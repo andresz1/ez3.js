@@ -1,0 +1,33 @@
+{
+  "name": "ez3.js",
+  "version": "1.0.0",
+  "description": "JavaScript 3D library",
+  "main": "build/ez3.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andresz1/ez3.js.git"
+  },
+  "keywords": [
+    "webgl",
+    "ez3js",
+    "ez3.js",
+    "3D"
+  ],
+  "authors": [
+    "Andres Alvarez",
+    "Carlos Zapata"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andresz1/ez3.js/issues"
+  },
+  "homepage": "https://github.com/andresz1/ez3.js#readme",
+  "dependencies": {
+    "grunt": "^0.4.5"
+  },
+  "devDependencies": {
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}
