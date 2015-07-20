@@ -1,5 +1,5 @@
 {
-  "name": "ez3.js",
+  "name": "ez3",
   "version": "1.0.0",
   "description": "JavaScript 3D library",
   "main": "build/ez3.js",
@@ -22,10 +22,20 @@
     "url": "https://github.com/andresz1/ez3.js/issues"
   },
   "homepage": "https://github.com/andresz1/ez3.js#readme",
-  "dependencies": {
-    "grunt": "^0.4.5"
+  "jshintConfig": {
+    "undef": true,
+    "unused": true,
+    "eqeqeq": true,
+    "indent": 2,
+    "latedef": true,
+    "maxlen": 120,
+    "newcap": true,
+    "camelcase": true,
+    "quotmark": "single",
+    "predef": ["module"]
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
     "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1"

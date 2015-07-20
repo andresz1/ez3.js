@@ -1,0 +1,28 @@
+{
+  "name": "ez3",
+  "version": "1.0.0",
+  "homepage": "https://github.com/andresz1/ez3.js",
+  "authors": [
+    "Andres Alvarez",
+    "Carlos Zapata"
+  ],
+  "description": "JavaScript 3D library",
+  "main": "build/ez3.js",
+  "keywords": [
+    "webgl",
+    "ez3js",
+    "ez3.js",
+    "3D"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "gl-matrix": "~2.3.1"
+  }
+}
