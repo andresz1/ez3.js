@@ -1,28 +1,3 @@
-var x = 2;
-
-x++;
-
-function sum(a, b) {
-  return a + b;
-}
-
-sum(x, x);
-
-var b = 2;
-
-b++;
-
-function sum(a, b) {
-  return a + b;
-}
-
-
-sum(b, b);
-
-var z = 2;
-
-z++;
-
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
