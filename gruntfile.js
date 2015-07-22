@@ -3,12 +3,8 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       build: {
-        src: ['src/*.js', 'src/**/*.js'],
+        src: ['src/*.js', 'src/**/*.js', 'bower_components/gl-matrix/dist/gl-matrix-min.js'],
         dest: 'build/<%= pkg.name %>.js'
-      },
-      dependencies: {
-        src: ['bower_components/gl-matrix/dist/gl-matrix-min.js', '<%= concat.dependencies.dest %>'],
-        dest: 'build/<%= pkg.name %>.min.js'
       }
     },
     uglify: {
@@ -23,7 +19,7 @@ module.exports = function(grunt) {
     },
     watch: {
       files: '<%= concat.build.src %>',
-      tasks: ['concat:build', 'uglify', 'concat:dependencies']
+      tasks: ['concat', 'uglify']
     }
   });
 
@@ -31,5 +27,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
 
-  grunt.registerTask('default', ['concat:build', 'uglify', 'concat:dependencies', 'watch']);
+  grunt.registerTask('default', ['concat', 'uglify', 'watch']);
 };
