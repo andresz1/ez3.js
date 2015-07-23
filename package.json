@@ -32,7 +32,11 @@
     "newcap": true,
     "camelcase": true,
     "quotmark": "single",
-    "predef": ["module", "EZ3"]
+    "predef": [
+      "module",
+      "EZ3",
+      "vec3"
+    ]
   },
   "devDependencies": {
     "grunt": "^0.4.5",
