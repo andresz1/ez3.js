@@ -7,5 +7,9 @@ EZ3.Engine = function(canvas, options) {
   } catch(e) {
     throw new Error('WebGl not supported');
   }
-  this.resize();
+  this.setViewport(0, 0, this.canvas.width, this.canvas.height);
+};
+
+EZ3.Engine.prototype.setViewport = function(x, y, width, height) {
+  this.gl.viewport(x, y, width, height);
 };
