@@ -1,3 +1,11 @@
+EZ3.core.engine = function() {
+
+};
+
+
+
+
+
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
