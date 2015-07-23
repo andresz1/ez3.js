@@ -26,8 +26,8 @@ EZ3.SPHERE.prototype.create = function() {
       u = s * S;
       v = t * T;
 
-      phi = Math.PI * s * S;
-      rho = Math.PI * t * T;
+      phi = this.PI * s * S;
+      rho = this.PI * t * T;
 
       vertex[0] = (this.radius * Math.cos(2 * phi) * Math.sin(rho));
       vertex[1] = (this.radius * Math.sin(rho - this.HALF_PI));
