@@ -34,6 +34,7 @@
     "quotmark": "single",
     "predef": [
       "module",
+      "document",
       "EZ3",
       "mat2",
       "mat3",
