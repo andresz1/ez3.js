@@ -78,5 +78,5 @@ EZ3.TORUS.prototype.create = function() {
 
     }
   }
-  
+
 };
