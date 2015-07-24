@@ -1,15 +1,17 @@
 EZ3.SPHERE = function(radius, slices, stacks) {
 
-  this.uv = [];
-  this.indices = [];
-  this.normals = [];
-  this.vertices = [];
   this.radius = radius;
   this.slices = slices;
   this.stacks = stacks;
 
+  this.uv = [];
+  this.indices = [];
+  this.normals = [];
+  this.vertices = [];
+
   this.PI = Math.PI;
-  this.HALF_PI = this.PI / 2;
+  this.HALF_PI = this.PI / 2.0;
+  this.DOUBLE_PI = 2.0 * this.PI;
 
   this.create();
 
@@ -31,28 +33,29 @@ EZ3.SPHERE.prototype.create = function() {
       u = s * S;
       v = t * T;
 
-      phi = this.PI * s * S;
-      rho = this.PI * t * T;
+      phi = this.DOUBLE_PI * u;
+      rho = this.PI * v;
 
-      vertex[0] = (this.radius * Math.cos(2 * phi) * Math.sin(rho));
+      vertex[0] = (this.radius * Math.cos(phi) * Math.sin(rho));
       vertex[1] = (this.radius * Math.sin(rho - this.HALF_PI));
-      vertex[2] = (this.radius * Math.sin(2 * phi) * Math.sin(rho));
+      vertex[2] = (this.radius * Math.sin(phi) * Math.sin(rho));
 
       normal[0] = vertex[0] / this.radius;
       normal[1] = vertex[1] / this.radius;
       normal[2] = vertex[2] / this.radius;
+
       vec3.normalize(normal, normal);
 
-      this.vertices.push(vertex[0]);
-      this.vertices.push(vertex[1]);
-      this.vertices.push(vertex[2]);
+      this.uv.push(u);
+      this.uv.push(v);
 
       this.normals.push(normal[0]);
       this.normals.push(normal[1]);
       this.normals.push(normal[2]);
 
-      this.uv.push(u);
-      this.uv.push(v);
+      this.vertices.push(vertex[0]);
+      this.vertices.push(vertex[1]);
+      this.vertices.push(vertex[2]);
 
     }
   }
