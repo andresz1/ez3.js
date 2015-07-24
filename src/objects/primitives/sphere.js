@@ -1,13 +1,18 @@
 EZ3.SPHERE = function(radius, slices, stacks) {
-  this.PI = Math.PI;
-  this.HALF_PI = this.PI / 2;
-  this.vertices = [];
-  this.normals = [];
+
   this.uv = [];
   this.indices = [];
+  this.normals = [];
+  this.vertices = [];
   this.radius = radius;
   this.slices = slices;
   this.stacks = stacks;
+
+  this.PI = Math.PI;
+  this.HALF_PI = this.PI / 2;
+
+  this.create();
+
 };
 
 EZ3.SPHERE.prototype.create = function() {
