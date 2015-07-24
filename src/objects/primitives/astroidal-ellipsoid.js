@@ -38,14 +38,14 @@ EZ3.ASTROIDAL_ELLIPSOID.prototype.create = function() {
       phi = this.DOUBLE_PI * u - this.PI;
       rho = this.PI * v - this.HALF_PI;
 
-      cosS = Math.cos(phi);
-      cosT = Math.cos(rho);
-      sinS = Math.sin(phi);
-      sinT = Math.sin(rho);
+      cosS = Math.pow(Math.cos(phi), 3.0);
+      cosT = Math.pow(Math.cos(rho), 3.0);
+      sinS = Math.pow(Math.sin(phi), 3.0);
+      sinT = Math.pow(Math.sin(rho), 3.0);
 
-      vertex[0] = (this.xRadius * Math.pow(cosT, 3.0) * Math.pow(cosS, 3.0));
-      vertex[1] = (this.yRadius * Math.pow(sinT, 3.0));
-      vertex[2] = (this.zRadius * Math.pow(cosT, 3.0) * Math.pow(sinS, 3.0));
+      vertex[0] = (this.xRadius * cosT * cosS);
+      vertex[1] = (this.yRadius * sinT);
+      vertex[2] = (this.zRadius * cosT * sinS);
 
       normal[0] = vertex[0] / this.xRadius;
       normal[1] = vertex[1] / this.yRadius;
