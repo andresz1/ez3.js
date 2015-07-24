@@ -11,6 +11,7 @@ EZ3.TORUS = function(innerRadius, outerRadius, sides, rings) {
   this.vertices = [];
 
   this.PI = Math.PI;
+  this.DOUBLE_PI = 2.0 * this.PI;
 
   this.create();
 
@@ -32,8 +33,8 @@ EZ3.TORUS.prototype.create = function() {
       u = s * S;
       v = r * R;
 
-      rho = 2.0 * this.PI * s * S;
-      phi = 2.0 * this.PI * r * R;
+      rho = this.DOUBLE_PI * u;
+      phi = this.DOUBLE_PI * v;
 
       cosS = Math.cos(rho);
       cosR = Math.cos(phi);
@@ -77,6 +78,5 @@ EZ3.TORUS.prototype.create = function() {
 
     }
   }
-
-
+  
 };
