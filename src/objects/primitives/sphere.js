@@ -26,12 +26,12 @@ EZ3.SPHERE.prototype.create = function() {
       u = s * S;
       v = t * T;
 
-      phi = this.PI * s * S;
+      phi = 2.0 * this.PI * s * S;
       rho = this.PI * t * T;
 
-      vertex[0] = (this.radius * Math.cos(2 * phi) * Math.sin(rho));
+      vertex[0] = (this.radius * Math.cos(phi) * Math.sin(rho));
       vertex[1] = (this.radius * Math.sin(rho - this.HALF_PI));
-      vertex[2] = (this.radius * Math.sin(2 * phi) * Math.sin(rho));
+      vertex[2] = (this.radius * Math.sin(phi) * Math.sin(rho));
 
       normal[0] = vertex[0] / this.radius;
       normal[1] = vertex[1] / this.radius;
