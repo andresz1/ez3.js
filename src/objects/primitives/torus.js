@@ -41,13 +41,13 @@ EZ3.TORUS.prototype.create = function() {
       sinS = Math.sin(rho);
       sinR = Math.sin(phi);
 
-      vertex[0] = (this.innerRadius + this.outerRadius * cosR) * cosS;
-      vertex[1] = (this.outerRadius * sinR);
-      vertex[2] = (this.innerRadius + this.outerRadius * cosR) * sinS;
+      vertex[0] = (this._innerRadius + this._outerRadius * cosR) * cosS;
+      vertex[1] = (this._outerRadius * sinR);
+      vertex[2] = (this._innerRadius + this._outerRadius * cosR) * sinS;
 
-      normal[0] = vertex[0] - this.innerRadius * cosS;
+      normal[0] = vertex[0] - this._innerRadius * cosS;
       normal[1] = vertex[1];
-      normal[2] = vertex[2] - this.innerRadius * sinS;
+      normal[2] = vertex[2] - this._innerRadius * sinS;
 
       vec3.normalize(normal, normal);
 
