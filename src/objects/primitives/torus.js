@@ -1,9 +1,9 @@
 EZ3.TORUS = function(innerRadius, outerRadius, sides, rings) {
 
-  this.sides = sides;
-  this.rings = rings;
-  this.innerRadius = innerRadius;
-  this.outerRadius = outerRadius;
+  this._sides = sides;
+  this._rings = rings;
+  this._innerRadius = innerRadius;
+  this._outerRadius = outerRadius;
 
   this.uv = [];
   this.indices = [];
@@ -21,14 +21,14 @@ EZ3.TORUS.prototype.create = function() {
 
   var vertex, normal, u, v, cosS, cosR, sinS, sinR, rho, phi, s, r, S, R;
 
-  S = 1.0 / (this.sides - 1);
-  R = 1.0 / (this.rings - 1);
+  S = 1.0 / (this._sides - 1);
+  R = 1.0 / (this._rings - 1);
 
   vertex = vec3.create();
   normal = vec3.create();
 
-  for(s = 0; s < sides; ++s){
-    for(r = 0; r < rings; ++r){
+  for(s = 0; s < this._sides; ++s){
+    for(r = 0; r < this._rings; ++r){
 
       u = s * S;
       v = r * R;
@@ -65,16 +65,16 @@ EZ3.TORUS.prototype.create = function() {
     }
   }
 
-  for(s = 0; s < this.sides - 1; ++s){
-    for(r = 0; r < this.rings - 1; ++r){
+  for(s = 0; s < this._sides - 1; ++s){
+    for(r = 0; r < this._rings - 1; ++r){
 
-      this.indices.push((s + 0) * this.rings + (r + 0));
-      this.indices.push((s + 0) * this.rings + (r + 1));
-      this.indices.push((s + 1) * this.rings + (r + 1));
+      this.indices.push((s + 0) * this._rings + (r + 0));
+      this.indices.push((s + 0) * this._rings + (r + 1));
+      this.indices.push((s + 1) * this._rings + (r + 1));
 
-      this.indices.push((s + 0) * this.rings + (r + 0));
-      this.indices.push((s + 1) * this.rings + (r + 1));
-      this.indices.push((s + 1) * this.rings + (r + 0));
+      this.indices.push((s + 0) * this._rings + (r + 0));
+      this.indices.push((s + 1) * this._rings + (r + 1));
+      this.indices.push((s + 1) * this._rings + (r + 0));
 
     }
   }
