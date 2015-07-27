@@ -1,8 +1,8 @@
 EZ3.SPHERE = function(radius, slices, stacks) {
 
-  this.radius = radius;
-  this.slices = slices;
-  this.stacks = stacks;
+  this._radius = radius;
+  this._slices = slices;
+  this._stacks = stacks;
 
   this.uv = [];
   this.indices = [];
@@ -24,11 +24,11 @@ EZ3.SPHERE.prototype.create = function() {
   vertex = vec3.create();
   normal = vec3.create();
 
-  S = 1.0 / (this.slices - 1);
-  T = 1.0 / (this.stacks - 1);
+  S = 1.0 / (this._slices - 1);
+  T = 1.0 / (this._stacks - 1);
 
-  for(s = 0; s < this.slices; ++s) {
-    for(t = 0; t < this.stacks; ++t) {
+  for(s = 0; s < this._slices; ++s) {
+    for(t = 0; t < this._stacks; ++t) {
 
       u = s * S;
       v = t * T;
@@ -40,9 +40,9 @@ EZ3.SPHERE.prototype.create = function() {
       vertex[1] = (this.radius * Math.sin(rho - this.HALF_PI));
       vertex[2] = (this.radius * Math.sin(phi) * Math.sin(rho));
 
-      normal[0] = vertex[0] / this.radius;
-      normal[1] = vertex[1] / this.radius;
-      normal[2] = vertex[2] / this.radius;
+      normal[0] = vertex[0] / this._radius;
+      normal[1] = vertex[1] / this._radius;
+      normal[2] = vertex[2] / this._radius;
 
       vec3.normalize(normal, normal);
 
@@ -60,16 +60,16 @@ EZ3.SPHERE.prototype.create = function() {
     }
   }
 
-  for(s = 0; s < this.slices - 1; ++s) {
-    for(t = 0; t < this.stacks - 1; ++t) {
+  for(s = 0; s < this._slices - 1; ++s) {
+    for(t = 0; t < this._stacks - 1; ++t) {
 
-      this.indices.push((s + 0) * this.stacks + (t + 0));
-      this.indices.push((s + 0) * this.stacks + (t + 1));
-      this.indices.push((s + 1) * this.stacks + (t + 1));
+      this.indices.push((s + 0) * this._stacks + (t + 0));
+      this.indices.push((s + 0) * this._stacks + (t + 1));
+      this.indices.push((s + 1) * this._stacks + (t + 1));
 
-      this.indices.push((s + 0) * this.stacks + (t + 0));
-      this.indices.push((s + 1) * this.stacks + (t + 1));
-      this.indices.push((s + 1) * this.stacks + (t + 0));
+      this.indices.push((s + 0) * this._stacks + (t + 0));
+      this.indices.push((s + 1) * this._stacks + (t + 1));
+      this.indices.push((s + 1) * this._stacks + (t + 0));
 
     }
   }
