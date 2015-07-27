@@ -8,17 +8,21 @@ EZ3.Geometry = function(data) {
   this.colors = data.colors || [];
 };
 
+EZ3.Geometry.prototype.initArray = function(size, value) {
+
+  return Array.apply(null, new Array(size)).map(function() {
+    return value;
+  });
+
+};
+
 EZ3.Geometry.prototype.calculateNormals = function() {
 
   var x, y, z, k;
   var normal, point0, point1, point2, vector0, vector1;
 
-  var temporalNormals = Array.apply(null, new Array(this.vertices.length)).map(function() {
-    return 0;
-  });
-  var temporalAppearances = Array.apply(null, new Array(this.vertices.length / 3)).map(function() {
-    return 0;
-  });
+  var temporalNormals = initArray(this.vertices.length, 0);
+  var temporalAppearances = initArray(this.vertices.length / 3, 0);
 
   for(k = 0; k < this.indices.length; k += 3) {
 
