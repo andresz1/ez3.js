@@ -1,17 +1,11 @@
 EZ3.TORUS = function(innerRadius, outerRadius, sides, rings) {
 
+  EZ3.Geometry.call(this);
+
   this._sides = sides;
   this._rings = rings;
   this._innerRadius = innerRadius;
   this._outerRadius = outerRadius;
-
-  this.uv = [];
-  this.indices = [];
-  this.normals = [];
-  this.vertices = [];
-
-  this.PI = Math.PI;
-  this.DOUBLE_PI = 2.0 * this.PI;
 
   this.create();
 

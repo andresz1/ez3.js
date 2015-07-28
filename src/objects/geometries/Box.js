@@ -1,7 +1,6 @@
 EZ3.BOX = function(width, height, depth) {
 
-  this.indices = [];
-  this.vertices = [];
+  EZ3.Geometry.call(this);
 
   this._width = width;
   this._depth = depth;
@@ -17,44 +16,21 @@ EZ3.BOX = function(width, height, depth) {
 
 EZ3.BOX.prototype.create = function() {
 
-  // 0
-  this.vertices.push(this._halfWidth);
-  this.vertices.push(this._halfHeight);
-  this.vertices.push(this._halfDepth);
+  this._vertices = [
+    +this._halfWidth, +this._halfHeight, +this._halfDepth,
+    -this._halfWidth, +this._halfHeight, +this._halfDepth,
+    -this._halfWidth, -this._halfHeight, +this._halfDepth,
+    +this._halfWidth, -this._halfHeight, +this._halfDepth,
+    +this._halfWidth, -this._halfHeight, -this._halfDepth,
+    -this._halfWidth, -this._halfHeight, -this._halfDepth,
+    -this._halfWidth, +this._halfHeight, -this._halfDepth,
+    +this._halfWidth, +this._halfHeight, -this._halfDepth
+  ];
 
-  // 1
-  this.vertices.push(-this._halfWidth);
-  this.vertices.push(this._halfHeight);
-  this.vertices.push(this._halfDepth);
+  this._indices = [
+    
+  ];
 
-  // 2
-  this.vertices.push(-this._halfWidth);
-  this.vertices.push(-this._halfHeight);
-  this.vertices.push(this._halfDepth);
-
-  // 3
-  this.vertices.push(this._halfWidth);
-  this.vertices.push(-this._halfHeight);
-  this.vertices.push(this._halfDepth);
-
-  // 4
-  this.vertices.push(this._halfWidth);
-  this.vertices.push(-this._halfHeight);
-  this.vertices.push(-this._halfDepth);
-
-  // 5
-  this.vertices.push(-this._halfWidth);
-  this.vertices.push(-this._halfHeight);
-  this.vertices.push(-this._halfDepth);
-
-  // 6
-  this.vertices.push(-this._halfWidth);
-  this.vertices.push(this._halfHeight);
-  this.vertices.push(-this._halfDepth);
-
-  // 7
-  this.vertices.push(this._halfWidth);
-  this.vertices.push(this._halfHeight);
-  this.vertices.push(-this._halfDepth);
+  calculateNormals();
 
 };
