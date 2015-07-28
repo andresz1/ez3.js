@@ -6,9 +6,9 @@ EZ3.BOX = function(width, height, depth) {
   this._depth = depth;
   this._height = height;
 
-  this._halfWidth = this._width / 2.0;
-  this._halfDepth = this._depth / 2.0;
-  this._halfHeight = this._height / 2.0;
+  this._halfWidth  = this._width * 0.5;
+  this._halfDepth  = this._depth * 0.5;
+  this._halfHeight = this._height * 0.5;
 
   this.create();
 
@@ -28,7 +28,7 @@ EZ3.BOX.prototype.create = function() {
   ];
 
   this._indices = [
-    
+
   ];
 
   calculateNormals();
