@@ -1,17 +1,11 @@
 EZ3.CONE = function(base, height, slices, stacks) {
 
+  EZ3.Geometry.call(this);
+
   this._base = base;
   this._height = height;
   this._slices = slices;
   this._stacks = stacks;
-
-  this.uv = [];
-  this.indices = [];
-  this.normals = [];
-  this.vertices = [];
-
-  this.PI = Math.PI;
-  this.DOUBLE_PI = 2.0 * this.PI;
 
   this.create();
 
@@ -49,16 +43,16 @@ EZ3.CONE.prototype.create = function() {
       if(normal[0] !== 0.0 || normal[1] !== 0.0 || normal[2] !== 0.0)
         vec3.normalize(normal, normal);
 
-      this.vertices.push(vertex[0]);
-      this.vertices.push(vertex[1]);
-      this.vertices.push(vertex[2]);
+      this._vertices.push(vertex[0]);
+      this._vertices.push(vertex[1]);
+      this._vertices.push(vertex[2]);
 
-      this.normals.push(normal[0]);
-      this.normals.push(normal[1]);
-      this.normals.push(normal[2]);
+      this._normals.push(normal[0]);
+      this._normals.push(normal[1]);
+      this._normals.push(normal[2]);
 
-      this.uv.push(u);
-      this.uv.push(v);
+      this._uv.push(u);
+      this._uv.push(v);
 
       actualHeight -= step;
 
@@ -71,13 +65,13 @@ EZ3.CONE.prototype.create = function() {
   for(s = 0; s < this._slices - 1; ++s) {
     for(t = 0; t < this._stacks - 1; ++t) {
 
-      this.indices.push((s + 0) * this._stacks + (t + 0));
-      this.indices.push((s + 0) * this._stacks + (t + 1));
-      this.indices.push((s + 1) * this._stacks + (t + 1));
+      this._indices.push((s + 0) * this._stacks + (t + 0));
+      this._indices.push((s + 0) * this._stacks + (t + 1));
+      this._indices.push((s + 1) * this._stacks + (t + 1));
 
-      this.indices.push((s + 0) * this._stacks + (t + 0));
-      this.indices.push((s + 1) * this._stacks + (t + 1));
-      this.indices.push((s + 1) * this._stacks + (t + 0));
+      this._indices.push((s + 0) * this._stacks + (t + 0));
+      this._indices.push((s + 1) * this._stacks + (t + 1));
+      this._indices.push((s + 1) * this._stacks + (t + 0));
 
     }
   }

@@ -1,19 +1,12 @@
 EZ3.ELLIPSOID = function(xRadius, yRadius, zRadius, slices, stacks) {
 
-  this.slices = slices;
-  this.stacks = stacks;
-  this.xRadius = xRadius;
-  this.yRadius = yRadius;
-  this.zRadius = zRadius;
+  EZ3.Geometry.call(this);
 
-  this.uv = [];
-  this.indices = [];
-  this.normals = [];
-  this.vertices = [];
-
-  this.PI = Math.PI;
-  this.HALF_PI = this.PI / 2;
-  this.DOUBLE_PI = 2.0 * this.PI;
+  this._slices = slices;
+  this._stacks = stacks;
+  this._xRadius = xRadius;
+  this._yRadius = yRadius;
+  this._zRadius = zRadius;
 
   this.create();
 
