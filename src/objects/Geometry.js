@@ -1,11 +1,19 @@
 EZ3.Geometry = function(data) {
-  this.vertices = data.vertices;
-  this.indices = data.indices;
-  this.normals = data.normals || [];
-  this.uv = data.uv || [];
-  this.tangents = data.tangents || [];
-  this.binormals = data.binormals || [];
-  this.colors = data.colors || [];
+
+  this._uv = [];
+  this._indices = [];
+  this._normals = [];
+  this._vertices = [];
+  this._tangents = [];
+  this._binormals = [];
+  this._maxPoint = vec3.create();
+  this._minPoint = vec3.create();
+  this._midPoint = vec3.create();
+
+  this.PI = Math.PI;
+  this.HALF_PI = this.PI / 2.0;
+  this.DOUBLE_PI = 2.0 * this.PI;
+
 };
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
@@ -24,11 +32,11 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   var temporalNormals = initArray(this.vertices.length, 0);
   var temporalAppearances = initArray(this.vertices.length / 3, 0);
 
-  for(k = 0; k < this.indices.length; k += 3) {
+  for(k = 0; k < this._indices.length; k += 3) {
 
-    x = 3 * this.indices[k + 0];
-    y = 3 * this.indices[k + 1];
-    z = 3 * this.indices[k + 2];
+    x = 3 * this._indices[k + 0];
+    y = 3 * this._indices[k + 1];
+    z = 3 * this._indices[k + 2];
 
     point0 = vec3.create(this.vertices[x + 0], this.vertices[x + 1], this.vertices[x + 2]);
     point1 = vec3.create(this.vertices[y + 0], this.vertices[y + 1], this.vertices[y + 2]);
@@ -61,15 +69,15 @@ EZ3.Geometry.prototype.calculateNormals = function() {
 
   }
 
-  for(k = 0; k < this.vertices.length / 3; ++k){
+  for(k = 0; k < this._vertices.length / 3; ++k){
 
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    this.normals.push(temporalNormals[x] / temporalAppearances[k]);
-    this.normals.push(temporalNormals[y] / temporalAppearances[k]);
-    this.normals.push(temporalNormals[z] / temporalAppearances[k]);
+    this._normals.push(temporalNormals[x] / temporalAppearances[k]);
+    this._normals.push(temporalNormals[y] / temporalAppearances[k]);
+    this._normals.push(temporalNormals[z] / temporalAppearances[k]);
 
   }
 
@@ -78,14 +86,34 @@ EZ3.Geometry.prototype.calculateNormals = function() {
 
 };
 
+EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
+
+  this._maxPoint[0] = Math.max(this._maxPoint[0], x);
+  this._maxPoint[1] = Math.max(this._maxPoint[1], y);
+  this._maxPoint[2] = Math.max(this._maxPoint[2], z);
+
+};
+
+EZ3.Geometry.prototype.updateMinPoint = function(x, y, z) {
+
+  this._minPoint[0] = Math.min(this._minPoint[0], x);
+  this._minPoint[1] = Math.min(this._minPoint[1], y);
+  this._minPoint[2] = Math.min(this._minPoint[2], z);
+
+};
+
+EZ3.Geometry.prototype.calculateMidPoint = function () {
+
+  this._midPoint[0] = (this._maxPoint[0] + this._minPoint[0]) * 0.5;
+  this._midPoint[0] = (this._maxPoint[1] + this._minPoint[1]) * 0.5;
+  this._midPoint[0] = (this._maxPoint[2] + this._minPoint[2]) * 0.5;
+
+};
+
 EZ3.Geometry.prototype.calculateTangents = function() {
 
 };
 
 EZ3.Geometry.prototype.calculateBoundingBox = function() {
-
-};
-
-EZ3.Geometry.prototype.calculateBoundingSphere = function() {
 
 };
