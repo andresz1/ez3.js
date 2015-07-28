@@ -1,3 +1,8 @@
+var EZ3 = {
+  VERSION: '1.0.0',
+  Signal: signals.Signal
+};
+
 EZ3.Engine = function(canvas, options) {
   this.canvas = canvas || document.createElement('canvas');
   this.canvas.width = canvas.width || 800;
@@ -16,14 +21,36 @@ EZ3.Engine.prototype.setViewport = function(x, y, width, height) {
 
 
 
+EZ3.Key = function() {
+
+};
+
+EZ3.Key.prototype.
+
+EZ3.Keyboard = function(domElement) {
+  this._domElement = domElement;
+
+  this.enabled = true;
+};
+
+EZ3.Keyboard.prototype.enable = function() {
+  this.enabled = true;
+};
+
+EZ3.Keyboard.prototype.disable = function() {
+  this.enabled = false;
+};
+
 EZ3.Geometry = function(data) {
-  this.vertices = data.vertices;
-  this.indices = data.indices;
-  this.normals = data.normals || [];
-  this.uv = data.uv || [];
-  this.tangents = data.tangents || [];
-  this.binormals = data.binormals || [];
-  this.colors = data.colors || [];
+  this._uv = [];
+  this._indices = [];
+  this._normals = [];
+  this._vertices = [];
+  this._tangents = [];
+  this._binormals = [];
+  this._maxPoint = vec3.create();
+  this._minPoint = vec3.create();
+  this._midPoint = vec3.create();
 };
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
@@ -79,15 +106,15 @@ EZ3.Geometry.prototype.calculateNormals = function() {
 
   }
 
-  for(k = 0; k < this.vertices.length / 3; ++k){
+  for(k = 0; k < this._vertices.length / 3; ++k){
 
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    this.normals.push(temporalNormals[x] / temporalAppearances[k]);
-    this.normals.push(temporalNormals[y] / temporalAppearances[k]);
-    this.normals.push(temporalNormals[z] / temporalAppearances[k]);
+    this._normals.push(temporalNormals[x] / temporalAppearances[k]);
+    this._normals.push(temporalNormals[y] / temporalAppearances[k]);
+    this._normals.push(temporalNormals[z] / temporalAppearances[k]);
 
   }
 
@@ -96,15 +123,35 @@ EZ3.Geometry.prototype.calculateNormals = function() {
 
 };
 
+EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
+
+  this._maxPoint[0] = Math.max(this._maxPoint[0], x);
+  this._maxPoint[1] = Math.max(this._maxPoint[1], y);
+  this._maxPoint[2] = Math.max(this._maxPoint[2], z);
+
+};
+
+EZ3.Geometry.prototype.updateMinPoint = function(x, y, z) {
+
+  this._minPoint[0] = Math.min(this._minPoint[0], x);
+  this._minPoint[1] = Math.min(this._minPoint[1], y);
+  this._minPoint[2] = Math.min(this._minPoint[2], z);
+
+};
+
+EZ3.Geometry.prototype.calculateMidPoint = function () {
+
+    this._midPoint[0] = (this._maxPoint[0] + this._minPoint[0]) * 0.5;
+    this._midPoint[0] = (this._maxPoint[1] + this._minPoint[1]) * 0.5;
+    this._midPoint[0] = (this._maxPoint[2] + this._minPoint[2]) * 0.5;
+
+};
+
 EZ3.Geometry.prototype.calculateTangents = function() {
 
 };
 
 EZ3.Geometry.prototype.calculateBoundingBox = function() {
-
-};
-
-EZ3.Geometry.prototype.calculateBoundingSphere = function() {
 
 };
 
@@ -193,6 +240,66 @@ EZ3.ASTROIDAL_ELLIPSOID.prototype.create = function() {
   }
 };
 
+EZ3.BOX = function(width, height, depth) {
+
+  EZ3.Geometry.call(this);
+
+  this._width = width;
+  this._depth = depth;
+  this._height = height;
+
+  this._halfWidth = this._width / 2.0;
+  this._halfDepth = this._depth / 2.0;
+  this._halfHeight = this._height / 2.0;
+
+  this.create();
+
+};
+
+EZ3.BOX.prototype.create = function() {
+
+  // 0
+  this.vertices.push(this._halfWidth);
+  this.vertices.push(this._halfHeight);
+  this.vertices.push(this._halfDepth);
+
+  // 1
+  this.vertices.push(-this._halfWidth);
+  this.vertices.push(this._halfHeight);
+  this.vertices.push(this._halfDepth);
+
+  // 2
+  this.vertices.push(-this._halfWidth);
+  this.vertices.push(-this._halfHeight);
+  this.vertices.push(this._halfDepth);
+
+  // 3
+  this.vertices.push(this._halfWidth);
+  this.vertices.push(-this._halfHeight);
+  this.vertices.push(this._halfDepth);
+
+  // 4
+  this.vertices.push(this._halfWidth);
+  this.vertices.push(-this._halfHeight);
+  this.vertices.push(-this._halfDepth);
+
+  // 5
+  this.vertices.push(-this._halfWidth);
+  this.vertices.push(-this._halfHeight);
+  this.vertices.push(-this._halfDepth);
+
+  // 6
+  this.vertices.push(-this._halfWidth);
+  this.vertices.push(this._halfHeight);
+  this.vertices.push(-this._halfDepth);
+
+  // 7
+  this.vertices.push(this._halfWidth);
+  this.vertices.push(this._halfHeight);
+  this.vertices.push(-this._halfDepth);
+
+};
+
 EZ3.CONE = function(base, height, slices, stacks) {
 
   this._base = base;
@@ -278,7 +385,6 @@ EZ3.CONE.prototype.create = function() {
   }
 
 };
-
 
 
 EZ3.ELLIPSOID = function(xRadius, yRadius, zRadius, slices, stacks) {
