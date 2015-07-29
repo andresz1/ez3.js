@@ -3,7 +3,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       build: {
-        src: ['src/*.js', 'src/**/*.js', 'bower_components/gl-matrix/dist/gl-matrix-min.js'],
+        src: ['bower_components/gl-matrix/dist/gl-matrix-min.js', 'src/*.js', 'src/**/*.js'],
         dest: 'build/<%= pkg.name %>.js'
       }
     },

@@ -58,3 +58,5 @@ EZ3.Mouse.prototype.disable = function() {
   this._domElement.removeEventListener('mousewheel', this._onWheel, true);
   this._domElement.removeEventListener('DOMMouseScroll', this._onWheel, true);
 };
+
+EZ3.Mouse.prototype.constructor = EZ3.Mouse;
