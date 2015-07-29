@@ -4,23 +4,23 @@ EZ3.Key = function(code) {
   this.code = code;
 };
 
-EZ3.Key.prototype.processDown = function(onPress, onDown) {
+EZ3.Key.prototype.processDown = function(context, onPress, onDown) {
   var isUp = this.isUp();
 
   this._state = true;
 
   if(isUp && onPress)
-    onPress.call(this, this.code);
+    onPress.call(context, this);
 
   if(onDown)
-    onDown.call(this, this.code);
+    onDown.call(context, this);
 };
 
-EZ3.Key.prototype.processUp = function(onRelease) {
+EZ3.Key.prototype.processUp = function(context, onRelease) {
   this._state = false;
 
   if(onRelease)
-    onRelease.call(this, this.code);
+    onRelease.call(context, this);
 };
 
 EZ3.Key.prototype.isDown = function() {

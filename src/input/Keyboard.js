@@ -2,22 +2,23 @@ EZ3.Keyboard = function(domElement) {
   this._domElement = domElement;
   this._keys = [];
 
-  this.enabled = true;
+  this.enabled = false;
   this.callbacks = {};
-  this.callbacks.onPress = null;
-  this.callbacks.onRelease = null;
-  this.callbacks.onDown = null;
+  this.callbacks.context = this;
+  this.callbacks.onKeyPress = null;
+  this.callbacks.onKeyDown = null;
+  this.callbacks.onKeyRelease = null;
 };
 
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Key(event.keyCode);
 
-  this._keys[event.keyCode].processDown(this.callbacks.onPress, this.callbacks.onDown);
+  this._keys[event.keyCode].processDown(this.callbacks.context, this.callbacks.onKeyPress, this.callbacks.onKeyDown);
 };
 
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
-  this._keys[event.keyCode].processUp(this.callbacks.onRelease);
+  this._keys[event.keyCode].processUp(this.callbacks.context, this.callbacks.onKeyRelease);
 };
 
 EZ3.Keyboard.prototype.enable = function() {
@@ -39,8 +40,8 @@ EZ3.Keyboard.prototype.enable = function() {
 EZ3.Keyboard.prototype.disable = function() {
   this.enabled = false;
 
-  this._domElement.addEventListener('keydown', this._onKeyDown, false);
-	this._domElement.addEventListener('keyup', this._onKeyUp, false);
+  this._domElement.removeEventListener('keydown', this._onKeyDown);
+	this._domElement.removeEventListener('keyup', this._onKeyUp);
 };
 
 EZ3.Keyboard.prototype.getKey = function(keyCode) {
