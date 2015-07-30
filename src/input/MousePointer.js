@@ -1,12 +1,7 @@
 EZ3.MousePointer = function() {
   EZ3.Pointer.call(this, 1);
 
-  this._states = {};
-  this._states[EZ3.MousePointer.LEFT_BUTTON] = false;
-  this._states[EZ3.MousePointer.RIGHT_BUTTON] = false;
-  this._states[EZ3.MousePointer.MIDDLE_BUTTON] = false;
-  this._states[EZ3.MousePointer.BACK_BUTTON] = false;
-  this._states[EZ3.MousePointer.FORWARD_BUTTON] = false;
+  this._buttons = [];
   this.wheel = EZ3.Vector2.create();
 };
 
@@ -36,18 +31,9 @@ EZ3.MousePointer.prototype.processWheel = function(event) {
     this.wheel[1] = event.deltaY;
 };
 
-EZ3.MousePointer.prototype.isDown = function(button) {
-  return this._states[button];
-};
-
-EZ3.MousePointer.prototype.isUp = function(button) {
-  return !this._states[button];
+EZ3.MousePointer.prototype.getButton = function(buttonCode) {
+  if(!this._buttons[buttonCode])
+    this._buttons[buttonCode] = new EZ3.Button(buttonCode);
 };
 
 EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
-
-EZ3.MousePointer.LEFT_BUTTON = 0;
-EZ3.MousePointer.RIGHT_BUTTON = 1;
-EZ3.MousePointer.MIDDLE_BUTTON = 2;
-EZ3.MousePointer.BACK_BUTTON = 3;
-EZ3.MousePointer.FORWARD_BUTTON = 4;
