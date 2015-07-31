@@ -1,4 +1,4 @@
-EZ3.Geometry = function(data) {
+EZ3.Geometry = function() {
 
   this._uv = [];
   this._indices = [];
@@ -10,11 +10,11 @@ EZ3.Geometry = function(data) {
   this._minPoint = vec3.create();
   this._midPoint = vec3.create();
 
-  this.PI = Math.PI;
-  this.HALF_PI = this.PI / 2.0;
-  this.DOUBLE_PI = 2.0 * this.PI;
-
 };
+
+EZ3.Geometry.PI = Math.PI;
+EZ3.Geometry.HALF_PI = 0.5 * Math.PI;
+EZ3.Geometry.DOUBLE_PI = 2.0 * Math.PI;
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
 
@@ -29,8 +29,8 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   var x, y, z, k;
   var normal, point0, point1, point2, vector0, vector1;
 
-  var temporalNormals = initArray(this.vertices.length, 0);
-  var temporalAppearances = initArray(this.vertices.length / 3, 0);
+  var temporalNormals = this.initArray(this.vertices.length, 0);
+  var temporalAppearances = this.initArray(this.vertices.length / 3, 0);
 
   for(k = 0; k < this._indices.length; k += 3) {
 

@@ -19,8 +19,8 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "src",
+    "gruntfile"
   ],
   "devDependencies": {
     "gl-matrix": "~2.3.1",

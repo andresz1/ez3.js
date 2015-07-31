@@ -41,7 +41,8 @@
       "mat4",
       "vec2",
       "vec3",
-      "vec4"
+      "vec4",
+      "signals"
     ]
   },
   "devDependencies": {

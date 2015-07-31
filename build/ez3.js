@@ -1,8 +1,4 @@
-var EZ3 = {
-  VERSION: '1.0.0',
-
-  Vector2: vec2
-};
+var EZ3 = { VERSION: '1.0.0' };
 
 EZ3.Engine = function(canvas, options) {
   this.canvas = canvas || document.createElement('canvas');
@@ -21,39 +17,6 @@ EZ3.Engine.prototype.setViewport = function(x, y, width, height) {
 };
 
 
-
-EZ3.Key = function(code) {
-  this._state = false;
-
-  this.code = code;
-};
-
-EZ3.Key.prototype.processDown = function(context, onPress, onDown) {
-  var isUp = this.isUp();
-
-  this._state = true;
-
-  if(isUp && onPress)
-    onPress.call(context, this);
-
-  if(onDown)
-    onDown.call(context, this);
-};
-
-EZ3.Key.prototype.processUp = function(context, onRelease) {
-  this._state = false;
-
-  if(onRelease)
-    onRelease.call(context, this);
-};
-
-EZ3.Key.prototype.isDown = function() {
-  return this._state;
-};
-
-EZ3.Key.prototype.isUp = function() {
-  return !this._state;
-};
 
 EZ3.Keyboard = function(domElement) {
   this._domElement = domElement;
@@ -272,17 +235,53 @@ EZ3.Mouse.prototype.disable = function() {
   this._domElement.removeEventListener('DOMMouseScroll', this._onWheel, true);
 };
 
+EZ3.Mouse.prototype.constructor = EZ3.Mouse;
+
+EZ3.Mouse.LEFT_BUTTON = 0;
+EZ3.Mouse.RIGHT_BUTTON = 1;
+EZ3.Mouse.MIDDLE_BUTTON = 2;
+EZ3.Mouse.BACK_BUTTON = 3;
+EZ3.Mouse.FORWARD_BUTTON = 4;
+
 EZ3.MousePointer = function() {
+  EZ3.Pointer.call(this, 1);
 
+  this._buttons = [];
+  this.wheel = EZ3.Vector2.create();
 };
 
-EZ3.Pointer.prototype.processDown = function(event) {
-  super.processDown(event);
+EZ3.MousePointer.prototype.processDown = function(event) {
+  this._states[event.button] = true;
+  EZ3.Pointer.prototype.processDown.call(this, event);
 };
 
-EZ3.Pointer.prototype.processUp = function(event) {
-  super.processUp(event);
+EZ3.MousePointer.prototype.processMove = function(event) {
+  EZ3.Pointer.prototype.processMove.call(this, event);
 };
+
+EZ3.MousePointer.prototype.processUp = function(event) {
+  this._states[event.button] = false;
+  //EZ3.Pointer.prototype.processUp.call(this, event);
+};
+
+EZ3.MousePointer.prototype.processWheel = function(event) {
+  if (event.wheelDeltaX)
+    this.wheel[0] = event.wheelDeltaX;
+  else
+    this.wheel[1] = event.deltaX;
+
+  if (event.wheelDeltaY)
+    this.wheel[0] = event.wheelDeltaY;
+  else
+    this.wheel[1] = event.deltaY;
+};
+
+EZ3.MousePointer.prototype.getButton = function(buttonCode) {
+  if(!this._buttons[buttonCode])
+    this._buttons[buttonCode] = new EZ3.Button(buttonCode);
+};
+
+EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
 
 EZ3.Pointer = function(id) {
   this.id = id;
@@ -306,7 +305,47 @@ EZ3.Pointer.prototype.processMove = function(event) {
   this.screen[0] = event.screenY;
 };
 
-EZ3.Geometry = function(data) {
+EZ3.Pointer.prototype.constructor = EZ3.Pointer;
+
+EZ3.Switch = function(code) {
+  this._state = false;
+
+  this.code = code;
+};
+
+EZ3.Switch.prototype.processDown = function(context, onPress, onDown) {
+  var isUp = this.isUp();
+
+  this._state = true;
+
+  if(isUp && onPress)
+    onPress.call(context, this);
+
+  if(onDown)
+    onDown.call(context, this);
+};
+
+EZ3.Switch.prototype.processUp = function(context, onRelease) {
+  this._state = false;
+
+  if(onRelease)
+    onRelease.call(context, this);
+};
+
+EZ3.Switch.prototype.isDown = function() {
+  return this._state;
+};
+
+EZ3.Switch.prototype.isUp = function() {
+  return !this._state;
+};
+
+EZ3.Switch.prototype.constructor = EZ3.Switch;
+
+EZ3.Key = EZ3.Switch;
+EZ3.Button = EZ3.Switch;
+
+EZ3.Geometry = function() {
 
   this._uv = [];
   this._indices = [];
@@ -318,11 +357,11 @@ EZ3.Geometry = function(data) {
   this._minPoint = vec3.create();
   this._midPoint = vec3.create();
 
-  this.PI = Math.PI;
-  this.HALF_PI = this.PI / 2.0;
-  this.DOUBLE_PI = 2.0 * this.PI;
-
 };
+
+EZ3.Geometry.PI = Math.PI;
+EZ3.Geometry.HALF_PI = 0.5 * Math.PI;
+EZ3.Geometry.DOUBLE_PI = 2.0 * Math.PI;
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
 
@@ -337,8 +376,8 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   var x, y, z, k;
   var normal, point0, point1, point2, vector0, vector1;
 
-  var temporalNormals = initArray(this.vertices.length, 0);
-  var temporalAppearances = initArray(this.vertices.length / 3, 0);
+  var temporalNormals = this.initArray(this.vertices.length, 0);
+  var temporalAppearances = this.initArray(this.vertices.length / 3, 0);
 
   for(k = 0; k < this._indices.length; k += 3) {
 
