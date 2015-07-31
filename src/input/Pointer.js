@@ -1,8 +1,8 @@
 EZ3.Pointer = function(id) {
   this.id = id;
-  this.client = EZ3.Vector2.create();
-  this.page = EZ3.Vector2.create();
-  this.screen = EZ3.Vector2.create();
+  this.client = EZ3.Vec2.create();
+  this.page = EZ3.Vec2.create();
+  this.screen = EZ3.Vec2.create();
 };
 
 EZ3.Pointer.prototype.processDown = function(event) {

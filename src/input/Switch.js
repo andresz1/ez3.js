@@ -4,23 +4,23 @@ EZ3.Switch = function(code) {
   this.code = code;
 };
 
-EZ3.Switch.prototype.processDown = function(context, onPress, onDown) {
+EZ3.Switch.prototype.processDown = function(onPress, onDown) {
   var isUp = this.isUp();
 
   this._state = true;
 
   if(isUp && onPress)
-    onPress.call(context, this);
+    onPress.dispatch(this);
 
   if(onDown)
-    onDown.call(context, this);
+    onDown.dispatch(this);
 };
 
-EZ3.Switch.prototype.processUp = function(context, onRelease) {
+EZ3.Switch.prototype.processUp = function(onRelease) {
   this._state = false;
 
   if(onRelease)
-    onRelease.call(context, this);
+    onRelease.dispatch(this);
 };
 
 EZ3.Switch.prototype.isDown = function() {
@@ -32,6 +32,3 @@ EZ3.Switch.prototype.isUp = function() {
 };
 
 EZ3.Switch.prototype.constructor = EZ3.Switch;
-
-EZ3.Key = EZ3.Switch;
-EZ3.Button = EZ3.Switch;

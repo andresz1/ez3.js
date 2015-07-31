@@ -1,22 +1,14 @@
 EZ3.MousePointer = function() {
   EZ3.Pointer.call(this, 1);
+  EZ3.Extends(this, EZ3.Pointer);
 
   this._buttons = [];
-  this.wheel = EZ3.Vector2.create();
+  this.wheel = EZ3.Vec2.create();
 };
 
-EZ3.MousePointer.prototype.processDown = function(event) {
+EZ3.MousePointer.prototype.processButtonDown = function(event) {
   this._states[event.button] = true;
   EZ3.Pointer.prototype.processDown.call(this, event);
-};
-
-EZ3.MousePointer.prototype.processMove = function(event) {
-  EZ3.Pointer.prototype.processMove.call(this, event);
-};
-
-EZ3.MousePointer.prototype.processUp = function(event) {
-  this._states[event.button] = false;
-  //EZ3.Pointer.prototype.processUp.call(this, event);
 };
 
 EZ3.MousePointer.prototype.processWheel = function(event) {

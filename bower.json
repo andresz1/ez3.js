@@ -24,6 +24,7 @@
   ],
   "devDependencies": {
     "gl-matrix": "~2.3.1",
-    "js-signals": "~1.0.0"
+    "js-signals": "~1.0.0",
+    "eztend.js": "~1.0.0"
   }
 }

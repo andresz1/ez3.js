@@ -42,7 +42,8 @@
       "vec2",
       "vec3",
       "vec4",
-      "signals"
+      "signals",
+      "eztend"
     ]
   },
   "devDependencies": {
