@@ -5,8 +5,8 @@ module.exports = function(grunt) {
       build: {
         src: [
           'bower_components/gl-matrix/dist/gl-matrix-min.js',
-          'bower_components/js-signals/dist/signals.js',
-          'bower_components/eztend.js/build/eztend.min.js',
+          'bower_components/js-signals/dist/signals.min.js',
+          'bower_components/eztends/build/eztends.min.js',
           'src/*.js',
           'src/**/*.js'
         ],
