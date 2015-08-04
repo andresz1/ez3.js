@@ -5,6 +5,8 @@ EZ3.Pointer = function(id) {
   this.screen = EZ3.Vec2.create();
 };
 
+EZ3.Pointer.prototype.constructor = EZ3.Pointer;
+
 EZ3.Pointer.prototype.processDown = function(event) {
   this.processMove(event);
 };
@@ -19,5 +21,3 @@ EZ3.Pointer.prototype.processMove = function(event) {
   this.screen[0] = event.screenX;
   this.screen[0] = event.screenY;
 };
-
-EZ3.Pointer.prototype.constructor = EZ3.Pointer;
