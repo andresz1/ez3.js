@@ -1,14 +1,27 @@
+/**
+ * @class MousePointer
+ * @extends Pointer
+ */
+
 EZ3.MousePointer = function() {
   EZ3.Pointer.call(this, 1);
-  EZ3.Extends(this, EZ3.Pointer);
 
   this._buttons = [];
   this.wheel = EZ3.Vec2.create();
 };
 
-EZ3.MousePointer.prototype.processButtonDown = function(event) {
-  this._states[event.button] = true;
-  EZ3.Pointer.prototype.processDown.call(this, event);
+EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
+EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
+
+EZ3.MousePointer.prototype.processDown = function(event) {
+  if(!this._buttons[event.button])
+    this._buttons[event.button] = new EZ3.Switch(event.button);
+
+  this._buttons[event.button].processDown();
+};
+
+EZ3.MousePointer.prototype.processUp = function(event) {
+  this._buttons[event.button].processUp();
 };
 
 EZ3.MousePointer.prototype.processWheel = function(event) {
@@ -27,5 +40,3 @@ EZ3.MousePointer.prototype.getButton = function(buttonCode) {
   if(!this._buttons[buttonCode])
     this._buttons[buttonCode] = new EZ3.Button(buttonCode);
 };
-
-EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;

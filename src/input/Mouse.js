@@ -5,19 +5,19 @@ EZ3.Mouse = function(domElement) {
   this.enabled = false;
 };
 
-EZ3.Mouse.prototype._processMousePointerDown = function(event) {
-  this.pointer.processButtonDown(event);
+EZ3.Mouse.prototype._processMouseDown = function(event) {
+  this.pointer.processDown(event);
 };
 
-EZ3.Mouse.prototype._processMousePointerMove = function(event) {
-  this.pointer.processButtonMove(event);
+EZ3.Mouse.prototype._processMouseMove = function(event) {
+  this.pointer.processMove(event);
 };
 
-EZ3.Mouse.prototype._processMousePointerUp = function(event) {
-  this.pointer.processButtonUp(event);
+EZ3.Mouse.prototype._processMouseUp = function(event) {
+  this.pointer.processUp(event);
 };
 
-EZ3.Mouse.prototype._processMousePointerWheel = function(event) {
+EZ3.Mouse.prototype._processMouseWheel = function(event) {
   this.pointer.processWheel(event);
 };
 
@@ -26,27 +26,27 @@ EZ3.Mouse.prototype.enable = function() {
 
   this.enabled = true;
 
-  this._onMousePointerDown = function (event) {
-    that._processDown(event);
+  this._onMouseDown = function (event) {
+    that._processMouseDown(event);
   };
 
-  this._onMousePointerMove = function (event) {
-    that._processMove(event);
+  this._onMouseMove = function (event) {
+    that._processMouseMove(event);
   };
 
-  this._onMousePointerUp = function (event) {
-    that._processUp(event);
+  this._onMouseUp = function (event) {
+    that._processMouseUp(event);
   };
 
-  this._onMousePointerWheel = function(event) {
-    that._processWheel(event);
+  this._onMouseWheel = function(event) {
+    that._processMouseWheel(event);
   };
 
-  this._domElement.addEventListener('mousedown', this._onMousePointerDown, true);
-  this._domElement.addEventListener('mousemove', this._onMousePointerMove, true);
-  this._domElement.addEventListener('mouseup', this._onMousePointerUp, true);
-  this._domElement.addEventListener('mousewheel', this._onMousePointerWheel, true);
-  this._domElement.addEventListener('DOMMouseScroll', this._onMousePointerWheel, true);
+  this._domElement.addEventListener('mousedown', this._onMouseDown, true);
+  this._domElement.addEventListener('mousemove', this._onMouseMove, true);
+  this._domElement.addEventListener('mouseup', this._onMouseUp, true);
+  this._domElement.addEventListener('mousewheel', this._onMouseWheel, true);
+  this._domElement.addEventListener('DOMMouseScroll', this._onMouseWheel, true);
 };
 
 EZ3.Mouse.prototype.disable = function() {

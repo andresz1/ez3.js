@@ -1,0 +1,22 @@
+{
+  "undef": true,
+  "unused": true,
+  "eqeqeq": true,
+  "indent": 2,
+  "latedef": true,
+  "maxlen": 120,
+  "newcap": true,
+  "camelcase": true,
+  "quotmark": "single",
+  "predef": [
+    "document",
+    "EZ3",
+    "mat2",
+    "mat3",
+    "mat4",
+    "vec2",
+    "vec3",
+    "vec4",
+    "signals"
+  ]
+}

@@ -1,8 +1,6 @@
 var EZ3 = {
   VERSION: '1.0.0',
 
-  extends: eztends,
-
   Vec2: vec2,
   Vec3: vec3,
   Vec4: vec4,
