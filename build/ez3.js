@@ -511,7 +511,7 @@ EZ3.Keyboard = function(domElement) {
   this.signals = {};
   this.signals.onKeyPress = new EZ3.Signal();
   this.signals.onKeyDown = new EZ3.Signal();
-  this.signals.onKeyRelease = new EZ3.Signal();
+  this.signals.onKeyUp = new EZ3.Signal();
 };
 
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
@@ -522,7 +522,7 @@ EZ3.Keyboard.prototype._processKeyDown = function(event) {
 };
 
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
-  this._keys[event.keyCode].processUp(this.signals.onKeyRelease);
+  this._keys[event.keyCode].processUp(this.signals.onKeyUp);
 };
 
 EZ3.Keyboard.prototype.enable = function() {
@@ -658,27 +658,39 @@ EZ3.Keyboard.DELETE = 46;
 EZ3.Keyboard.HELP = 47;
 EZ3.Keyboard.NUM_LOCK = 144;
 
+/**
+ * @class Mouse
+ */
+
 EZ3.Mouse = function(domElement) {
   this._domElement = domElement;
 
   this.pointer = new EZ3.MousePointer();
   this.enabled = false;
+  this.signals = {};
+  this.signals.onPress = new EZ3.Signal();
+  this.signals.onDown = new EZ3.Signal();
+  this.signals.onMove = new EZ3.Signal();
+  this.signals.onUp = new EZ3.Signal();
+  this.signals.onWheel = new EZ3.Signal();
 };
 
+EZ3.Mouse.prototype.constructor = EZ3.Mouse;
+
 EZ3.Mouse.prototype._processMouseDown = function(event) {
-  this.pointer.processDown(event);
+  this.pointer.processDown(event, this.signals.onDown, this.signals.onPress, this.signals.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseMove = function(event) {
-  this.pointer.processMove(event);
+  this.pointer.processMove(event, this.signals.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseUp = function(event) {
-  this.pointer.processUp(event);
+  this.pointer.processUp(event, this.signals.onUp);
 };
 
 EZ3.Mouse.prototype._processMouseWheel = function(event) {
-  this.pointer.processWheel(event);
+  this.pointer.processWheel(event, this.signals.onWheel);
 };
 
 EZ3.Mouse.prototype.enable = function() {
@@ -719,36 +731,39 @@ EZ3.Mouse.prototype.disable = function() {
   this._domElement.removeEventListener('DOMMouseScroll', this._onMousePointerWheel, true);
 };
 
-EZ3.Mouse.prototype.constructor = EZ3.Mouse;
-
 EZ3.Mouse.LEFT_BUTTON = 0;
 EZ3.Mouse.RIGHT_BUTTON = 1;
 EZ3.Mouse.MIDDLE_BUTTON = 2;
 EZ3.Mouse.BACK_BUTTON = 3;
 EZ3.Mouse.FORWARD_BUTTON = 4;
 
+/**
+ * @class Pointer
+ */
+
 EZ3.Pointer = function(id) {
   this.id = id;
   this.client = EZ3.Vec2.create();
   this.page = EZ3.Vec2.create();
   this.screen = EZ3.Vec2.create();
+
+  EZ3.Vec2.set(this.client, 0, 0);
+  EZ3.Vec2.set(this.page, 0, 0);
+  EZ3.Vec2.set(this.screen, 0, 0);
 };
 
 EZ3.Pointer.prototype.constructor = EZ3.Pointer;
 
-EZ3.Pointer.prototype.processDown = function(event) {
-  this.processMove(event);
+EZ3.Pointer.prototype.processDown = function(event, onMove) {
+  this.processMove(event, onMove);
 };
 
-EZ3.Pointer.prototype.processMove = function(event) {
-  this.client[0] = event.clientX;
-  this.client[1] = event.clientY;
+EZ3.Pointer.prototype.processMove = function(event, onMove) {
+  EZ3.Vec2.set(this.client, event.clientX, event.clientY);
+  EZ3.Vec2.set(this.page, event.pageX, event.pageY);
+  EZ3.Vec2.set(this.screen, event.screenX, event.screenY);
 
-  this.page[0] = event.pageX;
-  this.page[1] = event.pageY;
-
-  this.screen[0] = event.screenX;
-  this.screen[0] = event.screenY;
+  onMove.dispatch(this);
 };
 
 EZ3.Switch = function(code) {
@@ -762,18 +777,16 @@ EZ3.Switch.prototype.processDown = function(onPress, onDown) {
 
   this._state = true;
 
-  if(isUp && onPress)
+  if(isUp)
     onPress.dispatch(this);
 
-  if(onDown)
-    onDown.dispatch(this);
+  onDown.dispatch(this);
 };
 
-EZ3.Switch.prototype.processUp = function(onRelease) {
+EZ3.Switch.prototype.processUp = function(onUp) {
   this._state = false;
 
-  if(onRelease)
-    onRelease.dispatch(this);
+  onUp.dispatch(this);
 };
 
 EZ3.Switch.prototype.isDown = function() {
@@ -1343,31 +1356,34 @@ EZ3.TORUS.prototype.create = function() {
 
 /**
  * @class MousePointer
- * @extends Pointer
- */
+ *  */
 
 EZ3.MousePointer = function() {
   EZ3.Pointer.call(this, 1);
 
   this._buttons = [];
+
   this.wheel = EZ3.Vec2.create();
+
+  EZ3.Vec2.set(this.wheel, 0, 0);
 };
 
 EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
 EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
 
-EZ3.MousePointer.prototype.processDown = function(event) {
+EZ3.MousePointer.prototype.processDown = function(event, onPress, onDown, onMove) {
   if(!this._buttons[event.button])
     this._buttons[event.button] = new EZ3.Switch(event.button);
 
-  this._buttons[event.button].processDown();
+  this._buttons[event.button].processDown(onPress, onDown);
+  EZ3.Pointer.prototype.processDown.call(this, event, onMove);
 };
 
-EZ3.MousePointer.prototype.processUp = function(event) {
-  this._buttons[event.button].processUp();
+EZ3.MousePointer.prototype.processUp = function(event, onUp) {
+  this._buttons[event.button].processUp(onUp);
 };
 
-EZ3.MousePointer.prototype.processWheel = function(event) {
+EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
   if (event.wheelDeltaX)
     this.wheel[0] = event.wheelDeltaX;
   else
@@ -1377,9 +1393,13 @@ EZ3.MousePointer.prototype.processWheel = function(event) {
     this.wheel[0] = event.wheelDeltaY;
   else
     this.wheel[1] = event.deltaY;
+
+  onWheel.dispatch(this);
 };
 
 EZ3.MousePointer.prototype.getButton = function(buttonCode) {
   if(!this._buttons[buttonCode])
-    this._buttons[buttonCode] = new EZ3.Button(buttonCode);
+    this._buttons[buttonCode] = new EZ3.Switch(buttonCode);
+
+  return this._buttons[buttonCode];
 };

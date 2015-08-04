@@ -9,18 +9,16 @@ EZ3.Switch.prototype.processDown = function(onPress, onDown) {
 
   this._state = true;
 
-  if(isUp && onPress)
+  if(isUp)
     onPress.dispatch(this);
 
-  if(onDown)
-    onDown.dispatch(this);
+  onDown.dispatch(this);
 };
 
-EZ3.Switch.prototype.processUp = function(onRelease) {
+EZ3.Switch.prototype.processUp = function(onUp) {
   this._state = false;
 
-  if(onRelease)
-    onRelease.dispatch(this);
+  onUp.dispatch(this);
 };
 
 EZ3.Switch.prototype.isDown = function() {

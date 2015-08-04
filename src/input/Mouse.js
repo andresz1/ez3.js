@@ -1,24 +1,36 @@
+/**
+ * @class Mouse
+ */
+
 EZ3.Mouse = function(domElement) {
   this._domElement = domElement;
 
   this.pointer = new EZ3.MousePointer();
   this.enabled = false;
+  this.signals = {};
+  this.signals.onPress = new EZ3.Signal();
+  this.signals.onDown = new EZ3.Signal();
+  this.signals.onMove = new EZ3.Signal();
+  this.signals.onUp = new EZ3.Signal();
+  this.signals.onWheel = new EZ3.Signal();
 };
 
+EZ3.Mouse.prototype.constructor = EZ3.Mouse;
+
 EZ3.Mouse.prototype._processMouseDown = function(event) {
-  this.pointer.processDown(event);
+  this.pointer.processDown(event, this.signals.onDown, this.signals.onPress, this.signals.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseMove = function(event) {
-  this.pointer.processMove(event);
+  this.pointer.processMove(event, this.signals.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseUp = function(event) {
-  this.pointer.processUp(event);
+  this.pointer.processUp(event, this.signals.onUp);
 };
 
 EZ3.Mouse.prototype._processMouseWheel = function(event) {
-  this.pointer.processWheel(event);
+  this.pointer.processWheel(event, this.signals.onWheel);
 };
 
 EZ3.Mouse.prototype.enable = function() {
@@ -58,8 +70,6 @@ EZ3.Mouse.prototype.disable = function() {
   this._domElement.removeEventListener('mousewheel', this._onMousePointerWheel, true);
   this._domElement.removeEventListener('DOMMouseScroll', this._onMousePointerWheel, true);
 };
-
-EZ3.Mouse.prototype.constructor = EZ3.Mouse;
 
 EZ3.Mouse.LEFT_BUTTON = 0;
 EZ3.Mouse.RIGHT_BUTTON = 1;

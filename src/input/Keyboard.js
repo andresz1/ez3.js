@@ -6,7 +6,7 @@ EZ3.Keyboard = function(domElement) {
   this.signals = {};
   this.signals.onKeyPress = new EZ3.Signal();
   this.signals.onKeyDown = new EZ3.Signal();
-  this.signals.onKeyRelease = new EZ3.Signal();
+  this.signals.onKeyUp = new EZ3.Signal();
 };
 
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
@@ -17,7 +17,7 @@ EZ3.Keyboard.prototype._processKeyDown = function(event) {
 };
 
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
-  this._keys[event.keyCode].processUp(this.signals.onKeyRelease);
+  this._keys[event.keyCode].processUp(this.signals.onKeyUp);
 };
 
 EZ3.Keyboard.prototype.enable = function() {
