@@ -12,7 +12,6 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Torus.prototype._create = function() {
-
   var vertex, normal, u, v, cosS, cosR, sinS, sinR, rho, phi, s, r, totalSides, totalRings;
 
   totalSides = 1.0 / (this._sides - 1);
@@ -23,7 +22,6 @@ EZ3.Torus.prototype._create = function() {
 
   for(s = 0; s < this._sides; ++s){
     for(r = 0; r < this._rings; ++r){
-
       u = s * totalSides;
       v = r * totalRings;
 
@@ -55,13 +53,11 @@ EZ3.Torus.prototype._create = function() {
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
-
     }
   }
 
   for(s = 0; s < this._sides - 1; ++s){
     for(r = 0; r < this._rings - 1; ++r){
-
       this._indices.push((s + 0) * this._rings + (r + 0));
       this._indices.push((s + 0) * this._rings + (r + 1));
       this._indices.push((s + 1) * this._rings + (r + 1));
@@ -69,7 +65,6 @@ EZ3.Torus.prototype._create = function() {
       this._indices.push((s + 0) * this._rings + (r + 0));
       this._indices.push((s + 1) * this._rings + (r + 1));
       this._indices.push((s + 1) * this._rings + (r + 0));
-
     }
   }
 
@@ -77,5 +72,4 @@ EZ3.Torus.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };

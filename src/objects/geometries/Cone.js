@@ -46,10 +46,6 @@ EZ3.Cone.prototype._create = function() {
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
 
-      this._normals.push(normal[0]);
-      this._normals.push(normal[1]);
-      this._normals.push(normal[2]);
-
       this._uv.push(u);
       this._uv.push(v);
 
@@ -75,6 +71,8 @@ EZ3.Cone.prototype._create = function() {
 
     }
   }
+
+  this.calculateNormals();
 
   this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);

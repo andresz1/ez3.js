@@ -11,7 +11,6 @@ EZ3.Sphere = function(radius, slices, stacks) {
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Sphere.prototype._create = function() {
-
   var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
 
   vertex = vec3.create();
@@ -22,7 +21,6 @@ EZ3.Sphere.prototype._create = function() {
 
   for(s = 0; s < this._slices; ++s) {
     for(t = 0; t < this._stacks; ++t) {
-
       u = s * totalSlices;
       v = t * totalStacks;
 
@@ -49,13 +47,11 @@ EZ3.Sphere.prototype._create = function() {
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
-
     }
   }
 
   for(s = 0; s < this._slices - 1; ++s) {
     for(t = 0; t < this._stacks - 1; ++t) {
-
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 0) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 1));
@@ -63,7 +59,6 @@ EZ3.Sphere.prototype._create = function() {
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 1) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 0));
-
     }
   }
 
@@ -71,5 +66,4 @@ EZ3.Sphere.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };

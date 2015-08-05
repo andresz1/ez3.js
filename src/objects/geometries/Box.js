@@ -15,7 +15,6 @@ EZ3.Box = function(width, height, depth) {
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Box.prototype._create = function() {
-
   this._vertices = [
     +this._halfWidth, +this._halfHeight, +this._halfDepth,
     -this._halfWidth, +this._halfHeight, +this._halfDepth,
@@ -43,7 +42,7 @@ EZ3.Box.prototype._create = function() {
   ];
 
   this._uv = [
-    
+
   ];
 
   this.calculateNormals();
@@ -52,5 +51,4 @@ EZ3.Box.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };
