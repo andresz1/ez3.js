@@ -92,60 +92,45 @@ EZ3.Buffer.TANGENT_SIZE = 4;
 EZ3.Buffer.BITANGENT_SIZE = 3;
 
 EZ3.Buffer.prototype.fill = function(buffer, size, data) {
-
   this._bufferData[buffer] = data;
   this._bufferSize[buffer] = size;
-
 };
 
 EZ3.Buffer.prototype.draw = function(gl) {
 
-  if(this._bufferSize[EZ3.Buffer.VERTEX]) {
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.VERTEX]);
-    gl.enableVertexAttribArray(EZ3.Buffer.VERTEX_LAYOUT);
-    gl.vertexAttribPointer(EZ3.Buffer.VERTEX_LAYOUT, EZ3.Buffer.VERTEX_SIZE, gl.FLOAT, false, 0, 0);
-
-  }
+  gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.VERTEX]);
+  gl.enableVertexAttribArray(EZ3.Buffer.VERTEX_LAYOUT);
+  gl.vertexAttribPointer(EZ3.Buffer.VERTEX_LAYOUT, EZ3.Buffer.VERTEX_SIZE, gl.FLOAT, false, 0, 0);
 
   if(this._bufferSize[EZ3.Buffer.NORMAL]) {
-
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.NORMAL]);
     gl.enableVertexAttribArray(EZ3.Buffer.NORMAL_LAYOUT);
     gl.vertexAttribPointer(EZ3.Buffer.NORMAL_LAYOUT, EZ3.Buffer.NORMAL_SIZE, gl.FLOAT, false, 0, 0);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.UV]) {
-
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.UV]);
     gl.enableVertexAttribArray(EZ3.Buffer.UV_LAYOUT);
     gl.vertexAttribPointer(EZ3.Buffer.UV_LAYOUT, EZ3.Buffer.UV_SIZE, gl.FLOAT, false, 0, 0);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.TANGENT]) {
-
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.TANGENT]);
     gl.enableVertexAttribArray(EZ3.Buffer.TANGENT_LAYOUT);
     gl.vertexAttribPointer(EZ3.Buffer.TANGENT_LAYOUT, EZ3.Buffer.TANGENT_SIZE, gl.FLOAT, false, 0, 0);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.BITANGENT]) {
-
-
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.BITANGENT]);
     gl.enableVertexAttribArray(EZ3.Buffer.BITANGENT_LAYOUT);
     gl.vertexAttribPointer(EZ3.Buffer.BITANGENT_LAYOUT, EZ3.Buffer.BITANGENT_SIZE, gl.FLOAT, false, 0, 0);
-
   }
 
-  if(this._bufferSize[EZ3.Buffer.INDEX]) {
-
+  if(this._bufferSize[EZ3.Buffer.INDEX]){
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer[EZ3.Buffer.INDEX]);
     gl.drawElements(gl.TRIANGLES, this._bufferSize[EZ3.Buffer.INDEX], gl.UNSIGNED_SHORT, 0);
-
+  }else{
+    gl.drawArrays(gl.TRIANGLES, 0, this._bufferSize[EZ3.Buffer.VERTEX] / 3);
   }
 
 };
@@ -153,63 +138,45 @@ EZ3.Buffer.prototype.draw = function(gl) {
 EZ3.Buffer.prototype.init = function(gl) {
 
   if(this._bufferSize[EZ3.Buffer.VERTEX]) {
-
-    console.log("Init vertices");
     this._buffer[EZ3.Buffer.VERTEX] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.VERTEX]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.VERTEX]), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.NORMAL]) {
-
-    console.log("Init normals");
     this._buffer[EZ3.Buffer.NORMAL] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.NORMAL]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.NORMAL]), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.INDEX]) {
-
-    console.log("Init indices " + this._bufferSize[EZ3.Buffer.INDEX]);
     this._buffer[EZ3.Buffer.INDEX] = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer[EZ3.Buffer.INDEX]);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this._bufferData[EZ3.Buffer.INDEX]), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.UV]) {
-
-    console.log("Init UV");
     this._buffer[EZ3.Buffer.UV] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.UV]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.UV]), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.TANGENT]) {
-
-    console.log("Init Tangents");
     this._buffer[EZ3.Buffer.TANGENT] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.TANGENT]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.TANGENT]), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
   }
 
   if(this._bufferSize[EZ3.Buffer.BITANGENT]) {
-
-    console.log("Init bitangents");
     this._buffer[EZ3.Buffer.BITANGENT] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.BITANGENT]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.BITANGENT]), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
   }
 
 };
@@ -548,7 +515,6 @@ EZ3.Switch.prototype.isUp = function() {
 EZ3.Switch.prototype.constructor = EZ3.Switch;
 
 EZ3.Geometry = function() {
-
   this._uv = [];
   this._indices = [];
   this._normals = [];
@@ -559,7 +525,6 @@ EZ3.Geometry = function() {
   this._minPoint = vec3.create();
   this._midPoint = vec3.create();
   this._buffer = new EZ3.Buffer();
-
 };
 
 EZ3.Geometry.PI = Math.PI;
@@ -567,33 +532,24 @@ EZ3.Geometry.HALF_PI = 0.5 * Math.PI;
 EZ3.Geometry.DOUBLE_PI = 2.0 * Math.PI;
 
 EZ3.Geometry.prototype.draw = function(gl) {
-
   this._buffer.draw(gl);
-
 };
 
 EZ3.Geometry.prototype.init = function(gl) {
-
   this._buffer.init(gl);
-
 };
 
 EZ3.Geometry.prototype.fill = function(buffer, size, data) {
-
   this._buffer.fill(buffer, size, data);
-
 };
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
-
   return Array.apply(null, new Array(size)).map(function() {
     return value;
   });
-
 };
 
 EZ3.Geometry.prototype.calculateNormals = function() {
-
   var x, y, z, k;
   var normal, point0, point1, point2, vector0, vector1;
 
@@ -641,11 +597,9 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     ++temporalAppearances[x / 3];
     ++temporalAppearances[y / 3];
     ++temporalAppearances[z / 3];
-
   }
 
   for(k = 0; k < this._vertices.length / 3; ++k){
-
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
@@ -653,36 +607,28 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     this._normals.push(temporalNormals[x] / temporalAppearances[k]);
     this._normals.push(temporalNormals[y] / temporalAppearances[k]);
     this._normals.push(temporalNormals[z] / temporalAppearances[k]);
-
   }
 
   temporalNormals.splice(0, temporalNormals.length);
   temporalAppearances.splice(0, temporalAppearances.length);
-
 };
 
 EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
-
   this._maxPoint[0] = Math.max(this._maxPoint[0], x);
   this._maxPoint[1] = Math.max(this._maxPoint[1], y);
   this._maxPoint[2] = Math.max(this._maxPoint[2], z);
-
 };
 
 EZ3.Geometry.prototype.updateMinPoint = function(x, y, z) {
-
   this._minPoint[0] = Math.min(this._minPoint[0], x);
   this._minPoint[1] = Math.min(this._minPoint[1], y);
   this._minPoint[2] = Math.min(this._minPoint[2], z);
-
 };
 
 EZ3.Geometry.prototype.calculateMidPoint = function () {
-
   this._midPoint[0] = (this._maxPoint[0] + this._minPoint[0]) * 0.5;
   this._midPoint[0] = (this._maxPoint[1] + this._minPoint[1]) * 0.5;
   this._midPoint[0] = (this._maxPoint[2] + this._minPoint[2]) * 0.5;
-
 };
 
 EZ3.Geometry.prototype.calculateTangents = function() {
@@ -709,7 +655,6 @@ EZ3.AstroidalEllipsoid = function(radiusx, radiusy, radiusz, stacks, slices) {
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.AstroidalEllipsoid.prototype._create = function() {
-
   var s, t, cosS, cosT, sinS, sinT, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
 
   vertex = vec3.create();
@@ -720,7 +665,6 @@ EZ3.AstroidalEllipsoid.prototype._create = function() {
 
   for(s = 0; s < this._slices; ++s) {
     for(t = 0; t < this._stacks; ++t) {
-
       u = s * totalSlices;
       v = t * totalStacks;
 
@@ -752,13 +696,11 @@ EZ3.AstroidalEllipsoid.prototype._create = function() {
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
-
     }
   }
 
   for(s = 0; s < this._slices - 1; ++s) {
     for(t = 0; t < this._stacks - 1; ++t) {
-
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 0) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 1));
@@ -766,7 +708,6 @@ EZ3.AstroidalEllipsoid.prototype._create = function() {
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 1) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 0));
-
     }
   }
 
@@ -774,7 +715,6 @@ EZ3.AstroidalEllipsoid.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };
 
 EZ3.Box = function(width, height, depth) {
@@ -794,7 +734,6 @@ EZ3.Box = function(width, height, depth) {
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Box.prototype._create = function() {
-
   this._vertices = [
     +this._halfWidth, +this._halfHeight, +this._halfDepth,
     -this._halfWidth, +this._halfHeight, +this._halfDepth,
@@ -822,7 +761,7 @@ EZ3.Box.prototype._create = function() {
   ];
 
   this._uv = [
-    
+
   ];
 
   this.calculateNormals();
@@ -831,7 +770,6 @@ EZ3.Box.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };
 
 EZ3.Cone = function(base, height, slices, stacks) {
@@ -882,10 +820,6 @@ EZ3.Cone.prototype._create = function() {
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
 
-      this._normals.push(normal[0]);
-      this._normals.push(normal[1]);
-      this._normals.push(normal[2]);
-
       this._uv.push(u);
       this._uv.push(v);
 
@@ -911,6 +845,8 @@ EZ3.Cone.prototype._create = function() {
 
     }
   }
+
+  this.calculateNormals();
 
   this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
@@ -963,10 +899,6 @@ EZ3.Cylinder.prototype._create = function() {
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
 
-      this._normals.push(normal[0]);
-      this._normals.push(normal[1]);
-      this._normals.push(normal[2]);
-
       this._uv.push(u);
       this._uv.push(v);
 
@@ -993,6 +925,8 @@ EZ3.Cylinder.prototype._create = function() {
     }
   }
 
+  this.calculateNormals();
+
   this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
@@ -1015,7 +949,6 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
 EZ3.Ellipsoid.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Ellipsoid.prototype._create = function() {
-
   var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
 
   vertex = vec3.create();
@@ -1026,7 +959,6 @@ EZ3.Ellipsoid.prototype._create = function() {
 
   for(s = 0; s < this._slices; ++s) {
     for(t = 0; t < this._stacks; ++t) {
-
       u = s * totalSlices;
       v = t * totalStacks;
 
@@ -1053,13 +985,11 @@ EZ3.Ellipsoid.prototype._create = function() {
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
-
     }
   }
 
   for(s = 0; s < this._slices - 1; ++s) {
     for(t = 0; t < this._stacks - 1; ++t) {
-
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 0) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 1));
@@ -1067,7 +997,6 @@ EZ3.Ellipsoid.prototype._create = function() {
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 1) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 0));
-
     }
   }
 
@@ -1075,7 +1004,6 @@ EZ3.Ellipsoid.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };
 
 EZ3.Grid = function(width, height) {
@@ -1090,25 +1018,21 @@ EZ3.Grid = function(width, height) {
 EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Grid.prototype._create = function() {
-
   var index0, index1, index2, index3, z, x;
 
   for(z = 0; z < this._height + 1; ++z) {
     for(x = 0; x < this._width + 1; ++x) {
-
       this._vertices.push(x);
       this._vertices.push(0);
       this._vertices.push(z);
 
       this._uv.push(x / this._width);
       this._uv.push(z / this._height);
-
     }
   }
 
   for(z = 0; z < this._height; ++z) {
     for(x = 0; x < this._width; ++x) {
-
       index0 = z * (this._height + 1) + x;
       index1 = index0 + 1;
       index2 = index0 + (this._height + 1);
@@ -1121,7 +1045,6 @@ EZ3.Grid.prototype._create = function() {
       this._indices.push(index1);
       this._indices.push(index2);
       this._indices.push(index3);
-
     }
   }
 
@@ -1131,7 +1054,6 @@ EZ3.Grid.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };
 
 EZ3.Sphere = function(radius, slices, stacks) {
@@ -1147,7 +1069,6 @@ EZ3.Sphere = function(radius, slices, stacks) {
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Sphere.prototype._create = function() {
-
   var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
 
   vertex = vec3.create();
@@ -1158,7 +1079,6 @@ EZ3.Sphere.prototype._create = function() {
 
   for(s = 0; s < this._slices; ++s) {
     for(t = 0; t < this._stacks; ++t) {
-
       u = s * totalSlices;
       v = t * totalStacks;
 
@@ -1185,13 +1105,11 @@ EZ3.Sphere.prototype._create = function() {
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
-
     }
   }
 
   for(s = 0; s < this._slices - 1; ++s) {
     for(t = 0; t < this._stacks - 1; ++t) {
-
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 0) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 1));
@@ -1199,7 +1117,6 @@ EZ3.Sphere.prototype._create = function() {
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 1) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 0));
-
     }
   }
 
@@ -1207,7 +1124,6 @@ EZ3.Sphere.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };
 
 EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
@@ -1224,7 +1140,6 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
 
 EZ3.Torus.prototype._create = function() {
-
   var vertex, normal, u, v, cosS, cosR, sinS, sinR, rho, phi, s, r, totalSides, totalRings;
 
   totalSides = 1.0 / (this._sides - 1);
@@ -1235,7 +1150,6 @@ EZ3.Torus.prototype._create = function() {
 
   for(s = 0; s < this._sides; ++s){
     for(r = 0; r < this._rings; ++r){
-
       u = s * totalSides;
       v = r * totalRings;
 
@@ -1267,13 +1181,11 @@ EZ3.Torus.prototype._create = function() {
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
-
     }
   }
 
   for(s = 0; s < this._sides - 1; ++s){
     for(r = 0; r < this._rings - 1; ++r){
-
       this._indices.push((s + 0) * this._rings + (r + 0));
       this._indices.push((s + 0) * this._rings + (r + 1));
       this._indices.push((s + 1) * this._rings + (r + 1));
@@ -1281,7 +1193,6 @@ EZ3.Torus.prototype._create = function() {
       this._indices.push((s + 0) * this._rings + (r + 0));
       this._indices.push((s + 1) * this._rings + (r + 1));
       this._indices.push((s + 1) * this._rings + (r + 0));
-
     }
   }
 
@@ -1289,5 +1200,4 @@ EZ3.Torus.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
 };
