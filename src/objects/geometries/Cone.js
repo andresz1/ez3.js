@@ -40,8 +40,7 @@ EZ3.Cone.prototype._create = function() {
       normal[1] = vertex[1];
       normal[2] = vertex[2];
 
-      if(normal[0] !== 0.0 || normal[1] !== 0.0 || normal[2] !== 0.0)
-        vec3.normalize(normal, normal);
+      vec3.normalize(normal, normal);
 
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
@@ -54,12 +53,13 @@ EZ3.Cone.prototype._create = function() {
       this._uv.push(u);
       this._uv.push(v);
 
-      actualHeight -= step;
-
-      if(actualHeight < this._base)
-        break;
-
     }
+
+    actualHeight -= step;
+
+    if(actualHeight < this._base)
+      break;
+
   }
 
   for(s = 0; s < this._slices - 1; ++s) {
@@ -80,7 +80,5 @@ EZ3.Cone.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-  
-  this._clearDataArrays();
 
 };

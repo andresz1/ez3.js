@@ -62,13 +62,13 @@ EZ3.Torus.prototype._create = function() {
   for(s = 0; s < this._sides - 1; ++s){
     for(r = 0; r < this._rings - 1; ++r){
 
-      this.indices.push((s + 0) * this._rings + (r + 0));
-      this.indices.push((s + 0) * this._rings + (r + 1));
-      this.indices.push((s + 1) * this._rings + (r + 1));
+      this._indices.push((s + 0) * this._rings + (r + 0));
+      this._indices.push((s + 0) * this._rings + (r + 1));
+      this._indices.push((s + 1) * this._rings + (r + 1));
 
-      this.indices.push((s + 0) * this._rings + (r + 0));
-      this.indices.push((s + 1) * this._rings + (r + 1));
-      this.indices.push((s + 1) * this._rings + (r + 0));
+      this._indices.push((s + 0) * this._rings + (r + 0));
+      this._indices.push((s + 1) * this._rings + (r + 1));
+      this._indices.push((s + 1) * this._rings + (r + 0));
 
     }
   }
@@ -77,7 +77,5 @@ EZ3.Torus.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-  
-  this._clearDataArrays();
 
 };

@@ -72,6 +72,4 @@ EZ3.Sphere.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
 
-  this._clearDataArrays();
-
 };
