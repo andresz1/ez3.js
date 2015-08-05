@@ -17,16 +17,6 @@ EZ3.Geometry.PI = Math.PI;
 EZ3.Geometry.HALF_PI = 0.5 * Math.PI;
 EZ3.Geometry.DOUBLE_PI = 2.0 * Math.PI;
 
-EZ3.Geometry.prototype._clearDataArrays = function() {
-
-  this.splice(0, this._uv.length);
-  this.splice(0, this._indices.length);
-  this.splice(0, this._vertices.length);
-  this.splice(0, this._tangents.length);
-  this.splice(0, this._bitangents.length);
-
-};
-
 EZ3.Geometry.prototype.draw = function(gl) {
 
   this._buffer.draw(gl);
@@ -58,8 +48,15 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   var x, y, z, k;
   var normal, point0, point1, point2, vector0, vector1;
 
-  var temporalNormals = this.initArray(this.vertices.length, 0);
-  var temporalAppearances = this.initArray(this.vertices.length / 3, 0);
+  normal  = vec3.create();
+  point0  = vec3.create();
+  point1  = vec3.create();
+  point2  = vec3.create();
+  vector0 = vec3.create();
+  vector1 = vec3.create();
+
+  var temporalNormals = this.initArray(this._vertices.length, 0);
+  var temporalAppearances = this.initArray(this._vertices.length / 3, 0);
 
   for(k = 0; k < this._indices.length; k += 3) {
 
@@ -67,12 +64,12 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     y = 3 * this._indices[k + 1];
     z = 3 * this._indices[k + 2];
 
-    point0 = vec3.create(this.vertices[x + 0], this.vertices[x + 1], this.vertices[x + 2]);
-    point1 = vec3.create(this.vertices[y + 0], this.vertices[y + 1], this.vertices[y + 2]);
-    point2 = vec3.create(this.vertices[z + 0], this.vertices[z + 1], this.vertices[z + 2]);
+    vec3.set(point0, this._vertices[x + 0], this._vertices[x + 1], this._vertices[x + 2]);
+    vec3.set(point1, this._vertices[y + 0], this._vertices[y + 1], this._vertices[y + 2]);
+    vec3.set(point2, this._vertices[z + 0], this._vertices[z + 1], this._vertices[z + 2]);
 
-    vec3.subtract(vector0, point1, point0);
-    vec3.subtract(vector1, point2, point0);
+    vec3.sub(vector0, point1, point0);
+    vec3.sub(vector1, point2, point0);
 
     vec3.cross(normal, vector0, vector1);
 

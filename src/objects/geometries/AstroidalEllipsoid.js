@@ -73,12 +73,10 @@ EZ3.AstroidalEllipsoid.prototype._create = function() {
 
     }
   }
-  
+
   this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
-  this._clearDataArrays();
 
 };

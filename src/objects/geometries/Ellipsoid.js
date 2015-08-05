@@ -31,13 +31,13 @@ EZ3.Ellipsoid.prototype._create = function() {
       phi = EZ3.Geometry.DOUBLE_PI * u;
       rho = EZ3.Geometry.PI * v;
 
-      vertex[0] = (this.xRadius * Math.cos(phi) * Math.sin(rho));
-      vertex[1] = (this.yRadius * Math.sin(rho - this.HALF_PI));
-      vertex[2] = (this.zRadius * Math.sin(phi) * Math.sin(rho));
+      vertex[0] = (this._xRadius * Math.cos(phi) * Math.sin(rho));
+      vertex[1] = (this._yRadius * Math.sin(rho - EZ3.Geometry.HALF_PI));
+      vertex[2] = (this._zRadius * Math.sin(phi) * Math.sin(rho));
 
-      normal[0] = vertex[0] / this.xRadius;
-      normal[1] = vertex[1] / this.yRadius;
-      normal[2] = vertex[2] / this.zRadius;
+      normal[0] = vertex[0] / this._xRadius;
+      normal[1] = vertex[1] / this._yRadius;
+      normal[2] = vertex[2] / this._zRadius;
 
       vec3.normalize(normal, normal);
 
@@ -73,6 +73,5 @@ EZ3.Ellipsoid.prototype._create = function() {
   this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
   this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
   this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-  this._clearDataArrays();
 
 };

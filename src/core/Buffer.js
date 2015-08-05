@@ -95,7 +95,7 @@ EZ3.Buffer.prototype.init = function(gl) {
 
   if(this._bufferSize[EZ3.Buffer.VERTEX]) {
 
-    console.log("Init vertices")
+    console.log("Init vertices");
     this._buffer[EZ3.Buffer.VERTEX] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.VERTEX]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.VERTEX]), gl.STATIC_DRAW);
@@ -105,7 +105,7 @@ EZ3.Buffer.prototype.init = function(gl) {
 
   if(this._bufferSize[EZ3.Buffer.NORMAL]) {
 
-    console.log("Init normals")
+    console.log("Init normals");
     this._buffer[EZ3.Buffer.NORMAL] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.NORMAL]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.NORMAL]), gl.STATIC_DRAW);
@@ -115,7 +115,7 @@ EZ3.Buffer.prototype.init = function(gl) {
 
   if(this._bufferSize[EZ3.Buffer.INDEX]) {
 
-    console.log("Init indices")
+    console.log("Init indices " + this._bufferSize[EZ3.Buffer.INDEX]);
     this._buffer[EZ3.Buffer.INDEX] = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer[EZ3.Buffer.INDEX]);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this._bufferData[EZ3.Buffer.INDEX]), gl.STATIC_DRAW);
@@ -125,7 +125,7 @@ EZ3.Buffer.prototype.init = function(gl) {
 
   if(this._bufferSize[EZ3.Buffer.UV]) {
 
-    console.log("Init UV")
+    console.log("Init UV");
     this._buffer[EZ3.Buffer.UV] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.UV]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._bufferData[EZ3.Buffer.UV]), gl.STATIC_DRAW);
