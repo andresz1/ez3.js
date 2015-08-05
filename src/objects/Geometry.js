@@ -5,16 +5,45 @@ EZ3.Geometry = function() {
   this._normals = [];
   this._vertices = [];
   this._tangents = [];
-  this._binormals = [];
+  this._bitangents = [];
   this._maxPoint = vec3.create();
   this._minPoint = vec3.create();
   this._midPoint = vec3.create();
+  this._buffer = new EZ3.Buffer();
 
 };
 
 EZ3.Geometry.PI = Math.PI;
 EZ3.Geometry.HALF_PI = 0.5 * Math.PI;
 EZ3.Geometry.DOUBLE_PI = 2.0 * Math.PI;
+
+EZ3.Geometry.prototype._clearDataArrays = function() {
+
+  this.splice(0, this._uv.length);
+  this.splice(0, this._indices.length);
+  this.splice(0, this._vertices.length);
+  this.splice(0, this._tangents.length);
+  this.splice(0, this._bitangents.length);
+
+};
+
+EZ3.Geometry.prototype.draw = function(gl) {
+
+  this._buffer.draw(gl);
+
+};
+
+EZ3.Geometry.prototype.init = function(gl) {
+
+  this._buffer.init(gl);
+
+};
+
+EZ3.Geometry.prototype.fill = function(buffer, size, data) {
+
+  this._buffer.fill(buffer, size, data);
+
+};
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
 

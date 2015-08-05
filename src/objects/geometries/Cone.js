@@ -1,5 +1,4 @@
-EZ3.CONE = function(base, height, slices, stacks) {
-
+EZ3.Cone = function(base, height, slices, stacks) {
   EZ3.Geometry.call(this);
 
   this._base = base;
@@ -7,16 +6,17 @@ EZ3.CONE = function(base, height, slices, stacks) {
   this._slices = slices;
   this._stacks = stacks;
 
-  this.create();
-
+  this._create();
 };
 
-EZ3.CONE.prototype.create = function() {
+EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);
 
-  var s, t, u, v, radius, actualHeight, vertex, normal, step, S, T;
+EZ3.Cone.prototype._create = function() {
 
-  S = 1.0 / (this._slices - 1);
-  T = 1.0 / (this._stacks - 1);
+  var s, t, u, v, radius, actualHeight, vertex, normal, step, totalSlices, totalStacks;
+
+  totalSlices = 1.0 / (this._slices - 1);
+  totalStacks = 1.0 / (this._stacks - 1);
 
   actualHeight = this._height;
   step = (this._height - this._base) / this._slices;
@@ -27,14 +27,14 @@ EZ3.CONE.prototype.create = function() {
   for(s = 0; s < this._slices; ++s) {
     for(t = 0; t < this._stacks; ++t) {
 
-      u = s * S;
-      v = t * T;
+      u = s * totalSlices;
+      v = t * totalStacks;
 
       radius = Math.abs(this._height - actualHeight) * 0.5;
 
-      vertex[0] = radius * Math.cos(this.DOUBLE_PI * v);
+      vertex[0] = radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
       vertex[1] = actualHeight;
-      vertex[2] = radius * Math.sin(this.DOUBLE_PI * v);
+      vertex[2] = radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
 
       normal[0] = vertex[0];
       normal[1] = vertex[1];
@@ -75,5 +75,12 @@ EZ3.CONE.prototype.create = function() {
 
     }
   }
+
+  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
+  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
+  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
+  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
+  
+  this._clearDataArrays();
 
 };
