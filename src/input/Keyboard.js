@@ -1,3 +1,7 @@
+/**
+ * @class Keboard
+ */
+
 EZ3.Keyboard = function(domElement) {
   this._domElement = domElement;
   this._keys = [];

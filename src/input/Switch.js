@@ -1,7 +1,17 @@
+/**
+ * @class Switch
+ */
+
 EZ3.Switch = function(code) {
   this._state = false;
 
   this.code = code;
+};
+
+EZ3.Switch.prototype.processPress = function(onPress) {
+  this._state = true;
+
+  onPress.dispatch(this);
 };
 
 EZ3.Switch.prototype.processDown = function(onPress, onDown) {

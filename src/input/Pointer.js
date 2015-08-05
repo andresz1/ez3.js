@@ -15,7 +15,7 @@ EZ3.Pointer = function(id) {
 
 EZ3.Pointer.prototype.constructor = EZ3.Pointer;
 
-EZ3.Pointer.prototype.processDown = function(event, onMove) {
+EZ3.Pointer.prototype.processPress = function(event, onMove) {
   this.processMove(event, onMove);
 };
 
