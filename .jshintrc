@@ -7,9 +7,12 @@
   "maxlen": 120,
   "newcap": true,
   "camelcase": true,
+  "sub": true,
   "quotmark": "single",
   "predef": [
     "document",
+    "window",
+    "navigator",
     "EZ3",
     "mat2",
     "mat3",
