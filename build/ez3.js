@@ -865,57 +865,6 @@ EZ3.Mouse.BACK_BUTTON = 3;
 EZ3.Mouse.FORWARD_BUTTON = 4;
 
 /**
- * @class MousePointer
- * @extends Pointer
- */
-
-EZ3.MousePointer = function() {
-  EZ3.Pointer.call(this, 1);
-
-  this._buttons = [];
-
-  this.wheel = EZ3.Vec2.create();
-
-  EZ3.Vec2.set(this.wheel, 0, 0);
-};
-
-EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
-EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
-
-EZ3.MousePointer.prototype.processPress = function(event, onPress, onMove) {
-  if(!this._buttons[event.button])
-    this._buttons[event.button] = new EZ3.Switch(event.button);
-
-  this._buttons[event.button].processPress(onPress);
-  EZ3.Pointer.prototype.processPress.call(this, event, onMove);
-};
-
-EZ3.MousePointer.prototype.processUp = function(event, onUp) {
-  this._buttons[event.button].processUp(onUp);
-};
-
-EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
-  if (event.wheelDeltaX)
-    this.wheel[0] = event.wheelDeltaX;
-  else
-    this.wheel[1] = event.deltaX;
-
-  if (event.wheelDeltaY)
-    this.wheel[0] = event.wheelDeltaY;
-  else
-    this.wheel[1] = event.deltaY;
-
-  onWheel.dispatch(this);
-};
-
-EZ3.MousePointer.prototype.getButton = function(buttonCode) {
-  if(!this._buttons[buttonCode])
-    this._buttons[buttonCode] = new EZ3.Switch(buttonCode);
-
-  return this._buttons[buttonCode];
-};
-
-/**
  * @class Pointer
  */
 
@@ -1113,83 +1062,85 @@ EZ3.Geometry.prototype.calculateBoundingBox = function() {
 };
 
 
-EZ3.AstroidalEllipsoid = function(radiusx, radiusy, radiusz, stacks, slices) {
+EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
   EZ3.Geometry.call(this);
 
   this._slices = slices;
   this._stacks = stacks;
-  this._radiusx = radiusx;
-  this._radiusy = radiusy;
-  this._radiusz = radiusz;
+  this._xRadius = xRadius;
+  this._yRadius = yRadius;
+  this._zRadius = zRadius;
 
-  this._create();
+  var that = this;
+
+  function _create() {
+    var s, t, cosS, cosT, sinS, sinT, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
+
+    vertex = vec3.create();
+    normal = vec3.create();
+
+    totalSlices = 1.0 / (that._slices - 1);
+    totalStacks = 1.0 / (that._stacks - 1);
+
+    for(s = 0; s < that._slices; ++s) {
+      for(t = 0; t < that._stacks; ++t) {
+        u = s * totalSlices;
+        v = t * totalStacks;
+
+        phi = EZ3.Geometry.DOUBLE_PI * u - EZ3.Geometry.PI;
+        rho = EZ3.Geometry.PI * v - EZ3.Geometry.HALF_PI;
+
+        cosS = Math.pow(Math.cos(phi), 3.0);
+        cosT = Math.pow(Math.cos(rho), 3.0);
+        sinS = Math.pow(Math.sin(phi), 3.0);
+        sinT = Math.pow(Math.sin(rho), 3.0);
+
+        vertex[0] = (that._xRadius * cosT * cosS);
+        vertex[1] = (that._yRadius * sinT);
+        vertex[2] = (that._zRadius * cosT * sinS);
+
+        normal[0] = vertex[0] / that._xRadius;
+        normal[1] = vertex[1] / that._yRadius;
+        normal[2] = vertex[2] / that._zRadius;
+
+        vec3.normalize(normal, normal);
+
+        that._uv.push(u);
+        that._uv.push(v);
+
+        that._normals.push(normal[0]);
+        that._normals.push(normal[1]);
+        that._normals.push(normal[2]);
+
+        that._vertices.push(vertex[0]);
+        that._vertices.push(vertex[1]);
+        that._vertices.push(vertex[2]);
+      }
+    }
+
+    for(s = 0; s < that._slices - 1; ++s) {
+      for(t = 0; t < that._stacks - 1; ++t) {
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 0) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 0));
+      }
+    }
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+  }
+
+  _create();
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
-
-EZ3.AstroidalEllipsoid.prototype._create = function() {
-  var s, t, cosS, cosT, sinS, sinT, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
-
-  vertex = vec3.create();
-  normal = vec3.create();
-
-  totalSlices = 1.0 / (this._slices - 1);
-  totalStacks = 1.0 / (this._stacks - 1);
-
-  for(s = 0; s < this._slices; ++s) {
-    for(t = 0; t < this._stacks; ++t) {
-      u = s * totalSlices;
-      v = t * totalStacks;
-
-      phi = EZ3.Geometry.DOUBLE_PI * u - EZ3.Geometry.PI;
-      rho = EZ3.Geometry.PI * v - EZ3.Geometry.HALF_PI;
-
-      cosS = Math.pow(Math.cos(phi), 3.0);
-      cosT = Math.pow(Math.cos(rho), 3.0);
-      sinS = Math.pow(Math.sin(phi), 3.0);
-      sinT = Math.pow(Math.sin(rho), 3.0);
-
-      vertex[0] = (this._radiusx * cosT * cosS);
-      vertex[1] = (this._radiusy * sinT);
-      vertex[2] = (this._radiusz * cosT * sinS);
-
-      normal[0] = vertex[0] / this._xradius;
-      normal[1] = vertex[1] / this._yradius;
-      normal[2] = vertex[2] / this._zradius;
-
-      vec3.normalize(normal, normal);
-
-      this._uv.push(u);
-      this._uv.push(v);
-
-      this._normals.push(normal[0]);
-      this._normals.push(normal[1]);
-      this._normals.push(normal[2]);
-
-      this._vertices.push(vertex[0]);
-      this._vertices.push(vertex[1]);
-      this._vertices.push(vertex[2]);
-    }
-  }
-
-  for(s = 0; s < this._slices - 1; ++s) {
-    for(t = 0; t < this._stacks - 1; ++t) {
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 0) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 0));
-    }
-  }
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-};
 
 EZ3.Box = function(width, height, depth) {
   EZ3.Geometry.call(this);
@@ -1202,50 +1153,52 @@ EZ3.Box = function(width, height, depth) {
   this._halfDepth  = this._depth * 0.5;
   this._halfHeight = this._height * 0.5;
 
-  this._create();
+  var that = this;
+
+  function _create () {
+    that._vertices = [
+      +that._halfWidth, +that._halfHeight, +that._halfDepth,
+      -that._halfWidth, +that._halfHeight, +that._halfDepth,
+      -that._halfWidth, -that._halfHeight, +that._halfDepth,
+      +that._halfWidth, -that._halfHeight, +that._halfDepth,
+      +that._halfWidth, -that._halfHeight, -that._halfDepth,
+      -that._halfWidth, -that._halfHeight, -that._halfDepth,
+      -that._halfWidth, +that._halfHeight, -that._halfDepth,
+      +that._halfWidth, +that._halfHeight, -that._halfDepth
+    ];
+
+    that._indices = [
+      0, 1 ,2,
+      0, 2, 3,
+      7, 4, 5,
+      7, 5, 6,
+      6, 5, 2,
+      6, 2, 1,
+      7, 0, 3,
+      7, 3, 4,
+      7, 6, 1,
+      7, 1, 0,
+      3, 2, 5,
+      3, 5, 4
+    ];
+
+    that._uv = [
+
+    ];
+
+    that.calculateNormals();
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
+  }
+
+  _create();
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Box.prototype.constructor = EZ3.Box;
-
-EZ3.Box.prototype._create = function() {
-  this._vertices = [
-    +this._halfWidth, +this._halfHeight, +this._halfDepth,
-    -this._halfWidth, +this._halfHeight, +this._halfDepth,
-    -this._halfWidth, -this._halfHeight, +this._halfDepth,
-    +this._halfWidth, -this._halfHeight, +this._halfDepth,
-    +this._halfWidth, -this._halfHeight, -this._halfDepth,
-    -this._halfWidth, -this._halfHeight, -this._halfDepth,
-    -this._halfWidth, +this._halfHeight, -this._halfDepth,
-    +this._halfWidth, +this._halfHeight, -this._halfDepth
-  ];
-
-  this._indices = [
-    0, 1 ,2,
-    0, 2, 3,
-    7, 4, 5,
-    7, 5, 6,
-    6, 5, 2,
-    6, 2, 1,
-    7, 0, 3,
-    7, 3, 4,
-    7, 6, 1,
-    7, 1, 0,
-    3, 2, 5,
-    3, 5, 4
-  ];
-
-  this._uv = [
-
-  ];
-
-  this.calculateNormals();
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-};
 
 EZ3.Cone = function(base, height, slices, stacks) {
   EZ3.Geometry.call(this);
@@ -1255,81 +1208,83 @@ EZ3.Cone = function(base, height, slices, stacks) {
   this._slices = slices;
   this._stacks = stacks;
 
-  this._create();
+  var that = this;
+
+  function _create() {
+
+    var s, t, u, v, radius, actualHeight, vertex, normal, step, totalSlices, totalStacks;
+
+    totalSlices = 1.0 / (that._slices - 1);
+    totalStacks = 1.0 / (that._stacks - 1);
+
+    actualHeight = that._height;
+    step = (that._height - that._base) / that._slices;
+
+    vertex = vec3.create();
+    normal = vec3.create();
+
+    for(s = 0; s < that._slices; ++s) {
+      for(t = 0; t < that._stacks; ++t) {
+
+        u = s * totalSlices;
+        v = t * totalStacks;
+
+        radius = Math.abs(that._height - actualHeight) * 0.5;
+
+        vertex[0] = radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[1] = actualHeight;
+        vertex[2] = radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
+
+        normal[0] = vertex[0];
+        normal[1] = vertex[1];
+        normal[2] = vertex[2];
+
+        vec3.normalize(normal, normal);
+
+        that._vertices.push(vertex[0]);
+        that._vertices.push(vertex[1]);
+        that._vertices.push(vertex[2]);
+
+        that._uv.push(u);
+        that._uv.push(v);
+
+      }
+
+      actualHeight -= step;
+
+      if(actualHeight < that._base)
+        break;
+
+    }
+
+    for(s = 0; s < that._slices - 1; ++s) {
+      for(t = 0; t < that._stacks - 1; ++t) {
+
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 0) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 0));
+
+      }
+    }
+
+    that.calculateNormals();
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+
+  };
+
+  _create();
 };
 
 EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Cone.prototype.constructor = EZ3.Cone;
-
-EZ3.Cone.prototype._create = function() {
-
-  var s, t, u, v, radius, actualHeight, vertex, normal, step, totalSlices, totalStacks;
-
-  totalSlices = 1.0 / (this._slices - 1);
-  totalStacks = 1.0 / (this._stacks - 1);
-
-  actualHeight = this._height;
-  step = (this._height - this._base) / this._slices;
-
-  vertex = vec3.create();
-  normal = vec3.create();
-
-  for(s = 0; s < this._slices; ++s) {
-    for(t = 0; t < this._stacks; ++t) {
-
-      u = s * totalSlices;
-      v = t * totalStacks;
-
-      radius = Math.abs(this._height - actualHeight) * 0.5;
-
-      vertex[0] = radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
-      vertex[1] = actualHeight;
-      vertex[2] = radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
-
-      normal[0] = vertex[0];
-      normal[1] = vertex[1];
-      normal[2] = vertex[2];
-
-      vec3.normalize(normal, normal);
-
-      this._vertices.push(vertex[0]);
-      this._vertices.push(vertex[1]);
-      this._vertices.push(vertex[2]);
-
-      this._uv.push(u);
-      this._uv.push(v);
-
-    }
-
-    actualHeight -= step;
-
-    if(actualHeight < this._base)
-      break;
-
-  }
-
-  for(s = 0; s < this._slices - 1; ++s) {
-    for(t = 0; t < this._stacks - 1; ++t) {
-
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 0) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 0));
-
-    }
-  }
-
-  this.calculateNormals();
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
-};
 
 EZ3.Cylinder = function(radius, base, height, slices, stacks) {
   EZ3.Geometry.call(this);
@@ -1340,76 +1295,77 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
   this._slices = slices;
   this._stacks = stacks;
 
-  this._create();
+  var that = this;
+
+  function _create () {
+    var s, t, u, v, actualHeight, vertex, normal, step, totalSlices, totalStacks;
+
+    totalSlices = 1.0 / (that._slices - 1);
+    totalStacks = 1.0 / (that._stacks - 1);
+
+    actualHeight = that._height;
+    step = (that._height - that._base) / that._slices;
+
+    vertex = vec3.create();
+    normal = vec3.create();
+
+    for(s = 0; s < that._slices; ++s) {
+      for(t = 0; t < that._stacks; ++t) {
+
+        u = s * totalSlices;
+        v = t * totalStacks;
+
+        vertex[0] = that._radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[1] = actualHeight;
+        vertex[2] = that._radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
+
+        vec3.set(normal, vertex[0], vertex[1], vertex[2]);
+        vec3.normalize(normal, normal);
+
+        that._vertices.push(vertex[0]);
+        that._vertices.push(vertex[1]);
+        that._vertices.push(vertex[2]);
+
+        that._uv.push(u);
+        that._uv.push(v);
+
+      }
+
+      actualHeight -= step;
+
+      if(actualHeight < that._base)
+        break;
+
+    }
+
+    for(s = 0; s < that._slices - 1; ++s) {
+      for(t = 0; t < that._stacks - 1; ++t) {
+
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 0) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 0));
+
+      }
+    }
+
+    that.calculateNormals();
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+
+  }
+
+  _create();
 };
 
 EZ3.Cylinder.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Cylinder.prototype.constructor = EZ3.Cylinder;
-
-EZ3.Cylinder.prototype._create = function() {
-
-  var s, t, u, v, actualHeight, vertex, normal, step, totalSlices, totalStacks;
-
-  totalSlices = 1.0 / (this._slices - 1);
-  totalStacks = 1.0 / (this._stacks - 1);
-
-  actualHeight = this._height;
-  step = (this._height - this._base) / this._slices;
-
-  vertex = vec3.create();
-  normal = vec3.create();
-
-  for(s = 0; s < this._slices; ++s) {
-    for(t = 0; t < this._stacks; ++t) {
-
-      u = s * totalSlices;
-      v = t * totalStacks;
-
-      vertex[0] = this._radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
-      vertex[1] = actualHeight;
-      vertex[2] = this._radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
-
-      vec3.set(normal, vertex[0], vertex[1], vertex[2]);
-      vec3.normalize(normal, normal);
-
-      this._vertices.push(vertex[0]);
-      this._vertices.push(vertex[1]);
-      this._vertices.push(vertex[2]);
-
-      this._uv.push(u);
-      this._uv.push(v);
-
-    }
-
-    actualHeight -= step;
-
-    if(actualHeight < this._base)
-      break;
-
-  }
-
-  for(s = 0; s < this._slices - 1; ++s) {
-    for(t = 0; t < this._stacks - 1; ++t) {
-
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 0) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 0));
-
-    }
-  }
-
-  this.calculateNormals();
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-
-};
 
 EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
   EZ3.Geometry.call(this);
@@ -1420,69 +1376,71 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
   this._yRadius = yRadius;
   this._zRadius = zRadius;
 
-  this._create();
+  var that = this;
+
+  function _create() {
+    var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
+
+    vertex = vec3.create();
+    normal = vec3.create();
+
+    totalSlices = 1.0 / (that._slices - 1);
+    totalStacks = 1.0 / (that._stacks - 1);
+
+    for(s = 0; s < that._slices; ++s) {
+      for(t = 0; t < that._stacks; ++t) {
+        u = s * totalSlices;
+        v = t * totalStacks;
+
+        phi = EZ3.Geometry.DOUBLE_PI * u;
+        rho = EZ3.Geometry.PI * v;
+
+        vertex[0] = (that._xRadius * Math.cos(phi) * Math.sin(rho));
+        vertex[1] = (that._yRadius * Math.sin(rho - EZ3.Geometry.HALF_PI));
+        vertex[2] = (that._zRadius * Math.sin(phi) * Math.sin(rho));
+
+        normal[0] = vertex[0] / that._xRadius;
+        normal[1] = vertex[1] / that._yRadius;
+        normal[2] = vertex[2] / that._zRadius;
+
+        vec3.normalize(normal, normal);
+
+        that._uv.push(u);
+        that._uv.push(v);
+
+        that._normals.push(normal[0]);
+        that._normals.push(normal[1]);
+        that._normals.push(normal[2]);
+
+        that._vertices.push(vertex[0]);
+        that._vertices.push(vertex[1]);
+        that._vertices.push(vertex[2]);
+      }
+    }
+
+    for(s = 0; s < that._slices - 1; ++s) {
+      for(t = 0; t < that._stacks - 1; ++t) {
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 0) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 0));
+      }
+    }
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+  }
+
+  _create();
 };
 
 EZ3.Ellipsoid.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Ellipsoid.prototype.constructor = EZ3.Ellipsoid;
-
-EZ3.Ellipsoid.prototype._create = function() {
-  var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
-
-  vertex = vec3.create();
-  normal = vec3.create();
-
-  totalSlices = 1.0 / (this._slices - 1);
-  totalStacks = 1.0 / (this._stacks - 1);
-
-  for(s = 0; s < this._slices; ++s) {
-    for(t = 0; t < this._stacks; ++t) {
-      u = s * totalSlices;
-      v = t * totalStacks;
-
-      phi = EZ3.Geometry.DOUBLE_PI * u;
-      rho = EZ3.Geometry.PI * v;
-
-      vertex[0] = (this._xRadius * Math.cos(phi) * Math.sin(rho));
-      vertex[1] = (this._yRadius * Math.sin(rho - EZ3.Geometry.HALF_PI));
-      vertex[2] = (this._zRadius * Math.sin(phi) * Math.sin(rho));
-
-      normal[0] = vertex[0] / this._xRadius;
-      normal[1] = vertex[1] / this._yRadius;
-      normal[2] = vertex[2] / this._zRadius;
-
-      vec3.normalize(normal, normal);
-
-      this._uv.push(u);
-      this._uv.push(v);
-
-      this._normals.push(normal[0]);
-      this._normals.push(normal[1]);
-      this._normals.push(normal[2]);
-
-      this._vertices.push(vertex[0]);
-      this._vertices.push(vertex[1]);
-      this._vertices.push(vertex[2]);
-    }
-  }
-
-  for(s = 0; s < this._slices - 1; ++s) {
-    for(t = 0; t < this._stacks - 1; ++t) {
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 0) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 0));
-    }
-  }
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-};
 
 EZ3.Grid = function(width, height) {
   EZ3.Geometry.call(this);
@@ -1490,50 +1448,52 @@ EZ3.Grid = function(width, height) {
   this._width = width;
   this._height = height;
 
-  this._create();
+  var that = this;
+
+  function _create() {
+    var index0, index1, index2, index3, z, x;
+
+    for(z = 0; z < that._height + 1; ++z) {
+      for(x = 0; x < that._width + 1; ++x) {
+        that._vertices.push(x);
+        that._vertices.push(0);
+        that._vertices.push(z);
+
+        that._uv.push(x / that._width);
+        that._uv.push(z / that._height);
+      }
+    }
+
+    for(z = 0; z < that._height; ++z) {
+      for(x = 0; x < that._width; ++x) {
+        index0 = z * (that._height + 1) + x;
+        index1 = index0 + 1;
+        index2 = index0 + (that._height + 1);
+        index3 = index2 + 1;
+
+        that._indices.push(index0);
+        that._indices.push(index2);
+        that._indices.push(index1);
+
+        that._indices.push(index1);
+        that._indices.push(index2);
+        that._indices.push(index3);
+      }
+    }
+
+    that.calculateNormals();
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+  }
+
+  _create();
 };
 
 EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Grid.prototype.constructor = EZ3.Grid;
-
-EZ3.Grid.prototype._create = function() {
-  var index0, index1, index2, index3, z, x;
-
-  for(z = 0; z < this._height + 1; ++z) {
-    for(x = 0; x < this._width + 1; ++x) {
-      this._vertices.push(x);
-      this._vertices.push(0);
-      this._vertices.push(z);
-
-      this._uv.push(x / this._width);
-      this._uv.push(z / this._height);
-    }
-  }
-
-  for(z = 0; z < this._height; ++z) {
-    for(x = 0; x < this._width; ++x) {
-      index0 = z * (this._height + 1) + x;
-      index1 = index0 + 1;
-      index2 = index0 + (this._height + 1);
-      index3 = index2 + 1;
-
-      this._indices.push(index0);
-      this._indices.push(index2);
-      this._indices.push(index1);
-
-      this._indices.push(index1);
-      this._indices.push(index2);
-      this._indices.push(index3);
-    }
-  }
-
-  this.calculateNormals();
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-};
 
 EZ3.Sphere = function(radius, slices, stacks) {
   EZ3.Geometry.call(this);
@@ -1542,69 +1502,71 @@ EZ3.Sphere = function(radius, slices, stacks) {
   this._slices = slices;
   this._stacks = stacks;
 
-  this._create();
+  var that = this;
+
+  function _create() {
+    var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
+
+    vertex = vec3.create();
+    normal = vec3.create();
+
+    totalSlices = 1.0 / (that._slices - 1);
+    totalStacks = 1.0 / (that._stacks - 1);
+
+    for(s = 0; s < that._slices; ++s) {
+      for(t = 0; t < that._stacks; ++t) {
+        u = s * totalSlices;
+        v = t * totalStacks;
+
+        phi = EZ3.Geometry.DOUBLE_PI * u;
+        rho = EZ3.Geometry.PI * v;
+
+        vertex[0] = (that._radius * Math.cos(phi) * Math.sin(rho));
+        vertex[1] = (that._radius * Math.sin(rho - EZ3.Geometry.HALF_PI));
+        vertex[2] = (that._radius * Math.sin(phi) * Math.sin(rho));
+
+        normal[0] = vertex[0] / that._radius;
+        normal[1] = vertex[1] / that._radius;
+        normal[2] = vertex[2] / that._radius;
+
+        vec3.normalize(normal, normal);
+
+        that._uv.push(u);
+        that._uv.push(v);
+
+        that._normals.push(normal[0]);
+        that._normals.push(normal[1]);
+        that._normals.push(normal[2]);
+
+        that._vertices.push(vertex[0]);
+        that._vertices.push(vertex[1]);
+        that._vertices.push(vertex[2]);
+      }
+    }
+
+    for(s = 0; s < that._slices - 1; ++s) {
+      for(t = 0; t < that._stacks - 1; ++t) {
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 0) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+
+        that._indices.push((s + 0) * that._stacks + (t + 0));
+        that._indices.push((s + 1) * that._stacks + (t + 1));
+        that._indices.push((s + 1) * that._stacks + (t + 0));
+      }
+    }
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+  }
+
+  _create();
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Sphere.prototype.constructor = EZ3.Sphere;
-
-EZ3.Sphere.prototype._create = function() {
-  var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
-
-  vertex = vec3.create();
-  normal = vec3.create();
-
-  totalSlices = 1.0 / (this._slices - 1);
-  totalStacks = 1.0 / (this._stacks - 1);
-
-  for(s = 0; s < this._slices; ++s) {
-    for(t = 0; t < this._stacks; ++t) {
-      u = s * totalSlices;
-      v = t * totalStacks;
-
-      phi = EZ3.Geometry.DOUBLE_PI * u;
-      rho = EZ3.Geometry.PI * v;
-
-      vertex[0] = (this._radius * Math.cos(phi) * Math.sin(rho));
-      vertex[1] = (this._radius * Math.sin(rho - EZ3.Geometry.HALF_PI));
-      vertex[2] = (this._radius * Math.sin(phi) * Math.sin(rho));
-
-      normal[0] = vertex[0] / this._radius;
-      normal[1] = vertex[1] / this._radius;
-      normal[2] = vertex[2] / this._radius;
-
-      vec3.normalize(normal, normal);
-
-      this._uv.push(u);
-      this._uv.push(v);
-
-      this._normals.push(normal[0]);
-      this._normals.push(normal[1]);
-      this._normals.push(normal[2]);
-
-      this._vertices.push(vertex[0]);
-      this._vertices.push(vertex[1]);
-      this._vertices.push(vertex[2]);
-    }
-  }
-
-  for(s = 0; s < this._slices - 1; ++s) {
-    for(t = 0; t < this._stacks - 1; ++t) {
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 0) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-
-      this._indices.push((s + 0) * this._stacks + (t + 0));
-      this._indices.push((s + 1) * this._stacks + (t + 1));
-      this._indices.push((s + 1) * this._stacks + (t + 0));
-    }
-  }
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-};
 
 EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
   EZ3.Geometry.call(this);
@@ -1614,71 +1576,224 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
   this._innerRadius = innerRadius;
   this._outerRadius = outerRadius;
 
-  this._create();
+  var that = this;
+
+  function _create() {
+    var vertex, normal, u, v, cosS, cosR, sinS, sinR, rho, phi, s, r, totalSides, totalRings;
+
+    totalSides = 1.0 / (that._sides - 1);
+    totalRings = 1.0 / (that._rings - 1);
+
+    vertex = vec3.create();
+    normal = vec3.create();
+
+    for(s = 0; s < that._sides; ++s){
+      for(r = 0; r < that._rings; ++r){
+        u = s * totalSides;
+        v = r * totalRings;
+
+        rho = EZ3.Geometry.DOUBLE_PI * u;
+        phi = EZ3.Geometry.DOUBLE_PI * v;
+
+        cosS = Math.cos(rho);
+        cosR = Math.cos(phi);
+        sinS = Math.sin(rho);
+        sinR = Math.sin(phi);
+
+        vertex[0] = (that._innerRadius + that._outerRadius * cosR) * cosS;
+        vertex[1] = (that._outerRadius * sinR);
+        vertex[2] = (that._innerRadius + that._outerRadius * cosR) * sinS;
+
+        normal[0] = vertex[0] - that._innerRadius * cosS;
+        normal[1] = vertex[1];
+        normal[2] = vertex[2] - that._innerRadius * sinS;
+
+        vec3.normalize(normal, normal);
+
+        that._uv.push(u);
+        that._uv.push(v);
+
+        that._normals.push(normal[0]);
+        that._normals.push(normal[1]);
+        that._normals.push(normal[2]);
+
+        that._vertices.push(vertex[0]);
+        that._vertices.push(vertex[1]);
+        that._vertices.push(vertex[2]);
+      }
+    }
+
+    for(s = 0; s < that._sides - 1; ++s){
+      for(r = 0; r < that._rings - 1; ++r){
+        that._indices.push((s + 0) * that._rings + (r + 0));
+        that._indices.push((s + 0) * that._rings + (r + 1));
+        that._indices.push((s + 1) * that._rings + (r + 1));
+
+        that._indices.push((s + 0) * that._rings + (r + 0));
+        that._indices.push((s + 1) * that._rings + (r + 1));
+        that._indices.push((s + 1) * that._rings + (r + 0));
+      }
+    }
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+  }
+
+  _create();
 };
 
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Torus.prototype.constructor = EZ3.Torus;
 
-EZ3.Torus.prototype._create = function() {
-  var vertex, normal, u, v, cosS, cosR, sinS, sinR, rho, phi, s, r, totalSides, totalRings;
+EZ3.Device = function() {
+  this.readyAt = 0;
+};
 
-  totalSides = 1.0 / (this._sides - 1);
-  totalRings = 1.0 / (this._rings - 1);
+EZ3.Device = new EZ3.Device();
 
-  vertex = vec3.create();
-  normal = vec3.create();
+EZ3.Device.onReady = function(callback, context, nonPrimer) {
+  if (this.readyAt)
+    callback.call(context, this);
+  else if (this._checkReady._monitor || nonPrimer) {
+    this._checkReady._queue = this._checkReady._queue || [];
+    this._checkReady._queue.push([callback, context]);
+  }
+  else {
+    this._checkReady._monitor = this._checkReady.bind(this);
+    this._checkReady._queue = this._checkReady._queue || [];
+    this._checkReady._queue.push([callback, context]);
 
-  for(s = 0; s < this._sides; ++s){
-    for(r = 0; r < this._rings; ++r){
-      u = s * totalSides;
-      v = r * totalRings;
-
-      rho = EZ3.Geometry.DOUBLE_PI * u;
-      phi = EZ3.Geometry.DOUBLE_PI * v;
-
-      cosS = Math.cos(rho);
-      cosR = Math.cos(phi);
-      sinS = Math.sin(rho);
-      sinR = Math.sin(phi);
-
-      vertex[0] = (this._innerRadius + this._outerRadius * cosR) * cosS;
-      vertex[1] = (this._outerRadius * sinR);
-      vertex[2] = (this._innerRadius + this._outerRadius * cosR) * sinS;
-
-      normal[0] = vertex[0] - this._innerRadius * cosS;
-      normal[1] = vertex[1];
-      normal[2] = vertex[2] - this._innerRadius * sinS;
-
-      vec3.normalize(normal, normal);
-
-      this._uv.push(u);
-      this._uv.push(v);
-
-      this._normals.push(normal[0]);
-      this._normals.push(normal[1]);
-      this._normals.push(normal[2]);
-
-      this._vertices.push(vertex[0]);
-      this._vertices.push(vertex[1]);
-      this._vertices.push(vertex[2]);
+    if (document.readyState === 'complete' || document.readyState === 'interactive')
+      window.setTimeout(this._checkReady._monitor, 0);
+    else if (typeof window.cordova !== 'undefined' && !navigator['isCocoonJS'])
+      document.addEventListener('deviceready', this._checkReady._monitor, false);
+    else {
+      document.addEventListener('DOMContentLoaded', this._checkReady._monitor, false);
+      window.addEventListener('load', this._checkReady._monitor, false);
     }
   }
+};
 
-  for(s = 0; s < this._sides - 1; ++s){
-    for(r = 0; r < this._rings - 1; ++r){
-      this._indices.push((s + 0) * this._rings + (r + 0));
-      this._indices.push((s + 0) * this._rings + (r + 1));
-      this._indices.push((s + 1) * this._rings + (r + 1));
+EZ3.Device._checkReady = function() {
+  if (!document.body)
+    window.setTimeout(this._checkReady._monitor, 20);
+  else if (!this.readyAt) {
+    this.readyAt = Date.now();
 
-      this._indices.push((s + 0) * this._rings + (r + 0));
-      this._indices.push((s + 1) * this._rings + (r + 1));
-      this._indices.push((s + 1) * this._rings + (r + 0));
+    document.removeEventListener('deviceready', this._checkReady._monitor);
+    document.removeEventListener('DOMContentLoaded', this._checkReady._monitor);
+    window.removeEventListener('load', this._checkReady._monitor);
+
+    this._check();
+
+    var item;
+    while ((item = this._checkReady._queue.shift())) {
+      var callback = item[0];
+      var context = item[1];
+      callback.call(context, this);
     }
+
+    this._checkReady = null;
+    this._check = null;
+  }
+};
+
+EZ3.Device._check = function() {
+  var device = this;
+
+  function _checkOS() {
+    var ua = navigator.userAgent;
+
+    if (/Playstation Vita/.test(ua)) {
+      device.vita = true;
+    } else if (/Kindle/.test(ua) || /\bKF[A-Z][A-Z]+/.test(ua) || /Silk.*Mobile Safari/.test(ua)) {
+      device.kindle = true;
+    } else if (/Android/.test(ua)) {
+      device.android = true;
+    } else if (/CrOS/.test(ua)) {
+      device.chromeOS = true;
+    } else if (/iP[ao]d|iPhone/i.test(ua)) {
+      device.iOS = true;
+    } else if (/Linux/.test(ua)) {
+      device.linux = true;
+    } else if (/Mac OS/.test(ua)) {
+      device.macOS = true;
+    } else if (/Windows/.test(ua)) {
+      device.windows = true;
+    }
+
+    if (/Windows Phone/i.test(ua) || /IEMobile/i.test(ua)) {
+      device.android = false;
+      device.iOS = false;
+      device.macOS = false;
+      device.windows = true;
+      device.windowsPhone = true;
+    }
+
+    var silk = /Silk/.test(ua); // detected in browsers
+
+    if (device.windows || device.macOS || (device.linux && !silk) || device.chromeOS) {
+      device.desktop = true;
+    }
+
+    //  Windows Phone / Table reset
+    if (device.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua)))) {
+      device.desktop = false;
+    }
+
   }
 
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
+  _checkOS();
+};
+
+/**
+ * @class MousePointer
+ *  */
+
+EZ3.MousePointer = function() {
+  EZ3.Pointer.call(this, 1);
+
+  this._buttons = [];
+
+  this.wheel = EZ3.Vec2.create();
+
+  EZ3.Vec2.set(this.wheel, 0, 0);
+};
+
+EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
+EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
+
+EZ3.MousePointer.prototype.processPress = function(event, onPress, onMove) {
+  if(!this._buttons[event.button])
+    this._buttons[event.button] = new EZ3.Switch(event.button);
+
+  this._buttons[event.button].processPress(onPress);
+  EZ3.Pointer.prototype.processPress.call(this, event, onMove);
+};
+
+EZ3.MousePointer.prototype.processUp = function(event, onUp) {
+  this._buttons[event.button].processUp(onUp);
+};
+
+EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
+  if (event.wheelDeltaX)
+    this.wheel[0] = event.wheelDeltaX;
+  else
+    this.wheel[1] = event.deltaX;
+
+  if (event.wheelDeltaY)
+    this.wheel[0] = event.wheelDeltaY;
+  else
+    this.wheel[1] = event.deltaY;
+
+  onWheel.dispatch(this);
+};
+
+EZ3.MousePointer.prototype.getButton = function(buttonCode) {
+  if(!this._buttons[buttonCode])
+    this._buttons[buttonCode] = new EZ3.Switch(buttonCode);
+
+  return this._buttons[buttonCode];
 };
