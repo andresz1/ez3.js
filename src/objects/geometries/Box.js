@@ -9,47 +9,49 @@ EZ3.Box = function(width, height, depth) {
   this._halfDepth  = this._depth * 0.5;
   this._halfHeight = this._height * 0.5;
 
-  this._create();
+  var that = this;
+
+  function _create () {
+    that._vertices = [
+      +that._halfWidth, +that._halfHeight, +that._halfDepth,
+      -that._halfWidth, +that._halfHeight, +that._halfDepth,
+      -that._halfWidth, -that._halfHeight, +that._halfDepth,
+      +that._halfWidth, -that._halfHeight, +that._halfDepth,
+      +that._halfWidth, -that._halfHeight, -that._halfDepth,
+      -that._halfWidth, -that._halfHeight, -that._halfDepth,
+      -that._halfWidth, +that._halfHeight, -that._halfDepth,
+      +that._halfWidth, +that._halfHeight, -that._halfDepth
+    ];
+
+    that._indices = [
+      0, 1 ,2,
+      0, 2, 3,
+      7, 4, 5,
+      7, 5, 6,
+      6, 5, 2,
+      6, 2, 1,
+      7, 0, 3,
+      7, 3, 4,
+      7, 6, 1,
+      7, 1, 0,
+      3, 2, 5,
+      3, 5, 4
+    ];
+
+    that._uv = [
+
+    ];
+
+    that.calculateNormals();
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
+  }
+
+  _create();
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Box.prototype.constructor = EZ3.Box;
-
-EZ3.Box.prototype._create = function() {
-  this._vertices = [
-    +this._halfWidth, +this._halfHeight, +this._halfDepth,
-    -this._halfWidth, +this._halfHeight, +this._halfDepth,
-    -this._halfWidth, -this._halfHeight, +this._halfDepth,
-    +this._halfWidth, -this._halfHeight, +this._halfDepth,
-    +this._halfWidth, -this._halfHeight, -this._halfDepth,
-    -this._halfWidth, -this._halfHeight, -this._halfDepth,
-    -this._halfWidth, +this._halfHeight, -this._halfDepth,
-    +this._halfWidth, +this._halfHeight, -this._halfDepth
-  ];
-
-  this._indices = [
-    0, 1 ,2,
-    0, 2, 3,
-    7, 4, 5,
-    7, 5, 6,
-    6, 5, 2,
-    6, 2, 1,
-    7, 0, 3,
-    7, 3, 4,
-    7, 6, 1,
-    7, 1, 0,
-    3, 2, 5,
-    3, 5, 4
-  ];
-
-  this._uv = [
-
-  ];
-
-  this.calculateNormals();
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-};

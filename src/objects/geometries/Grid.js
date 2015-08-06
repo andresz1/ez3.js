@@ -4,47 +4,49 @@ EZ3.Grid = function(width, height) {
   this._width = width;
   this._height = height;
 
-  this._create();
+  var that = this;
+
+  function _create() {
+    var index0, index1, index2, index3, z, x;
+
+    for(z = 0; z < that._height + 1; ++z) {
+      for(x = 0; x < that._width + 1; ++x) {
+        that._vertices.push(x);
+        that._vertices.push(0);
+        that._vertices.push(z);
+
+        that._uv.push(x / that._width);
+        that._uv.push(z / that._height);
+      }
+    }
+
+    for(z = 0; z < that._height; ++z) {
+      for(x = 0; x < that._width; ++x) {
+        index0 = z * (that._height + 1) + x;
+        index1 = index0 + 1;
+        index2 = index0 + (that._height + 1);
+        index3 = index2 + 1;
+
+        that._indices.push(index0);
+        that._indices.push(index2);
+        that._indices.push(index1);
+
+        that._indices.push(index1);
+        that._indices.push(index2);
+        that._indices.push(index3);
+      }
+    }
+
+    that.calculateNormals();
+
+    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
+    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
+    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+  }
+
+  _create();
 };
 
 EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Grid.prototype.constructor = EZ3.Grid;
-
-EZ3.Grid.prototype._create = function() {
-  var index0, index1, index2, index3, z, x;
-
-  for(z = 0; z < this._height + 1; ++z) {
-    for(x = 0; x < this._width + 1; ++x) {
-      this._vertices.push(x);
-      this._vertices.push(0);
-      this._vertices.push(z);
-
-      this._uv.push(x / this._width);
-      this._uv.push(z / this._height);
-    }
-  }
-
-  for(z = 0; z < this._height; ++z) {
-    for(x = 0; x < this._width; ++x) {
-      index0 = z * (this._height + 1) + x;
-      index1 = index0 + 1;
-      index2 = index0 + (this._height + 1);
-      index3 = index2 + 1;
-
-      this._indices.push(index0);
-      this._indices.push(index2);
-      this._indices.push(index1);
-
-      this._indices.push(index1);
-      this._indices.push(index2);
-      this._indices.push(index3);
-    }
-  }
-
-  this.calculateNormals();
-
-  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
-  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
-  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
-  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
-};
