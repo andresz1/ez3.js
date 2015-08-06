@@ -1,5 +1,4 @@
 EZ3.Buffer = function() {
-
   this._buffer = [];
   this._bufferSize = {};
   this._bufferData = {};
@@ -10,7 +9,6 @@ EZ3.Buffer = function() {
   this._buffer[EZ3.Buffer.NORMAL] = -1;
   this._buffer[EZ3.Buffer.TANGENT] = -1;
   this._buffer[EZ3.Buffer.BITANGENT] = -1;
-
 };
 
 EZ3.Buffer.VERTEX = 0;
@@ -121,3 +119,5 @@ EZ3.Buffer.prototype.init = function(gl) {
   }
 
 };
+
+EZ3.Buffer.prototype.constructor = EZ3.Buffer;
