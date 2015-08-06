@@ -1,36 +1,51 @@
 EZ3.Geometry = function() {
-
   this._uv = [];
   this._indices = [];
   this._normals = [];
   this._vertices = [];
   this._tangents = [];
-  this._binormals = [];
+  this._bitangents = [];
   this._maxPoint = vec3.create();
   this._minPoint = vec3.create();
   this._midPoint = vec3.create();
-
+  this._buffer = new EZ3.Buffer();
 };
 
 EZ3.Geometry.PI = Math.PI;
 EZ3.Geometry.HALF_PI = 0.5 * Math.PI;
 EZ3.Geometry.DOUBLE_PI = 2.0 * Math.PI;
 
-EZ3.Geometry.prototype.initArray = function(size, value) {
+EZ3.Geometry.prototype.draw = function(gl) {
+  this._buffer.draw(gl);
+};
 
+EZ3.Geometry.prototype.init = function(gl) {
+  this._buffer.init(gl);
+};
+
+EZ3.Geometry.prototype.fill = function(buffer, size, data) {
+  this._buffer.fill(buffer, size, data);
+};
+
+EZ3.Geometry.prototype.initArray = function(size, value) {
   return Array.apply(null, new Array(size)).map(function() {
     return value;
   });
-
 };
 
 EZ3.Geometry.prototype.calculateNormals = function() {
-
   var x, y, z, k;
   var normal, point0, point1, point2, vector0, vector1;
 
-  var temporalNormals = this.initArray(this.vertices.length, 0);
-  var temporalAppearances = this.initArray(this.vertices.length / 3, 0);
+  normal  = vec3.create();
+  point0  = vec3.create();
+  point1  = vec3.create();
+  point2  = vec3.create();
+  vector0 = vec3.create();
+  vector1 = vec3.create();
+
+  var temporalNormals = this.initArray(this._vertices.length, 0);
+  var temporalAppearances = this.initArray(this._vertices.length / 3, 0);
 
   for(k = 0; k < this._indices.length; k += 3) {
 
@@ -38,12 +53,12 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     y = 3 * this._indices[k + 1];
     z = 3 * this._indices[k + 2];
 
-    point0 = vec3.create(this.vertices[x + 0], this.vertices[x + 1], this.vertices[x + 2]);
-    point1 = vec3.create(this.vertices[y + 0], this.vertices[y + 1], this.vertices[y + 2]);
-    point2 = vec3.create(this.vertices[z + 0], this.vertices[z + 1], this.vertices[z + 2]);
+    vec3.set(point0, this._vertices[x + 0], this._vertices[x + 1], this._vertices[x + 2]);
+    vec3.set(point1, this._vertices[y + 0], this._vertices[y + 1], this._vertices[y + 2]);
+    vec3.set(point2, this._vertices[z + 0], this._vertices[z + 1], this._vertices[z + 2]);
 
-    vec3.subtract(vector0, point1, point0);
-    vec3.subtract(vector1, point2, point0);
+    vec3.sub(vector0, point1, point0);
+    vec3.sub(vector1, point2, point0);
 
     vec3.cross(normal, vector0, vector1);
 
@@ -66,11 +81,9 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     ++temporalAppearances[x / 3];
     ++temporalAppearances[y / 3];
     ++temporalAppearances[z / 3];
-
   }
 
   for(k = 0; k < this._vertices.length / 3; ++k){
-
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
@@ -78,36 +91,28 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     this._normals.push(temporalNormals[x] / temporalAppearances[k]);
     this._normals.push(temporalNormals[y] / temporalAppearances[k]);
     this._normals.push(temporalNormals[z] / temporalAppearances[k]);
-
   }
 
   temporalNormals.splice(0, temporalNormals.length);
   temporalAppearances.splice(0, temporalAppearances.length);
-
 };
 
 EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
-
   this._maxPoint[0] = Math.max(this._maxPoint[0], x);
   this._maxPoint[1] = Math.max(this._maxPoint[1], y);
   this._maxPoint[2] = Math.max(this._maxPoint[2], z);
-
 };
 
 EZ3.Geometry.prototype.updateMinPoint = function(x, y, z) {
-
   this._minPoint[0] = Math.min(this._minPoint[0], x);
   this._minPoint[1] = Math.min(this._minPoint[1], y);
   this._minPoint[2] = Math.min(this._minPoint[2], z);
-
 };
 
 EZ3.Geometry.prototype.calculateMidPoint = function () {
-
   this._midPoint[0] = (this._maxPoint[0] + this._minPoint[0]) * 0.5;
   this._midPoint[0] = (this._maxPoint[1] + this._minPoint[1]) * 0.5;
   this._midPoint[0] = (this._maxPoint[2] + this._minPoint[2]) * 0.5;
-
 };
 
 EZ3.Geometry.prototype.calculateTangents = function() {

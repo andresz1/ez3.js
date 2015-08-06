@@ -1,5 +1,4 @@
-EZ3.ASTROIDAL_ELLIPSOID = function(radiusx, radiusy, radiusz, stacks, slices) {
-
+EZ3.AstroidalEllipsoid = function(radiusx, radiusy, radiusz, stacks, slices) {
   EZ3.Geometry.call(this);
 
   this._slices = slices;
@@ -8,28 +7,27 @@ EZ3.ASTROIDAL_ELLIPSOID = function(radiusx, radiusy, radiusz, stacks, slices) {
   this._radiusy = radiusy;
   this._radiusz = radiusz;
 
-  this.create();
-
+  this._create();
 };
 
-EZ3.ASTROIDAL_ELLIPSOID.prototype.create = function() {
+EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
 
-  var s, t, cosS, cosT, sinS, sinT, phi, rho, u, v, normal, vertex, S, T;
+EZ3.AstroidalEllipsoid.prototype._create = function() {
+  var s, t, cosS, cosT, sinS, sinT, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
 
   vertex = vec3.create();
   normal = vec3.create();
 
-  S = 1.0 / (this._slices - 1);
-  T = 1.0 / (this._stacks - 1);
+  totalSlices = 1.0 / (this._slices - 1);
+  totalStacks = 1.0 / (this._stacks - 1);
 
   for(s = 0; s < this._slices; ++s) {
     for(t = 0; t < this._stacks; ++t) {
+      u = s * totalSlices;
+      v = t * totalStacks;
 
-      u = s * S;
-      v = t * T;
-
-      phi = this.DOUBLE_PI * u - this.PI;
-      rho = this.PI * v - this.HALF_PI;
+      phi = EZ3.Geometry.DOUBLE_PI * u - EZ3.Geometry.PI;
+      rho = EZ3.Geometry.PI * v - EZ3.Geometry.HALF_PI;
 
       cosS = Math.pow(Math.cos(phi), 3.0);
       cosT = Math.pow(Math.cos(rho), 3.0);
@@ -56,13 +54,11 @@ EZ3.ASTROIDAL_ELLIPSOID.prototype.create = function() {
       this._vertices.push(vertex[0]);
       this._vertices.push(vertex[1]);
       this._vertices.push(vertex[2]);
-
     }
   }
 
   for(s = 0; s < this._slices - 1; ++s) {
     for(t = 0; t < this._stacks - 1; ++t) {
-
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 0) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 1));
@@ -70,7 +66,11 @@ EZ3.ASTROIDAL_ELLIPSOID.prototype.create = function() {
       this._indices.push((s + 0) * this._stacks + (t + 0));
       this._indices.push((s + 1) * this._stacks + (t + 1));
       this._indices.push((s + 1) * this._stacks + (t + 0));
-
     }
   }
+
+  this._buffer.fill(EZ3.Buffer.VERTEX, this._vertices.length, this._vertices);
+  this._buffer.fill(EZ3.Buffer.NORMAL, this._normals.length, this._normals);
+  this._buffer.fill(EZ3.Buffer.INDEX, this._indices.length, this._indices);
+  this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
 };
