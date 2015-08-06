@@ -9,21 +9,21 @@ EZ3.Box = function(width, height, depth) {
   this._halfDepth  = this._depth * 0.5;
   this._halfHeight = this._height * 0.5;
 
-  var that = this;
+  var scope = this;
 
   function _create () {
-    that._vertices = [
-      +that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, +that._halfHeight, -that._halfDepth,
-      +that._halfWidth, +that._halfHeight, -that._halfDepth
+    scope._vertices = [
+      +scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
+      -scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
+      -scope._halfWidth, -scope._halfHeight, +scope._halfDepth,
+      +scope._halfWidth, -scope._halfHeight, +scope._halfDepth,
+      +scope._halfWidth, -scope._halfHeight, -scope._halfDepth,
+      -scope._halfWidth, -scope._halfHeight, -scope._halfDepth,
+      -scope._halfWidth, +scope._halfHeight, -scope._halfDepth,
+      +scope._halfWidth, +scope._halfHeight, -scope._halfDepth
     ];
 
-    that._indices = [
+    scope._indices = [
       0, 1 ,2,
       0, 2, 3,
       7, 4, 5,
@@ -38,15 +38,15 @@ EZ3.Box = function(width, height, depth) {
       3, 5, 4
     ];
 
-    that._uv = [
+    scope._uv = [
 
     ];
 
-    that.calculateNormals();
+    scope.calculateNormals();
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
     //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
   }
 
