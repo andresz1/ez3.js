@@ -11,6 +11,7 @@ EZ3.AstroidalEllipsoid = function(radiusx, radiusy, radiusz, stacks, slices) {
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
 
 EZ3.AstroidalEllipsoid.prototype._create = function() {
   var s, t, cosS, cosT, sinS, sinT, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;

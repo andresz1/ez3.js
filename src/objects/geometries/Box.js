@@ -13,6 +13,7 @@ EZ3.Box = function(width, height, depth) {
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Box.prototype.constructor = EZ3.Box;
 
 EZ3.Box.prototype._create = function() {
   this._vertices = [

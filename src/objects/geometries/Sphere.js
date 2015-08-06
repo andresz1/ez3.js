@@ -9,6 +9,7 @@ EZ3.Sphere = function(radius, slices, stacks) {
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Sphere.prototype.constructor = EZ3.Sphere;
 
 EZ3.Sphere.prototype._create = function() {
   var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;

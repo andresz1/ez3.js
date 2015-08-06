@@ -10,6 +10,7 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
 };
 
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Torus.prototype.constructor = EZ3.Torus;
 
 EZ3.Torus.prototype._create = function() {
   var vertex, normal, u, v, cosS, cosR, sinS, sinR, rho, phi, s, r, totalSides, totalRings;

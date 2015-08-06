@@ -10,6 +10,7 @@ EZ3.Cone = function(base, height, slices, stacks) {
 };
 
 EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Cone.prototype.constructor = EZ3.Cone;
 
 EZ3.Cone.prototype._create = function() {
 

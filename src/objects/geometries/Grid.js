@@ -8,6 +8,7 @@ EZ3.Grid = function(width, height) {
 };
 
 EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Grid.prototype.constructor = EZ3.Grid;
 
 EZ3.Grid.prototype._create = function() {
   var index0, index1, index2, index3, z, x;

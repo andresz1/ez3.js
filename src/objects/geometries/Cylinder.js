@@ -11,6 +11,7 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
 };
 
 EZ3.Cylinder.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Cylinder.prototype.constructor = EZ3.Cylinder;
 
 EZ3.Cylinder.prototype._create = function() {
 

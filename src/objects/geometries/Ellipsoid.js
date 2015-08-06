@@ -11,6 +11,7 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
 };
 
 EZ3.Ellipsoid.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Ellipsoid.prototype.constructor = EZ3.Ellipsoid;
 
 EZ3.Ellipsoid.prototype._create = function() {
   var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
