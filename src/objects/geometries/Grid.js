@@ -4,45 +4,45 @@ EZ3.Grid = function(width, height) {
   this._width = width;
   this._height = height;
 
-  var that = this;
+  var scope = this;
 
   function _create() {
     var index0, index1, index2, index3, z, x;
 
-    for(z = 0; z < that._height + 1; ++z) {
-      for(x = 0; x < that._width + 1; ++x) {
-        that._vertices.push(x);
-        that._vertices.push(0);
-        that._vertices.push(z);
+    for(z = 0; z < scope._height + 1; ++z) {
+      for(x = 0; x < scope._width + 1; ++x) {
+        scope._vertices.push(x);
+        scope._vertices.push(0);
+        scope._vertices.push(z);
 
-        that._uv.push(x / that._width);
-        that._uv.push(z / that._height);
+        scope._uv.push(x / scope._width);
+        scope._uv.push(z / scope._height);
       }
     }
 
-    for(z = 0; z < that._height; ++z) {
-      for(x = 0; x < that._width; ++x) {
-        index0 = z * (that._height + 1) + x;
+    for(z = 0; z < scope._height; ++z) {
+      for(x = 0; x < scope._width; ++x) {
+        index0 = z * (scope._height + 1) + x;
         index1 = index0 + 1;
-        index2 = index0 + (that._height + 1);
+        index2 = index0 + (scope._height + 1);
         index3 = index2 + 1;
 
-        that._indices.push(index0);
-        that._indices.push(index2);
-        that._indices.push(index1);
+        scope._indices.push(index0);
+        scope._indices.push(index2);
+        scope._indices.push(index1);
 
-        that._indices.push(index1);
-        that._indices.push(index2);
-        that._indices.push(index3);
+        scope._indices.push(index1);
+        scope._indices.push(index2);
+        scope._indices.push(index3);
       }
     }
 
-    that.calculateNormals();
+    scope.calculateNormals();
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
   }
 
   _create();
