@@ -44,8 +44,8 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   vector0 = vec3.create();
   vector1 = vec3.create();
 
-  var temporalNormals = this.initArray(this._vertices.length, 0);
-  var temporalAppearances = this.initArray(this._vertices.length / 3, 0);
+  var tempNormals = this.initArray(this._vertices.length, 0);
+  var tempAppearances = this.initArray(this._vertices.length / 3, 0);
 
   for(k = 0; k < this._indices.length; k += 3) {
 
@@ -66,21 +66,21 @@ EZ3.Geometry.prototype.calculateNormals = function() {
       vec3.normalize(normal, normal);
     }
 
-    temporalNormals[x + 0] += normal[0];
-    temporalNormals[x + 1] += normal[1];
-    temporalNormals[x + 2] += normal[2];
+    tempNormals[x + 0] += normal[0];
+    tempNormals[x + 1] += normal[1];
+    tempNormals[x + 2] += normal[2];
 
-    temporalNormals[y + 0] += normal[0];
-    temporalNormals[y + 1] += normal[1];
-    temporalNormals[y + 2] += normal[2];
+    tempNormals[y + 0] += normal[0];
+    tempNormals[y + 1] += normal[1];
+    tempNormals[y + 2] += normal[2];
 
-    temporalNormals[z + 0] += normal[0];
-    temporalNormals[z + 1] += normal[1];
-    temporalNormals[z + 2] += normal[2];
+    tempNormals[z + 0] += normal[0];
+    tempNormals[z + 1] += normal[1];
+    tempNormals[z + 2] += normal[2];
 
-    ++temporalAppearances[x / 3];
-    ++temporalAppearances[y / 3];
-    ++temporalAppearances[z / 3];
+    ++tempAppearances[x / 3];
+    ++tempAppearances[y / 3];
+    ++tempAppearances[z / 3];
   }
 
   for(k = 0; k < this._vertices.length / 3; ++k){
@@ -88,13 +88,13 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    this._normals.push(temporalNormals[x] / temporalAppearances[k]);
-    this._normals.push(temporalNormals[y] / temporalAppearances[k]);
-    this._normals.push(temporalNormals[z] / temporalAppearances[k]);
+    this._normals.push(tempNormals[x] / tempAppearances[k]);
+    this._normals.push(tempNormals[y] / tempAppearances[k]);
+    this._normals.push(tempNormals[z] / tempAppearances[k]);
   }
 
-  temporalNormals.splice(0, temporalNormals.length);
-  temporalAppearances.splice(0, temporalAppearances.length);
+  tempNormals.splice(0, tempNormals.length);
+  tempAppearances.splice(0, tempAppearances.length);
 };
 
 EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
@@ -116,6 +116,96 @@ EZ3.Geometry.prototype.calculateMidPoint = function () {
 };
 
 EZ3.Geometry.prototype.calculateTangents = function() {
+  var x, y, z, k, r;
+
+  var point0 = vec3.create();
+  var point1 = vec3.create();
+  var point2 = vec3.create();
+
+  var vector0 = vec3.create();
+  var vector1 = vec3.create();
+
+  var normal = vec3.create();
+  var tangent = vec4.create();
+  var bitangent = vec3.create();
+
+  var textPoint0 = vec2.create();
+  var textPoint1 = vec2.create();
+  var textPoint2 = vec2.create();
+
+  var textVector0 = vec2.create();
+  var textVector1 = vec2.create();
+
+  var tempT = this.initArray(this._vertices.length, 0);
+  var tempB = this.initArray(this._vertices.length, 0);
+
+  for(k = 0; k < this._indices.length; k += 3) {
+
+    x = this._indices[k + 0];
+    y = this._indices[k + 1];
+    z = this._indices[k + 2];
+
+    vec3.set(point0, this._vertices[3 * x + 0], this._vertices[3 * x + 1], this._vertices[3 * x + 2]);
+    vec3.set(point1, this._vertices[3 * y + 0], this._vertices[3 * y + 1], this._vertices[3 * y + 2]);
+    vec3.set(point2, this._vertices[3 * z + 0], this._vertices[3 * z + 1], this._vertices[3 * z + 2]);
+
+    vec2.set(textPoint0, this._uv[2 * x + 0], this._uv[2 * x + 1]);
+    vec2.set(textPoint1, this._uv[2 * y + 0], this._uv[2 * y + 1]);
+    vec2.set(textPoint2, this._uv[2 * z + 0], this._uv[2 * z + 1]);
+
+    vec3.sub(vector0, point1, point0);
+    vec3.sub(vector1, point2, point0);
+
+    vec2.sub(textVector0, textPoint1, textPoint0);
+    vec2.sub(textVector1, textPoint2, textPoint0);
+
+    r = 1.0 / (textVector0[0] * textVector1[1] - textVector1[0] * textVector0[1]);
+
+    tangent[0] = (textVector1[1] * vector0[0] - textVector0[1] * vector1[0]) * r;
+    tangent[1] = (textVector1[1] * vector0[1] - textVector0[1] * vector1[1]) * r;
+    tangent[2] = (textVector1[1] * vector0[2] - textVector0[1] * vector1[2]) * r;
+
+    bitangent[0] = (textVector0[0] * vector1[0] - textVector1[0] * vector0[0]) * r;
+    bitangent[1] = (textVector0[0] * vector1[1] - textVector1[0] * vector0[1]) * r;
+    bitangent[2] = (textVector0[0] * vector1[2] - textVector1[0] * vector0[2]) * r;
+
+    tempT[3 * x + 0] += tangent[0];
+    tempT[3 * y + 0] += tangent[1];
+    tempT[3 * z + 0] += tangent[2];
+
+    tempT[3 * x + 1] += tangent[0];
+    tempT[3 * y + 1] += tangent[1];
+    tempT[3 * z + 1] += tangent[2];
+
+    tempT[3 * x + 2] += tangent[0];
+    tempT[3 * y + 2] += tangent[1];
+    tempT[3 * z + 2] += tangent[2];
+
+    tempB[3 * x + 0] += bitangent[0];
+    tempB[3 * y + 0] += bitangent[1];
+    tempB[3 * z + 0] += bitangent[2];
+
+    tempB[3 * x + 1] += bitangent[0];
+    tempB[3 * y + 1] += bitangent[1];
+    tempB[3 * z + 1] += bitangent[2];
+
+    tempB[3 * x + 2] += bitangent[0];
+    tempB[3 * y + 2] += bitangent[1];
+    tempB[3 * z + 2] += bitangent[2];
+
+  }
+
+  for(k = 0; k < this._vertices.length / 3; ++k) {
+
+    x = 3 * k + 0;
+    y = 3 * k + 1;
+    z = 3 * k + 2;
+
+    vec3.set(tangent, tempT[x], tempT[y], tempT[z]);
+    vec3.set(bitangent, tempB[x], tempB[y], tempB[z]);
+    vec3.set(normal, this._normals[x], this._normals[y], this._normals[z]);
+
+  }
 
 };
 
