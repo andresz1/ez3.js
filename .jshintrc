@@ -4,7 +4,7 @@
   "eqeqeq": true,
   "indent": 2,
   "latedef": true,
-  "maxlen": 120,
+  "maxlen": 150,
   "newcap": true,
   "camelcase": true,
   "sub": true,

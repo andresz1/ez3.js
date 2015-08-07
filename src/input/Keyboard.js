@@ -7,21 +7,20 @@ EZ3.Keyboard = function(domElement) {
   this._keys = [];
 
   this.enabled = false;
-  this.signals = {};
-  this.signals.onKeyPress = new EZ3.Signal();
-  this.signals.onKeyDown = new EZ3.Signal();
-  this.signals.onKeyUp = new EZ3.Signal();
+  this.onKeyPress = new EZ3.Signal();
+  this.onKeyDown = new EZ3.Signal();
+  this.onKeyUp = new EZ3.Signal();
 };
 
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
 
-  this._keys[event.keyCode].processDown(this.signals.onKeyPress, this.signals.onKeyDown);
+  this._keys[event.keyCode].processDown(this.onKeyPress, this.onKeyDown);
 };
 
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
-  this._keys[event.keyCode].processUp(this.signals.onKeyUp);
+  this._keys[event.keyCode].processUp(this.onKeyUp);
 };
 
 EZ3.Keyboard.prototype.enable = function() {
@@ -45,6 +44,9 @@ EZ3.Keyboard.prototype.disable = function() {
 
   this._domElement.removeEventListener('keydown', this._onKeyDown);
 	this._domElement.removeEventListener('keyup', this._onKeyUp);
+
+  delete this._onKeyDown;
+  delete this._onKeyUp;
 };
 
 EZ3.Keyboard.prototype.getKey = function(keyCode) {
