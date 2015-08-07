@@ -26,3 +26,6 @@ EZ3.Pointer.prototype.processMove = function(event, onMove) {
 
   onMove.dispatch(this);
 };
+
+EZ3.Pointer.MOUSE = 0;
+EZ3.Pointer.TOUCH_1 = 1;

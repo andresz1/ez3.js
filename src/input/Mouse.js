@@ -5,8 +5,8 @@
 EZ3.Mouse = function(domElement) {
   this._domElement = domElement;
 
-  this.pointer = new EZ3.MousePointer();
   this.enabled = false;
+  this.pointer = new EZ3.MousePointer();
   this.onPress = new EZ3.Signal();
   this.onMove = new EZ3.Signal();
   this.onUp = new EZ3.Signal();

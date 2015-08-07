@@ -5,8 +5,33 @@
 EZ3.Touch = function(domElement, device) {
   this._domElement = domElement;
   this._device = device;
+  this._pointers = [];
 
   this.enabled = false;
+};
+
+EZ3.Touch._onTouchPress = function(event) {
+  event.preventDefault();
+
+	for (var i = 0; i < event.changedTouches.length; i++) {
+    var id = event.changedTouches[i].identifier;
+
+    if(!this._pointers[id])
+      this._pointers[id] = new EZ3.TouchPointer(id);
+
+    this._pointers[id].processDown();
+  }
+};
+
+EZ3.Touch._onTouchMove = function(event) {
+
+};
+
+EZ3.Touch._onTouchUp = function(event) {
+  event.preventDefault();
+
+  for (var i = 0; i < event.changedTouches.length; i++)
+    this._pointers[event.changedTouches[i].identifier].processUp();
 };
 
 EZ3.Touch.prototype.enable = function() {
@@ -16,27 +41,15 @@ EZ3.Touch.prototype.enable = function() {
 
   if (this._device.touch) {
     this._onTouchPress = function(event) {
-      this._processTouchPress(event);
+      that._processTouchPress(event);
     };
 
     this._onTouchMove = function(event) {
-      this._processTouchMove(event);
+      that._processTouchMove(event);
     };
 
     this._onTouchUp = function(event) {
-      this._processTouchUp(event);
-    };
-
-    this._onTouchEnter = function(event) {
-      this._processTouchEnter(event);
-    };
-
-    this._onTouchLeave = function(event) {
-      this._processTouchLeave(event);
-    };
-
-    this._onTouchCancel = function(event) {
-      this._processTouchCancel(event);
+      that._processTouchUp(event);
     };
 
     if(this._device.touch === EZ3.device.TOUCH) {
@@ -44,7 +57,7 @@ EZ3.Touch.prototype.enable = function() {
       this._domElement.addEventListener('touchmove', this._onTouchMove, false);
       this._domElement.addEventListener('touchend', this._onTouchUp, false);
     }
-     else if (this._device.touch === EZ3.device.POINTER) {
+    else if (this._device.touch === EZ3.device.POINTER) {
       this._domElement.addEventListener('pointerdown', this._onTouchPress, false);
       this._domElement.addEventListener('pointermove', this._onTouchMove, false);
       this._domElement.addEventListener('pointerup', this._onTouchUp, false);
@@ -80,8 +93,7 @@ EZ3.Touch.prototype.disable = function() {
     delete this._onTouchPress;
     delete this._onTouchMove;
     delete this._onTouchUp;
-    delete this._onTouchEnter;
-    delete this._onTouchLeave;
-    delete this._onTouchCancel;
   }
 };
+
+EZ3.Touch.TAP = 0;
