@@ -3,14 +3,16 @@ module.exports = {
     'depconcat:deps',
     'depconcat:src',
     'uglify:deps',
-    'clean:deps',
-    'watch'
+    'depconcat:std',
+    'uglify:src',
+    'depconcat:min',
+    'clean:deps'
   ],
   'debug': [
     'depconcat:deps',
     'depconcat:src',
     'uglify:deps',
-    'clean:deps',
+    'depconcat:std',
     'watch'
   ],
   'release': [

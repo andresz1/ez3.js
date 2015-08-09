@@ -1,7 +1,7 @@
 module.exports = {
   deps: {
     files: {
-      '<%= dest %>.deps.min.js': ['<%= dest %>.deps.js']
+      '<%= dest %>.deps.min.js': ['<%= dest %>.deps.min.js']
     }
   },
   src: {
