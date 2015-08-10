@@ -12,6 +12,8 @@ EZ3.Keyboard = function(domElement) {
   this.onKeyUp = new EZ3.Signal();
 };
 
+EZ3.Keyboard.prototype.constructor = EZ3.Keyboard;
+
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);

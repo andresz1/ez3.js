@@ -13,6 +13,8 @@ EZ3.Touch = function(domElement, device) {
   this.onUp = new EZ3.Signal();
 };
 
+EZ3.Touch.prototype.constructor = EZ3.Touch;
+
 EZ3.Touch.prototype._processTouchPress = function(event) {
   event.preventDefault();
 
@@ -47,9 +49,9 @@ EZ3.Touch.prototype._processTouchUp = function(event) {
 };
 
 EZ3.Touch.prototype.enable = function() {
-  var that = this;
-
   if (this._device.touch) {
+    var that = this;
+
     this.enabled = true;
 
     this._onTouchPress = function(event) {
@@ -65,18 +67,22 @@ EZ3.Touch.prototype.enable = function() {
     };
 
     if (this._device.touch === EZ3.Device.TOUCH) {
-      this._domElement.addEventListener('touchstart', this._onTouchPress, false);
-      this._domElement.addEventListener('touchmove', this._onTouchMove, false);
-      this._domElement.addEventListener('touchend', this._onTouchUp, false);
+      this._press = 'touchstart';
+      this._move = 'touchmove';
+      this._up = 'touchend';
     } else if (this._device.touch === EZ3.Device.POINTER) {
-      this._domElement.addEventListener('pointerdown', this._onTouchPress, false);
-      this._domElement.addEventListener('pointermove', this._onTouchMove, false);
-      this._domElement.addEventListener('pointerup', this._onTouchUp, false);
+      this._press = 'pointerdown';
+      this._move = 'pointermove';
+      this._up = 'pointerup';
     } else {
-      this._domElement.addEventListener('MSPointerDown', this._onTouchPress, false);
-      this._domElement.addEventListener('MSPointerMove', this._onTouchMove, false);
-      this._domElement.addEventListener('MSPointerUp', this._onTouchUp, false);
+      this._press = 'MSPointerDown';
+      this._move = 'MSPointerMove';
+      this._up = 'MSPointerUp';
     }
+
+    this._domElement.addEventListener(this._press, this._onTouchPress, false);
+    this._domElement.addEventListener(this._move, this._onTouchMove, false);
+    this._domElement.addEventListener(this._up, this._onTouchUp, false);
   }
 };
 
@@ -84,23 +90,17 @@ EZ3.Touch.prototype.disable = function() {
   if (this._device.touch) {
     this.enabled = false;
 
-    if (this._device.touch === EZ3.device.TOUCH) {
-      this._domElement.addEventListener('touchstart', this._onTouchPress, false);
-      this._domElement.addEventListener('touchmove', this._onTouchMove, false);
-      this._domElement.addEventListener('touchend', this._onTouchUp, false);
-    } else if (this._device.touch === EZ3.device.POINTER) {
-      this._domElement.addEventListener('pointerdown', this._onTouchPress, false);
-      this._domElement.addEventListener('pointermove', this._onTouchMove, false);
-      this._domElement.addEventListener('pointerup', this._onTouchUp, false);
-    } else {
-      this._domElement.addEventListener('MSPointerDown', this._onTouchPress, false);
-      this._domElement.addEventListener('MSPointerMove', this._onTouchMove, false);
-      this._domElement.addEventListener('MSPointerUp', this._onTouchUp, false);
-    }
+    this._domElement.removeEventListener(this._press, this._onTouchPress, false);
+    this._domElement.removeEventListener(this._move, this._onTouchMove, false);
+    this._domElement.removeEventListener(this._up, this._onTouchUp, false);
 
     delete this._onTouchPress;
     delete this._onTouchMove;
     delete this._onTouchUp;
+
+    delete this._press;
+    delete this._move;
+    delete this._up;
   }
 };
 
