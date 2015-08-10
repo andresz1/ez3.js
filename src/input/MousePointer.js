@@ -20,12 +20,17 @@ EZ3.MousePointer.prototype.processPress = function(event, onPress, onMove) {
   if(!this._buttons[event.button])
     this._buttons[event.button] = new EZ3.Switch(event.button);
 
-  this._buttons[event.button].processPress(onPress);
-  EZ3.Pointer.prototype.processPress.call(this, event, onMove);
+  this._buttons[event.button].processPress();
+  EZ3.Pointer.prototype.processPress.call(this, event);
+
+  onPress.dispatch(this._buttons[event.button]);
+  onMove.dispatch(this);
 };
 
 EZ3.MousePointer.prototype.processUp = function(event, onUp) {
-  this._buttons[event.button].processUp(onUp);
+  this._buttons[event.button].processUp();
+
+  onUp.dispatch(this._buttons[event.button]);
 };
 
 EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {

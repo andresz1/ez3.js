@@ -1,478 +1,5 @@
-/**
- * @fileoverview gl-matrix - High performance matrix and vector operations
- * @author Brandon Jones
- * @author Colin MacKenzie IV
- * @version 2.3.0
- */
-
-/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. */
-
-!function(t,n){if("object"==typeof exports&&"object"==typeof module)module.exports=n();else if("function"==typeof define&&define.amd)define(n);else{var r=n();for(var a in r)("object"==typeof exports?exports:t)[a]=r[a]}}(this,function(){return function(t){function n(a){if(r[a])return r[a].exports;var e=r[a]={exports:{},id:a,loaded:!1};return t[a].call(e.exports,e,e.exports,n),e.loaded=!0,e.exports}var r={};return n.m=t,n.c=r,n.p="",n(0)}([function(t,n,r){n.glMatrix=r(1),n.mat2=r(2),n.mat2d=r(3),n.mat3=r(4),n.mat4=r(5),n.quat=r(6),n.vec2=r(9),n.vec3=r(7),n.vec4=r(8)},function(t,n){var r={};r.EPSILON=1e-6,r.ARRAY_TYPE="undefined"!=typeof Float32Array?Float32Array:Array,r.RANDOM=Math.random,r.setMatrixArrayType=function(t){GLMAT_ARRAY_TYPE=t};var a=Math.PI/180;r.toRadian=function(t){return t*a},t.exports=r},function(t,n,r){var a=r(1),e={};e.create=function(){var t=new a.ARRAY_TYPE(4);return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t},e.clone=function(t){var n=new a.ARRAY_TYPE(4);return n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n},e.copy=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t},e.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t},e.transpose=function(t,n){if(t===n){var r=n[1];t[1]=n[2],t[2]=r}else t[0]=n[0],t[1]=n[2],t[2]=n[1],t[3]=n[3];return t},e.invert=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=r*u-e*a;return o?(o=1/o,t[0]=u*o,t[1]=-a*o,t[2]=-e*o,t[3]=r*o,t):null},e.adjoint=function(t,n){var r=n[0];return t[0]=n[3],t[1]=-n[1],t[2]=-n[2],t[3]=r,t},e.determinant=function(t){return t[0]*t[3]-t[2]*t[1]},e.multiply=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=r[0],c=r[1],f=r[2],s=r[3];return t[0]=a*i+u*c,t[1]=e*i+o*c,t[2]=a*f+u*s,t[3]=e*f+o*s,t},e.mul=e.multiply,e.rotate=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(r),c=Math.cos(r);return t[0]=a*c+u*i,t[1]=e*c+o*i,t[2]=a*-i+u*c,t[3]=e*-i+o*c,t},e.scale=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=r[0],c=r[1];return t[0]=a*i,t[1]=e*i,t[2]=u*c,t[3]=o*c,t},e.fromRotation=function(t,n){var r=Math.sin(n),a=Math.cos(n);return t[0]=a,t[1]=r,t[2]=-r,t[3]=a,t},e.fromScaling=function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=n[1],t},e.str=function(t){return"mat2("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},e.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2))},e.LDU=function(t,n,r,a){return t[2]=a[2]/a[0],r[0]=a[0],r[1]=a[1],r[3]=a[3]-t[2]*r[1],[t,n,r]},t.exports=e},function(t,n,r){var a=r(1),e={};e.create=function(){var t=new a.ARRAY_TYPE(6);return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=0,t[5]=0,t},e.clone=function(t){var n=new a.ARRAY_TYPE(6);return n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n[4]=t[4],n[5]=t[5],n},e.copy=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=n[4],t[5]=n[5],t},e.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=0,t[5]=0,t},e.invert=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=n[4],i=n[5],c=r*u-a*e;return c?(c=1/c,t[0]=u*c,t[1]=-a*c,t[2]=-e*c,t[3]=r*c,t[4]=(e*i-u*o)*c,t[5]=(a*o-r*i)*c,t):null},e.determinant=function(t){return t[0]*t[3]-t[1]*t[2]},e.multiply=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=r[0],s=r[1],h=r[2],M=r[3],l=r[4],v=r[5];return t[0]=a*f+u*s,t[1]=e*f+o*s,t[2]=a*h+u*M,t[3]=e*h+o*M,t[4]=a*l+u*v+i,t[5]=e*l+o*v+c,t},e.mul=e.multiply,e.rotate=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=Math.sin(r),s=Math.cos(r);return t[0]=a*s+u*f,t[1]=e*s+o*f,t[2]=a*-f+u*s,t[3]=e*-f+o*s,t[4]=i,t[5]=c,t},e.scale=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=r[0],s=r[1];return t[0]=a*f,t[1]=e*f,t[2]=u*s,t[3]=o*s,t[4]=i,t[5]=c,t},e.translate=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=r[0],s=r[1];return t[0]=a,t[1]=e,t[2]=u,t[3]=o,t[4]=a*f+u*s+i,t[5]=e*f+o*s+c,t},e.fromRotation=function(t,n){var r=Math.sin(n),a=Math.cos(n);return t[0]=a,t[1]=r,t[2]=-r,t[3]=a,t[4]=0,t[5]=0,t},e.fromScaling=function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=n[1],t[4]=0,t[5]=0,t},e.fromTranslation=function(t,n){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=n[0],t[5]=n[1],t},e.str=function(t){return"mat2d("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+")"},e.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2)+Math.pow(t[4],2)+Math.pow(t[5],2)+1)},t.exports=e},function(t,n,r){var a=r(1),e={};e.create=function(){var t=new a.ARRAY_TYPE(9);return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},e.fromMat4=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[4],t[4]=n[5],t[5]=n[6],t[6]=n[8],t[7]=n[9],t[8]=n[10],t},e.clone=function(t){var n=new a.ARRAY_TYPE(9);return n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n[4]=t[4],n[5]=t[5],n[6]=t[6],n[7]=t[7],n[8]=t[8],n},e.copy=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=n[4],t[5]=n[5],t[6]=n[6],t[7]=n[7],t[8]=n[8],t},e.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},e.transpose=function(t,n){if(t===n){var r=n[1],a=n[2],e=n[5];t[1]=n[3],t[2]=n[6],t[3]=r,t[5]=n[7],t[6]=a,t[7]=e}else t[0]=n[0],t[1]=n[3],t[2]=n[6],t[3]=n[1],t[4]=n[4],t[5]=n[7],t[6]=n[2],t[7]=n[5],t[8]=n[8];return t},e.invert=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=n[4],i=n[5],c=n[6],f=n[7],s=n[8],h=s*o-i*f,M=-s*u+i*c,l=f*u-o*c,v=r*h+a*M+e*l;return v?(v=1/v,t[0]=h*v,t[1]=(-s*a+e*f)*v,t[2]=(i*a-e*o)*v,t[3]=M*v,t[4]=(s*r-e*c)*v,t[5]=(-i*r+e*u)*v,t[6]=l*v,t[7]=(-f*r+a*c)*v,t[8]=(o*r-a*u)*v,t):null},e.adjoint=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=n[4],i=n[5],c=n[6],f=n[7],s=n[8];return t[0]=o*s-i*f,t[1]=e*f-a*s,t[2]=a*i-e*o,t[3]=i*c-u*s,t[4]=r*s-e*c,t[5]=e*u-r*i,t[6]=u*f-o*c,t[7]=a*c-r*f,t[8]=r*o-a*u,t},e.determinant=function(t){var n=t[0],r=t[1],a=t[2],e=t[3],u=t[4],o=t[5],i=t[6],c=t[7],f=t[8];return n*(f*u-o*c)+r*(-f*e+o*i)+a*(c*e-u*i)},e.multiply=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=n[6],s=n[7],h=n[8],M=r[0],l=r[1],v=r[2],m=r[3],p=r[4],d=r[5],A=r[6],R=r[7],w=r[8];return t[0]=M*a+l*o+v*f,t[1]=M*e+l*i+v*s,t[2]=M*u+l*c+v*h,t[3]=m*a+p*o+d*f,t[4]=m*e+p*i+d*s,t[5]=m*u+p*c+d*h,t[6]=A*a+R*o+w*f,t[7]=A*e+R*i+w*s,t[8]=A*u+R*c+w*h,t},e.mul=e.multiply,e.translate=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=n[6],s=n[7],h=n[8],M=r[0],l=r[1];return t[0]=a,t[1]=e,t[2]=u,t[3]=o,t[4]=i,t[5]=c,t[6]=M*a+l*o+f,t[7]=M*e+l*i+s,t[8]=M*u+l*c+h,t},e.rotate=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=n[6],s=n[7],h=n[8],M=Math.sin(r),l=Math.cos(r);return t[0]=l*a+M*o,t[1]=l*e+M*i,t[2]=l*u+M*c,t[3]=l*o-M*a,t[4]=l*i-M*e,t[5]=l*c-M*u,t[6]=f,t[7]=s,t[8]=h,t},e.scale=function(t,n,r){var a=r[0],e=r[1];return t[0]=a*n[0],t[1]=a*n[1],t[2]=a*n[2],t[3]=e*n[3],t[4]=e*n[4],t[5]=e*n[5],t[6]=n[6],t[7]=n[7],t[8]=n[8],t},e.fromTranslation=function(t,n){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=n[0],t[7]=n[1],t[8]=1,t},e.fromRotation=function(t,n){var r=Math.sin(n),a=Math.cos(n);return t[0]=a,t[1]=r,t[2]=0,t[3]=-r,t[4]=a,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},e.fromScaling=function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=0,t[4]=n[1],t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},e.fromMat2d=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=0,t[3]=n[2],t[4]=n[3],t[5]=0,t[6]=n[4],t[7]=n[5],t[8]=1,t},e.fromQuat=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=r+r,i=a+a,c=e+e,f=r*o,s=a*o,h=a*i,M=e*o,l=e*i,v=e*c,m=u*o,p=u*i,d=u*c;return t[0]=1-h-v,t[3]=s-d,t[6]=M+p,t[1]=s+d,t[4]=1-f-v,t[7]=l-m,t[2]=M-p,t[5]=l+m,t[8]=1-f-h,t},e.normalFromMat4=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=n[4],i=n[5],c=n[6],f=n[7],s=n[8],h=n[9],M=n[10],l=n[11],v=n[12],m=n[13],p=n[14],d=n[15],A=r*i-a*o,R=r*c-e*o,w=r*f-u*o,q=a*c-e*i,Y=a*f-u*i,g=e*f-u*c,y=s*m-h*v,x=s*p-M*v,P=s*d-l*v,E=h*p-M*m,T=h*d-l*m,b=M*d-l*p,D=A*b-R*T+w*E+q*P-Y*x+g*y;return D?(D=1/D,t[0]=(i*b-c*T+f*E)*D,t[1]=(c*P-o*b-f*x)*D,t[2]=(o*T-i*P+f*y)*D,t[3]=(e*T-a*b-u*E)*D,t[4]=(r*b-e*P+u*x)*D,t[5]=(a*P-r*T-u*y)*D,t[6]=(m*g-p*Y+d*q)*D,t[7]=(p*w-v*g-d*R)*D,t[8]=(v*Y-m*w+d*A)*D,t):null},e.str=function(t){return"mat3("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+", "+t[6]+", "+t[7]+", "+t[8]+")"},e.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2)+Math.pow(t[4],2)+Math.pow(t[5],2)+Math.pow(t[6],2)+Math.pow(t[7],2)+Math.pow(t[8],2))},t.exports=e},function(t,n,r){var a=r(1),e={};e.create=function(){var t=new a.ARRAY_TYPE(16);return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},e.clone=function(t){var n=new a.ARRAY_TYPE(16);return n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n[4]=t[4],n[5]=t[5],n[6]=t[6],n[7]=t[7],n[8]=t[8],n[9]=t[9],n[10]=t[10],n[11]=t[11],n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15],n},e.copy=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=n[4],t[5]=n[5],t[6]=n[6],t[7]=n[7],t[8]=n[8],t[9]=n[9],t[10]=n[10],t[11]=n[11],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15],t},e.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},e.transpose=function(t,n){if(t===n){var r=n[1],a=n[2],e=n[3],u=n[6],o=n[7],i=n[11];t[1]=n[4],t[2]=n[8],t[3]=n[12],t[4]=r,t[6]=n[9],t[7]=n[13],t[8]=a,t[9]=u,t[11]=n[14],t[12]=e,t[13]=o,t[14]=i}else t[0]=n[0],t[1]=n[4],t[2]=n[8],t[3]=n[12],t[4]=n[1],t[5]=n[5],t[6]=n[9],t[7]=n[13],t[8]=n[2],t[9]=n[6],t[10]=n[10],t[11]=n[14],t[12]=n[3],t[13]=n[7],t[14]=n[11],t[15]=n[15];return t},e.invert=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=n[4],i=n[5],c=n[6],f=n[7],s=n[8],h=n[9],M=n[10],l=n[11],v=n[12],m=n[13],p=n[14],d=n[15],A=r*i-a*o,R=r*c-e*o,w=r*f-u*o,q=a*c-e*i,Y=a*f-u*i,g=e*f-u*c,y=s*m-h*v,x=s*p-M*v,P=s*d-l*v,E=h*p-M*m,T=h*d-l*m,b=M*d-l*p,D=A*b-R*T+w*E+q*P-Y*x+g*y;return D?(D=1/D,t[0]=(i*b-c*T+f*E)*D,t[1]=(e*T-a*b-u*E)*D,t[2]=(m*g-p*Y+d*q)*D,t[3]=(M*Y-h*g-l*q)*D,t[4]=(c*P-o*b-f*x)*D,t[5]=(r*b-e*P+u*x)*D,t[6]=(p*w-v*g-d*R)*D,t[7]=(s*g-M*w+l*R)*D,t[8]=(o*T-i*P+f*y)*D,t[9]=(a*P-r*T-u*y)*D,t[10]=(v*Y-m*w+d*A)*D,t[11]=(h*w-s*Y-l*A)*D,t[12]=(i*x-o*E-c*y)*D,t[13]=(r*E-a*x+e*y)*D,t[14]=(m*R-v*q-p*A)*D,t[15]=(s*q-h*R+M*A)*D,t):null},e.adjoint=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=n[4],i=n[5],c=n[6],f=n[7],s=n[8],h=n[9],M=n[10],l=n[11],v=n[12],m=n[13],p=n[14],d=n[15];return t[0]=i*(M*d-l*p)-h*(c*d-f*p)+m*(c*l-f*M),t[1]=-(a*(M*d-l*p)-h*(e*d-u*p)+m*(e*l-u*M)),t[2]=a*(c*d-f*p)-i*(e*d-u*p)+m*(e*f-u*c),t[3]=-(a*(c*l-f*M)-i*(e*l-u*M)+h*(e*f-u*c)),t[4]=-(o*(M*d-l*p)-s*(c*d-f*p)+v*(c*l-f*M)),t[5]=r*(M*d-l*p)-s*(e*d-u*p)+v*(e*l-u*M),t[6]=-(r*(c*d-f*p)-o*(e*d-u*p)+v*(e*f-u*c)),t[7]=r*(c*l-f*M)-o*(e*l-u*M)+s*(e*f-u*c),t[8]=o*(h*d-l*m)-s*(i*d-f*m)+v*(i*l-f*h),t[9]=-(r*(h*d-l*m)-s*(a*d-u*m)+v*(a*l-u*h)),t[10]=r*(i*d-f*m)-o*(a*d-u*m)+v*(a*f-u*i),t[11]=-(r*(i*l-f*h)-o*(a*l-u*h)+s*(a*f-u*i)),t[12]=-(o*(h*p-M*m)-s*(i*p-c*m)+v*(i*M-c*h)),t[13]=r*(h*p-M*m)-s*(a*p-e*m)+v*(a*M-e*h),t[14]=-(r*(i*p-c*m)-o*(a*p-e*m)+v*(a*c-e*i)),t[15]=r*(i*M-c*h)-o*(a*M-e*h)+s*(a*c-e*i),t},e.determinant=function(t){var n=t[0],r=t[1],a=t[2],e=t[3],u=t[4],o=t[5],i=t[6],c=t[7],f=t[8],s=t[9],h=t[10],M=t[11],l=t[12],v=t[13],m=t[14],p=t[15],d=n*o-r*u,A=n*i-a*u,R=n*c-e*u,w=r*i-a*o,q=r*c-e*o,Y=a*c-e*i,g=f*v-s*l,y=f*m-h*l,x=f*p-M*l,P=s*m-h*v,E=s*p-M*v,T=h*p-M*m;return d*T-A*E+R*P+w*x-q*y+Y*g},e.multiply=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=n[6],s=n[7],h=n[8],M=n[9],l=n[10],v=n[11],m=n[12],p=n[13],d=n[14],A=n[15],R=r[0],w=r[1],q=r[2],Y=r[3];return t[0]=R*a+w*i+q*h+Y*m,t[1]=R*e+w*c+q*M+Y*p,t[2]=R*u+w*f+q*l+Y*d,t[3]=R*o+w*s+q*v+Y*A,R=r[4],w=r[5],q=r[6],Y=r[7],t[4]=R*a+w*i+q*h+Y*m,t[5]=R*e+w*c+q*M+Y*p,t[6]=R*u+w*f+q*l+Y*d,t[7]=R*o+w*s+q*v+Y*A,R=r[8],w=r[9],q=r[10],Y=r[11],t[8]=R*a+w*i+q*h+Y*m,t[9]=R*e+w*c+q*M+Y*p,t[10]=R*u+w*f+q*l+Y*d,t[11]=R*o+w*s+q*v+Y*A,R=r[12],w=r[13],q=r[14],Y=r[15],t[12]=R*a+w*i+q*h+Y*m,t[13]=R*e+w*c+q*M+Y*p,t[14]=R*u+w*f+q*l+Y*d,t[15]=R*o+w*s+q*v+Y*A,t},e.mul=e.multiply,e.translate=function(t,n,r){var a,e,u,o,i,c,f,s,h,M,l,v,m=r[0],p=r[1],d=r[2];return n===t?(t[12]=n[0]*m+n[4]*p+n[8]*d+n[12],t[13]=n[1]*m+n[5]*p+n[9]*d+n[13],t[14]=n[2]*m+n[6]*p+n[10]*d+n[14],t[15]=n[3]*m+n[7]*p+n[11]*d+n[15]):(a=n[0],e=n[1],u=n[2],o=n[3],i=n[4],c=n[5],f=n[6],s=n[7],h=n[8],M=n[9],l=n[10],v=n[11],t[0]=a,t[1]=e,t[2]=u,t[3]=o,t[4]=i,t[5]=c,t[6]=f,t[7]=s,t[8]=h,t[9]=M,t[10]=l,t[11]=v,t[12]=a*m+i*p+h*d+n[12],t[13]=e*m+c*p+M*d+n[13],t[14]=u*m+f*p+l*d+n[14],t[15]=o*m+s*p+v*d+n[15]),t},e.scale=function(t,n,r){var a=r[0],e=r[1],u=r[2];return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t[3]=n[3]*a,t[4]=n[4]*e,t[5]=n[5]*e,t[6]=n[6]*e,t[7]=n[7]*e,t[8]=n[8]*u,t[9]=n[9]*u,t[10]=n[10]*u,t[11]=n[11]*u,t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15],t},e.rotate=function(t,n,r,e){var u,o,i,c,f,s,h,M,l,v,m,p,d,A,R,w,q,Y,g,y,x,P,E,T,b=e[0],D=e[1],L=e[2],_=Math.sqrt(b*b+D*D+L*L);return Math.abs(_)<a.EPSILON?null:(_=1/_,b*=_,D*=_,L*=_,u=Math.sin(r),o=Math.cos(r),i=1-o,c=n[0],f=n[1],s=n[2],h=n[3],M=n[4],l=n[5],v=n[6],m=n[7],p=n[8],d=n[9],A=n[10],R=n[11],w=b*b*i+o,q=D*b*i+L*u,Y=L*b*i-D*u,g=b*D*i-L*u,y=D*D*i+o,x=L*D*i+b*u,P=b*L*i+D*u,E=D*L*i-b*u,T=L*L*i+o,t[0]=c*w+M*q+p*Y,t[1]=f*w+l*q+d*Y,t[2]=s*w+v*q+A*Y,t[3]=h*w+m*q+R*Y,t[4]=c*g+M*y+p*x,t[5]=f*g+l*y+d*x,t[6]=s*g+v*y+A*x,t[7]=h*g+m*y+R*x,t[8]=c*P+M*E+p*T,t[9]=f*P+l*E+d*T,t[10]=s*P+v*E+A*T,t[11]=h*P+m*E+R*T,n!==t&&(t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t)},e.rotateX=function(t,n,r){var a=Math.sin(r),e=Math.cos(r),u=n[4],o=n[5],i=n[6],c=n[7],f=n[8],s=n[9],h=n[10],M=n[11];return n!==t&&(t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t[4]=u*e+f*a,t[5]=o*e+s*a,t[6]=i*e+h*a,t[7]=c*e+M*a,t[8]=f*e-u*a,t[9]=s*e-o*a,t[10]=h*e-i*a,t[11]=M*e-c*a,t},e.rotateY=function(t,n,r){var a=Math.sin(r),e=Math.cos(r),u=n[0],o=n[1],i=n[2],c=n[3],f=n[8],s=n[9],h=n[10],M=n[11];return n!==t&&(t[4]=n[4],t[5]=n[5],t[6]=n[6],t[7]=n[7],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t[0]=u*e-f*a,t[1]=o*e-s*a,t[2]=i*e-h*a,t[3]=c*e-M*a,t[8]=u*a+f*e,t[9]=o*a+s*e,t[10]=i*a+h*e,t[11]=c*a+M*e,t},e.rotateZ=function(t,n,r){var a=Math.sin(r),e=Math.cos(r),u=n[0],o=n[1],i=n[2],c=n[3],f=n[4],s=n[5],h=n[6],M=n[7];return n!==t&&(t[8]=n[8],t[9]=n[9],t[10]=n[10],t[11]=n[11],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t[0]=u*e+f*a,t[1]=o*e+s*a,t[2]=i*e+h*a,t[3]=c*e+M*a,t[4]=f*e-u*a,t[5]=s*e-o*a,t[6]=h*e-i*a,t[7]=M*e-c*a,t},e.fromTranslation=function(t,n){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=n[0],t[13]=n[1],t[14]=n[2],t[15]=1,t},e.fromScaling=function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=n[1],t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=n[2],t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},e.fromRotation=function(t,n,r){var e,u,o,i=r[0],c=r[1],f=r[2],s=Math.sqrt(i*i+c*c+f*f);return Math.abs(s)<a.EPSILON?null:(s=1/s,i*=s,c*=s,f*=s,e=Math.sin(n),u=Math.cos(n),o=1-u,t[0]=i*i*o+u,t[1]=c*i*o+f*e,t[2]=f*i*o-c*e,t[3]=0,t[4]=i*c*o-f*e,t[5]=c*c*o+u,t[6]=f*c*o+i*e,t[7]=0,t[8]=i*f*o+c*e,t[9]=c*f*o-i*e,t[10]=f*f*o+u,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t)},e.fromXRotation=function(t,n){var r=Math.sin(n),a=Math.cos(n);return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=a,t[6]=r,t[7]=0,t[8]=0,t[9]=-r,t[10]=a,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},e.fromYRotation=function(t,n){var r=Math.sin(n),a=Math.cos(n);return t[0]=a,t[1]=0,t[2]=-r,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=r,t[9]=0,t[10]=a,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},e.fromZRotation=function(t,n){var r=Math.sin(n),a=Math.cos(n);return t[0]=a,t[1]=r,t[2]=0,t[3]=0,t[4]=-r,t[5]=a,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},e.fromRotationTranslation=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=a+a,c=e+e,f=u+u,s=a*i,h=a*c,M=a*f,l=e*c,v=e*f,m=u*f,p=o*i,d=o*c,A=o*f;return t[0]=1-(l+m),t[1]=h+A,t[2]=M-d,t[3]=0,t[4]=h-A,t[5]=1-(s+m),t[6]=v+p,t[7]=0,t[8]=M+d,t[9]=v-p,t[10]=1-(s+l),t[11]=0,t[12]=r[0],t[13]=r[1],t[14]=r[2],t[15]=1,t},e.fromRotationTranslationScale=function(t,n,r,a){var e=n[0],u=n[1],o=n[2],i=n[3],c=e+e,f=u+u,s=o+o,h=e*c,M=e*f,l=e*s,v=u*f,m=u*s,p=o*s,d=i*c,A=i*f,R=i*s,w=a[0],q=a[1],Y=a[2];return t[0]=(1-(v+p))*w,t[1]=(M+R)*w,t[2]=(l-A)*w,t[3]=0,t[4]=(M-R)*q,t[5]=(1-(h+p))*q,t[6]=(m+d)*q,t[7]=0,t[8]=(l+A)*Y,t[9]=(m-d)*Y,t[10]=(1-(h+v))*Y,t[11]=0,t[12]=r[0],t[13]=r[1],t[14]=r[2],t[15]=1,t},e.fromRotationTranslationScaleOrigin=function(t,n,r,a,e){var u=n[0],o=n[1],i=n[2],c=n[3],f=u+u,s=o+o,h=i+i,M=u*f,l=u*s,v=u*h,m=o*s,p=o*h,d=i*h,A=c*f,R=c*s,w=c*h,q=a[0],Y=a[1],g=a[2],y=e[0],x=e[1],P=e[2];return t[0]=(1-(m+d))*q,t[1]=(l+w)*q,t[2]=(v-R)*q,t[3]=0,t[4]=(l-w)*Y,t[5]=(1-(M+d))*Y,t[6]=(p+A)*Y,t[7]=0,t[8]=(v+R)*g,t[9]=(p-A)*g,t[10]=(1-(M+m))*g,t[11]=0,t[12]=r[0]+y-(t[0]*y+t[4]*x+t[8]*P),t[13]=r[1]+x-(t[1]*y+t[5]*x+t[9]*P),t[14]=r[2]+P-(t[2]*y+t[6]*x+t[10]*P),t[15]=1,t},e.fromQuat=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=r+r,i=a+a,c=e+e,f=r*o,s=a*o,h=a*i,M=e*o,l=e*i,v=e*c,m=u*o,p=u*i,d=u*c;return t[0]=1-h-v,t[1]=s+d,t[2]=M-p,t[3]=0,t[4]=s-d,t[5]=1-f-v,t[6]=l+m,t[7]=0,t[8]=M+p,t[9]=l-m,t[10]=1-f-h,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},e.frustum=function(t,n,r,a,e,u,o){var i=1/(r-n),c=1/(e-a),f=1/(u-o);return t[0]=2*u*i,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=2*u*c,t[6]=0,t[7]=0,t[8]=(r+n)*i,t[9]=(e+a)*c,t[10]=(o+u)*f,t[11]=-1,t[12]=0,t[13]=0,t[14]=o*u*2*f,t[15]=0,t},e.perspective=function(t,n,r,a,e){var u=1/Math.tan(n/2),o=1/(a-e);return t[0]=u/r,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=u,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=(e+a)*o,t[11]=-1,t[12]=0,t[13]=0,t[14]=2*e*a*o,t[15]=0,t},e.perspectiveFromFieldOfView=function(t,n,r,a){var e=Math.tan(n.upDegrees*Math.PI/180),u=Math.tan(n.downDegrees*Math.PI/180),o=Math.tan(n.leftDegrees*Math.PI/180),i=Math.tan(n.rightDegrees*Math.PI/180),c=2/(o+i),f=2/(e+u);return t[0]=c,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=f,t[6]=0,t[7]=0,t[8]=-((o-i)*c*.5),t[9]=(e-u)*f*.5,t[10]=a/(r-a),t[11]=-1,t[12]=0,t[13]=0,t[14]=a*r/(r-a),t[15]=0,t},e.ortho=function(t,n,r,a,e,u,o){var i=1/(n-r),c=1/(a-e),f=1/(u-o);return t[0]=-2*i,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=-2*c,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=2*f,t[11]=0,t[12]=(n+r)*i,t[13]=(e+a)*c,t[14]=(o+u)*f,t[15]=1,t},e.lookAt=function(t,n,r,u){var o,i,c,f,s,h,M,l,v,m,p=n[0],d=n[1],A=n[2],R=u[0],w=u[1],q=u[2],Y=r[0],g=r[1],y=r[2];return Math.abs(p-Y)<a.EPSILON&&Math.abs(d-g)<a.EPSILON&&Math.abs(A-y)<a.EPSILON?e.identity(t):(M=p-Y,l=d-g,v=A-y,m=1/Math.sqrt(M*M+l*l+v*v),M*=m,l*=m,v*=m,o=w*v-q*l,i=q*M-R*v,c=R*l-w*M,m=Math.sqrt(o*o+i*i+c*c),m?(m=1/m,o*=m,i*=m,c*=m):(o=0,i=0,c=0),f=l*c-v*i,s=v*o-M*c,h=M*i-l*o,m=Math.sqrt(f*f+s*s+h*h),m?(m=1/m,f*=m,s*=m,h*=m):(f=0,s=0,h=0),t[0]=o,t[1]=f,t[2]=M,t[3]=0,t[4]=i,t[5]=s,t[6]=l,t[7]=0,t[8]=c,t[9]=h,t[10]=v,t[11]=0,t[12]=-(o*p+i*d+c*A),t[13]=-(f*p+s*d+h*A),t[14]=-(M*p+l*d+v*A),t[15]=1,t)},e.str=function(t){return"mat4("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+", "+t[6]+", "+t[7]+", "+t[8]+", "+t[9]+", "+t[10]+", "+t[11]+", "+t[12]+", "+t[13]+", "+t[14]+", "+t[15]+")"},e.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2)+Math.pow(t[4],2)+Math.pow(t[5],2)+Math.pow(t[6],2)+Math.pow(t[7],2)+Math.pow(t[8],2)+Math.pow(t[9],2)+Math.pow(t[10],2)+Math.pow(t[11],2)+Math.pow(t[12],2)+Math.pow(t[13],2)+Math.pow(t[14],2)+Math.pow(t[15],2))},t.exports=e},function(t,n,r){var a=r(1),e=r(4),u=r(7),o=r(8),i={};i.create=function(){var t=new a.ARRAY_TYPE(4);return t[0]=0,t[1]=0,t[2]=0,t[3]=1,t},i.rotationTo=function(){var t=u.create(),n=u.fromValues(1,0,0),r=u.fromValues(0,1,0);return function(a,e,o){var c=u.dot(e,o);return-.999999>c?(u.cross(t,n,e),u.length(t)<1e-6&&u.cross(t,r,e),u.normalize(t,t),i.setAxisAngle(a,t,Math.PI),a):c>.999999?(a[0]=0,a[1]=0,a[2]=0,a[3]=1,a):(u.cross(t,e,o),a[0]=t[0],a[1]=t[1],a[2]=t[2],a[3]=1+c,i.normalize(a,a))}}(),i.setAxes=function(){var t=e.create();return function(n,r,a,e){return t[0]=a[0],t[3]=a[1],t[6]=a[2],t[1]=e[0],t[4]=e[1],t[7]=e[2],t[2]=-r[0],t[5]=-r[1],t[8]=-r[2],i.normalize(n,i.fromMat3(n,t))}}(),i.clone=o.clone,i.fromValues=o.fromValues,i.copy=o.copy,i.set=o.set,i.identity=function(t){return t[0]=0,t[1]=0,t[2]=0,t[3]=1,t},i.setAxisAngle=function(t,n,r){r=.5*r;var a=Math.sin(r);return t[0]=a*n[0],t[1]=a*n[1],t[2]=a*n[2],t[3]=Math.cos(r),t},i.add=o.add,i.multiply=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3],i=r[0],c=r[1],f=r[2],s=r[3];return t[0]=a*s+o*i+e*f-u*c,t[1]=e*s+o*c+u*i-a*f,t[2]=u*s+o*f+a*c-e*i,t[3]=o*s-a*i-e*c-u*f,t},i.mul=i.multiply,i.scale=o.scale,i.rotateX=function(t,n,r){r*=.5;var a=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(r),c=Math.cos(r);return t[0]=a*c+o*i,t[1]=e*c+u*i,t[2]=u*c-e*i,t[3]=o*c-a*i,t},i.rotateY=function(t,n,r){r*=.5;var a=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(r),c=Math.cos(r);return t[0]=a*c-u*i,t[1]=e*c+o*i,t[2]=u*c+a*i,t[3]=o*c-e*i,t},i.rotateZ=function(t,n,r){r*=.5;var a=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(r),c=Math.cos(r);return t[0]=a*c+e*i,t[1]=e*c-a*i,t[2]=u*c+o*i,t[3]=o*c-u*i,t},i.calculateW=function(t,n){var r=n[0],a=n[1],e=n[2];return t[0]=r,t[1]=a,t[2]=e,t[3]=Math.sqrt(Math.abs(1-r*r-a*a-e*e)),t},i.dot=o.dot,i.lerp=o.lerp,i.slerp=function(t,n,r,a){var e,u,o,i,c,f=n[0],s=n[1],h=n[2],M=n[3],l=r[0],v=r[1],m=r[2],p=r[3];return u=f*l+s*v+h*m+M*p,0>u&&(u=-u,l=-l,v=-v,m=-m,p=-p),1-u>1e-6?(e=Math.acos(u),o=Math.sin(e),i=Math.sin((1-a)*e)/o,c=Math.sin(a*e)/o):(i=1-a,c=a),t[0]=i*f+c*l,t[1]=i*s+c*v,t[2]=i*h+c*m,t[3]=i*M+c*p,t},i.sqlerp=function(){var t=i.create(),n=i.create();return function(r,a,e,u,o,c){return i.slerp(t,a,o,c),i.slerp(n,e,u,c),i.slerp(r,t,n,2*c*(1-c)),r}}(),i.invert=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=r*r+a*a+e*e+u*u,i=o?1/o:0;return t[0]=-r*i,t[1]=-a*i,t[2]=-e*i,t[3]=u*i,t},i.conjugate=function(t,n){return t[0]=-n[0],t[1]=-n[1],t[2]=-n[2],t[3]=n[3],t},i.length=o.length,i.len=i.length,i.squaredLength=o.squaredLength,i.sqrLen=i.squaredLength,i.normalize=o.normalize,i.fromMat3=function(t,n){var r,a=n[0]+n[4]+n[8];if(a>0)r=Math.sqrt(a+1),t[3]=.5*r,r=.5/r,t[0]=(n[5]-n[7])*r,t[1]=(n[6]-n[2])*r,t[2]=(n[1]-n[3])*r;else{var e=0;n[4]>n[0]&&(e=1),n[8]>n[3*e+e]&&(e=2);var u=(e+1)%3,o=(e+2)%3;r=Math.sqrt(n[3*e+e]-n[3*u+u]-n[3*o+o]+1),t[e]=.5*r,r=.5/r,t[3]=(n[3*u+o]-n[3*o+u])*r,t[u]=(n[3*u+e]+n[3*e+u])*r,t[o]=(n[3*o+e]+n[3*e+o])*r}return t},i.str=function(t){return"quat("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},t.exports=i},function(t,n,r){var a=r(1),e={};e.create=function(){var t=new a.ARRAY_TYPE(3);return t[0]=0,t[1]=0,t[2]=0,t},e.clone=function(t){var n=new a.ARRAY_TYPE(3);return n[0]=t[0],n[1]=t[1],n[2]=t[2],n},e.fromValues=function(t,n,r){var e=new a.ARRAY_TYPE(3);return e[0]=t,e[1]=n,e[2]=r,e},e.copy=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t},e.set=function(t,n,r,a){return t[0]=n,t[1]=r,t[2]=a,t},e.add=function(t,n,r){return t[0]=n[0]+r[0],t[1]=n[1]+r[1],t[2]=n[2]+r[2],t},e.subtract=function(t,n,r){return t[0]=n[0]-r[0],t[1]=n[1]-r[1],t[2]=n[2]-r[2],t},e.sub=e.subtract,e.multiply=function(t,n,r){return t[0]=n[0]*r[0],t[1]=n[1]*r[1],t[2]=n[2]*r[2],t},e.mul=e.multiply,e.divide=function(t,n,r){return t[0]=n[0]/r[0],t[1]=n[1]/r[1],t[2]=n[2]/r[2],t},e.div=e.divide,e.min=function(t,n,r){return t[0]=Math.min(n[0],r[0]),t[1]=Math.min(n[1],r[1]),t[2]=Math.min(n[2],r[2]),t},e.max=function(t,n,r){return t[0]=Math.max(n[0],r[0]),t[1]=Math.max(n[1],r[1]),t[2]=Math.max(n[2],r[2]),t},e.scale=function(t,n,r){return t[0]=n[0]*r,t[1]=n[1]*r,t[2]=n[2]*r,t},e.scaleAndAdd=function(t,n,r,a){return t[0]=n[0]+r[0]*a,t[1]=n[1]+r[1]*a,t[2]=n[2]+r[2]*a,t},e.distance=function(t,n){var r=n[0]-t[0],a=n[1]-t[1],e=n[2]-t[2];return Math.sqrt(r*r+a*a+e*e)},e.dist=e.distance,e.squaredDistance=function(t,n){var r=n[0]-t[0],a=n[1]-t[1],e=n[2]-t[2];return r*r+a*a+e*e},e.sqrDist=e.squaredDistance,e.length=function(t){var n=t[0],r=t[1],a=t[2];return Math.sqrt(n*n+r*r+a*a)},e.len=e.length,e.squaredLength=function(t){var n=t[0],r=t[1],a=t[2];return n*n+r*r+a*a},e.sqrLen=e.squaredLength,e.negate=function(t,n){return t[0]=-n[0],t[1]=-n[1],t[2]=-n[2],t},e.inverse=function(t,n){return t[0]=1/n[0],t[1]=1/n[1],t[2]=1/n[2],t},e.normalize=function(t,n){var r=n[0],a=n[1],e=n[2],u=r*r+a*a+e*e;return u>0&&(u=1/Math.sqrt(u),t[0]=n[0]*u,t[1]=n[1]*u,t[2]=n[2]*u),t},e.dot=function(t,n){return t[0]*n[0]+t[1]*n[1]+t[2]*n[2]},e.cross=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=r[0],i=r[1],c=r[2];return t[0]=e*c-u*i,t[1]=u*o-a*c,t[2]=a*i-e*o,t},e.lerp=function(t,n,r,a){var e=n[0],u=n[1],o=n[2];return t[0]=e+a*(r[0]-e),t[1]=u+a*(r[1]-u),t[2]=o+a*(r[2]-o),t},e.hermite=function(t,n,r,a,e,u){var o=u*u,i=o*(2*u-3)+1,c=o*(u-2)+u,f=o*(u-1),s=o*(3-2*u);return t[0]=n[0]*i+r[0]*c+a[0]*f+e[0]*s,t[1]=n[1]*i+r[1]*c+a[1]*f+e[1]*s,t[2]=n[2]*i+r[2]*c+a[2]*f+e[2]*s,t},e.bezier=function(t,n,r,a,e,u){var o=1-u,i=o*o,c=u*u,f=i*o,s=3*u*i,h=3*c*o,M=c*u;return t[0]=n[0]*f+r[0]*s+a[0]*h+e[0]*M,t[1]=n[1]*f+r[1]*s+a[1]*h+e[1]*M,t[2]=n[2]*f+r[2]*s+a[2]*h+e[2]*M,t},e.random=function(t,n){n=n||1;var r=2*a.RANDOM()*Math.PI,e=2*a.RANDOM()-1,u=Math.sqrt(1-e*e)*n;return t[0]=Math.cos(r)*u,t[1]=Math.sin(r)*u,t[2]=e*n,t},e.transformMat4=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=r[3]*a+r[7]*e+r[11]*u+r[15];return o=o||1,t[0]=(r[0]*a+r[4]*e+r[8]*u+r[12])/o,t[1]=(r[1]*a+r[5]*e+r[9]*u+r[13])/o,t[2]=(r[2]*a+r[6]*e+r[10]*u+r[14])/o,t},e.transformMat3=function(t,n,r){var a=n[0],e=n[1],u=n[2];return t[0]=a*r[0]+e*r[3]+u*r[6],t[1]=a*r[1]+e*r[4]+u*r[7],t[2]=a*r[2]+e*r[5]+u*r[8],t},e.transformQuat=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=r[0],i=r[1],c=r[2],f=r[3],s=f*a+i*u-c*e,h=f*e+c*a-o*u,M=f*u+o*e-i*a,l=-o*a-i*e-c*u;return t[0]=s*f+l*-o+h*-c-M*-i,t[1]=h*f+l*-i+M*-o-s*-c,t[2]=M*f+l*-c+s*-i-h*-o,t},e.rotateX=function(t,n,r,a){var e=[],u=[];return e[0]=n[0]-r[0],e[1]=n[1]-r[1],e[2]=n[2]-r[2],u[0]=e[0],u[1]=e[1]*Math.cos(a)-e[2]*Math.sin(a),u[2]=e[1]*Math.sin(a)+e[2]*Math.cos(a),t[0]=u[0]+r[0],t[1]=u[1]+r[1],t[2]=u[2]+r[2],t},e.rotateY=function(t,n,r,a){var e=[],u=[];return e[0]=n[0]-r[0],e[1]=n[1]-r[1],e[2]=n[2]-r[2],u[0]=e[2]*Math.sin(a)+e[0]*Math.cos(a),u[1]=e[1],u[2]=e[2]*Math.cos(a)-e[0]*Math.sin(a),t[0]=u[0]+r[0],t[1]=u[1]+r[1],t[2]=u[2]+r[2],t},e.rotateZ=function(t,n,r,a){var e=[],u=[];return e[0]=n[0]-r[0],e[1]=n[1]-r[1],e[2]=n[2]-r[2],u[0]=e[0]*Math.cos(a)-e[1]*Math.sin(a),u[1]=e[0]*Math.sin(a)+e[1]*Math.cos(a),u[2]=e[2],t[0]=u[0]+r[0],t[1]=u[1]+r[1],t[2]=u[2]+r[2],t},e.forEach=function(){var t=e.create();return function(n,r,a,e,u,o){var i,c;for(r||(r=3),a||(a=0),c=e?Math.min(e*r+a,n.length):n.length,i=a;c>i;i+=r)t[0]=n[i],t[1]=n[i+1],t[2]=n[i+2],u(t,t,o),n[i]=t[0],n[i+1]=t[1],n[i+2]=t[2];return n}}(),e.angle=function(t,n){var r=e.fromValues(t[0],t[1],t[2]),a=e.fromValues(n[0],n[1],n[2]);e.normalize(r,r),e.normalize(a,a);var u=e.dot(r,a);return u>1?0:Math.acos(u)},e.str=function(t){return"vec3("+t[0]+", "+t[1]+", "+t[2]+")"},t.exports=e},function(t,n,r){var a=r(1),e={};e.create=function(){var t=new a.ARRAY_TYPE(4);return t[0]=0,t[1]=0,t[2]=0,t[3]=0,t},e.clone=function(t){var n=new a.ARRAY_TYPE(4);return n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n},e.fromValues=function(t,n,r,e){var u=new a.ARRAY_TYPE(4);return u[0]=t,u[1]=n,u[2]=r,u[3]=e,u},e.copy=function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t},e.set=function(t,n,r,a,e){return t[0]=n,t[1]=r,t[2]=a,t[3]=e,t},e.add=function(t,n,r){return t[0]=n[0]+r[0],t[1]=n[1]+r[1],t[2]=n[2]+r[2],t[3]=n[3]+r[3],t},e.subtract=function(t,n,r){return t[0]=n[0]-r[0],t[1]=n[1]-r[1],t[2]=n[2]-r[2],t[3]=n[3]-r[3],t},e.sub=e.subtract,e.multiply=function(t,n,r){return t[0]=n[0]*r[0],t[1]=n[1]*r[1],t[2]=n[2]*r[2],t[3]=n[3]*r[3],t},e.mul=e.multiply,e.divide=function(t,n,r){return t[0]=n[0]/r[0],t[1]=n[1]/r[1],t[2]=n[2]/r[2],t[3]=n[3]/r[3],t},e.div=e.divide,e.min=function(t,n,r){return t[0]=Math.min(n[0],r[0]),t[1]=Math.min(n[1],r[1]),t[2]=Math.min(n[2],r[2]),t[3]=Math.min(n[3],r[3]),t},e.max=function(t,n,r){return t[0]=Math.max(n[0],r[0]),t[1]=Math.max(n[1],r[1]),t[2]=Math.max(n[2],r[2]),t[3]=Math.max(n[3],r[3]),t},e.scale=function(t,n,r){return t[0]=n[0]*r,t[1]=n[1]*r,t[2]=n[2]*r,t[3]=n[3]*r,t},e.scaleAndAdd=function(t,n,r,a){return t[0]=n[0]+r[0]*a,t[1]=n[1]+r[1]*a,t[2]=n[2]+r[2]*a,t[3]=n[3]+r[3]*a,t},e.distance=function(t,n){var r=n[0]-t[0],a=n[1]-t[1],e=n[2]-t[2],u=n[3]-t[3];return Math.sqrt(r*r+a*a+e*e+u*u)},e.dist=e.distance,e.squaredDistance=function(t,n){var r=n[0]-t[0],a=n[1]-t[1],e=n[2]-t[2],u=n[3]-t[3];return r*r+a*a+e*e+u*u},e.sqrDist=e.squaredDistance,e.length=function(t){var n=t[0],r=t[1],a=t[2],e=t[3];return Math.sqrt(n*n+r*r+a*a+e*e)},e.len=e.length,e.squaredLength=function(t){var n=t[0],r=t[1],a=t[2],e=t[3];return n*n+r*r+a*a+e*e},e.sqrLen=e.squaredLength,e.negate=function(t,n){return t[0]=-n[0],t[1]=-n[1],t[2]=-n[2],t[3]=-n[3],t},e.inverse=function(t,n){return t[0]=1/n[0],t[1]=1/n[1],t[2]=1/n[2],t[3]=1/n[3],t},e.normalize=function(t,n){var r=n[0],a=n[1],e=n[2],u=n[3],o=r*r+a*a+e*e+u*u;return o>0&&(o=1/Math.sqrt(o),t[0]=r*o,t[1]=a*o,t[2]=e*o,t[3]=u*o),t},e.dot=function(t,n){return t[0]*n[0]+t[1]*n[1]+t[2]*n[2]+t[3]*n[3]},e.lerp=function(t,n,r,a){var e=n[0],u=n[1],o=n[2],i=n[3];return t[0]=e+a*(r[0]-e),t[1]=u+a*(r[1]-u),t[2]=o+a*(r[2]-o),t[3]=i+a*(r[3]-i),t},e.random=function(t,n){return n=n||1,t[0]=a.RANDOM(),t[1]=a.RANDOM(),t[2]=a.RANDOM(),t[3]=a.RANDOM(),e.normalize(t,t),e.scale(t,t,n),t},e.transformMat4=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=n[3];return t[0]=r[0]*a+r[4]*e+r[8]*u+r[12]*o,t[1]=r[1]*a+r[5]*e+r[9]*u+r[13]*o,t[2]=r[2]*a+r[6]*e+r[10]*u+r[14]*o,t[3]=r[3]*a+r[7]*e+r[11]*u+r[15]*o,t},e.transformQuat=function(t,n,r){var a=n[0],e=n[1],u=n[2],o=r[0],i=r[1],c=r[2],f=r[3],s=f*a+i*u-c*e,h=f*e+c*a-o*u,M=f*u+o*e-i*a,l=-o*a-i*e-c*u;return t[0]=s*f+l*-o+h*-c-M*-i,t[1]=h*f+l*-i+M*-o-s*-c,t[2]=M*f+l*-c+s*-i-h*-o,t[3]=n[3],t},e.forEach=function(){var t=e.create();return function(n,r,a,e,u,o){var i,c;for(r||(r=4),a||(a=0),c=e?Math.min(e*r+a,n.length):n.length,i=a;c>i;i+=r)t[0]=n[i],t[1]=n[i+1],t[2]=n[i+2],t[3]=n[i+3],u(t,t,o),n[i]=t[0],n[i+1]=t[1],n[i+2]=t[2],n[i+3]=t[3];return n}}(),e.str=function(t){return"vec4("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},t.exports=e},function(t,n,r){var a=r(1),e={};e.create=function(){var t=new a.ARRAY_TYPE(2);return t[0]=0,t[1]=0,t},e.clone=function(t){var n=new a.ARRAY_TYPE(2);return n[0]=t[0],n[1]=t[1],n},e.fromValues=function(t,n){var r=new a.ARRAY_TYPE(2);return r[0]=t,r[1]=n,r},e.copy=function(t,n){return t[0]=n[0],t[1]=n[1],t},e.set=function(t,n,r){return t[0]=n,t[1]=r,t},e.add=function(t,n,r){return t[0]=n[0]+r[0],t[1]=n[1]+r[1],t},e.subtract=function(t,n,r){return t[0]=n[0]-r[0],t[1]=n[1]-r[1],t},e.sub=e.subtract,e.multiply=function(t,n,r){return t[0]=n[0]*r[0],t[1]=n[1]*r[1],t},e.mul=e.multiply,e.divide=function(t,n,r){return t[0]=n[0]/r[0],t[1]=n[1]/r[1],t},e.div=e.divide,e.min=function(t,n,r){return t[0]=Math.min(n[0],r[0]),t[1]=Math.min(n[1],r[1]),t},e.max=function(t,n,r){return t[0]=Math.max(n[0],r[0]),t[1]=Math.max(n[1],r[1]),t},e.scale=function(t,n,r){return t[0]=n[0]*r,t[1]=n[1]*r,t},e.scaleAndAdd=function(t,n,r,a){return t[0]=n[0]+r[0]*a,t[1]=n[1]+r[1]*a,t},e.distance=function(t,n){var r=n[0]-t[0],a=n[1]-t[1];return Math.sqrt(r*r+a*a)},e.dist=e.distance,e.squaredDistance=function(t,n){var r=n[0]-t[0],a=n[1]-t[1];return r*r+a*a},e.sqrDist=e.squaredDistance,e.length=function(t){var n=t[0],r=t[1];return Math.sqrt(n*n+r*r)},e.len=e.length,e.squaredLength=function(t){var n=t[0],r=t[1];return n*n+r*r},e.sqrLen=e.squaredLength,e.negate=function(t,n){return t[0]=-n[0],t[1]=-n[1],t},e.inverse=function(t,n){return t[0]=1/n[0],t[1]=1/n[1],t},e.normalize=function(t,n){var r=n[0],a=n[1],e=r*r+a*a;return e>0&&(e=1/Math.sqrt(e),t[0]=n[0]*e,t[1]=n[1]*e),t},e.dot=function(t,n){return t[0]*n[0]+t[1]*n[1]},e.cross=function(t,n,r){var a=n[0]*r[1]-n[1]*r[0];return t[0]=t[1]=0,t[2]=a,t},e.lerp=function(t,n,r,a){var e=n[0],u=n[1];return t[0]=e+a*(r[0]-e),t[1]=u+a*(r[1]-u),t},e.random=function(t,n){n=n||1;var r=2*a.RANDOM()*Math.PI;return t[0]=Math.cos(r)*n,t[1]=Math.sin(r)*n,t},e.transformMat2=function(t,n,r){var a=n[0],e=n[1];return t[0]=r[0]*a+r[2]*e,t[1]=r[1]*a+r[3]*e,t},e.transformMat2d=function(t,n,r){var a=n[0],e=n[1];return t[0]=r[0]*a+r[2]*e+r[4],t[1]=r[1]*a+r[3]*e+r[5],t},e.transformMat3=function(t,n,r){
-var a=n[0],e=n[1];return t[0]=r[0]*a+r[3]*e+r[6],t[1]=r[1]*a+r[4]*e+r[7],t},e.transformMat4=function(t,n,r){var a=n[0],e=n[1];return t[0]=r[0]*a+r[4]*e+r[12],t[1]=r[1]*a+r[5]*e+r[13],t},e.forEach=function(){var t=e.create();return function(n,r,a,e,u,o){var i,c;for(r||(r=2),a||(a=0),c=e?Math.min(e*r+a,n.length):n.length,i=a;c>i;i+=r)t[0]=n[i],t[1]=n[i+1],u(t,t,o),n[i]=t[0],n[i+1]=t[1];return n}}(),e.str=function(t){return"vec2("+t[0]+", "+t[1]+")"},t.exports=e}])});
-/*jslint onevar:true, undef:true, newcap:true, regexp:true, bitwise:true, maxerr:50, indent:4, white:false, nomen:false, plusplus:false */
-/*global define:false, require:false, exports:false, module:false, signals:false */
-
-/** @license
- * JS Signals <http://millermedeiros.github.com/js-signals/>
- * Released under the MIT license
- * Author: Miller Medeiros
- * Version: 1.0.0 - Build: 268 (2012/11/29 05:48 PM)
- */
-
-(function(global){
-
-    // SignalBinding -------------------------------------------------
-    //================================================================
-
-    /**
-     * Object that represents a binding between a Signal and a listener function.
-     * <br />- <strong>This is an internal constructor and shouldn't be called by regular users.</strong>
-     * <br />- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
-     * @author Miller Medeiros
-     * @constructor
-     * @internal
-     * @name SignalBinding
-     * @param {Signal} signal Reference to Signal object that listener is currently bound to.
-     * @param {Function} listener Handler function bound to the signal.
-     * @param {boolean} isOnce If binding should be executed just once.
-     * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-     * @param {Number} [priority] The priority level of the event listener. (default = 0).
-     */
-    function SignalBinding(signal, listener, isOnce, listenerContext, priority) {
-
-        /**
-         * Handler function bound to the signal.
-         * @type Function
-         * @private
-         */
-        this._listener = listener;
-
-        /**
-         * If binding should be executed just once.
-         * @type boolean
-         * @private
-         */
-        this._isOnce = isOnce;
-
-        /**
-         * Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-         * @memberOf SignalBinding.prototype
-         * @name context
-         * @type Object|undefined|null
-         */
-        this.context = listenerContext;
-
-        /**
-         * Reference to Signal object that listener is currently bound to.
-         * @type Signal
-         * @private
-         */
-        this._signal = signal;
-
-        /**
-         * Listener priority
-         * @type Number
-         * @private
-         */
-        this._priority = priority || 0;
-    }
-
-    SignalBinding.prototype = {
-
-        /**
-         * If binding is active and should be executed.
-         * @type boolean
-         */
-        active : true,
-
-        /**
-         * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute`. (curried parameters)
-         * @type Array|null
-         */
-        params : null,
-
-        /**
-         * Call listener passing arbitrary parameters.
-         * <p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.</p>
-         * @param {Array} [paramsArr] Array of parameters that should be passed to the listener
-         * @return {*} Value returned by the listener.
-         */
-        execute : function (paramsArr) {
-            var handlerReturn, params;
-            if (this.active && !!this._listener) {
-                params = this.params? this.params.concat(paramsArr) : paramsArr;
-                handlerReturn = this._listener.apply(this.context, params);
-                if (this._isOnce) {
-                    this.detach();
-                }
-            }
-            return handlerReturn;
-        },
-
-        /**
-         * Detach binding from signal.
-         * - alias to: mySignal.remove(myBinding.getListener());
-         * @return {Function|null} Handler function bound to the signal or `null` if binding was previously detached.
-         */
-        detach : function () {
-            return this.isBound()? this._signal.remove(this._listener, this.context) : null;
-        },
-
-        /**
-         * @return {Boolean} `true` if binding is still bound to the signal and have a listener.
-         */
-        isBound : function () {
-            return (!!this._signal && !!this._listener);
-        },
-
-        /**
-         * @return {boolean} If SignalBinding will only be executed once.
-         */
-        isOnce : function () {
-            return this._isOnce;
-        },
-
-        /**
-         * @return {Function} Handler function bound to the signal.
-         */
-        getListener : function () {
-            return this._listener;
-        },
-
-        /**
-         * @return {Signal} Signal that listener is currently bound to.
-         */
-        getSignal : function () {
-            return this._signal;
-        },
-
-        /**
-         * Delete instance properties
-         * @private
-         */
-        _destroy : function () {
-            delete this._signal;
-            delete this._listener;
-            delete this.context;
-        },
-
-        /**
-         * @return {string} String representation of the object.
-         */
-        toString : function () {
-            return '[SignalBinding isOnce:' + this._isOnce +', isBound:'+ this.isBound() +', active:' + this.active + ']';
-        }
-
-    };
-
-
-/*global SignalBinding:false*/
-
-    // Signal --------------------------------------------------------
-    //================================================================
-
-    function validateListener(listener, fnName) {
-        if (typeof listener !== 'function') {
-            throw new Error( 'listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName) );
-        }
-    }
-
-    /**
-     * Custom event broadcaster
-     * <br />- inspired by Robert Penner's AS3 Signals.
-     * @name Signal
-     * @author Miller Medeiros
-     * @constructor
-     */
-    function Signal() {
-        /**
-         * @type Array.<SignalBinding>
-         * @private
-         */
-        this._bindings = [];
-        this._prevParams = null;
-
-        // enforce dispatch to aways work on same context (#47)
-        var self = this;
-        this.dispatch = function(){
-            Signal.prototype.dispatch.apply(self, arguments);
-        };
-    }
-
-    Signal.prototype = {
-
-        /**
-         * Signals Version Number
-         * @type String
-         * @const
-         */
-        VERSION : '1.0.0',
-
-        /**
-         * If Signal should keep record of previously dispatched parameters and
-         * automatically execute listener during `add()`/`addOnce()` if Signal was
-         * already dispatched before.
-         * @type boolean
-         */
-        memorize : false,
-
-        /**
-         * @type boolean
-         * @private
-         */
-        _shouldPropagate : true,
-
-        /**
-         * If Signal is active and should broadcast events.
-         * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
-         * @type boolean
-         */
-        active : true,
-
-        /**
-         * @param {Function} listener
-         * @param {boolean} isOnce
-         * @param {Object} [listenerContext]
-         * @param {Number} [priority]
-         * @return {SignalBinding}
-         * @private
-         */
-        _registerListener : function (listener, isOnce, listenerContext, priority) {
-
-            var prevIndex = this._indexOfListener(listener, listenerContext),
-                binding;
-
-            if (prevIndex !== -1) {
-                binding = this._bindings[prevIndex];
-                if (binding.isOnce() !== isOnce) {
-                    throw new Error('You cannot add'+ (isOnce? '' : 'Once') +'() then add'+ (!isOnce? '' : 'Once') +'() the same listener without removing the relationship first.');
-                }
-            } else {
-                binding = new SignalBinding(this, listener, isOnce, listenerContext, priority);
-                this._addBinding(binding);
-            }
-
-            if(this.memorize && this._prevParams){
-                binding.execute(this._prevParams);
-            }
-
-            return binding;
-        },
-
-        /**
-         * @param {SignalBinding} binding
-         * @private
-         */
-        _addBinding : function (binding) {
-            //simplified insertion sort
-            var n = this._bindings.length;
-            do { --n; } while (this._bindings[n] && binding._priority <= this._bindings[n]._priority);
-            this._bindings.splice(n + 1, 0, binding);
-        },
-
-        /**
-         * @param {Function} listener
-         * @return {number}
-         * @private
-         */
-        _indexOfListener : function (listener, context) {
-            var n = this._bindings.length,
-                cur;
-            while (n--) {
-                cur = this._bindings[n];
-                if (cur._listener === listener && cur.context === context) {
-                    return n;
-                }
-            }
-            return -1;
-        },
-
-        /**
-         * Check if listener was attached to Signal.
-         * @param {Function} listener
-         * @param {Object} [context]
-         * @return {boolean} if Signal has the specified listener.
-         */
-        has : function (listener, context) {
-            return this._indexOfListener(listener, context) !== -1;
-        },
-
-        /**
-         * Add a listener to the signal.
-         * @param {Function} listener Signal handler function.
-         * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-         * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
-         * @return {SignalBinding} An Object representing the binding between the Signal and listener.
-         */
-        add : function (listener, listenerContext, priority) {
-            validateListener(listener, 'add');
-            return this._registerListener(listener, false, listenerContext, priority);
-        },
-
-        /**
-         * Add listener to the signal that should be removed after first execution (will be executed only once).
-         * @param {Function} listener Signal handler function.
-         * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-         * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
-         * @return {SignalBinding} An Object representing the binding between the Signal and listener.
-         */
-        addOnce : function (listener, listenerContext, priority) {
-            validateListener(listener, 'addOnce');
-            return this._registerListener(listener, true, listenerContext, priority);
-        },
-
-        /**
-         * Remove a single listener from the dispatch queue.
-         * @param {Function} listener Handler function that should be removed.
-         * @param {Object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
-         * @return {Function} Listener handler function.
-         */
-        remove : function (listener, context) {
-            validateListener(listener, 'remove');
-
-            var i = this._indexOfListener(listener, context);
-            if (i !== -1) {
-                this._bindings[i]._destroy(); //no reason to a SignalBinding exist if it isn't attached to a signal
-                this._bindings.splice(i, 1);
-            }
-            return listener;
-        },
-
-        /**
-         * Remove all listeners from the Signal.
-         */
-        removeAll : function () {
-            var n = this._bindings.length;
-            while (n--) {
-                this._bindings[n]._destroy();
-            }
-            this._bindings.length = 0;
-        },
-
-        /**
-         * @return {number} Number of listeners attached to the Signal.
-         */
-        getNumListeners : function () {
-            return this._bindings.length;
-        },
-
-        /**
-         * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
-         * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
-         * @see Signal.prototype.disable
-         */
-        halt : function () {
-            this._shouldPropagate = false;
-        },
-
-        /**
-         * Dispatch/Broadcast Signal to all listeners added to the queue.
-         * @param {...*} [params] Parameters that should be passed to each handler.
-         */
-        dispatch : function (params) {
-            if (! this.active) {
-                return;
-            }
-
-            var paramsArr = Array.prototype.slice.call(arguments),
-                n = this._bindings.length,
-                bindings;
-
-            if (this.memorize) {
-                this._prevParams = paramsArr;
-            }
-
-            if (! n) {
-                //should come after memorize
-                return;
-            }
-
-            bindings = this._bindings.slice(); //clone array in case add/remove items during dispatch
-            this._shouldPropagate = true; //in case `halt` was called before dispatch or during the previous dispatch.
-
-            //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
-            //reverse loop since listeners with higher priority will be added at the end of the list
-            do { n--; } while (bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
-        },
-
-        /**
-         * Forget memorized arguments.
-         * @see Signal.memorize
-         */
-        forget : function(){
-            this._prevParams = null;
-        },
-
-        /**
-         * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-         * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
-         */
-        dispose : function () {
-            this.removeAll();
-            delete this._bindings;
-            delete this._prevParams;
-        },
-
-        /**
-         * @return {string} String representation of the object.
-         */
-        toString : function () {
-            return '[Signal active:'+ this.active +' numListeners:'+ this.getNumListeners() +']';
-        }
-
-    };
-
-
-    // Namespace -----------------------------------------------------
-    //================================================================
-
-    /**
-     * Signals namespace
-     * @namespace
-     * @name signals
-     */
-    var signals = Signal;
-
-    /**
-     * Custom event broadcaster
-     * @see Signal
-     */
-    // alias for backwards compatibility (see #gh-44)
-    signals.Signal = Signal;
-
-
-
-    //exports to multiple environments
-    if(typeof define === 'function' && define.amd){ //AMD
-        define(function () { return signals; });
-    } else if (typeof module !== 'undefined' && module.exports){ //node
-        module.exports = signals;
-    } else { //browser
-        //use string because of Google closure compiler ADVANCED_MODE
-        /*jslint sub:true */
-        global['signals'] = signals;
-    }
-
-}(this));
-
+!function(a,b){if("object"==typeof exports&&"object"==typeof module)module.exports=b();else if("function"==typeof define&&define.amd)define(b);else{var c=b();for(var d in c)("object"==typeof exports?exports:a)[d]=c[d]}}(this,function(){return function(a){function b(d){if(c[d])return c[d].exports;var e=c[d]={exports:{},id:d,loaded:!1};return a[d].call(e.exports,e,e.exports,b),e.loaded=!0,e.exports}var c={};return b.m=a,b.c=c,b.p="",b(0)}([function(a,b,c){b.glMatrix=c(1),b.mat2=c(2),b.mat2d=c(3),b.mat3=c(4),b.mat4=c(5),b.quat=c(6),b.vec2=c(9),b.vec3=c(7),b.vec4=c(8)},function(a,b){var c={};c.EPSILON=1e-6,c.ARRAY_TYPE="undefined"!=typeof Float32Array?Float32Array:Array,c.RANDOM=Math.random,c.setMatrixArrayType=function(a){GLMAT_ARRAY_TYPE=a};var d=Math.PI/180;c.toRadian=function(a){return a*d},a.exports=c},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(4);return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a},e.clone=function(a){var b=new d.ARRAY_TYPE(4);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a},e.transpose=function(a,b){if(a===b){var c=b[1];a[1]=b[2],a[2]=c}else a[0]=b[0],a[1]=b[2],a[2]=b[1],a[3]=b[3];return a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c*f-e*d;return g?(g=1/g,a[0]=f*g,a[1]=-d*g,a[2]=-e*g,a[3]=c*g,a):null},e.adjoint=function(a,b){var c=b[0];return a[0]=b[3],a[1]=-b[1],a[2]=-b[2],a[3]=c,a},e.determinant=function(a){return a[0]*a[3]-a[2]*a[1]},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=c[0],i=c[1],j=c[2],k=c[3];return a[0]=d*h+f*i,a[1]=e*h+g*i,a[2]=d*j+f*k,a[3]=e*j+g*k,a},e.mul=e.multiply,e.rotate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i+f*h,a[1]=e*i+g*h,a[2]=d*-h+f*i,a[3]=e*-h+g*i,a},e.scale=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=c[0],i=c[1];return a[0]=d*h,a[1]=e*h,a[2]=f*i,a[3]=g*i,a},e.fromRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=-c,a[3]=d,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=b[1],a},e.str=function(a){return"mat2("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2))},e.LDU=function(a,b,c,d){return a[2]=d[2]/d[0],c[0]=d[0],c[1]=d[1],c[3]=d[3]-a[2]*c[1],[a,b,c]},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(6);return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a[4]=0,a[5]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(6);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b[4]=a[4],b[5]=a[5],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[4]=b[4],a[5]=b[5],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a[4]=0,a[5]=0,a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=c*f-d*e;return i?(i=1/i,a[0]=f*i,a[1]=-d*i,a[2]=-e*i,a[3]=c*i,a[4]=(e*h-f*g)*i,a[5]=(d*g-c*h)*i,a):null},e.determinant=function(a){return a[0]*a[3]-a[1]*a[2]},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=c[0],k=c[1],l=c[2],m=c[3],n=c[4],o=c[5];return a[0]=d*j+f*k,a[1]=e*j+g*k,a[2]=d*l+f*m,a[3]=e*l+g*m,a[4]=d*n+f*o+h,a[5]=e*n+g*o+i,a},e.mul=e.multiply,e.rotate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=Math.sin(c),k=Math.cos(c);return a[0]=d*k+f*j,a[1]=e*k+g*j,a[2]=d*-j+f*k,a[3]=e*-j+g*k,a[4]=h,a[5]=i,a},e.scale=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=c[0],k=c[1];return a[0]=d*j,a[1]=e*j,a[2]=f*k,a[3]=g*k,a[4]=h,a[5]=i,a},e.translate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=c[0],k=c[1];return a[0]=d,a[1]=e,a[2]=f,a[3]=g,a[4]=d*j+f*k+h,a[5]=e*j+g*k+i,a},e.fromRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=-c,a[3]=d,a[4]=0,a[5]=0,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=b[1],a[4]=0,a[5]=0,a},e.fromTranslation=function(a,b){return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a[4]=b[0],a[5]=b[1],a},e.str=function(a){return"mat2d("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+", "+a[4]+", "+a[5]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2)+Math.pow(a[4],2)+Math.pow(a[5],2)+1)},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(9);return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=1,a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.fromMat4=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[4],a[4]=b[5],a[5]=b[6],a[6]=b[8],a[7]=b[9],a[8]=b[10],a},e.clone=function(a){var b=new d.ARRAY_TYPE(9);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b[4]=a[4],b[5]=a[5],b[6]=a[6],b[7]=a[7],b[8]=a[8],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[4]=b[4],a[5]=b[5],a[6]=b[6],a[7]=b[7],a[8]=b[8],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=1,a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.transpose=function(a,b){if(a===b){var c=b[1],d=b[2],e=b[5];a[1]=b[3],a[2]=b[6],a[3]=c,a[5]=b[7],a[6]=d,a[7]=e}else a[0]=b[0],a[1]=b[3],a[2]=b[6],a[3]=b[1],a[4]=b[4],a[5]=b[7],a[6]=b[2],a[7]=b[5],a[8]=b[8];return a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=k*g-h*j,m=-k*f+h*i,n=j*f-g*i,o=c*l+d*m+e*n;return o?(o=1/o,a[0]=l*o,a[1]=(-k*d+e*j)*o,a[2]=(h*d-e*g)*o,a[3]=m*o,a[4]=(k*c-e*i)*o,a[5]=(-h*c+e*f)*o,a[6]=n*o,a[7]=(-j*c+d*i)*o,a[8]=(g*c-d*f)*o,a):null},e.adjoint=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8];return a[0]=g*k-h*j,a[1]=e*j-d*k,a[2]=d*h-e*g,a[3]=h*i-f*k,a[4]=c*k-e*i,a[5]=e*f-c*h,a[6]=f*j-g*i,a[7]=d*i-c*j,a[8]=c*g-d*f,a},e.determinant=function(a){var b=a[0],c=a[1],d=a[2],e=a[3],f=a[4],g=a[5],h=a[6],i=a[7],j=a[8];return b*(j*f-g*i)+c*(-j*e+g*h)+d*(i*e-f*h)},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=c[0],n=c[1],o=c[2],p=c[3],q=c[4],r=c[5],s=c[6],t=c[7],u=c[8];return a[0]=m*d+n*g+o*j,a[1]=m*e+n*h+o*k,a[2]=m*f+n*i+o*l,a[3]=p*d+q*g+r*j,a[4]=p*e+q*h+r*k,a[5]=p*f+q*i+r*l,a[6]=s*d+t*g+u*j,a[7]=s*e+t*h+u*k,a[8]=s*f+t*i+u*l,a},e.mul=e.multiply,e.translate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=c[0],n=c[1];return a[0]=d,a[1]=e,a[2]=f,a[3]=g,a[4]=h,a[5]=i,a[6]=m*d+n*g+j,a[7]=m*e+n*h+k,a[8]=m*f+n*i+l,a},e.rotate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=Math.sin(c),n=Math.cos(c);return a[0]=n*d+m*g,a[1]=n*e+m*h,a[2]=n*f+m*i,a[3]=n*g-m*d,a[4]=n*h-m*e,a[5]=n*i-m*f,a[6]=j,a[7]=k,a[8]=l,a},e.scale=function(a,b,c){var d=c[0],e=c[1];return a[0]=d*b[0],a[1]=d*b[1],a[2]=d*b[2],a[3]=e*b[3],a[4]=e*b[4],a[5]=e*b[5],a[6]=b[6],a[7]=b[7],a[8]=b[8],a},e.fromTranslation=function(a,b){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=1,a[5]=0,a[6]=b[0],a[7]=b[1],a[8]=1,a},e.fromRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=0,a[3]=-c,a[4]=d,a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=0,a[4]=b[1],a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.fromMat2d=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=0,a[3]=b[2],a[4]=b[3],a[5]=0,a[6]=b[4],a[7]=b[5],a[8]=1,a},e.fromQuat=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c+c,h=d+d,i=e+e,j=c*g,k=d*g,l=d*h,m=e*g,n=e*h,o=e*i,p=f*g,q=f*h,r=f*i;return a[0]=1-l-o,a[3]=k-r,a[6]=m+q,a[1]=k+r,a[4]=1-j-o,a[7]=n-p,a[2]=m-q,a[5]=n+p,a[8]=1-j-l,a},e.normalFromMat4=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=b[9],m=b[10],n=b[11],o=b[12],p=b[13],q=b[14],r=b[15],s=c*h-d*g,t=c*i-e*g,u=c*j-f*g,v=d*i-e*h,w=d*j-f*h,x=e*j-f*i,y=k*p-l*o,z=k*q-m*o,A=k*r-n*o,B=l*q-m*p,C=l*r-n*p,D=m*r-n*q,E=s*D-t*C+u*B+v*A-w*z+x*y;return E?(E=1/E,a[0]=(h*D-i*C+j*B)*E,a[1]=(i*A-g*D-j*z)*E,a[2]=(g*C-h*A+j*y)*E,a[3]=(e*C-d*D-f*B)*E,a[4]=(c*D-e*A+f*z)*E,a[5]=(d*A-c*C-f*y)*E,a[6]=(p*x-q*w+r*v)*E,a[7]=(q*u-o*x-r*t)*E,a[8]=(o*w-p*u+r*s)*E,a):null},e.str=function(a){return"mat3("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+", "+a[4]+", "+a[5]+", "+a[6]+", "+a[7]+", "+a[8]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2)+Math.pow(a[4],2)+Math.pow(a[5],2)+Math.pow(a[6],2)+Math.pow(a[7],2)+Math.pow(a[8],2))},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(16);return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.clone=function(a){var b=new d.ARRAY_TYPE(16);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b[4]=a[4],b[5]=a[5],b[6]=a[6],b[7]=a[7],b[8]=a[8],b[9]=a[9],b[10]=a[10],b[11]=a[11],b[12]=a[12],b[13]=a[13],b[14]=a[14],b[15]=a[15],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[4]=b[4],a[5]=b[5],a[6]=b[6],a[7]=b[7],a[8]=b[8],a[9]=b[9],a[10]=b[10],a[11]=b[11],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.transpose=function(a,b){if(a===b){var c=b[1],d=b[2],e=b[3],f=b[6],g=b[7],h=b[11];a[1]=b[4],a[2]=b[8],a[3]=b[12],a[4]=c,a[6]=b[9],a[7]=b[13],a[8]=d,a[9]=f,a[11]=b[14],a[12]=e,a[13]=g,a[14]=h}else a[0]=b[0],a[1]=b[4],a[2]=b[8],a[3]=b[12],a[4]=b[1],a[5]=b[5],a[6]=b[9],a[7]=b[13],a[8]=b[2],a[9]=b[6],a[10]=b[10],a[11]=b[14],a[12]=b[3],a[13]=b[7],a[14]=b[11],a[15]=b[15];return a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=b[9],m=b[10],n=b[11],o=b[12],p=b[13],q=b[14],r=b[15],s=c*h-d*g,t=c*i-e*g,u=c*j-f*g,v=d*i-e*h,w=d*j-f*h,x=e*j-f*i,y=k*p-l*o,z=k*q-m*o,A=k*r-n*o,B=l*q-m*p,C=l*r-n*p,D=m*r-n*q,E=s*D-t*C+u*B+v*A-w*z+x*y;return E?(E=1/E,a[0]=(h*D-i*C+j*B)*E,a[1]=(e*C-d*D-f*B)*E,a[2]=(p*x-q*w+r*v)*E,a[3]=(m*w-l*x-n*v)*E,a[4]=(i*A-g*D-j*z)*E,a[5]=(c*D-e*A+f*z)*E,a[6]=(q*u-o*x-r*t)*E,a[7]=(k*x-m*u+n*t)*E,a[8]=(g*C-h*A+j*y)*E,a[9]=(d*A-c*C-f*y)*E,a[10]=(o*w-p*u+r*s)*E,a[11]=(l*u-k*w-n*s)*E,a[12]=(h*z-g*B-i*y)*E,a[13]=(c*B-d*z+e*y)*E,a[14]=(p*t-o*v-q*s)*E,a[15]=(k*v-l*t+m*s)*E,a):null},e.adjoint=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=b[9],m=b[10],n=b[11],o=b[12],p=b[13],q=b[14],r=b[15];return a[0]=h*(m*r-n*q)-l*(i*r-j*q)+p*(i*n-j*m),a[1]=-(d*(m*r-n*q)-l*(e*r-f*q)+p*(e*n-f*m)),a[2]=d*(i*r-j*q)-h*(e*r-f*q)+p*(e*j-f*i),a[3]=-(d*(i*n-j*m)-h*(e*n-f*m)+l*(e*j-f*i)),a[4]=-(g*(m*r-n*q)-k*(i*r-j*q)+o*(i*n-j*m)),a[5]=c*(m*r-n*q)-k*(e*r-f*q)+o*(e*n-f*m),a[6]=-(c*(i*r-j*q)-g*(e*r-f*q)+o*(e*j-f*i)),a[7]=c*(i*n-j*m)-g*(e*n-f*m)+k*(e*j-f*i),a[8]=g*(l*r-n*p)-k*(h*r-j*p)+o*(h*n-j*l),a[9]=-(c*(l*r-n*p)-k*(d*r-f*p)+o*(d*n-f*l)),a[10]=c*(h*r-j*p)-g*(d*r-f*p)+o*(d*j-f*h),a[11]=-(c*(h*n-j*l)-g*(d*n-f*l)+k*(d*j-f*h)),a[12]=-(g*(l*q-m*p)-k*(h*q-i*p)+o*(h*m-i*l)),a[13]=c*(l*q-m*p)-k*(d*q-e*p)+o*(d*m-e*l),a[14]=-(c*(h*q-i*p)-g*(d*q-e*p)+o*(d*i-e*h)),a[15]=c*(h*m-i*l)-g*(d*m-e*l)+k*(d*i-e*h),a},e.determinant=function(a){var b=a[0],c=a[1],d=a[2],e=a[3],f=a[4],g=a[5],h=a[6],i=a[7],j=a[8],k=a[9],l=a[10],m=a[11],n=a[12],o=a[13],p=a[14],q=a[15],r=b*g-c*f,s=b*h-d*f,t=b*i-e*f,u=c*h-d*g,v=c*i-e*g,w=d*i-e*h,x=j*o-k*n,y=j*p-l*n,z=j*q-m*n,A=k*p-l*o,B=k*q-m*o,C=l*q-m*p;return r*C-s*B+t*A+u*z-v*y+w*x},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=b[9],n=b[10],o=b[11],p=b[12],q=b[13],r=b[14],s=b[15],t=c[0],u=c[1],v=c[2],w=c[3];return a[0]=t*d+u*h+v*l+w*p,a[1]=t*e+u*i+v*m+w*q,a[2]=t*f+u*j+v*n+w*r,a[3]=t*g+u*k+v*o+w*s,t=c[4],u=c[5],v=c[6],w=c[7],a[4]=t*d+u*h+v*l+w*p,a[5]=t*e+u*i+v*m+w*q,a[6]=t*f+u*j+v*n+w*r,a[7]=t*g+u*k+v*o+w*s,t=c[8],u=c[9],v=c[10],w=c[11],a[8]=t*d+u*h+v*l+w*p,a[9]=t*e+u*i+v*m+w*q,a[10]=t*f+u*j+v*n+w*r,a[11]=t*g+u*k+v*o+w*s,t=c[12],u=c[13],v=c[14],w=c[15],a[12]=t*d+u*h+v*l+w*p,a[13]=t*e+u*i+v*m+w*q,a[14]=t*f+u*j+v*n+w*r,a[15]=t*g+u*k+v*o+w*s,a},e.mul=e.multiply,e.translate=function(a,b,c){var d,e,f,g,h,i,j,k,l,m,n,o,p=c[0],q=c[1],r=c[2];return b===a?(a[12]=b[0]*p+b[4]*q+b[8]*r+b[12],a[13]=b[1]*p+b[5]*q+b[9]*r+b[13],a[14]=b[2]*p+b[6]*q+b[10]*r+b[14],a[15]=b[3]*p+b[7]*q+b[11]*r+b[15]):(d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=b[9],n=b[10],o=b[11],a[0]=d,a[1]=e,a[2]=f,a[3]=g,a[4]=h,a[5]=i,a[6]=j,a[7]=k,a[8]=l,a[9]=m,a[10]=n,a[11]=o,a[12]=d*p+h*q+l*r+b[12],a[13]=e*p+i*q+m*r+b[13],a[14]=f*p+j*q+n*r+b[14],a[15]=g*p+k*q+o*r+b[15]),a},e.scale=function(a,b,c){var d=c[0],e=c[1],f=c[2];return a[0]=b[0]*d,a[1]=b[1]*d,a[2]=b[2]*d,a[3]=b[3]*d,a[4]=b[4]*e,a[5]=b[5]*e,a[6]=b[6]*e,a[7]=b[7]*e,a[8]=b[8]*f,a[9]=b[9]*f,a[10]=b[10]*f,a[11]=b[11]*f,a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15],a},e.rotate=function(a,b,c,e){var f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D=e[0],E=e[1],F=e[2],G=Math.sqrt(D*D+E*E+F*F);return Math.abs(G)<d.EPSILON?null:(G=1/G,D*=G,E*=G,F*=G,f=Math.sin(c),g=Math.cos(c),h=1-g,i=b[0],j=b[1],k=b[2],l=b[3],m=b[4],n=b[5],o=b[6],p=b[7],q=b[8],r=b[9],s=b[10],t=b[11],u=D*D*h+g,v=E*D*h+F*f,w=F*D*h-E*f,x=D*E*h-F*f,y=E*E*h+g,z=F*E*h+D*f,A=D*F*h+E*f,B=E*F*h-D*f,C=F*F*h+g,a[0]=i*u+m*v+q*w,a[1]=j*u+n*v+r*w,a[2]=k*u+o*v+s*w,a[3]=l*u+p*v+t*w,a[4]=i*x+m*y+q*z,a[5]=j*x+n*y+r*z,a[6]=k*x+o*y+s*z,a[7]=l*x+p*y+t*z,a[8]=i*A+m*B+q*C,a[9]=j*A+n*B+r*C,a[10]=k*A+o*B+s*C,a[11]=l*A+p*B+t*C,b!==a&&(a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a)},e.rotateX=function(a,b,c){var d=Math.sin(c),e=Math.cos(c),f=b[4],g=b[5],h=b[6],i=b[7],j=b[8],k=b[9],l=b[10],m=b[11];return b!==a&&(a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a[4]=f*e+j*d,a[5]=g*e+k*d,a[6]=h*e+l*d,a[7]=i*e+m*d,a[8]=j*e-f*d,a[9]=k*e-g*d,a[10]=l*e-h*d,a[11]=m*e-i*d,a},e.rotateY=function(a,b,c){var d=Math.sin(c),e=Math.cos(c),f=b[0],g=b[1],h=b[2],i=b[3],j=b[8],k=b[9],l=b[10],m=b[11];return b!==a&&(a[4]=b[4],a[5]=b[5],a[6]=b[6],a[7]=b[7],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a[0]=f*e-j*d,a[1]=g*e-k*d,a[2]=h*e-l*d,a[3]=i*e-m*d,a[8]=f*d+j*e,a[9]=g*d+k*e,a[10]=h*d+l*e,a[11]=i*d+m*e,a},e.rotateZ=function(a,b,c){var d=Math.sin(c),e=Math.cos(c),f=b[0],g=b[1],h=b[2],i=b[3],j=b[4],k=b[5],l=b[6],m=b[7];return b!==a&&(a[8]=b[8],a[9]=b[9],a[10]=b[10],a[11]=b[11],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a[0]=f*e+j*d,a[1]=g*e+k*d,a[2]=h*e+l*d,a[3]=i*e+m*d,a[4]=j*e-f*d,a[5]=k*e-g*d,a[6]=l*e-h*d,a[7]=m*e-i*d,a},e.fromTranslation=function(a,b){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=b[0],a[13]=b[1],a[14]=b[2],a[15]=1,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=b[1],a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=b[2],a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromRotation=function(a,b,c){var e,f,g,h=c[0],i=c[1],j=c[2],k=Math.sqrt(h*h+i*i+j*j);return Math.abs(k)<d.EPSILON?null:(k=1/k,h*=k,i*=k,j*=k,e=Math.sin(b),f=Math.cos(b),g=1-f,a[0]=h*h*g+f,a[1]=i*h*g+j*e,a[2]=j*h*g-i*e,a[3]=0,a[4]=h*i*g-j*e,a[5]=i*i*g+f,a[6]=j*i*g+h*e,a[7]=0,a[8]=h*j*g+i*e,a[9]=i*j*g-h*e,a[10]=j*j*g+f,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a)},e.fromXRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=d,a[6]=c,a[7]=0,a[8]=0,a[9]=-c,a[10]=d,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromYRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=0,a[2]=-c,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=c,a[9]=0,a[10]=d,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromZRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=0,a[3]=0,a[4]=-c,a[5]=d,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromRotationTranslation=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=d+d,i=e+e,j=f+f,k=d*h,l=d*i,m=d*j,n=e*i,o=e*j,p=f*j,q=g*h,r=g*i,s=g*j;return a[0]=1-(n+p),a[1]=l+s,a[2]=m-r,a[3]=0,a[4]=l-s,a[5]=1-(k+p),a[6]=o+q,a[7]=0,a[8]=m+r,a[9]=o-q,a[10]=1-(k+n),a[11]=0,a[12]=c[0],a[13]=c[1],a[14]=c[2],a[15]=1,a},e.fromRotationTranslationScale=function(a,b,c,d){var e=b[0],f=b[1],g=b[2],h=b[3],i=e+e,j=f+f,k=g+g,l=e*i,m=e*j,n=e*k,o=f*j,p=f*k,q=g*k,r=h*i,s=h*j,t=h*k,u=d[0],v=d[1],w=d[2];return a[0]=(1-(o+q))*u,a[1]=(m+t)*u,a[2]=(n-s)*u,a[3]=0,a[4]=(m-t)*v,a[5]=(1-(l+q))*v,a[6]=(p+r)*v,a[7]=0,a[8]=(n+s)*w,a[9]=(p-r)*w,a[10]=(1-(l+o))*w,a[11]=0,a[12]=c[0],a[13]=c[1],a[14]=c[2],a[15]=1,a},e.fromRotationTranslationScaleOrigin=function(a,b,c,d,e){var f=b[0],g=b[1],h=b[2],i=b[3],j=f+f,k=g+g,l=h+h,m=f*j,n=f*k,o=f*l,p=g*k,q=g*l,r=h*l,s=i*j,t=i*k,u=i*l,v=d[0],w=d[1],x=d[2],y=e[0],z=e[1],A=e[2];return a[0]=(1-(p+r))*v,a[1]=(n+u)*v,a[2]=(o-t)*v,a[3]=0,a[4]=(n-u)*w,a[5]=(1-(m+r))*w,a[6]=(q+s)*w,a[7]=0,a[8]=(o+t)*x,a[9]=(q-s)*x,a[10]=(1-(m+p))*x,a[11]=0,a[12]=c[0]+y-(a[0]*y+a[4]*z+a[8]*A),a[13]=c[1]+z-(a[1]*y+a[5]*z+a[9]*A),a[14]=c[2]+A-(a[2]*y+a[6]*z+a[10]*A),a[15]=1,a},e.fromQuat=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c+c,h=d+d,i=e+e,j=c*g,k=d*g,l=d*h,m=e*g,n=e*h,o=e*i,p=f*g,q=f*h,r=f*i;return a[0]=1-l-o,a[1]=k+r,a[2]=m-q,a[3]=0,a[4]=k-r,a[5]=1-j-o,a[6]=n+p,a[7]=0,a[8]=m+q,a[9]=n-p,a[10]=1-j-l,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.frustum=function(a,b,c,d,e,f,g){var h=1/(c-b),i=1/(e-d),j=1/(f-g);return a[0]=2*f*h,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2*f*i,a[6]=0,a[7]=0,a[8]=(c+b)*h,a[9]=(e+d)*i,a[10]=(g+f)*j,a[11]=-1,a[12]=0,a[13]=0,a[14]=g*f*2*j,a[15]=0,a},e.perspective=function(a,b,c,d,e){var f=1/Math.tan(b/2),g=1/(d-e);return a[0]=f/c,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=f,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=(e+d)*g,a[11]=-1,a[12]=0,a[13]=0,a[14]=2*e*d*g,a[15]=0,a},e.perspectiveFromFieldOfView=function(a,b,c,d){var e=Math.tan(b.upDegrees*Math.PI/180),f=Math.tan(b.downDegrees*Math.PI/180),g=Math.tan(b.leftDegrees*Math.PI/180),h=Math.tan(b.rightDegrees*Math.PI/180),i=2/(g+h),j=2/(e+f);return a[0]=i,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=j,a[6]=0,a[7]=0,a[8]=-((g-h)*i*.5),a[9]=(e-f)*j*.5,a[10]=d/(c-d),a[11]=-1,a[12]=0,a[13]=0,a[14]=d*c/(c-d),a[15]=0,a},e.ortho=function(a,b,c,d,e,f,g){var h=1/(b-c),i=1/(d-e),j=1/(f-g);return a[0]=-2*h,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=-2*i,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=2*j,a[11]=0,a[12]=(b+c)*h,a[13]=(e+d)*i,a[14]=(g+f)*j,a[15]=1,a},e.lookAt=function(a,b,c,f){var g,h,i,j,k,l,m,n,o,p,q=b[0],r=b[1],s=b[2],t=f[0],u=f[1],v=f[2],w=c[0],x=c[1],y=c[2];return Math.abs(q-w)<d.EPSILON&&Math.abs(r-x)<d.EPSILON&&Math.abs(s-y)<d.EPSILON?e.identity(a):(m=q-w,n=r-x,o=s-y,p=1/Math.sqrt(m*m+n*n+o*o),m*=p,n*=p,o*=p,g=u*o-v*n,h=v*m-t*o,i=t*n-u*m,p=Math.sqrt(g*g+h*h+i*i),p?(p=1/p,g*=p,h*=p,i*=p):(g=0,h=0,i=0),j=n*i-o*h,k=o*g-m*i,l=m*h-n*g,p=Math.sqrt(j*j+k*k+l*l),p?(p=1/p,j*=p,k*=p,l*=p):(j=0,k=0,l=0),a[0]=g,a[1]=j,a[2]=m,a[3]=0,a[4]=h,a[5]=k,a[6]=n,a[7]=0,a[8]=i,a[9]=l,a[10]=o,a[11]=0,a[12]=-(g*q+h*r+i*s),a[13]=-(j*q+k*r+l*s),a[14]=-(m*q+n*r+o*s),a[15]=1,a)},e.str=function(a){return"mat4("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+", "+a[4]+", "+a[5]+", "+a[6]+", "+a[7]+", "+a[8]+", "+a[9]+", "+a[10]+", "+a[11]+", "+a[12]+", "+a[13]+", "+a[14]+", "+a[15]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2)+Math.pow(a[4],2)+Math.pow(a[5],2)+Math.pow(a[6],2)+Math.pow(a[7],2)+Math.pow(a[8],2)+Math.pow(a[9],2)+Math.pow(a[10],2)+Math.pow(a[11],2)+Math.pow(a[12],2)+Math.pow(a[13],2)+Math.pow(a[14],2)+Math.pow(a[15],2))},a.exports=e},function(a,b,c){var d=c(1),e=c(4),f=c(7),g=c(8),h={};h.create=function(){var a=new d.ARRAY_TYPE(4);return a[0]=0,a[1]=0,a[2]=0,a[3]=1,a},h.rotationTo=function(){var a=f.create(),b=f.fromValues(1,0,0),c=f.fromValues(0,1,0);return function(d,e,g){var i=f.dot(e,g);return-.999999>i?(f.cross(a,b,e),f.length(a)<1e-6&&f.cross(a,c,e),f.normalize(a,a),h.setAxisAngle(d,a,Math.PI),d):i>.999999?(d[0]=0,d[1]=0,d[2]=0,d[3]=1,d):(f.cross(a,e,g),d[0]=a[0],d[1]=a[1],d[2]=a[2],d[3]=1+i,h.normalize(d,d))}}(),h.setAxes=function(){var a=e.create();return function(b,c,d,e){return a[0]=d[0],a[3]=d[1],a[6]=d[2],a[1]=e[0],a[4]=e[1],a[7]=e[2],a[2]=-c[0],a[5]=-c[1],a[8]=-c[2],h.normalize(b,h.fromMat3(b,a))}}(),h.clone=g.clone,h.fromValues=g.fromValues,h.copy=g.copy,h.set=g.set,h.identity=function(a){return a[0]=0,a[1]=0,a[2]=0,a[3]=1,a},h.setAxisAngle=function(a,b,c){c=.5*c;var d=Math.sin(c);return a[0]=d*b[0],a[1]=d*b[1],a[2]=d*b[2],a[3]=Math.cos(c),a},h.add=g.add,h.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=c[0],i=c[1],j=c[2],k=c[3];return a[0]=d*k+g*h+e*j-f*i,a[1]=e*k+g*i+f*h-d*j,a[2]=f*k+g*j+d*i-e*h,a[3]=g*k-d*h-e*i-f*j,a},h.mul=h.multiply,h.scale=g.scale,h.rotateX=function(a,b,c){c*=.5;var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i+g*h,a[1]=e*i+f*h,a[2]=f*i-e*h,a[3]=g*i-d*h,a},h.rotateY=function(a,b,c){c*=.5;var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i-f*h,a[1]=e*i+g*h,a[2]=f*i+d*h,a[3]=g*i-e*h,a},h.rotateZ=function(a,b,c){c*=.5;var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i+e*h,a[1]=e*i-d*h,a[2]=f*i+g*h,a[3]=g*i-f*h,a},h.calculateW=function(a,b){var c=b[0],d=b[1],e=b[2];return a[0]=c,a[1]=d,a[2]=e,a[3]=Math.sqrt(Math.abs(1-c*c-d*d-e*e)),a},h.dot=g.dot,h.lerp=g.lerp,h.slerp=function(a,b,c,d){var e,f,g,h,i,j=b[0],k=b[1],l=b[2],m=b[3],n=c[0],o=c[1],p=c[2],q=c[3];return f=j*n+k*o+l*p+m*q,0>f&&(f=-f,n=-n,o=-o,p=-p,q=-q),1-f>1e-6?(e=Math.acos(f),g=Math.sin(e),h=Math.sin((1-d)*e)/g,i=Math.sin(d*e)/g):(h=1-d,i=d),a[0]=h*j+i*n,a[1]=h*k+i*o,a[2]=h*l+i*p,a[3]=h*m+i*q,a},h.sqlerp=function(){var a=h.create(),b=h.create();return function(c,d,e,f,g,i){return h.slerp(a,d,g,i),h.slerp(b,e,f,i),h.slerp(c,a,b,2*i*(1-i)),c}}(),h.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c*c+d*d+e*e+f*f,h=g?1/g:0;return a[0]=-c*h,a[1]=-d*h,a[2]=-e*h,a[3]=f*h,a},h.conjugate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a[2]=-b[2],a[3]=b[3],a},h.length=g.length,h.len=h.length,h.squaredLength=g.squaredLength,h.sqrLen=h.squaredLength,h.normalize=g.normalize,h.fromMat3=function(a,b){var c,d=b[0]+b[4]+b[8];if(d>0)c=Math.sqrt(d+1),a[3]=.5*c,c=.5/c,a[0]=(b[5]-b[7])*c,a[1]=(b[6]-b[2])*c,a[2]=(b[1]-b[3])*c;else{var e=0;b[4]>b[0]&&(e=1),b[8]>b[3*e+e]&&(e=2);var f=(e+1)%3,g=(e+2)%3;c=Math.sqrt(b[3*e+e]-b[3*f+f]-b[3*g+g]+1),a[e]=.5*c,c=.5/c,a[3]=(b[3*f+g]-b[3*g+f])*c,a[f]=(b[3*f+e]+b[3*e+f])*c,a[g]=(b[3*g+e]+b[3*e+g])*c}return a},h.str=function(a){return"quat("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+")"},a.exports=h},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(3);return a[0]=0,a[1]=0,a[2]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(3);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b},e.fromValues=function(a,b,c){var e=new d.ARRAY_TYPE(3);return e[0]=a,e[1]=b,e[2]=c,e},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a},e.set=function(a,b,c,d){return a[0]=b,a[1]=c,a[2]=d,a},e.add=function(a,b,c){return a[0]=b[0]+c[0],a[1]=b[1]+c[1],a[2]=b[2]+c[2],a},e.subtract=function(a,b,c){return a[0]=b[0]-c[0],a[1]=b[1]-c[1],a[2]=b[2]-c[2],a},e.sub=e.subtract,e.multiply=function(a,b,c){return a[0]=b[0]*c[0],a[1]=b[1]*c[1],a[2]=b[2]*c[2],a},e.mul=e.multiply,e.divide=function(a,b,c){return a[0]=b[0]/c[0],a[1]=b[1]/c[1],a[2]=b[2]/c[2],a},e.div=e.divide,e.min=function(a,b,c){return a[0]=Math.min(b[0],c[0]),a[1]=Math.min(b[1],c[1]),a[2]=Math.min(b[2],c[2]),a},e.max=function(a,b,c){return a[0]=Math.max(b[0],c[0]),a[1]=Math.max(b[1],c[1]),a[2]=Math.max(b[2],c[2]),a},e.scale=function(a,b,c){return a[0]=b[0]*c,a[1]=b[1]*c,a[2]=b[2]*c,a},e.scaleAndAdd=function(a,b,c,d){return a[0]=b[0]+c[0]*d,a[1]=b[1]+c[1]*d,a[2]=b[2]+c[2]*d,a},e.distance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2];return Math.sqrt(c*c+d*d+e*e)},e.dist=e.distance,e.squaredDistance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2];return c*c+d*d+e*e},e.sqrDist=e.squaredDistance,e.length=function(a){var b=a[0],c=a[1],d=a[2];return Math.sqrt(b*b+c*c+d*d)},e.len=e.length,e.squaredLength=function(a){var b=a[0],c=a[1],d=a[2];return b*b+c*c+d*d},e.sqrLen=e.squaredLength,e.negate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a[2]=-b[2],a},e.inverse=function(a,b){return a[0]=1/b[0],a[1]=1/b[1],a[2]=1/b[2],a},e.normalize=function(a,b){var c=b[0],d=b[1],e=b[2],f=c*c+d*d+e*e;return f>0&&(f=1/Math.sqrt(f),a[0]=b[0]*f,a[1]=b[1]*f,a[2]=b[2]*f),a},e.dot=function(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]},e.cross=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[0],h=c[1],i=c[2];return a[0]=e*i-f*h,a[1]=f*g-d*i,a[2]=d*h-e*g,a},e.lerp=function(a,b,c,d){var e=b[0],f=b[1],g=b[2];return a[0]=e+d*(c[0]-e),a[1]=f+d*(c[1]-f),a[2]=g+d*(c[2]-g),a},e.hermite=function(a,b,c,d,e,f){var g=f*f,h=g*(2*f-3)+1,i=g*(f-2)+f,j=g*(f-1),k=g*(3-2*f);return a[0]=b[0]*h+c[0]*i+d[0]*j+e[0]*k,a[1]=b[1]*h+c[1]*i+d[1]*j+e[1]*k,a[2]=b[2]*h+c[2]*i+d[2]*j+e[2]*k,a},e.bezier=function(a,b,c,d,e,f){var g=1-f,h=g*g,i=f*f,j=h*g,k=3*f*h,l=3*i*g,m=i*f;return a[0]=b[0]*j+c[0]*k+d[0]*l+e[0]*m,a[1]=b[1]*j+c[1]*k+d[1]*l+e[1]*m,a[2]=b[2]*j+c[2]*k+d[2]*l+e[2]*m,a},e.random=function(a,b){b=b||1;var c=2*d.RANDOM()*Math.PI,e=2*d.RANDOM()-1,f=Math.sqrt(1-e*e)*b;return a[0]=Math.cos(c)*f,a[1]=Math.sin(c)*f,a[2]=e*b,a},e.transformMat4=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[3]*d+c[7]*e+c[11]*f+c[15];return g=g||1,a[0]=(c[0]*d+c[4]*e+c[8]*f+c[12])/g,a[1]=(c[1]*d+c[5]*e+c[9]*f+c[13])/g,a[2]=(c[2]*d+c[6]*e+c[10]*f+c[14])/g,a},e.transformMat3=function(a,b,c){var d=b[0],e=b[1],f=b[2];return a[0]=d*c[0]+e*c[3]+f*c[6],a[1]=d*c[1]+e*c[4]+f*c[7],a[2]=d*c[2]+e*c[5]+f*c[8],a},e.transformQuat=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[0],h=c[1],i=c[2],j=c[3],k=j*d+h*f-i*e,l=j*e+i*d-g*f,m=j*f+g*e-h*d,n=-g*d-h*e-i*f;return a[0]=k*j+n*-g+l*-i-m*-h,a[1]=l*j+n*-h+m*-g-k*-i,a[2]=m*j+n*-i+k*-h-l*-g,a},e.rotateX=function(a,b,c,d){var e=[],f=[];return e[0]=b[0]-c[0],e[1]=b[1]-c[1],e[2]=b[2]-c[2],f[0]=e[0],f[1]=e[1]*Math.cos(d)-e[2]*Math.sin(d),f[2]=e[1]*Math.sin(d)+e[2]*Math.cos(d),a[0]=f[0]+c[0],a[1]=f[1]+c[1],a[2]=f[2]+c[2],a},e.rotateY=function(a,b,c,d){var e=[],f=[];return e[0]=b[0]-c[0],e[1]=b[1]-c[1],e[2]=b[2]-c[2],f[0]=e[2]*Math.sin(d)+e[0]*Math.cos(d),f[1]=e[1],f[2]=e[2]*Math.cos(d)-e[0]*Math.sin(d),a[0]=f[0]+c[0],a[1]=f[1]+c[1],a[2]=f[2]+c[2],a},e.rotateZ=function(a,b,c,d){var e=[],f=[];return e[0]=b[0]-c[0],e[1]=b[1]-c[1],e[2]=b[2]-c[2],f[0]=e[0]*Math.cos(d)-e[1]*Math.sin(d),f[1]=e[0]*Math.sin(d)+e[1]*Math.cos(d),f[2]=e[2],a[0]=f[0]+c[0],a[1]=f[1]+c[1],a[2]=f[2]+c[2],a},e.forEach=function(){var a=e.create();return function(b,c,d,e,f,g){var h,i;for(c||(c=3),d||(d=0),i=e?Math.min(e*c+d,b.length):b.length,h=d;i>h;h+=c)a[0]=b[h],a[1]=b[h+1],a[2]=b[h+2],f(a,a,g),b[h]=a[0],b[h+1]=a[1],b[h+2]=a[2];return b}}(),e.angle=function(a,b){var c=e.fromValues(a[0],a[1],a[2]),d=e.fromValues(b[0],b[1],b[2]);e.normalize(c,c),e.normalize(d,d);var f=e.dot(c,d);return f>1?0:Math.acos(f)},e.str=function(a){return"vec3("+a[0]+", "+a[1]+", "+a[2]+")"},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(4);return a[0]=0,a[1]=0,a[2]=0,a[3]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(4);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b},e.fromValues=function(a,b,c,e){var f=new d.ARRAY_TYPE(4);return f[0]=a,f[1]=b,f[2]=c,f[3]=e,f},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a},e.set=function(a,b,c,d,e){return a[0]=b,a[1]=c,a[2]=d,a[3]=e,a},e.add=function(a,b,c){return a[0]=b[0]+c[0],a[1]=b[1]+c[1],a[2]=b[2]+c[2],a[3]=b[3]+c[3],a},e.subtract=function(a,b,c){return a[0]=b[0]-c[0],a[1]=b[1]-c[1],a[2]=b[2]-c[2],a[3]=b[3]-c[3],a},e.sub=e.subtract,e.multiply=function(a,b,c){return a[0]=b[0]*c[0],a[1]=b[1]*c[1],a[2]=b[2]*c[2],a[3]=b[3]*c[3],a},e.mul=e.multiply,e.divide=function(a,b,c){return a[0]=b[0]/c[0],a[1]=b[1]/c[1],a[2]=b[2]/c[2],a[3]=b[3]/c[3],a},e.div=e.divide,e.min=function(a,b,c){return a[0]=Math.min(b[0],c[0]),a[1]=Math.min(b[1],c[1]),a[2]=Math.min(b[2],c[2]),a[3]=Math.min(b[3],c[3]),a},e.max=function(a,b,c){return a[0]=Math.max(b[0],c[0]),a[1]=Math.max(b[1],c[1]),a[2]=Math.max(b[2],c[2]),a[3]=Math.max(b[3],c[3]),a},e.scale=function(a,b,c){return a[0]=b[0]*c,a[1]=b[1]*c,a[2]=b[2]*c,a[3]=b[3]*c,a},e.scaleAndAdd=function(a,b,c,d){return a[0]=b[0]+c[0]*d,a[1]=b[1]+c[1]*d,a[2]=b[2]+c[2]*d,a[3]=b[3]+c[3]*d,a},e.distance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2],f=b[3]-a[3];return Math.sqrt(c*c+d*d+e*e+f*f)},e.dist=e.distance,e.squaredDistance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2],f=b[3]-a[3];return c*c+d*d+e*e+f*f},e.sqrDist=e.squaredDistance,e.length=function(a){var b=a[0],c=a[1],d=a[2],e=a[3];return Math.sqrt(b*b+c*c+d*d+e*e)},e.len=e.length,e.squaredLength=function(a){var b=a[0],c=a[1],d=a[2],e=a[3];return b*b+c*c+d*d+e*e},e.sqrLen=e.squaredLength,e.negate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a[2]=-b[2],a[3]=-b[3],a},e.inverse=function(a,b){return a[0]=1/b[0],a[1]=1/b[1],a[2]=1/b[2],a[3]=1/b[3],a},e.normalize=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c*c+d*d+e*e+f*f;return g>0&&(g=1/Math.sqrt(g),a[0]=c*g,a[1]=d*g,a[2]=e*g,a[3]=f*g),a},e.dot=function(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3]},e.lerp=function(a,b,c,d){var e=b[0],f=b[1],g=b[2],h=b[3];return a[0]=e+d*(c[0]-e),a[1]=f+d*(c[1]-f),a[2]=g+d*(c[2]-g),a[3]=h+d*(c[3]-h),a},e.random=function(a,b){return b=b||1,a[0]=d.RANDOM(),a[1]=d.RANDOM(),a[2]=d.RANDOM(),a[3]=d.RANDOM(),e.normalize(a,a),e.scale(a,a,b),a},e.transformMat4=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3];return a[0]=c[0]*d+c[4]*e+c[8]*f+c[12]*g,a[1]=c[1]*d+c[5]*e+c[9]*f+c[13]*g,a[2]=c[2]*d+c[6]*e+c[10]*f+c[14]*g,a[3]=c[3]*d+c[7]*e+c[11]*f+c[15]*g,a},e.transformQuat=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[0],h=c[1],i=c[2],j=c[3],k=j*d+h*f-i*e,l=j*e+i*d-g*f,m=j*f+g*e-h*d,n=-g*d-h*e-i*f;return a[0]=k*j+n*-g+l*-i-m*-h,a[1]=l*j+n*-h+m*-g-k*-i,a[2]=m*j+n*-i+k*-h-l*-g,a[3]=b[3],a},e.forEach=function(){var a=e.create();return function(b,c,d,e,f,g){var h,i;for(c||(c=4),d||(d=0),i=e?Math.min(e*c+d,b.length):b.length,h=d;i>h;h+=c)a[0]=b[h],a[1]=b[h+1],a[2]=b[h+2],a[3]=b[h+3],f(a,a,g),b[h]=a[0],b[h+1]=a[1],b[h+2]=a[2],b[h+3]=a[3];return b}}(),e.str=function(a){return"vec4("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+")"},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(2);return a[0]=0,a[1]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(2);return b[0]=a[0],b[1]=a[1],b},e.fromValues=function(a,b){var c=new d.ARRAY_TYPE(2);return c[0]=a,c[1]=b,c},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a},e.set=function(a,b,c){return a[0]=b,a[1]=c,a},e.add=function(a,b,c){return a[0]=b[0]+c[0],a[1]=b[1]+c[1],a},e.subtract=function(a,b,c){return a[0]=b[0]-c[0],a[1]=b[1]-c[1],a},e.sub=e.subtract,e.multiply=function(a,b,c){return a[0]=b[0]*c[0],a[1]=b[1]*c[1],a},e.mul=e.multiply,e.divide=function(a,b,c){return a[0]=b[0]/c[0],a[1]=b[1]/c[1],a},e.div=e.divide,e.min=function(a,b,c){return a[0]=Math.min(b[0],c[0]),a[1]=Math.min(b[1],c[1]),a},e.max=function(a,b,c){return a[0]=Math.max(b[0],c[0]),a[1]=Math.max(b[1],c[1]),a},e.scale=function(a,b,c){return a[0]=b[0]*c,a[1]=b[1]*c,a},e.scaleAndAdd=function(a,b,c,d){return a[0]=b[0]+c[0]*d,a[1]=b[1]+c[1]*d,a},e.distance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1];return Math.sqrt(c*c+d*d)},e.dist=e.distance,e.squaredDistance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1];return c*c+d*d},e.sqrDist=e.squaredDistance,e.length=function(a){var b=a[0],c=a[1];return Math.sqrt(b*b+c*c)},e.len=e.length,e.squaredLength=function(a){var b=a[0],c=a[1];return b*b+c*c},e.sqrLen=e.squaredLength,e.negate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a},e.inverse=function(a,b){return a[0]=1/b[0],a[1]=1/b[1],a},e.normalize=function(a,b){var c=b[0],d=b[1],e=c*c+d*d;return e>0&&(e=1/Math.sqrt(e),a[0]=b[0]*e,a[1]=b[1]*e),a},e.dot=function(a,b){return a[0]*b[0]+a[1]*b[1]},e.cross=function(a,b,c){var d=b[0]*c[1]-b[1]*c[0];return a[0]=a[1]=0,a[2]=d,a},e.lerp=function(a,b,c,d){var e=b[0],f=b[1];return a[0]=e+d*(c[0]-e),a[1]=f+d*(c[1]-f),a},e.random=function(a,b){b=b||1;var c=2*d.RANDOM()*Math.PI;return a[0]=Math.cos(c)*b,a[1]=Math.sin(c)*b,a},e.transformMat2=function(a,b,c){var d=b[0],e=b[1];return a[0]=c[0]*d+c[2]*e,a[1]=c[1]*d+c[3]*e,a},e.transformMat2d=function(a,b,c){var d=b[0],e=b[1];return a[0]=c[0]*d+c[2]*e+c[4],a[1]=c[1]*d+c[3]*e+c[5],a},e.transformMat3=function(a,b,c){
+var d=b[0],e=b[1];return a[0]=c[0]*d+c[3]*e+c[6],a[1]=c[1]*d+c[4]*e+c[7],a},e.transformMat4=function(a,b,c){var d=b[0],e=b[1];return a[0]=c[0]*d+c[4]*e+c[12],a[1]=c[1]*d+c[5]*e+c[13],a},e.forEach=function(){var a=e.create();return function(b,c,d,e,f,g){var h,i;for(c||(c=2),d||(d=0),i=e?Math.min(e*c+d,b.length):b.length,h=d;i>h;h+=c)a[0]=b[h],a[1]=b[h+1],f(a,a,g),b[h]=a[0],b[h+1]=a[1];return b}}(),e.str=function(a){return"vec2("+a[0]+", "+a[1]+")"},a.exports=e}])}),function(a){function b(a,b,c,d,e){this._listener=b,this._isOnce=c,this.context=d,this._signal=a,this._priority=e||0}function c(a,b){if("function"!=typeof a)throw Error("listener is a required param of {fn}() and should be a Function.".replace("{fn}",b))}function d(){this._bindings=[],this._prevParams=null;var a=this;this.dispatch=function(){d.prototype.dispatch.apply(a,arguments)}}b.prototype={active:!0,params:null,execute:function(a){var b;return this.active&&this._listener&&(a=this.params?this.params.concat(a):a,b=this._listener.apply(this.context,a),this._isOnce&&this.detach()),b},detach:function(){return this.isBound()?this._signal.remove(this._listener,this.context):null},isBound:function(){return!!this._signal&&!!this._listener},isOnce:function(){return this._isOnce},getListener:function(){return this._listener},getSignal:function(){return this._signal},_destroy:function(){delete this._signal,delete this._listener,delete this.context},toString:function(){return"[SignalBinding isOnce:"+this._isOnce+", isBound:"+this.isBound()+", active:"+this.active+"]"}},d.prototype={VERSION:"1.0.0",memorize:!1,_shouldPropagate:!0,active:!0,_registerListener:function(a,c,d,e){var f=this._indexOfListener(a,d);if(-1!==f){if(a=this._bindings[f],a.isOnce()!==c)throw Error("You cannot add"+(c?"":"Once")+"() then add"+(c?"Once":"")+"() the same listener without removing the relationship first.")}else a=new b(this,a,c,d,e),this._addBinding(a);return this.memorize&&this._prevParams&&a.execute(this._prevParams),a},_addBinding:function(a){var b=this._bindings.length;do--b;while(this._bindings[b]&&a._priority<=this._bindings[b]._priority);this._bindings.splice(b+1,0,a)},_indexOfListener:function(a,b){for(var c,d=this._bindings.length;d--;)if(c=this._bindings[d],c._listener===a&&c.context===b)return d;return-1},has:function(a,b){return-1!==this._indexOfListener(a,b)},add:function(a,b,d){return c(a,"add"),this._registerListener(a,!1,b,d)},addOnce:function(a,b,d){return c(a,"addOnce"),this._registerListener(a,!0,b,d)},remove:function(a,b){c(a,"remove");var d=this._indexOfListener(a,b);return-1!==d&&(this._bindings[d]._destroy(),this._bindings.splice(d,1)),a},removeAll:function(){for(var a=this._bindings.length;a--;)this._bindings[a]._destroy();this._bindings.length=0},getNumListeners:function(){return this._bindings.length},halt:function(){this._shouldPropagate=!1},dispatch:function(a){if(this.active){var b,c=Array.prototype.slice.call(arguments),d=this._bindings.length;if(this.memorize&&(this._prevParams=c),d){b=this._bindings.slice(),this._shouldPropagate=!0;do d--;while(b[d]&&this._shouldPropagate&&b[d].execute(c)!==!1)}}},forget:function(){this._prevParams=null},dispose:function(){this.removeAll(),delete this._bindings,delete this._prevParams},toString:function(){return"[Signal active:"+this.active+" numListeners:"+this.getNumListeners()+"]"}};var e=d;e.Signal=d,"function"==typeof define&&define.amd?define(function(){return e}):"undefined"!=typeof module&&module.exports?module.exports=e:a.signals=e}(this),!function(a){var b=function(a,b){for(var c in b)b.hasOwnProperty(c)&&(a[c]=b[c])};"function"==typeof define&&define.amd?define(function(){return b}):"undefined"!=typeof module&&module.exports?module.exports=b:a.mixin=b}(this);
 var EZ3 = {
   VERSION: '1.0.0',
 
@@ -486,7 +13,6 @@ var EZ3 = {
 };
 
 EZ3.Buffer = function() {
-
   this._buffer = [];
   this._bufferSize = {};
   this._bufferData = {};
@@ -497,7 +23,6 @@ EZ3.Buffer = function() {
   this._buffer[EZ3.Buffer.NORMAL] = -1;
   this._buffer[EZ3.Buffer.TANGENT] = -1;
   this._buffer[EZ3.Buffer.BITANGENT] = -1;
-
 };
 
 EZ3.Buffer.VERTEX = 0;
@@ -609,6 +134,8 @@ EZ3.Buffer.prototype.init = function(gl) {
 
 };
 
+EZ3.Buffer.prototype.constructor = EZ3.Buffer;
+
 EZ3.Engine = function(canvas, options) {
   this.canvas = canvas || document.createElement('canvas');
   this.canvas.width = canvas.width || 800;
@@ -636,21 +163,27 @@ EZ3.Keyboard = function(domElement) {
   this._keys = [];
 
   this.enabled = false;
-  this.signals = {};
-  this.signals.onKeyPress = new EZ3.Signal();
-  this.signals.onKeyDown = new EZ3.Signal();
-  this.signals.onKeyUp = new EZ3.Signal();
+  this.onKeyPress = new EZ3.Signal();
+  this.onKeyDown = new EZ3.Signal();
+  this.onKeyUp = new EZ3.Signal();
 };
 
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
 
-  this._keys[event.keyCode].processDown(this.signals.onKeyPress, this.signals.onKeyDown);
+  if(this._keys[event.keyCode].processDown())
+    this.onKeyPress.dispatch(this._keys[event.keyCode]);
+
+  this.onKeyDown.dispatch(this._keys[event.keyCode]);
 };
 
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
-  this._keys[event.keyCode].processUp(this.signals.onKeyUp);
+  if(!this._keys[event.keyCode])
+    this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
+
+  this._keys[event.keyCode].processUp();
+  this.onKeyUp.dispatch(this._keys[event.keyCode]);
 };
 
 EZ3.Keyboard.prototype.enable = function() {
@@ -674,6 +207,9 @@ EZ3.Keyboard.prototype.disable = function() {
 
   this._domElement.removeEventListener('keydown', this._onKeyDown);
 	this._domElement.removeEventListener('keyup', this._onKeyUp);
+
+  delete this._onKeyDown;
+  delete this._onKeyUp;
 };
 
 EZ3.Keyboard.prototype.getKey = function(keyCode) {
@@ -793,31 +329,30 @@ EZ3.Keyboard.NUM_LOCK = 144;
 EZ3.Mouse = function(domElement) {
   this._domElement = domElement;
 
-  this.pointer = new EZ3.MousePointer();
   this.enabled = false;
-  this.signals = {};
-  this.signals.onPress = new EZ3.Signal();
-  this.signals.onMove = new EZ3.Signal();
-  this.signals.onUp = new EZ3.Signal();
-  this.signals.onWheel = new EZ3.Signal();
+  this.pointer = new EZ3.MousePointer();
+  this.onPress = new EZ3.Signal();
+  this.onMove = new EZ3.Signal();
+  this.onUp = new EZ3.Signal();
+  this.onWheel = new EZ3.Signal();
 };
 
 EZ3.Mouse.prototype.constructor = EZ3.Mouse;
 
 EZ3.Mouse.prototype._processMousePress = function(event) {
-  this.pointer.processPress(event, this.signals.onPress, this.signals.onMove);
+  this.pointer.processPress(event, this.onPress, this.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseMove = function(event) {
-  this.pointer.processMove(event, this.signals.onMove);
+  this.pointer.processMove(event, this.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseUp = function(event) {
-  this.pointer.processUp(event, this.signals.onUp);
+  this.pointer.processUp(event, this.onUp);
 };
 
 EZ3.Mouse.prototype._processMouseWheel = function(event) {
-  this.pointer.processWheel(event, this.signals.onWheel);
+  this.pointer.processWheel(event, this.onWheel);
 };
 
 EZ3.Mouse.prototype.enable = function() {
@@ -856,6 +391,11 @@ EZ3.Mouse.prototype.disable = function() {
   this._domElement.removeEventListener('mouseup', this._onMousePointerUp, true);
   this._domElement.removeEventListener('mousewheel', this._onMousePointerWheel, true);
   this._domElement.removeEventListener('DOMMouseScroll', this._onMousePointerWheel, true);
+
+  delete this._onMousePress;
+  delete this._onMouseMove;
+  delete this._onMouseUp;
+  delete this._onMouseWheel;
 };
 
 EZ3.Mouse.LEFT_BUTTON = 0;
@@ -881,17 +421,18 @@ EZ3.Pointer = function(id) {
 
 EZ3.Pointer.prototype.constructor = EZ3.Pointer;
 
-EZ3.Pointer.prototype.processPress = function(event, onMove) {
-  this.processMove(event, onMove);
+EZ3.Pointer.prototype.processPress = function(event) {
+  this.processMove(event);
 };
 
-EZ3.Pointer.prototype.processMove = function(event, onMove) {
+EZ3.Pointer.prototype.processMove = function(event) {
   EZ3.Vec2.set(this.client, event.clientX, event.clientY);
   EZ3.Vec2.set(this.page, event.pageX, event.pageY);
   EZ3.Vec2.set(this.screen, event.screenX, event.screenY);
-
-  onMove.dispatch(this);
 };
+
+EZ3.Pointer.MOUSE = 0;
+EZ3.Pointer.TOUCH_1 = 1;
 
 /**
  * @class Switch
@@ -903,27 +444,22 @@ EZ3.Switch = function(code) {
   this.code = code;
 };
 
-EZ3.Switch.prototype.processPress = function(onPress) {
-  this._state = true;
+EZ3.Switch.prototype.constructor = EZ3.Switch;
 
-  onPress.dispatch(this);
+EZ3.Switch.prototype.processPress = function() {
+  this._state = true;
 };
 
-EZ3.Switch.prototype.processDown = function(onPress, onDown) {
+EZ3.Switch.prototype.processDown = function() {
   var isUp = this.isUp();
 
   this._state = true;
 
-  if(isUp)
-    onPress.dispatch(this);
-
-  onDown.dispatch(this);
+  return isUp;
 };
 
-EZ3.Switch.prototype.processUp = function(onUp) {
+EZ3.Switch.prototype.processUp = function() {
   this._state = false;
-
-  onUp.dispatch(this);
 };
 
 EZ3.Switch.prototype.isDown = function() {
@@ -934,7 +470,113 @@ EZ3.Switch.prototype.isUp = function() {
   return !this._state;
 };
 
-EZ3.Switch.prototype.constructor = EZ3.Switch;
+/**
+ * @class Touch
+ */
+
+EZ3.Touch = function(domElement, device) {
+  this._domElement = domElement;
+  this._device = device;
+  this._pointers = [];
+
+  this.enabled = false;
+  this.onPress = new EZ3.Signal();
+  this.onMove = new EZ3.Signal();
+  this.onUp = new EZ3.Signal();
+};
+
+EZ3.Touch.prototype._processTouchPress = function(event) {
+  event.preventDefault();
+
+  for (var i = 0; i < event.changedTouches.length; i++) {
+    var id = event.changedTouches[i].identifier;
+
+    if (!this._pointers[id])
+      this._pointers[id] = new EZ3.TouchPointer(id);
+
+    this._pointers[id].processPress(event.changedTouches[i], this.onPress, this.onMove);
+  }
+};
+
+EZ3.Touch.prototype._processTouchMove = function(event) {
+  event.preventDefault();
+
+  for (var i = 0; i < event.changedTouches.length; i++)
+    this._pointers[event.changedTouches[i].identifier].processMove(event.changedTouches[i], this.onMove);
+};
+
+EZ3.Touch.prototype._processTouchUp = function(event) {
+  event.preventDefault();
+
+  for (var i = 0; i < event.changedTouches.length; i++) {
+    var id = event.changedTouches[i].identifier;
+
+    if (!this._pointers[id])
+      this._pointers[id] = new EZ3.TouchPointer(id);
+
+    this._pointers[id].processUp(this.onUp);
+  }
+};
+
+EZ3.Touch.prototype.enable = function() {
+  var that = this;
+
+  if (this._device.touch) {
+    this.enabled = true;
+
+    this._onTouchPress = function(event) {
+      that._processTouchPress(event);
+    };
+
+    this._onTouchMove = function(event) {
+      that._processTouchMove(event);
+    };
+
+    this._onTouchUp = function(event) {
+      that._processTouchUp(event);
+    };
+
+    if (this._device.touch === EZ3.Device.TOUCH) {
+      this._domElement.addEventListener('touchstart', this._onTouchPress, false);
+      this._domElement.addEventListener('touchmove', this._onTouchMove, false);
+      this._domElement.addEventListener('touchend', this._onTouchUp, false);
+    } else if (this._device.touch === EZ3.Device.POINTER) {
+      this._domElement.addEventListener('pointerdown', this._onTouchPress, false);
+      this._domElement.addEventListener('pointermove', this._onTouchMove, false);
+      this._domElement.addEventListener('pointerup', this._onTouchUp, false);
+    } else {
+      this._domElement.addEventListener('MSPointerDown', this._onTouchPress, false);
+      this._domElement.addEventListener('MSPointerMove', this._onTouchMove, false);
+      this._domElement.addEventListener('MSPointerUp', this._onTouchUp, false);
+    }
+  }
+};
+
+EZ3.Touch.prototype.disable = function() {
+  if (this._device.touch) {
+    this.enabled = false;
+
+    if (this._device.touch === EZ3.device.TOUCH) {
+      this._domElement.addEventListener('touchstart', this._onTouchPress, false);
+      this._domElement.addEventListener('touchmove', this._onTouchMove, false);
+      this._domElement.addEventListener('touchend', this._onTouchUp, false);
+    } else if (this._device.touch === EZ3.device.POINTER) {
+      this._domElement.addEventListener('pointerdown', this._onTouchPress, false);
+      this._domElement.addEventListener('pointermove', this._onTouchMove, false);
+      this._domElement.addEventListener('pointerup', this._onTouchUp, false);
+    } else {
+      this._domElement.addEventListener('MSPointerDown', this._onTouchPress, false);
+      this._domElement.addEventListener('MSPointerMove', this._onTouchMove, false);
+      this._domElement.addEventListener('MSPointerUp', this._onTouchUp, false);
+    }
+
+    delete this._onTouchPress;
+    delete this._onTouchMove;
+    delete this._onTouchUp;
+  }
+};
+
+EZ3.Touch.TAP = 0;
 
 EZ3.Geometry = function() {
   this._uv = [];
@@ -982,8 +624,8 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   vector0 = vec3.create();
   vector1 = vec3.create();
 
-  var temporalNormals = this.initArray(this._vertices.length, 0);
-  var temporalAppearances = this.initArray(this._vertices.length / 3, 0);
+  var tempNormals = this.initArray(this._vertices.length, 0);
+  var tempAppearances = this.initArray(this._vertices.length / 3, 0);
 
   for(k = 0; k < this._indices.length; k += 3) {
 
@@ -1004,21 +646,21 @@ EZ3.Geometry.prototype.calculateNormals = function() {
       vec3.normalize(normal, normal);
     }
 
-    temporalNormals[x + 0] += normal[0];
-    temporalNormals[x + 1] += normal[1];
-    temporalNormals[x + 2] += normal[2];
+    tempNormals[x + 0] += normal[0];
+    tempNormals[x + 1] += normal[1];
+    tempNormals[x + 2] += normal[2];
 
-    temporalNormals[y + 0] += normal[0];
-    temporalNormals[y + 1] += normal[1];
-    temporalNormals[y + 2] += normal[2];
+    tempNormals[y + 0] += normal[0];
+    tempNormals[y + 1] += normal[1];
+    tempNormals[y + 2] += normal[2];
 
-    temporalNormals[z + 0] += normal[0];
-    temporalNormals[z + 1] += normal[1];
-    temporalNormals[z + 2] += normal[2];
+    tempNormals[z + 0] += normal[0];
+    tempNormals[z + 1] += normal[1];
+    tempNormals[z + 2] += normal[2];
 
-    ++temporalAppearances[x / 3];
-    ++temporalAppearances[y / 3];
-    ++temporalAppearances[z / 3];
+    ++tempAppearances[x / 3];
+    ++tempAppearances[y / 3];
+    ++tempAppearances[z / 3];
   }
 
   for(k = 0; k < this._vertices.length / 3; ++k){
@@ -1026,13 +668,13 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    this._normals.push(temporalNormals[x] / temporalAppearances[k]);
-    this._normals.push(temporalNormals[y] / temporalAppearances[k]);
-    this._normals.push(temporalNormals[z] / temporalAppearances[k]);
+    this._normals.push(tempNormals[x] / tempAppearances[k]);
+    this._normals.push(tempNormals[y] / tempAppearances[k]);
+    this._normals.push(tempNormals[z] / tempAppearances[k]);
   }
 
-  temporalNormals.splice(0, temporalNormals.length);
-  temporalAppearances.splice(0, temporalAppearances.length);
+  tempNormals.splice(0, tempNormals.length);
+  tempAppearances.splice(0, tempAppearances.length);
 };
 
 EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
@@ -1054,6 +696,96 @@ EZ3.Geometry.prototype.calculateMidPoint = function () {
 };
 
 EZ3.Geometry.prototype.calculateTangents = function() {
+  var x, y, z, k, r;
+
+  var point0 = vec3.create();
+  var point1 = vec3.create();
+  var point2 = vec3.create();
+
+  var vector0 = vec3.create();
+  var vector1 = vec3.create();
+
+  var normal = vec3.create();
+  var tangent = vec4.create();
+  var bitangent = vec3.create();
+
+  var textPoint0 = vec2.create();
+  var textPoint1 = vec2.create();
+  var textPoint2 = vec2.create();
+
+  var textVector0 = vec2.create();
+  var textVector1 = vec2.create();
+
+  var tempT = this.initArray(this._vertices.length, 0);
+  var tempB = this.initArray(this._vertices.length, 0);
+
+  for(k = 0; k < this._indices.length; k += 3) {
+
+    x = this._indices[k + 0];
+    y = this._indices[k + 1];
+    z = this._indices[k + 2];
+
+    vec3.set(point0, this._vertices[3 * x + 0], this._vertices[3 * x + 1], this._vertices[3 * x + 2]);
+    vec3.set(point1, this._vertices[3 * y + 0], this._vertices[3 * y + 1], this._vertices[3 * y + 2]);
+    vec3.set(point2, this._vertices[3 * z + 0], this._vertices[3 * z + 1], this._vertices[3 * z + 2]);
+
+    vec2.set(textPoint0, this._uv[2 * x + 0], this._uv[2 * x + 1]);
+    vec2.set(textPoint1, this._uv[2 * y + 0], this._uv[2 * y + 1]);
+    vec2.set(textPoint2, this._uv[2 * z + 0], this._uv[2 * z + 1]);
+
+    vec3.sub(vector0, point1, point0);
+    vec3.sub(vector1, point2, point0);
+
+    vec2.sub(textVector0, textPoint1, textPoint0);
+    vec2.sub(textVector1, textPoint2, textPoint0);
+
+    r = 1.0 / (textVector0[0] * textVector1[1] - textVector1[0] * textVector0[1]);
+
+    tangent[0] = (textVector1[1] * vector0[0] - textVector0[1] * vector1[0]) * r;
+    tangent[1] = (textVector1[1] * vector0[1] - textVector0[1] * vector1[1]) * r;
+    tangent[2] = (textVector1[1] * vector0[2] - textVector0[1] * vector1[2]) * r;
+
+    bitangent[0] = (textVector0[0] * vector1[0] - textVector1[0] * vector0[0]) * r;
+    bitangent[1] = (textVector0[0] * vector1[1] - textVector1[0] * vector0[1]) * r;
+    bitangent[2] = (textVector0[0] * vector1[2] - textVector1[0] * vector0[2]) * r;
+
+    tempT[3 * x + 0] += tangent[0];
+    tempT[3 * y + 0] += tangent[1];
+    tempT[3 * z + 0] += tangent[2];
+
+    tempT[3 * x + 1] += tangent[0];
+    tempT[3 * y + 1] += tangent[1];
+    tempT[3 * z + 1] += tangent[2];
+
+    tempT[3 * x + 2] += tangent[0];
+    tempT[3 * y + 2] += tangent[1];
+    tempT[3 * z + 2] += tangent[2];
+
+    tempB[3 * x + 0] += bitangent[0];
+    tempB[3 * y + 0] += bitangent[1];
+    tempB[3 * z + 0] += bitangent[2];
+
+    tempB[3 * x + 1] += bitangent[0];
+    tempB[3 * y + 1] += bitangent[1];
+    tempB[3 * z + 1] += bitangent[2];
+
+    tempB[3 * x + 2] += bitangent[0];
+    tempB[3 * y + 2] += bitangent[1];
+    tempB[3 * z + 2] += bitangent[2];
+
+  }
+
+  for(k = 0; k < this._vertices.length / 3; ++k) {
+
+    x = 3 * k + 0;
+    y = 3 * k + 1;
+    z = 3 * k + 2;
+
+    vec3.set(tangent, tempT[x], tempT[y], tempT[z]);
+    vec3.set(bitangent, tempB[x], tempB[y], tempB[z]);
+    vec3.set(normal, this._normals[x], this._normals[y], this._normals[z]);
+
+  }
 
 };
 
@@ -1071,7 +803,7 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
   this._yRadius = yRadius;
   this._zRadius = zRadius;
 
-  var that = this;
+  var scope = this;
 
   function _create() {
     var s, t, cosS, cosT, sinS, sinT, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
@@ -1079,11 +811,11 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
     vertex = vec3.create();
     normal = vec3.create();
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
+    totalSlices = 1.0 / (scope._slices - 1);
+    totalStacks = 1.0 / (scope._stacks - 1);
 
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
+    for(s = 0; s < scope._slices; ++s) {
+      for(t = 0; t < scope._stacks; ++t) {
         u = s * totalSlices;
         v = t * totalStacks;
 
@@ -1095,45 +827,45 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
         sinS = Math.pow(Math.sin(phi), 3.0);
         sinT = Math.pow(Math.sin(rho), 3.0);
 
-        vertex[0] = (that._xRadius * cosT * cosS);
-        vertex[1] = (that._yRadius * sinT);
-        vertex[2] = (that._zRadius * cosT * sinS);
+        vertex[0] = (scope._xRadius * cosT * cosS);
+        vertex[1] = (scope._yRadius * sinT);
+        vertex[2] = (scope._zRadius * cosT * sinS);
 
-        normal[0] = vertex[0] / that._xRadius;
-        normal[1] = vertex[1] / that._yRadius;
-        normal[2] = vertex[2] / that._zRadius;
+        normal[0] = vertex[0] / scope._xRadius;
+        normal[1] = vertex[1] / scope._yRadius;
+        normal[2] = vertex[2] / scope._zRadius;
 
         vec3.normalize(normal, normal);
 
-        that._uv.push(u);
-        that._uv.push(v);
+        scope._uv.push(u);
+        scope._uv.push(v);
 
-        that._normals.push(normal[0]);
-        that._normals.push(normal[1]);
-        that._normals.push(normal[2]);
+        scope._normals.push(normal[0]);
+        scope._normals.push(normal[1]);
+        scope._normals.push(normal[2]);
 
-        that._vertices.push(vertex[0]);
-        that._vertices.push(vertex[1]);
-        that._vertices.push(vertex[2]);
+        scope._vertices.push(vertex[0]);
+        scope._vertices.push(vertex[1]);
+        scope._vertices.push(vertex[2]);
       }
     }
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 0) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
+    for(s = 0; s < scope._slices - 1; ++s) {
+      for(t = 0; t < scope._stacks - 1; ++t) {
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
 
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 0));
       }
     }
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
   }
 
   _create();
@@ -1153,21 +885,21 @@ EZ3.Box = function(width, height, depth) {
   this._halfDepth  = this._depth * 0.5;
   this._halfHeight = this._height * 0.5;
 
-  var that = this;
+  var scope = this;
 
   function _create () {
-    that._vertices = [
-      +that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, +that._halfHeight, -that._halfDepth,
-      +that._halfWidth, +that._halfHeight, -that._halfDepth
+    scope._vertices = [
+      +scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
+      -scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
+      -scope._halfWidth, -scope._halfHeight, +scope._halfDepth,
+      +scope._halfWidth, -scope._halfHeight, +scope._halfDepth,
+      +scope._halfWidth, -scope._halfHeight, -scope._halfDepth,
+      -scope._halfWidth, -scope._halfHeight, -scope._halfDepth,
+      -scope._halfWidth, +scope._halfHeight, -scope._halfDepth,
+      +scope._halfWidth, +scope._halfHeight, -scope._halfDepth
     ];
 
-    that._indices = [
+    scope._indices = [
       0, 1 ,2,
       0, 2, 3,
       7, 4, 5,
@@ -1182,15 +914,15 @@ EZ3.Box = function(width, height, depth) {
       3, 5, 4
     ];
 
-    that._uv = [
+    scope._uv = [
 
     ];
 
-    that.calculateNormals();
+    scope.calculateNormals();
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
     //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
   }
 
@@ -1208,28 +940,28 @@ EZ3.Cone = function(base, height, slices, stacks) {
   this._slices = slices;
   this._stacks = stacks;
 
-  var that = this;
+  var scope = this;
 
   function _create() {
 
     var s, t, u, v, radius, actualHeight, vertex, normal, step, totalSlices, totalStacks;
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
+    totalSlices = 1.0 / (scope._slices - 1);
+    totalStacks = 1.0 / (scope._stacks - 1);
 
-    actualHeight = that._height;
-    step = (that._height - that._base) / that._slices;
+    actualHeight = scope._height;
+    step = (scope._height - scope._base) / scope._slices;
 
     vertex = vec3.create();
     normal = vec3.create();
 
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
+    for(s = 0; s < scope._slices; ++s) {
+      for(t = 0; t < scope._stacks; ++t) {
 
         u = s * totalSlices;
         v = t * totalStacks;
 
-        radius = Math.abs(that._height - actualHeight) * 0.5;
+        radius = Math.abs(scope._height - actualHeight) * 0.5;
 
         vertex[0] = radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
         vertex[1] = actualHeight;
@@ -1241,42 +973,42 @@ EZ3.Cone = function(base, height, slices, stacks) {
 
         vec3.normalize(normal, normal);
 
-        that._vertices.push(vertex[0]);
-        that._vertices.push(vertex[1]);
-        that._vertices.push(vertex[2]);
+        scope._vertices.push(vertex[0]);
+        scope._vertices.push(vertex[1]);
+        scope._vertices.push(vertex[2]);
 
-        that._uv.push(u);
-        that._uv.push(v);
+        scope._uv.push(u);
+        scope._uv.push(v);
 
       }
 
       actualHeight -= step;
 
-      if(actualHeight < that._base)
+      if(actualHeight < scope._base)
         break;
 
     }
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
+    for(s = 0; s < scope._slices - 1; ++s) {
+      for(t = 0; t < scope._stacks - 1; ++t) {
 
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 0) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
 
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 0));
 
       }
     }
 
-    that.calculateNormals();
+    scope.calculateNormals();
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
 
   };
 
@@ -1295,69 +1027,69 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
   this._slices = slices;
   this._stacks = stacks;
 
-  var that = this;
+  var scope = this;
 
   function _create () {
     var s, t, u, v, actualHeight, vertex, normal, step, totalSlices, totalStacks;
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
+    totalSlices = 1.0 / (scope._slices - 1);
+    totalStacks = 1.0 / (scope._stacks - 1);
 
-    actualHeight = that._height;
-    step = (that._height - that._base) / that._slices;
+    actualHeight = scope._height;
+    step = (scope._height - scope._base) / scope._slices;
 
     vertex = vec3.create();
     normal = vec3.create();
 
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
+    for(s = 0; s < scope._slices; ++s) {
+      for(t = 0; t < scope._stacks; ++t) {
 
         u = s * totalSlices;
         v = t * totalStacks;
 
-        vertex[0] = that._radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[0] = scope._radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
         vertex[1] = actualHeight;
-        vertex[2] = that._radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[2] = scope._radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
 
         vec3.set(normal, vertex[0], vertex[1], vertex[2]);
         vec3.normalize(normal, normal);
 
-        that._vertices.push(vertex[0]);
-        that._vertices.push(vertex[1]);
-        that._vertices.push(vertex[2]);
+        scope._vertices.push(vertex[0]);
+        scope._vertices.push(vertex[1]);
+        scope._vertices.push(vertex[2]);
 
-        that._uv.push(u);
-        that._uv.push(v);
+        scope._uv.push(u);
+        scope._uv.push(v);
 
       }
 
       actualHeight -= step;
 
-      if(actualHeight < that._base)
+      if(actualHeight < scope._base)
         break;
 
     }
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
+    for(s = 0; s < scope._slices - 1; ++s) {
+      for(t = 0; t < scope._stacks - 1; ++t) {
 
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 0) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
 
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 0));
 
       }
     }
 
-    that.calculateNormals();
+    scope.calculateNormals();
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
 
   }
 
@@ -1376,7 +1108,7 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
   this._yRadius = yRadius;
   this._zRadius = zRadius;
 
-  var that = this;
+  var scope = this;
 
   function _create() {
     var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
@@ -1384,56 +1116,56 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
     vertex = vec3.create();
     normal = vec3.create();
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
+    totalSlices = 1.0 / (scope._slices - 1);
+    totalStacks = 1.0 / (scope._stacks - 1);
 
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
+    for(s = 0; s < scope._slices; ++s) {
+      for(t = 0; t < scope._stacks; ++t) {
         u = s * totalSlices;
         v = t * totalStacks;
 
         phi = EZ3.Geometry.DOUBLE_PI * u;
         rho = EZ3.Geometry.PI * v;
 
-        vertex[0] = (that._xRadius * Math.cos(phi) * Math.sin(rho));
-        vertex[1] = (that._yRadius * Math.sin(rho - EZ3.Geometry.HALF_PI));
-        vertex[2] = (that._zRadius * Math.sin(phi) * Math.sin(rho));
+        vertex[0] = (scope._xRadius * Math.cos(phi) * Math.sin(rho));
+        vertex[1] = (scope._yRadius * Math.sin(rho - EZ3.Geometry.HALF_PI));
+        vertex[2] = (scope._zRadius * Math.sin(phi) * Math.sin(rho));
 
-        normal[0] = vertex[0] / that._xRadius;
-        normal[1] = vertex[1] / that._yRadius;
-        normal[2] = vertex[2] / that._zRadius;
+        normal[0] = vertex[0] / scope._xRadius;
+        normal[1] = vertex[1] / scope._yRadius;
+        normal[2] = vertex[2] / scope._zRadius;
 
         vec3.normalize(normal, normal);
 
-        that._uv.push(u);
-        that._uv.push(v);
+        scope._uv.push(u);
+        scope._uv.push(v);
 
-        that._normals.push(normal[0]);
-        that._normals.push(normal[1]);
-        that._normals.push(normal[2]);
+        scope._normals.push(normal[0]);
+        scope._normals.push(normal[1]);
+        scope._normals.push(normal[2]);
 
-        that._vertices.push(vertex[0]);
-        that._vertices.push(vertex[1]);
-        that._vertices.push(vertex[2]);
+        scope._vertices.push(vertex[0]);
+        scope._vertices.push(vertex[1]);
+        scope._vertices.push(vertex[2]);
       }
     }
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 0) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
+    for(s = 0; s < scope._slices - 1; ++s) {
+      for(t = 0; t < scope._stacks - 1; ++t) {
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
 
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 0));
       }
     }
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
   }
 
   _create();
@@ -1448,45 +1180,45 @@ EZ3.Grid = function(width, height) {
   this._width = width;
   this._height = height;
 
-  var that = this;
+  var scope = this;
 
   function _create() {
     var index0, index1, index2, index3, z, x;
 
-    for(z = 0; z < that._height + 1; ++z) {
-      for(x = 0; x < that._width + 1; ++x) {
-        that._vertices.push(x);
-        that._vertices.push(0);
-        that._vertices.push(z);
+    for(z = 0; z < scope._height + 1; ++z) {
+      for(x = 0; x < scope._width + 1; ++x) {
+        scope._vertices.push(x);
+        scope._vertices.push(0);
+        scope._vertices.push(z);
 
-        that._uv.push(x / that._width);
-        that._uv.push(z / that._height);
+        scope._uv.push(x / scope._width);
+        scope._uv.push(z / scope._height);
       }
     }
 
-    for(z = 0; z < that._height; ++z) {
-      for(x = 0; x < that._width; ++x) {
-        index0 = z * (that._height + 1) + x;
+    for(z = 0; z < scope._height; ++z) {
+      for(x = 0; x < scope._width; ++x) {
+        index0 = z * (scope._height + 1) + x;
         index1 = index0 + 1;
-        index2 = index0 + (that._height + 1);
+        index2 = index0 + (scope._height + 1);
         index3 = index2 + 1;
 
-        that._indices.push(index0);
-        that._indices.push(index2);
-        that._indices.push(index1);
+        scope._indices.push(index0);
+        scope._indices.push(index2);
+        scope._indices.push(index1);
 
-        that._indices.push(index1);
-        that._indices.push(index2);
-        that._indices.push(index3);
+        scope._indices.push(index1);
+        scope._indices.push(index2);
+        scope._indices.push(index3);
       }
     }
 
-    that.calculateNormals();
+    scope.calculateNormals();
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
   }
 
   _create();
@@ -1502,7 +1234,7 @@ EZ3.Sphere = function(radius, slices, stacks) {
   this._slices = slices;
   this._stacks = stacks;
 
-  var that = this;
+  var scope = this;
 
   function _create() {
     var s, t, phi, rho, u, v, normal, vertex, totalSlices, totalStacks;
@@ -1510,56 +1242,56 @@ EZ3.Sphere = function(radius, slices, stacks) {
     vertex = vec3.create();
     normal = vec3.create();
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
+    totalSlices = 1.0 / (scope._slices - 1);
+    totalStacks = 1.0 / (scope._stacks - 1);
 
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
+    for(s = 0; s < scope._slices; ++s) {
+      for(t = 0; t < scope._stacks; ++t) {
         u = s * totalSlices;
         v = t * totalStacks;
 
         phi = EZ3.Geometry.DOUBLE_PI * u;
         rho = EZ3.Geometry.PI * v;
 
-        vertex[0] = (that._radius * Math.cos(phi) * Math.sin(rho));
-        vertex[1] = (that._radius * Math.sin(rho - EZ3.Geometry.HALF_PI));
-        vertex[2] = (that._radius * Math.sin(phi) * Math.sin(rho));
+        vertex[0] = (scope._radius * Math.cos(phi) * Math.sin(rho));
+        vertex[1] = (scope._radius * Math.sin(rho - EZ3.Geometry.HALF_PI));
+        vertex[2] = (scope._radius * Math.sin(phi) * Math.sin(rho));
 
-        normal[0] = vertex[0] / that._radius;
-        normal[1] = vertex[1] / that._radius;
-        normal[2] = vertex[2] / that._radius;
+        normal[0] = vertex[0] / scope._radius;
+        normal[1] = vertex[1] / scope._radius;
+        normal[2] = vertex[2] / scope._radius;
 
         vec3.normalize(normal, normal);
 
-        that._uv.push(u);
-        that._uv.push(v);
+        scope._uv.push(u);
+        scope._uv.push(v);
 
-        that._normals.push(normal[0]);
-        that._normals.push(normal[1]);
-        that._normals.push(normal[2]);
+        scope._normals.push(normal[0]);
+        scope._normals.push(normal[1]);
+        scope._normals.push(normal[2]);
 
-        that._vertices.push(vertex[0]);
-        that._vertices.push(vertex[1]);
-        that._vertices.push(vertex[2]);
+        scope._vertices.push(vertex[0]);
+        scope._vertices.push(vertex[1]);
+        scope._vertices.push(vertex[2]);
       }
     }
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 0) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
+    for(s = 0; s < scope._slices - 1; ++s) {
+      for(t = 0; t < scope._stacks - 1; ++t) {
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
 
-        that._indices.push((s + 0) * that._stacks + (t + 0));
-        that._indices.push((s + 1) * that._stacks + (t + 1));
-        that._indices.push((s + 1) * that._stacks + (t + 0));
+        scope._indices.push((s + 0) * scope._stacks + (t + 0));
+        scope._indices.push((s + 1) * scope._stacks + (t + 1));
+        scope._indices.push((s + 1) * scope._stacks + (t + 0));
       }
     }
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
   }
 
   _create();
@@ -1576,19 +1308,19 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
   this._innerRadius = innerRadius;
   this._outerRadius = outerRadius;
 
-  var that = this;
+  var scope = this;
 
   function _create() {
     var vertex, normal, u, v, cosS, cosR, sinS, sinR, rho, phi, s, r, totalSides, totalRings;
 
-    totalSides = 1.0 / (that._sides - 1);
-    totalRings = 1.0 / (that._rings - 1);
+    totalSides = 1.0 / (scope._sides - 1);
+    totalRings = 1.0 / (scope._rings - 1);
 
     vertex = vec3.create();
     normal = vec3.create();
 
-    for(s = 0; s < that._sides; ++s){
-      for(r = 0; r < that._rings; ++r){
+    for(s = 0; s < scope._sides; ++s){
+      for(r = 0; r < scope._rings; ++r){
         u = s * totalSides;
         v = r * totalRings;
 
@@ -1600,45 +1332,45 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
         sinS = Math.sin(rho);
         sinR = Math.sin(phi);
 
-        vertex[0] = (that._innerRadius + that._outerRadius * cosR) * cosS;
-        vertex[1] = (that._outerRadius * sinR);
-        vertex[2] = (that._innerRadius + that._outerRadius * cosR) * sinS;
+        vertex[0] = (scope._innerRadius + scope._outerRadius * cosR) * cosS;
+        vertex[1] = (scope._outerRadius * sinR);
+        vertex[2] = (scope._innerRadius + scope._outerRadius * cosR) * sinS;
 
-        normal[0] = vertex[0] - that._innerRadius * cosS;
+        normal[0] = vertex[0] - scope._innerRadius * cosS;
         normal[1] = vertex[1];
-        normal[2] = vertex[2] - that._innerRadius * sinS;
+        normal[2] = vertex[2] - scope._innerRadius * sinS;
 
         vec3.normalize(normal, normal);
 
-        that._uv.push(u);
-        that._uv.push(v);
+        scope._uv.push(u);
+        scope._uv.push(v);
 
-        that._normals.push(normal[0]);
-        that._normals.push(normal[1]);
-        that._normals.push(normal[2]);
+        scope._normals.push(normal[0]);
+        scope._normals.push(normal[1]);
+        scope._normals.push(normal[2]);
 
-        that._vertices.push(vertex[0]);
-        that._vertices.push(vertex[1]);
-        that._vertices.push(vertex[2]);
+        scope._vertices.push(vertex[0]);
+        scope._vertices.push(vertex[1]);
+        scope._vertices.push(vertex[2]);
       }
     }
 
-    for(s = 0; s < that._sides - 1; ++s){
-      for(r = 0; r < that._rings - 1; ++r){
-        that._indices.push((s + 0) * that._rings + (r + 0));
-        that._indices.push((s + 0) * that._rings + (r + 1));
-        that._indices.push((s + 1) * that._rings + (r + 1));
+    for(s = 0; s < scope._sides - 1; ++s){
+      for(r = 0; r < scope._rings - 1; ++r){
+        scope._indices.push((s + 0) * scope._rings + (r + 0));
+        scope._indices.push((s + 0) * scope._rings + (r + 1));
+        scope._indices.push((s + 1) * scope._rings + (r + 1));
 
-        that._indices.push((s + 0) * that._rings + (r + 0));
-        that._indices.push((s + 1) * that._rings + (r + 1));
-        that._indices.push((s + 1) * that._rings + (r + 0));
+        scope._indices.push((s + 0) * scope._rings + (r + 0));
+        scope._indices.push((s + 1) * scope._rings + (r + 1));
+        scope._indices.push((s + 1) * scope._rings + (r + 0));
       }
     }
 
-    that._buffer.fill(EZ3.Buffer.VERTEX, that._vertices.length, that._vertices);
-    that._buffer.fill(EZ3.Buffer.NORMAL, that._normals.length, that._normals);
-    that._buffer.fill(EZ3.Buffer.INDEX, that._indices.length, that._indices);
-    that._buffer.fill(EZ3.Buffer.UV, that._uv.length, that._uv);
+    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
+    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
+    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
+    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
   }
 
   _create();
@@ -1647,113 +1379,133 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Torus.prototype.constructor = EZ3.Torus;
 
+/**
+ * @class Device
+ */
+
 EZ3.Device = function() {
-  this.readyAt = 0;
+  this.ready = false;
+  this.operatingSystem = 0;
+  this.touch = 0;
 };
 
 EZ3.Device = new EZ3.Device();
 
-EZ3.Device.onReady = function(callback, context, nonPrimer) {
-  if (this.readyAt)
-    callback.call(context, this);
-  else if (this._checkReady._monitor || nonPrimer) {
-    this._checkReady._queue = this._checkReady._queue || [];
-    this._checkReady._queue.push([callback, context]);
-  }
-  else {
-    this._checkReady._monitor = this._checkReady.bind(this);
-    this._checkReady._queue = this._checkReady._queue || [];
-    this._checkReady._queue.push([callback, context]);
+EZ3.Device._check = function() {
+  var that = this;
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive')
-      window.setTimeout(this._checkReady._monitor, 0);
-    else if (typeof window.cordova !== 'undefined' && !navigator['isCocoonJS'])
-      document.addEventListener('deviceready', this._checkReady._monitor, false);
+  function _checkOperatingSystem() {
+    if (/Playstation Vita/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.PSVITA;
+    else if (/Kindle/.test(navigator.userAgent) || /\bKF[A-Z][A-Z]+/.test(navigator.userAgent) || /Silk.*Mobile Safari/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.KINDLE;
+    else if (/Android/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.ANDROID;
+    else if (/CrOS/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.CRHOMEOS;
+    else if (/iP[ao]d|iPhone/i.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.IOS;
+    else if (/Linux/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.LINUX;
+    else if (/Mac OS/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.MACOS;
+    else if (/Windows/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.WINDOWS;
+
+    if (/Windows Phone/i.test(navigator.userAgent) || /IEMobile/i.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.WINDOWS_PHONE;
+  }
+
+  function _checkInput() {
+    if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
+      that.touch = EZ3.Device.TOUCH;
     else {
-      document.addEventListener('DOMContentLoaded', this._checkReady._monitor, false);
-      window.addEventListener('load', this._checkReady._monitor, false);
+      if(window.navigator.pointerEnabled)
+        that.touch = EZ3.Device.POINTER;
+
+      if(window.navigator.msPointerEnabled)
+        that.touch = EZ3.Device.MSPOINTER;
     }
   }
+
+  _checkOperatingSystem();
+  _checkInput();
 };
 
-EZ3.Device._checkReady = function() {
-  if (!document.body)
-    window.setTimeout(this._checkReady._monitor, 20);
-  else if (!this.readyAt) {
-    this.readyAt = Date.now();
-
-    document.removeEventListener('deviceready', this._checkReady._monitor);
-    document.removeEventListener('DOMContentLoaded', this._checkReady._monitor);
-    window.removeEventListener('load', this._checkReady._monitor);
+EZ3.Device._isReady = function() {
+  if (!document.body) {
+    window.setTimeout(this._isReady, 20);
+  } else if (!this.ready) {
+    document.removeEventListener('deviceready', this._onReady);
+    document.removeEventListener('DOMContentLoaded', this._onReady);
+    window.removeEventListener('load', this._onReady);
 
     this._check();
 
+    this.ready = true;
+
     var item;
-    while ((item = this._checkReady._queue.shift())) {
-      var callback = item[0];
-      var context = item[1];
-      callback.call(context, this);
-    }
+    while ((item = this._isReady.queue.shift()))
+      item.callback.call(item.context, this);
 
-    this._checkReady = null;
-    this._check = null;
+    delete this._isReady;
+    delete this._onReady;
+    delete this._check;
   }
 };
 
-EZ3.Device._check = function() {
-  var device = this;
+EZ3.Device.onReady = function(callback, context) {
+  if (this.ready)
+    callback.call(context, this);
+  else if (this._isReady.queue)
+    this._isReady.queue.push({
+      callback: callback,
+      context: context
+    });
+  else {
+    var that = this;
 
-  function _checkOS() {
-    var ua = navigator.userAgent;
+    this._isReady.queue = [];
+    this._isReady.queue.push({
+      callback: callback,
+      context: context
+    });
 
-    if (/Playstation Vita/.test(ua)) {
-      device.vita = true;
-    } else if (/Kindle/.test(ua) || /\bKF[A-Z][A-Z]+/.test(ua) || /Silk.*Mobile Safari/.test(ua)) {
-      device.kindle = true;
-    } else if (/Android/.test(ua)) {
-      device.android = true;
-    } else if (/CrOS/.test(ua)) {
-      device.chromeOS = true;
-    } else if (/iP[ao]d|iPhone/i.test(ua)) {
-      device.iOS = true;
-    } else if (/Linux/.test(ua)) {
-      device.linux = true;
-    } else if (/Mac OS/.test(ua)) {
-      device.macOS = true;
-    } else if (/Windows/.test(ua)) {
-      device.windows = true;
+    this._onReady = function() {
+      that._isReady();
+    };
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive')
+      this._isReady();
+    else if (typeof window.cordova !== 'undefined' && !navigator['isCocoonJS'])
+      document.addEventListener('deviceready', this._onReady, false);
+    else {
+      document.addEventListener('DOMContentLoaded', this._onReady, false);
+      window.addEventListener('load', this._onReady, false);
     }
-
-    if (/Windows Phone/i.test(ua) || /IEMobile/i.test(ua)) {
-      device.android = false;
-      device.iOS = false;
-      device.macOS = false;
-      device.windows = true;
-      device.windowsPhone = true;
-    }
-
-    var silk = /Silk/.test(ua); // detected in browsers
-
-    if (device.windows || device.macOS || (device.linux && !silk) || device.chromeOS) {
-      device.desktop = true;
-    }
-
-    //  Windows Phone / Table reset
-    if (device.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua)))) {
-      device.desktop = false;
-    }
-
   }
-
-  _checkOS();
 };
+
+EZ3.Device.WINDOWS = 1;
+EZ3.Device.MACOS = 2;
+EZ3.Device.LINUX = 4;
+EZ3.Device.IOS = 8;
+EZ3.Device.ANDROID = 16;
+EZ3.Device.WINDOWS_PHONE = 32;
+EZ3.Device.CRHOMEOS = 64;
+EZ3.Device.KINDLE = 128;
+EZ3.Device.PSVITA = 256;
+
+EZ3.Device.TOUCH = 1;
+EZ3.Device.POINTER = 2;
+EZ3.Device.MSPOINTER = 4;
 
 /**
  * @class MousePointer
  *  */
 
 EZ3.MousePointer = function() {
-  EZ3.Pointer.call(this, 1);
+  EZ3.Pointer.call(this, EZ3.Pointer.MOUSE);
 
   this._buttons = [];
 
@@ -1769,12 +1521,17 @@ EZ3.MousePointer.prototype.processPress = function(event, onPress, onMove) {
   if(!this._buttons[event.button])
     this._buttons[event.button] = new EZ3.Switch(event.button);
 
-  this._buttons[event.button].processPress(onPress);
-  EZ3.Pointer.prototype.processPress.call(this, event, onMove);
+  this._buttons[event.button].processPress();
+  EZ3.Pointer.prototype.processPress.call(this, event);
+
+  onPress.dispatch(this._buttons[event.button]);
+  onMove.dispatch(this);
 };
 
 EZ3.MousePointer.prototype.processUp = function(event, onUp) {
-  this._buttons[event.button].processUp(onUp);
+  this._buttons[event.button].processUp();
+
+  onUp.dispatch(this._buttons[event.button]);
 };
 
 EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
@@ -1796,4 +1553,25 @@ EZ3.MousePointer.prototype.getButton = function(buttonCode) {
     this._buttons[buttonCode] = new EZ3.Switch(buttonCode);
 
   return this._buttons[buttonCode];
+};
+
+/**
+ * @class TouchPointer
+ *  *  */
+
+EZ3.TouchPointer = function(id) {
+  EZ3.Pointer.call(this, id + 1);
+  EZ3.Switch.call(this, EZ3.Touch.TAP);
+};
+
+EZ3.TouchPointer.prototype = Object.create(EZ3.Pointer.prototype);
+mixin(EZ3.TouchPointer.prototype, EZ3.Switch.prototype);
+EZ3.TouchPointer.prototype.constructor = EZ3.TouchPointer;
+
+EZ3.TouchPointer.prototype.processPress = function(event, onPress, onMove) {
+  EZ3.Pointer.prototype.processPress.call(this, event);
+  EZ3.Switch.prototype.processPress.call(this);
+
+  onPress.dispatch(this);
+  onMove.dispatch(this);
 };

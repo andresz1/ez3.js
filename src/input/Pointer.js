@@ -15,16 +15,14 @@ EZ3.Pointer = function(id) {
 
 EZ3.Pointer.prototype.constructor = EZ3.Pointer;
 
-EZ3.Pointer.prototype.processPress = function(event, onMove) {
-  this.processMove(event, onMove);
+EZ3.Pointer.prototype.processPress = function(event) {
+  this.processMove(event);
 };
 
-EZ3.Pointer.prototype.processMove = function(event, onMove) {
+EZ3.Pointer.prototype.processMove = function(event) {
   EZ3.Vec2.set(this.client, event.clientX, event.clientY);
   EZ3.Vec2.set(this.page, event.pageX, event.pageY);
   EZ3.Vec2.set(this.screen, event.screenX, event.screenY);
-
-  onMove.dispatch(this);
 };
 
 EZ3.Pointer.MOUSE = 0;

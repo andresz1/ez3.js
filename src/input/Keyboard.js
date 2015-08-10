@@ -16,11 +16,18 @@ EZ3.Keyboard.prototype._processKeyDown = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
 
-  this._keys[event.keyCode].processDown(this.onKeyPress, this.onKeyDown);
+  if(this._keys[event.keyCode].processDown())
+    this.onKeyPress.dispatch(this._keys[event.keyCode]);
+
+  this.onKeyDown.dispatch(this._keys[event.keyCode]);
 };
 
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
-  this._keys[event.keyCode].processUp(this.onKeyUp);
+  if(!this._keys[event.keyCode])
+    this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
+
+  this._keys[event.keyCode].processUp();
+  this.onKeyUp.dispatch(this._keys[event.keyCode]);
 };
 
 EZ3.Keyboard.prototype.enable = function() {
