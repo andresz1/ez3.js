@@ -104,4 +104,11 @@ EZ3.Touch.prototype.disable = function() {
   }
 };
 
+EZ3.Touch.prototype.getPointer = function(id) {
+  if (!this._pointers[--id])
+    this._pointers[id] = new EZ3.TouchPointer(id);
+
+  return this._pointers[id];
+};
+
 EZ3.Touch.TAP = 0;

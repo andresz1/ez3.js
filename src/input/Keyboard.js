@@ -56,11 +56,11 @@ EZ3.Keyboard.prototype.disable = function() {
   delete this._onKeyUp;
 };
 
-EZ3.Keyboard.prototype.getKey = function(keyCode) {
-  if(!this._keys[keyCode])
-    this._keys[keyCode] = new EZ3.Switch(keyCode);
+EZ3.Keyboard.prototype.getKey = function(code) {
+  if(!this._keys[code])
+    this._keys[code] = new EZ3.Switch(code);
 
-  return this._keys[keyCode];
+  return this._keys[code];
 };
 
 EZ3.Keyboard.A = 'A'.charCodeAt(0);
