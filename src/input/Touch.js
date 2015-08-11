@@ -6,6 +6,7 @@ EZ3.Touch = function(domElement, device) {
   this._domElement = domElement;
   this._device = device;
   this._pointers = [];
+  this.count = -1;
 
   this.enabled = false;
   this.onPress = new EZ3.Signal();
@@ -19,12 +20,13 @@ EZ3.Touch.prototype._processTouchPress = function(event) {
   event.preventDefault();
 
   for (var i = 0; i < event.changedTouches.length; i++) {
-    var id = event.changedTouches[i].identifier;
+    //var id = event.changedTouches[i].identifier;
+    this.count++;
 
-    if (!this._pointers[id])
-      this._pointers[id] = new EZ3.TouchPointer(id);
+    if (!this._pointers[this.count])
+      this._pointers[this.count] = new EZ3.TouchPointer(this.count);
 
-    this._pointers[id].processPress(event.changedTouches[i], this.onPress, this.onMove);
+    this._pointers[this.count].processPress(event.changedTouches[i], this.onPress, this.onMove);
   }
 };
 
@@ -32,19 +34,20 @@ EZ3.Touch.prototype._processTouchMove = function(event) {
   event.preventDefault();
 
   for (var i = 0; i < event.changedTouches.length; i++)
-    this._pointers[event.changedTouches[i].identifier].processMove(event.changedTouches[i], this.onMove);
+    this._pointers[i].processMove(event.changedTouches[i], this.onMove);
 };
 
 EZ3.Touch.prototype._processTouchUp = function(event) {
   event.preventDefault();
 
   for (var i = 0; i < event.changedTouches.length; i++) {
-    var id = event.changedTouches[i].identifier;
+    //var id = event.changedTouches[i].identifier;
+    if (!this._pointers[this.count])
+      this._pointers[this.count] = new EZ3.TouchPointer(this.count);
 
-    if (!this._pointers[id])
-      this._pointers[id] = new EZ3.TouchPointer(id);
+    this._pointers[this.count].processUp(this.onUp);
 
-    this._pointers[id].processUp(this.onUp);
+    this.count--;
   }
 };
 
