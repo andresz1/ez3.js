@@ -6,7 +6,6 @@ EZ3.Touch = function(domElement, device) {
   this._domElement = domElement;
   this._device = device;
   this._pointers = [];
-  this.count = -1;
 
   this.enabled = false;
   this.onPress = new EZ3.Signal();
@@ -16,38 +15,49 @@ EZ3.Touch = function(domElement, device) {
 
 EZ3.Touch.prototype.constructor = EZ3.Touch;
 
+EZ3.Touch.prototype._searchPointerIndex = function(id) {
+  for (var i = 0; i < this._pointers.length; i++)
+    if (id === this._pointers[i].id)
+      return i;
+
+  return -1;
+};
+
 EZ3.Touch.prototype._processTouchPress = function(event) {
   event.preventDefault();
 
   for (var i = 0; i < event.changedTouches.length; i++) {
-    //var id = event.changedTouches[i].identifier;
-    this.count++;
+    for (var j = 0; j < EZ3.Touch.MAX_NUM_OF_POINTERS; j++) {
+      if (!this._pointers[j]) {
+        this._pointers[j] = new EZ3.TouchPointer(j, event.changedTouches[i].identifier);
+        break;
+      } else if (this._pointers[j].isUp()) {
+        this._pointers[j].id = event.changedTouches[i].identifier;
+        break;
+      }
+    }
 
-    if (!this._pointers[this.count])
-      this._pointers[this.count] = new EZ3.TouchPointer(this.count);
-
-    this._pointers[this.count].processPress(event.changedTouches[i], this.onPress, this.onMove);
+    this._pointers[j].processPress(event.changedTouches[i], this.onPress, this.onMove);
   }
 };
 
 EZ3.Touch.prototype._processTouchMove = function(event) {
   event.preventDefault();
 
-  for (var i = 0; i < event.changedTouches.length; i++)
-    this._pointers[i].processMove(event.changedTouches[i], this.onMove);
+  for (var i = 0; i < event.changedTouches.length; i++) {
+    var j = this._searchPointerIndex(event.changedTouches[i].identifier);
+    if (j >= 0)
+      this._pointers[j].processMove(event.changedTouches[i], this.onMove);
+  }
 };
 
 EZ3.Touch.prototype._processTouchUp = function(event) {
   event.preventDefault();
 
   for (var i = 0; i < event.changedTouches.length; i++) {
-    //var id = event.changedTouches[i].identifier;
-    if (!this._pointers[this.count])
-      this._pointers[this.count] = new EZ3.TouchPointer(this.count);
-
-    this._pointers[this.count].processUp(this.onUp);
-
-    this.count--;
+    var j = this._searchPointerIndex(event.changedTouches[i].identifier);
+    if (j >= 0)
+      this._pointers[j].processUp(this.onUp);
   }
 };
 
@@ -107,11 +117,21 @@ EZ3.Touch.prototype.disable = function() {
   }
 };
 
-EZ3.Touch.prototype.getPointer = function(id) {
-  if (!this._pointers[--id])
-    this._pointers[id] = new EZ3.TouchPointer(id);
+EZ3.Touch.prototype.getPointer = function(code) {
+  if (!this._pointers[code])
+    this._pointers[code] = new EZ3.TouchPointer(code);
 
-  return this._pointers[id];
+  return this._pointers[code];
 };
 
-EZ3.Touch.TAP = 0;
+EZ3.Touch.POINTER_1 = 0;
+EZ3.Touch.POINTER_2 = 1;
+EZ3.Touch.POINTER_3 = 2;
+EZ3.Touch.POINTER_4 = 3;
+EZ3.Touch.POINTER_5 = 4;
+EZ3.Touch.POINTER_6 = 5;
+EZ3.Touch.POINTER_7 = 6;
+EZ3.Touch.POINTER_8 = 7;
+EZ3.Touch.POINTER_9 = 8;
+EZ3.Touch.POINTER_10 = 9;
+EZ3.Touch.MAX_NUM_OF_POINTERS = 10;

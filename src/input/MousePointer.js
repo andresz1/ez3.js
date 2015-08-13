@@ -4,7 +4,7 @@
  */
 
 EZ3.MousePointer = function() {
-  EZ3.Pointer.call(this, EZ3.Pointer.MOUSE);
+  EZ3.Pointer.call(this);
 
   this._buttons = [];
 

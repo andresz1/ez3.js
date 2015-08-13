@@ -4,9 +4,11 @@
  * @extends Switch
  */
 
-EZ3.TouchPointer = function(id) {
-  EZ3.Pointer.call(this, id + 1);
-  EZ3.Switch.call(this, EZ3.Touch.TAP);
+EZ3.TouchPointer = function(code, id) {
+  EZ3.Pointer.call(this);
+  EZ3.Switch.call(this, code);
+
+  this.id = id || 0;
 };
 
 EZ3.TouchPointer.prototype = Object.create(EZ3.Pointer.prototype);
