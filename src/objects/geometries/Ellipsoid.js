@@ -23,8 +23,8 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
         u = s * totalSlices;
         v = t * totalStacks;
 
-        phi = EZ3.Geometry.DOUBLE_PI * u;
-        rho = EZ3.Geometry.PI * v;
+        phi = EZ3.DOUBLE_PI * u;
+        rho = EZ3.PI * v;
 
         vertex[0] = (scope._xRadius * Math.cos(phi) * Math.sin(rho));
         vertex[1] = (scope._yRadius * Math.sin(rho - EZ3.Geometry.HALF_PI));

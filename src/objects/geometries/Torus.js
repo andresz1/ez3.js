@@ -22,8 +22,8 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
         u = s * totalSides;
         v = r * totalRings;
 
-        rho = EZ3.Geometry.DOUBLE_PI * u;
-        phi = EZ3.Geometry.DOUBLE_PI * v;
+        rho = EZ3.DOUBLE_PI * u;
+        phi = EZ3.DOUBLE_PI * v;
 
         cosS = Math.cos(rho);
         cosR = Math.cos(phi);

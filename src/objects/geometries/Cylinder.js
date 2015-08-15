@@ -27,9 +27,9 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
         u = s * totalSlices;
         v = t * totalStacks;
 
-        vertex[0] = scope._radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[0] = scope._radius * Math.cos(EZ3.DOUBLE_PI * v);
         vertex[1] = actualHeight;
-        vertex[2] = scope._radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[2] = scope._radius * Math.sin(EZ3.DOUBLE_PI * v);
 
         vec3.set(normal, vertex[0], vertex[1], vertex[2]);
         vec3.normalize(normal, normal);

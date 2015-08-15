@@ -29,9 +29,9 @@ EZ3.Cone = function(base, height, slices, stacks) {
 
         radius = Math.abs(scope._height - actualHeight) * 0.5;
 
-        vertex[0] = radius * Math.cos(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[0] = radius * Math.cos(EZ3.DOUBLE_PI * v);
         vertex[1] = actualHeight;
-        vertex[2] = radius * Math.sin(EZ3.Geometry.DOUBLE_PI * v);
+        vertex[2] = radius * Math.sin(EZ3.DOUBLE_PI * v);
 
         normal[0] = vertex[0];
         normal[1] = vertex[1];
@@ -76,7 +76,7 @@ EZ3.Cone = function(base, height, slices, stacks) {
     scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
     scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
 
-  };
+  }
 
   _create();
 };
