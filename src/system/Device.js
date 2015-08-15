@@ -39,10 +39,10 @@ EZ3.Device._check = function() {
     if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
       that.touch = EZ3.Device.TOUCH;
     else {
-      if(window.navigator.pointerEnabled)
+      if (window.navigator.pointerEnabled)
         that.touch = EZ3.Device.POINTER;
 
-      if(window.navigator.msPointerEnabled)
+      if (window.navigator.msPointerEnabled)
         that.touch = EZ3.Device.MSPOINTER;
     }
   }
@@ -65,7 +65,8 @@ EZ3.Device._isReady = function() {
 
     var item;
     while ((item = this._isReady.queue.shift()))
-      item.callback.call(item.context, this);
+      item.callback.apply(item.context, item.params);
+
 
     delete this._isReady;
     delete this._onReady;
@@ -73,13 +74,14 @@ EZ3.Device._isReady = function() {
   }
 };
 
-EZ3.Device.onReady = function(callback, context) {
+EZ3.Device.onReady = function(callback, context, params) {
   if (this.ready)
-    callback.call(context, this);
+    callback.apply(context, params);
   else if (this._isReady.queue)
     this._isReady.queue.push({
       callback: callback,
-      context: context
+      context: context,
+      params: params
     });
   else {
     var that = this;
@@ -87,7 +89,8 @@ EZ3.Device.onReady = function(callback, context) {
     this._isReady.queue = [];
     this._isReady.queue.push({
       callback: callback,
-      context: context
+      context: context,
+      params: params
     });
 
     this._onReady = function() {

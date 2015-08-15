@@ -2,7 +2,7 @@
  * @class Touch
  */
 
-EZ3.Touch = function(domElement, device) {
+EZ3.Touch = function(device, domElement) {
   this._domElement = domElement;
   this._device = device;
   this._pointers = [];
@@ -27,17 +27,22 @@ EZ3.Touch.prototype._processTouchPress = function(event) {
   event.preventDefault();
 
   for (var i = 0; i < event.changedTouches.length; i++) {
+    var found = false;
+
     for (var j = 0; j < EZ3.Touch.MAX_NUM_OF_POINTERS; j++) {
       if (!this._pointers[j]) {
         this._pointers[j] = new EZ3.TouchPointer(j, event.changedTouches[i].identifier);
+        found = true;
         break;
       } else if (this._pointers[j].isUp()) {
         this._pointers[j].id = event.changedTouches[i].identifier;
+        found = true;
         break;
       }
     }
 
-    this._pointers[j].processPress(event.changedTouches[i], this.onPress, this.onMove);
+    if (found)
+      this._pointers[j].processPress(event.changedTouches[i], this.onPress, this.onMove);
   }
 };
 
