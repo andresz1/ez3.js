@@ -1,15 +1,12 @@
 EZ3.Engine = function(canvas, options) {
-  this.canvas = canvas || document.createElement('canvas');
-  this.canvas.width = canvas.width || 800;
-  this.canvas.height = canvas.height || 600;
-  try {
-    this.gl = canvas.getContext('webgl', options) || canvas.getContext('experimental-webgl', options);
-  } catch(e) {
-    throw new Error('WebGl not supported');
-  }
-  this.setViewport(0, 0, this.canvas.width, this.canvas.height);
+  this.device = EZ3.Device;
+  this.renderer = null;
+  this.inputManager = null;
+
+  this.device.onReady(this._init, this, [canvas, options]);
 };
 
-EZ3.Engine.prototype.setViewport = function(x, y, width, height) {
-  this.gl.viewport(x, y, width, height);
+EZ3.Engine.prototype._init = function(canvas, options) {
+  this.renderer = new EZ3.Renderer(canvas, options);
+  this.inputManager = new EZ3.inputManager(this.device, canvas);
 };
