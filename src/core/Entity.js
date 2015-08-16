@@ -2,12 +2,17 @@ EZ3.Entity = function() {
   this._name = null;
   this._parent = null;
   this._children = [];
-  this._dirty = false;
   this._scale = vec3.create();
   this._position = vec3.create();
   this._rotation = quat.create();
   this._modelMatrix = mat4.create();
   this._worldMatrix = mat4.create();
+  this._normalMatrix = mat3.create();
+
+  this._dirty = true;
+  this._scale.dirty = false;
+  this._position.dirty = false;
+  this._rotation.dirty = false;
 };
 
 EZ3.Entity.prototype.add = function(child) {
@@ -37,6 +42,29 @@ EZ3.Entity.prototype.remove = function(child) {
   }
 };
 
-EZ3.Entity.prototype.update = function(parentDirty, parentWorldMatrix) {
+EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
+  var childrenCount = this._children.length;
+
+  this._dirty = this._dirty || parentIsDirty || this._scale.dirty || this._position.dirty || this._rotation.dirty;
+
+  if(this._dirty){
+
+    mat4.fromRotationTranslation(this._modelMatrix, this._rotation, this._position);
+    mat4.scale(this._modelMatrix, this._scale);
+
+    mat4.multiply(this._worldMatrix, parentWorldMatrix, this._modelMatrix);
+
+    mat3.normalFromMat4(this._normalMatrix, this._worldMatrix);
+
+    while(--childrenCount) {
+      this._children[childrenCount].update(this._worldMatrix, this._dirty);
+    }
+
+    this.dirty = false;
+    this._scale.dirty = false;
+    this._position.dirty = false;
+    this._rotation.dirty = false;
+
+  }
 
 };
