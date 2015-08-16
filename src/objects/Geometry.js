@@ -11,10 +11,6 @@ EZ3.Geometry = function() {
   this._buffer = new EZ3.Buffer();
 };
 
-EZ3.Geometry.PI = Math.PI;
-EZ3.Geometry.HALF_PI = 0.5 * Math.PI;
-EZ3.Geometry.DOUBLE_PI = 2.0 * Math.PI;
-
 EZ3.Geometry.prototype.draw = function(gl) {
   this._buffer.draw(gl);
 };

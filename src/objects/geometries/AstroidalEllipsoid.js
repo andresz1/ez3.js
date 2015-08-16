@@ -23,8 +23,8 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
         u = s * totalSlices;
         v = t * totalStacks;
 
-        phi = EZ3.Geometry.DOUBLE_PI * u - EZ3.Geometry.PI;
-        rho = EZ3.Geometry.PI * v - EZ3.Geometry.HALF_PI;
+        phi = EZ3.DOUBLE_PI * u - EZ3.PI;
+        rho = EZ3.PI * v - EZ3.HALF_PI;
 
         cosS = Math.pow(Math.cos(phi), 3.0);
         cosT = Math.pow(Math.cos(rho), 3.0);

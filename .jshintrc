@@ -20,7 +20,10 @@
     "vec2",
     "vec3",
     "vec4",
+    "quat"
     "signals",
-    "mixin"
+    "mixin",
+    "Float32Array",
+    "Uint16Array"
   ]
 }
