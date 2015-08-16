@@ -1,17 +1,50 @@
+/**
+ * @class Renderer
+ */
+
 EZ3.Renderer = function(canvas, options) {
-  var that = this;
-
   this.canvas = canvas;
+  this.options = options;
   this.context = null;
+};
 
-  function _init() {
+EZ3.Renderer.prototype._processContextLost = function(event) {
+  event.preventDefault();
+};
+
+EZ3.Renderer.prototype._processContextRecovered = function() {
+  this.initContext();
+};
+
+EZ3.Renderer.prototype.initContext = function() {
+  var names = [
+    'webgl',
+    'experimental-webgl',
+    'webkit-3d',
+    'moz-webgl'
+  ];
+
+  for (var i = 0; i < names.length; i++) {
     try {
-      that.context = canvas.getContext('webgl', options) || canvas.getContext('experimental-webgl', options);
-      console.log('ok');
-    } catch (e) {
-      throw new Error('WebGl not supported');
-    }
+      this.context = this.canvas.getContext(names[i], this.options);
+    } catch (e) {}
+    if (this.context)
+      break;
   }
 
-  _init();
+  if (!this.context)
+    throw new Error('Unable to initialize WebGL with selected options. Your browser may not support it.');
+
+  var that = this;
+
+  this._onContextLost = function(event) {
+    that._processContextLost(event);
+  };
+
+  this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
+
+  if (this._onContextRestored) {
+    this.canvas.removeEventListener('webglcontextrestored', this._onContextRestored, false);
+    delete this._onContextRestored;
+  }
 };

@@ -1,3 +1,7 @@
+/**
+ * @class Engine
+ */
+
 EZ3.Engine = function(canvas, options) {
   this.device = EZ3.Device;
   this.renderer = null;
@@ -8,5 +12,7 @@ EZ3.Engine = function(canvas, options) {
 
 EZ3.Engine.prototype._init = function(canvas, options) {
   this.renderer = new EZ3.Renderer(canvas, options);
-  this.inputManager = new EZ3.inputManager(this.device, canvas);
+  this.inputManager = new EZ3.InputManager(this.device, canvas);
+
+  this.renderer.initContext();
 };
