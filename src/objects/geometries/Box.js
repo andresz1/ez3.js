@@ -38,16 +38,11 @@ EZ3.Box = function(width, height, depth) {
       3, 5, 4
     ];
 
-    scope._uv = [
-
-    ];
-
     scope.calculateNormals();
 
     scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
     scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
     scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
-    //this._buffer.fill(EZ3.Buffer.UV, this._uv.length, this._uv);
   }
 
   _create();

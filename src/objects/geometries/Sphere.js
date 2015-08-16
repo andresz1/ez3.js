@@ -25,7 +25,7 @@ EZ3.Sphere = function(radius, slices, stacks) {
         rho = EZ3.PI * v;
 
         vertex[0] = (scope._radius * Math.cos(phi) * Math.sin(rho));
-        vertex[1] = (scope._radius * Math.sin(rho - EZ3.Geometry.HALF_PI));
+        vertex[1] = (scope._radius * Math.sin(rho - EZ3.HALF_PI));
         vertex[2] = (scope._radius * Math.sin(phi) * Math.sin(rho));
 
         normal[0] = vertex[0] / scope._radius;
