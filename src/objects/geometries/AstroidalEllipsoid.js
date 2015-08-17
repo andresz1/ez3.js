@@ -41,8 +41,8 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
 
         vec3.normalize(normal, normal);
 
-        scope.uv.push(u);
-        scope.uv.push(v);
+        scope.uvs.push(u);
+        scope.uvs.push(v);
 
         scope.normals.push(normal[0]);
         scope.normals.push(normal[1]);

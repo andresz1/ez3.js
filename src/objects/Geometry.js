@@ -1,5 +1,5 @@
 EZ3.Geometry = function() {
-  this.uv = [];
+  this.uvs = [];
   this.indices = [];
   this.normals = [];
   this.vertices = [];

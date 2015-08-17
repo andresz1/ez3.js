@@ -38,8 +38,8 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
         scope.vertices.push(vertex[1]);
         scope.vertices.push(vertex[2]);
 
-        scope.uv.push(u);
-        scope.uv.push(v);
+        scope.uvs.push(u);
+        scope.uvs.push(v);
 
       }
 

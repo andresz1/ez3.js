@@ -15,8 +15,8 @@ EZ3.Grid = function(width, height) {
         scope.vertices.push(0);
         scope.vertices.push(z);
 
-        scope.uv.push(x / scope._width);
-        scope.uv.push(z / scope._height);
+        scope.uvs.push(x / scope._width);
+        scope.uvs.push(z / scope._height);
       }
     }
 
