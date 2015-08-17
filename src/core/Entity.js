@@ -8,6 +8,14 @@ EZ3.Entity = function() {
   this._worldMatrix = mat4.create();
   this._normalMatrix = mat3.create();
 
+  vec3.set(this._scale, 1, 1 ,1);
+  vec3.set(this._position, 0, 0 ,0);
+  quat.set(this._rotation, 0, 0, 0, 0);
+
+  mat4.identity(this._modelMatrix);
+  mat4.identity(this._worldMatrix);
+  mat3.identity(this._normalMatrix);
+
   this._dirty = true;
   this._scale.dirty = false;
   this._position.dirty = false;
