@@ -19,7 +19,7 @@ EZ3.Engine.prototype._init = function(canvas, options) {
   this.renderer = new EZ3.Renderer(canvas, options);
   this.inputManager = new EZ3.InputManager(this.device, canvas);
 
-  //this.renderer.initContext();
+  this.renderer.initContext();
   this.time.start();
   this._update();
 };
