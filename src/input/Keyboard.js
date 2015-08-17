@@ -2,8 +2,7 @@
  * @class Keboard
  */
 
-EZ3.Keyboard = function(domElement) {
-  this._domElement = domElement;
+EZ3.Keyboard = function() {
   this._keys = [];
 
   this.enabled = false;
@@ -44,15 +43,15 @@ EZ3.Keyboard.prototype.enable = function() {
     that._processKeyUp(event);
   };
 
-  this._domElement.addEventListener('keydown', this._onKeyDown, false);
-	this._domElement.addEventListener('keyup', this._onKeyUp, false);
+  window.addEventListener('keydown', this._onKeyDown, false);
+	window.addEventListener('keyup', this._onKeyUp, false);
 };
 
 EZ3.Keyboard.prototype.disable = function() {
   this.enabled = false;
 
-  this._domElement.removeEventListener('keydown', this._onKeyDown);
-	this._domElement.removeEventListener('keyup', this._onKeyUp);
+  window.removeEventListener('keydown', this._onKeyDown);
+	window.removeEventListener('keyup', this._onKeyUp);
 
   delete this._onKeyDown;
   delete this._onKeyUp;

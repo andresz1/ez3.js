@@ -50,6 +50,6 @@ EZ3.Renderer.prototype.initContext = function() {
   }
 };
 
-EZ3.Renderer.prototype.update = function() {
+EZ3.Renderer.prototype.render = function(screen) {
 
 };
