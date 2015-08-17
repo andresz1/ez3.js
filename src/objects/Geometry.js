@@ -130,7 +130,6 @@ EZ3.Geometry.prototype.calculateTangents = function() {
   var tempB = this.initArray(this.vertices.length, 0);
 
   for(k = 0; k < this.indices.length; k += 3) {
-
     x = this.indices[k + 0];
     y = this.indices[k + 1];
     z = this.indices[k + 2];
@@ -182,11 +181,9 @@ EZ3.Geometry.prototype.calculateTangents = function() {
     tempB[3 * x + 2] += bitangent[0];
     tempB[3 * y + 2] += bitangent[1];
     tempB[3 * z + 2] += bitangent[2];
-
   }
 
   for(k = 0; k < this._vertices.length / 3; ++k) {
-
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
@@ -194,7 +191,6 @@ EZ3.Geometry.prototype.calculateTangents = function() {
     vec3.set(tangent, tempT[x], tempT[y], tempT[z]);
     vec3.set(bitangent, tempB[x], tempB[y], tempB[z]);
     vec3.set(normal, this.normals[x], this.normals[y], this.normals[z]);
-
   }
 
 };
