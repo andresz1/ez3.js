@@ -24,7 +24,7 @@ EZ3.Mesh.prototype.init = function(gl) {
   }
 
   if (this.geometry.uvNeedUpdate) {
-    this._buffer.init(gl, EZ3.Buffer.UV, this.geometry.uv.length, this.geometry.uv, hint);
+    this._buffer.init(gl, EZ3.Buffer.UV, this.geometry.uvs.length, this.geometry.uvs, hint);
     this.geometry.uvNeedUpdate = false;
   }
 
