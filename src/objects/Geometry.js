@@ -1,26 +1,20 @@
 EZ3.Geometry = function() {
-  this._uv = [];
-  this._indices = [];
-  this._normals = [];
-  this._vertices = [];
-  this._tangents = [];
-  this._bitangents = [];
-  this._maxPoint = vec3.create();
-  this._minPoint = vec3.create();
-  this._midPoint = vec3.create();
-  this._buffer = new EZ3.Buffer();
-};
+  this.uv = [];
+  this.indices = [];
+  this.normals = [];
+  this.vertices = [];
+  this.tangents = [];
+  this.bitangents = [];
+  this.maxPoint = vec3.create();
+  this.minPoint = vec3.create();
+  this.midPoint = vec3.create();
 
-EZ3.Geometry.prototype.draw = function(gl) {
-  this._buffer.draw(gl);
-};
-
-EZ3.Geometry.prototype.init = function(gl) {
-  this._buffer.init(gl);
-};
-
-EZ3.Geometry.prototype.fill = function(buffer, size, data) {
-  this._buffer.fill(buffer, size, data);
+  this.uvNeedUpdate = true;
+  this.normalsNeedUpdate = true;
+  this.indicesNeedUpdate = true;
+  this.verticesNeedUpdate = true;
+  this.tangentsNeedUpdate = true;
+  this.bitangentsNeedUpdate = true;
 };
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
@@ -40,18 +34,18 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   vector0 = vec3.create();
   vector1 = vec3.create();
 
-  var tempNormals = this.initArray(this._vertices.length, 0);
-  var tempAppearances = this.initArray(this._vertices.length / 3, 0);
+  var tempNormals = this.initArray(this.vertices.length, 0);
+  var tempAppearances = this.initArray(this.vertices.length / 3, 0);
 
-  for(k = 0; k < this._indices.length; k += 3) {
+  for(k = 0; k < this.indices.length; k += 3) {
 
-    x = 3 * this._indices[k + 0];
-    y = 3 * this._indices[k + 1];
-    z = 3 * this._indices[k + 2];
+    x = 3 * this.indices[k + 0];
+    y = 3 * this.indices[k + 1];
+    z = 3 * this.indices[k + 2];
 
-    vec3.set(point0, this._vertices[x + 0], this._vertices[x + 1], this._vertices[x + 2]);
-    vec3.set(point1, this._vertices[y + 0], this._vertices[y + 1], this._vertices[y + 2]);
-    vec3.set(point2, this._vertices[z + 0], this._vertices[z + 1], this._vertices[z + 2]);
+    vec3.set(point0, this.vertices[x + 0], this.vertices[x + 1], this.vertices[x + 2]);
+    vec3.set(point1, this.vertices[y + 0], this.vertices[y + 1], this.vertices[y + 2]);
+    vec3.set(point2, this.vertices[z + 0], this.vertices[z + 1], this.vertices[z + 2]);
 
     vec3.sub(vector0, point1, point0);
     vec3.sub(vector1, point2, point0);
@@ -79,14 +73,14 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     ++tempAppearances[z / 3];
   }
 
-  for(k = 0; k < this._vertices.length / 3; ++k){
+  for(k = 0; k < this.vertices.length / 3; ++k){
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    this._normals.push(tempNormals[x] / tempAppearances[k]);
-    this._normals.push(tempNormals[y] / tempAppearances[k]);
-    this._normals.push(tempNormals[z] / tempAppearances[k]);
+    this.normals.push(tempNormals[x] / tempAppearances[k]);
+    this.normals.push(tempNormals[y] / tempAppearances[k]);
+    this.normals.push(tempNormals[z] / tempAppearances[k]);
   }
 
   tempNormals.splice(0, tempNormals.length);
@@ -132,22 +126,22 @@ EZ3.Geometry.prototype.calculateTangents = function() {
   var textVector0 = vec2.create();
   var textVector1 = vec2.create();
 
-  var tempT = this.initArray(this._vertices.length, 0);
-  var tempB = this.initArray(this._vertices.length, 0);
+  var tempT = this.initArray(this.vertices.length, 0);
+  var tempB = this.initArray(this.vertices.length, 0);
 
-  for(k = 0; k < this._indices.length; k += 3) {
+  for(k = 0; k < this.indices.length; k += 3) {
 
-    x = this._indices[k + 0];
-    y = this._indices[k + 1];
-    z = this._indices[k + 2];
+    x = this.indices[k + 0];
+    y = this.indices[k + 1];
+    z = this.indices[k + 2];
 
-    vec3.set(point0, this._vertices[3 * x + 0], this._vertices[3 * x + 1], this._vertices[3 * x + 2]);
-    vec3.set(point1, this._vertices[3 * y + 0], this._vertices[3 * y + 1], this._vertices[3 * y + 2]);
-    vec3.set(point2, this._vertices[3 * z + 0], this._vertices[3 * z + 1], this._vertices[3 * z + 2]);
+    vec3.set(point0, this.vertices[3 * x + 0], this.vertices[3 * x + 1], this.vertices[3 * x + 2]);
+    vec3.set(point1, this.vertices[3 * y + 0], this.vertices[3 * y + 1], this.vertices[3 * y + 2]);
+    vec3.set(point2, this.vertices[3 * z + 0], this.vertices[3 * z + 1], this.vertices[3 * z + 2]);
 
-    vec2.set(textPoint0, this._uv[2 * x + 0], this._uv[2 * x + 1]);
-    vec2.set(textPoint1, this._uv[2 * y + 0], this._uv[2 * y + 1]);
-    vec2.set(textPoint2, this._uv[2 * z + 0], this._uv[2 * z + 1]);
+    vec2.set(textPoint0, this.uv[2 * x + 0], this.uv[2 * x + 1]);
+    vec2.set(textPoint1, this.uv[2 * y + 0], this.uv[2 * y + 1]);
+    vec2.set(textPoint2, this.uv[2 * z + 0], this.uv[2 * z + 1]);
 
     vec3.sub(vector0, point1, point0);
     vec3.sub(vector1, point2, point0);
@@ -199,7 +193,7 @@ EZ3.Geometry.prototype.calculateTangents = function() {
 
     vec3.set(tangent, tempT[x], tempT[y], tempT[z]);
     vec3.set(bitangent, tempB[x], tempB[y], tempB[z]);
-    vec3.set(normal, this._normals[x], this._normals[y], this._normals[z]);
+    vec3.set(normal, this.normals[x], this.normals[y], this.normals[z]);
 
   }
 
