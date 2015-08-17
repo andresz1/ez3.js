@@ -12,7 +12,7 @@ EZ3.Box = function(width, height, depth) {
   var scope = this;
 
   function _create () {
-    scope._vertices = [
+    scope.vertices = [
       +scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
       -scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
       -scope._halfWidth, -scope._halfHeight, +scope._halfDepth,
@@ -23,7 +23,7 @@ EZ3.Box = function(width, height, depth) {
       +scope._halfWidth, +scope._halfHeight, -scope._halfDepth
     ];
 
-    scope._indices = [
+    scope.indices = [
       0, 1 ,2,
       0, 2, 3,
       7, 4, 5,
@@ -39,10 +39,6 @@ EZ3.Box = function(width, height, depth) {
     ];
 
     scope.calculateNormals();
-
-    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
-    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
-    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
   }
 
   _create();

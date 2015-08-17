@@ -34,12 +34,12 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
         vec3.set(normal, vertex[0], vertex[1], vertex[2]);
         vec3.normalize(normal, normal);
 
-        scope._vertices.push(vertex[0]);
-        scope._vertices.push(vertex[1]);
-        scope._vertices.push(vertex[2]);
+        scope.vertices.push(vertex[0]);
+        scope.vertices.push(vertex[1]);
+        scope.vertices.push(vertex[2]);
 
-        scope._uv.push(u);
-        scope._uv.push(v);
+        scope.uv.push(u);
+        scope.uv.push(v);
 
       }
 
@@ -53,23 +53,18 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
     for(s = 0; s < scope._slices - 1; ++s) {
       for(t = 0; t < scope._stacks - 1; ++t) {
 
-        scope._indices.push((s + 0) * scope._stacks + (t + 0));
-        scope._indices.push((s + 0) * scope._stacks + (t + 1));
-        scope._indices.push((s + 1) * scope._stacks + (t + 1));
+        scope.indices.push((s + 0) * scope._stacks + (t + 0));
+        scope.indices.push((s + 0) * scope._stacks + (t + 1));
+        scope.indices.push((s + 1) * scope._stacks + (t + 1));
 
-        scope._indices.push((s + 0) * scope._stacks + (t + 0));
-        scope._indices.push((s + 1) * scope._stacks + (t + 1));
-        scope._indices.push((s + 1) * scope._stacks + (t + 0));
+        scope.indices.push((s + 0) * scope._stacks + (t + 0));
+        scope.indices.push((s + 1) * scope._stacks + (t + 1));
+        scope.indices.push((s + 1) * scope._stacks + (t + 0));
 
       }
     }
 
     scope.calculateNormals();
-
-    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
-    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
-    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
-    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
 
   }
 

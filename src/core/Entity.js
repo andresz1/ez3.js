@@ -1,5 +1,4 @@
 EZ3.Entity = function() {
-  this._name = null;
   this._parent = null;
   this._children = [];
   this._scale = vec3.create();

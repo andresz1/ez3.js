@@ -11,12 +11,12 @@ EZ3.Grid = function(width, height) {
 
     for(z = 0; z < scope._height + 1; ++z) {
       for(x = 0; x < scope._width + 1; ++x) {
-        scope._vertices.push(x);
-        scope._vertices.push(0);
-        scope._vertices.push(z);
+        scope.vertices.push(x);
+        scope.vertices.push(0);
+        scope.vertices.push(z);
 
-        scope._uv.push(x / scope._width);
-        scope._uv.push(z / scope._height);
+        scope.uv.push(x / scope._width);
+        scope.uv.push(z / scope._height);
       }
     }
 
@@ -27,22 +27,18 @@ EZ3.Grid = function(width, height) {
         index2 = index0 + (scope._height + 1);
         index3 = index2 + 1;
 
-        scope._indices.push(index0);
-        scope._indices.push(index2);
-        scope._indices.push(index1);
+        scope.indices.push(index0);
+        scope.indices.push(index2);
+        scope.indices.push(index1);
 
-        scope._indices.push(index1);
-        scope._indices.push(index2);
-        scope._indices.push(index3);
+        scope.indices.push(index1);
+        scope.indices.push(index2);
+        scope.indices.push(index3);
       }
     }
 
     scope.calculateNormals();
 
-    scope._buffer.fill(EZ3.Buffer.VERTEX, scope._vertices.length, scope._vertices);
-    scope._buffer.fill(EZ3.Buffer.NORMAL, scope._normals.length, scope._normals);
-    scope._buffer.fill(EZ3.Buffer.INDEX, scope._indices.length, scope._indices);
-    scope._buffer.fill(EZ3.Buffer.UV, scope._uv.length, scope._uv);
   }
 
   _create();
