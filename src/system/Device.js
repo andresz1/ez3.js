@@ -6,6 +6,7 @@ EZ3.Device = function() {
   this.ready = false;
   this.operatingSystem = 0;
   this.touch = 0;
+  this.animationFrame = 0;
 };
 
 EZ3.Device = new EZ3.Device();
@@ -15,39 +16,61 @@ EZ3.Device._check = function() {
 
   function _checkOperatingSystem() {
     if (/Playstation Vita/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.PSVITA;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.PSVITA;
     else if (/Kindle/.test(navigator.userAgent) || /\bKF[A-Z][A-Z]+/.test(navigator.userAgent) || /Silk.*Mobile Safari/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.KINDLE;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.KINDLE;
     else if (/Android/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.ANDROID;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.ANDROID;
     else if (/CrOS/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.CRHOMEOS;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.CRHOMEOS;
     else if (/iP[ao]d|iPhone/i.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.IOS;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.IOS;
     else if (/Linux/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.LINUX;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.LINUX;
     else if (/Mac OS/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.MACOS;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.MACOS;
     else if (/Windows/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.WINDOWS;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS;
 
     if (/Windows Phone/i.test(navigator.userAgent) || /IEMobile/i.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.WINDOWS_PHONE;
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE;
+  }
+
+  function _checkAnimationFrame() {
+    var vendors = [
+      'ms',
+      'moz',
+      'webkit',
+      'o'
+    ];
+
+    this.animationFrame = EZ3.Device.ANIMATION_FRAME.TIME_OUT;
+
+    for (var i = 0; i < vendors.length; i++) {
+      if (window.requestAnimationFrame) {
+        this.animationFrame = EZ3.Device.ANIMATION_FRAME.STANDARD;
+        return;
+      }
+
+      window.requestAnimationFrame = window[vendors[i] + 'RequestAnimationFrame'];
+      window.cancelAnimationFrame = window[vendors[i] + 'CancelAnimationFrame'];
+    }
   }
 
   function _checkInput() {
     if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
-      that.touch = EZ3.Device.TOUCH;
+      that.touch = EZ3.Device.TOUCH.STANDARD;
     else {
       if (window.navigator.pointerEnabled)
-        that.touch = EZ3.Device.POINTER;
+        that.touch = EZ3.Device.TOUCH.POINTER;
 
       if (window.navigator.msPointerEnabled)
-        that.touch = EZ3.Device.MSPOINTER;
+        that.touch = EZ3.Device.TOUCH.MSPOINTER;
     }
   }
 
   _checkOperatingSystem();
+  _checkAnimationFrame();
   _checkInput();
 };
 
@@ -108,16 +131,22 @@ EZ3.Device.onReady = function(callback, context, params) {
   }
 };
 
-EZ3.Device.WINDOWS = 1;
-EZ3.Device.MACOS = 2;
-EZ3.Device.LINUX = 4;
-EZ3.Device.IOS = 8;
-EZ3.Device.ANDROID = 16;
-EZ3.Device.WINDOWS_PHONE = 32;
-EZ3.Device.CRHOMEOS = 64;
-EZ3.Device.KINDLE = 128;
-EZ3.Device.PSVITA = 256;
+EZ3.Device.OPERATING_SYSTEM = {};
+EZ3.Device.OPERATING_SYSTEM.WINDOWS = 1;
+EZ3.Device.OPERATING_SYSTEM.MACOS = 2;
+EZ3.Device.OPERATING_SYSTEM.LINUX = 4;
+EZ3.Device.OPERATING_SYSTEM.IOS = 8;
+EZ3.Device.OPERATING_SYSTEM.ANDROID = 16;
+EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE = 32;
+EZ3.Device.OPERATING_SYSTEM.CRHOMEOS = 64;
+EZ3.Device.OPERATING_SYSTEM.KINDLE = 128;
+EZ3.Device.OPERATING_SYSTEM.PSVITA = 256;
 
-EZ3.Device.TOUCH = 1;
-EZ3.Device.POINTER = 2;
-EZ3.Device.MSPOINTER = 4;
+EZ3.Device.TOUCH = {};
+EZ3.Device.TOUCH.STANDARD = 1;
+EZ3.Device.TOUCH.POINTER = 2;
+EZ3.Device.TOUCH.MSPOINTER = 4;
+
+EZ3.Device.ANIMATION_FRAME = {};
+EZ3.Device.ANIMATION_FRAME.STANDARD = 1;
+EZ3.Device.ANIMATION_FRAME.TIME_OUT = 2;

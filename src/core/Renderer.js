@@ -28,6 +28,7 @@ EZ3.Renderer.prototype.initContext = function() {
     try {
       this.context = this.canvas.getContext(names[i], this.options);
     } catch (e) {}
+
     if (this.context)
       break;
   }
@@ -47,4 +48,8 @@ EZ3.Renderer.prototype.initContext = function() {
     this.canvas.removeEventListener('webglcontextrestored', this._onContextRestored, false);
     delete this._onContextRestored;
   }
+};
+
+EZ3.Renderer.prototype.update = function() {
+
 };
