@@ -84,11 +84,11 @@ EZ3.Touch.prototype.enable = function() {
       that._processTouchUp(event);
     };
 
-    if (this._device.touch === EZ3.Device.TOUCH) {
+    if (this._device.touch === EZ3.Device.TOUCH.STANDARD) {
       this._press = 'touchstart';
       this._move = 'touchmove';
       this._up = 'touchend';
-    } else if (this._device.touch === EZ3.Device.POINTER) {
+    } else if (this._device.touch === EZ3.Device.TOUCH.POINTER) {
       this._press = 'pointerdown';
       this._move = 'pointermove';
       this._up = 'pointerup';
