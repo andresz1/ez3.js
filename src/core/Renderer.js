@@ -6,6 +6,7 @@ EZ3.Renderer = function(canvas, options) {
   this.canvas = canvas;
   this.options = options;
   this.context = null;
+  this.renderStack = new EZ3.Stack();
 };
 
 EZ3.Renderer.prototype._processContextLost = function(event) {
@@ -50,6 +51,29 @@ EZ3.Renderer.prototype.initContext = function() {
   }
 };
 
-EZ3.Renderer.prototype.render = function(screen) {
+EZ3.Renderer.prototype.displaySceneGraph = function(mesh) {
+  if(mesh instanceof EZ3.Entity) {
+    this.renderStack.push(mesh);
 
+    while(!this.renderStack.isEmpty()) {
+      var actualMesh = this.renderStack.top();
+      this.renderStack.pop();
+
+      if(actualMesh instanceof EZ3.Mesh) {
+          actualMesh.init(this.context);
+          actualMesh.draw(this.context);
+      }
+
+      for(var k = actualMesh.children.length - 1; k >= 0; --k)
+        this.renderStack.push(actualMesh.children[k]);
+    }
+  }
+};
+
+EZ3.Renderer.prototype.render = function(screen) {
+  this.context.clearColor(0.0,0.0,0.0,1.0);
+  this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+
+  screen.scene.update();
+  this.displaySceneGraph(screen.scene);
 };
