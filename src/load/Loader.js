@@ -16,13 +16,13 @@ EZ3.Loader = function(cache) {
 EZ3.Loader.prototype._processFileLoad = function(file) {
   this._numOfFilesLoaded++;
   this._cache.set(file.id, file.content);
-  this._processProgress(file, EZ3.Loader.FILE.ERROR);
+  this._processProgress(file, EZ3.Loader.FILE.LOADED);
 };
 
 EZ3.Loader.prototype._processFileError = function(file) {
   this._numOfFilesErrors++;
 
-  this._processProgress(file, EZ3.Loader.FILE.LOADED);
+  this._processProgress(file, EZ3.Loader.FILE.ERROR);
 };
 
 EZ3.Loader.prototype._processProgress = function(file, status) {
