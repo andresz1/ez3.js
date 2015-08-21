@@ -4,48 +4,44 @@
 
 EZ3.Loader = function(cache) {
   this._cache = cache;
-  this._resources = {};
-  this._numOfResourcesLoaded = 0;
-  this._numOfResourcesErrors = 0;
+  this._files = {};
+  this._numOfFilesLoaded = 0;
+  this._numOfFilesErrors = 0;
 
   this.started = false;
   this.onProgress = new EZ3.Signal();
-  this.onLoad = new EZ3.Signal();
+  this.onComplete = new EZ3.Signal();
 };
 
-EZ3.Loader.prototype._processResourceLoad = function(resource) {
-  this._numOfResourcesLoaded++;
-  this._cache.set((resource instanceof EZ3.Image)? EZ3.Cache.IMAGE: EZ3.Cache.DATA, resource.id, resource.content);
-  this._processProgress(resource, EZ3.Loader.RESOURCE.ERROR);
+EZ3.Loader.prototype._processFileLoad = function(file) {
+  this._numOfFilesLoaded++;
+  this._cache.set(file.id, file.content);
+  this._processProgress(file, EZ3.Loader.FILE.ERROR);
 };
 
-EZ3.Loader.prototype._processResourceError = function(resource) {
-  this._numOfResourcesErrors++;
+EZ3.Loader.prototype._processFileError = function(file) {
+  this._numOfFilesErrors++;
 
-  this._processProgress(resource, EZ3.Loader.RESOURCE.LOADED);
+  this._processProgress(file, EZ3.Loader.FILE.LOADED);
 };
 
-EZ3.Loader.prototype._processProgress = function(resource, status) {
-  var numOfResources, numOfResourcesLoaded, numOfResourcesErrors;
+EZ3.Loader.prototype._processProgress = function(file, status) {
+  var numOfFiles, numOfFilesLoaded, numOfFilesErrors;
 
-  numOfResources = Object.keys(this._resources).length;
+  numOfFiles = Object.keys(this._files).length;
 
-  console.log(numOfResources);
+  this.onProgress.dispatch(file, status, numOfFilesLoaded, numOfFilesErrors, numOfFiles);
 
-  this.onProgress.dispatch(resource, status, numOfResourcesLoaded, numOfResourcesErrors, numOfResources);
-
-  console.log(resource);
-
-  if (numOfResources === this._numOfResourcesLoaded + this._numOfResourcesErrors) {
-    numOfResourcesLoaded = this._numOfResourcesLoaded;
-    numOfResourcesErrors = this._numOfResourcesErrors;
+  if (numOfFiles === this._numOfFilesLoaded + this._numOfFilesErrors) {
+    numOfFilesLoaded = this._numOfFilesLoaded;
+    numOfFilesErrors = this._numOfFilesErrors;
 
     this.started = false;
-    this._resources = {};
-    this._numOfResourcesLoaded = 0;
-    this._numOfResourcesErrors = 0;
+    this._files = {};
+    this._numOfFilesLoaded = 0;
+    this._numOfFilesErrors = 0;
 
-    this.onLoad.dispatch(numOfResourcesLoaded, numOfResourcesErrors);
+    this.onComplete.dispatch(numOfFilesLoaded, numOfFilesErrors);
   }
 };
 
@@ -53,25 +49,25 @@ EZ3.Loader.prototype.start = function() {
   this.started = true;
 
   for (var id in this._resources)
-    this._resources[id].load(this._processResourceLoad.bind(this), this._processResourceError.bind(this));
+    this._resources[id].load(this._processFileLoad.bind(this), this._processFileError.bind(this));
 };
 
-EZ3.Loader.prototype.add = function(id, resource) {
-  if (resource instanceof EZ3.Image) {
-    if (this._cache.get(EZ3.Cache.IMAGE, id))
-      return;
-  } else if (resource instanceof EZ3.Data) {
-    if (this._cache.get(EZ3.Cache.DATA, id))
-      return;
-  } else
+EZ3.Loader.prototype.add = function(id, file) {
+  var type;
+
+  if (file instanceof EZ3.Image)
+    type = EZ3.Cache.IMAGE;
+  else if (file instanceof EZ3.Data)
+    type = EZ3.Cache.DATA;
+  else
     return;
 
-  if (!this.started && !this._resources[resource.url]) {
-    resource.id = id;
-    this._resources[resource.url] = resource;
+  if (!this.started && !this._cache.get(type, id) && !this._files[file.url]) {
+    file.id = id;
+    this._files[file.url] = file;
   }
 };
 
-EZ3.Loader.RESOURCE = {};
-EZ3.Loader.RESOURCE.ERROR = 0;
-EZ3.Loader.RESOURCE.LOADED = 1;
+EZ3.Loader.FILE = {};
+EZ3.Loader.FILE.ERROR = 0;
+EZ3.Loader.FILE.LOADED = 1;
