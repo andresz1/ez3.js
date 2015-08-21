@@ -14,7 +14,7 @@ EZ3.Device = new EZ3.Device();
 EZ3.Device._check = function() {
   var that = this;
 
-  function _checkOperatingSystem() {
+  function checkOperatingSystem() {
     if (/Playstation Vita/.test(navigator.userAgent))
       that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.PSVITA;
     else if (/Kindle/.test(navigator.userAgent) || /\bKF[A-Z][A-Z]+/.test(navigator.userAgent) || /Silk.*Mobile Safari/.test(navigator.userAgent))
@@ -36,7 +36,7 @@ EZ3.Device._check = function() {
       that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE;
   }
 
-  function _checkAnimationFrame() {
+  function checkAnimationFrame() {
     var vendors = [
       'ms',
       'moz',
@@ -57,7 +57,7 @@ EZ3.Device._check = function() {
     }
   }
 
-  function _checkInput() {
+  function checkInput() {
     if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
       that.touch = EZ3.Device.TOUCH.STANDARD;
     else {
@@ -69,15 +69,15 @@ EZ3.Device._check = function() {
     }
   }
 
-  _checkOperatingSystem();
-  _checkAnimationFrame();
-  _checkInput();
+  checkOperatingSystem();
+  checkAnimationFrame();
+  checkInput();
 };
 
 EZ3.Device._isReady = function() {
-  if (!document.body) {
+  if (!document.body)
     window.setTimeout(this._isReady, 20);
-  } else if (!this.ready) {
+  else if (!this.ready) {
     document.removeEventListener('deviceready', this._onReady);
     document.removeEventListener('DOMContentLoaded', this._onReady);
     window.removeEventListener('load', this._onReady);
@@ -89,7 +89,6 @@ EZ3.Device._isReady = function() {
     var item;
     while ((item = this._isReady.queue.shift()))
       item.callback.apply(item.context, item.params);
-
 
     delete this._isReady;
     delete this._onReady;

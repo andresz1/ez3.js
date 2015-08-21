@@ -25,7 +25,7 @@ EZ3.Engine.prototype._init = function(canvas, options) {
 };
 
 EZ3.Engine.prototype._update = function() {
-  for (var i=0; i < this.screens.length; i++) {
+  for (var i = 0; i < this.screens.length; i++) {
     this.renderer.render(this.screens[i]);
     this.screens[i].update();
   }

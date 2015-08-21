@@ -51,5 +51,9 @@ EZ3.Renderer.prototype.initContext = function() {
 };
 
 EZ3.Renderer.prototype.render = function(screen) {
+  var gl = this.context;
 
+  gl.viewport(screen.position[0], screen.position[1], screen.size[0], screen.size[1]);
+  gl.clearColor(0, 0, 0, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 };

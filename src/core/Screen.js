@@ -12,6 +12,10 @@ EZ3.Screen.prototype.load = function() {
 
 };
 
-EZ3.Screen.prototype.update = function() {
+EZ3.Screen.prototype.create = function() {
 
+};
+
+EZ3.Screen.prototype.update = function() {
+  
 };
