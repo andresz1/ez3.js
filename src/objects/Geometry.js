@@ -9,7 +9,7 @@ EZ3.Geometry = function() {
   this.minPoint = vec3.create();
   this.midPoint = vec3.create();
 
-  this.uvNeedUpdate = true;
+  this.uvsNeedUpdate = true;
   this.normalsNeedUpdate = true;
   this.indicesNeedUpdate = true;
   this.verticesNeedUpdate = true;
