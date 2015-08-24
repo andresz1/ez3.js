@@ -31,7 +31,7 @@ EZ3.Loader.prototype._processProgress = function(file, status) {
 
   numOfFiles = Object.keys(this._files).length;
 
-  this.onProgress.dispatch(file, status, numOfFilesLoaded, numOfFilesErrors, numOfFiles);
+  this.onProgress.dispatch(file, status, this._numOfFilesLoaded, this._numOfFilesErrors, numOfFiles);
 
   if (numOfFiles === this._numOfFilesLoaded + this._numOfFilesErrors) {
     numOfFilesLoaded = this._numOfFilesLoaded;

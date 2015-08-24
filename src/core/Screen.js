@@ -2,7 +2,8 @@
  * @class Screen
  */
 
-EZ3.Screen = function(position, size) {
+EZ3.Screen = function(id, position, size) {
+  this.id = id;
   this.position = position;
   this.size = size;
   this.scene = new EZ3.Scene();
