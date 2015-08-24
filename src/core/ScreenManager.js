@@ -21,13 +21,35 @@ EZ3.ScreenManager.prototype.add = function(screen) {
     screen.cache = this._cache;
     screen.loader = new EZ3.Loader(this._cache);
 
+    var events = {
+      keyboard: [
+        'onKeyPress',
+        'onKeyDown',
+        'onKeyUp'
+      ],
+      mouse: [
+        'onMousePress',
+        'onMouseMove',
+        'onMouseUp'
+      ],
+      touch: [
+        'onTouchPress',
+        'onTouchMove',
+        'onTouchUp'
+      ]
+    };
+
+    for (var i in events)
+      for (var j = 0; j < events[i].length; j++)
+        if (screen.input[i][events[i][j]] !== EZ3.Screen.prototype[i])
+          screen.input[i][events[i][j]].add(screen[events[i][j]], screen);
+
     if (screen.load) {
       screen.load();
       screen.loader.onComplete.add(screen.create.bind(screen));
       screen.loader.start();
-    } else {
+    } else
       screen.create();
-    }
 
     this._screens.unshift(screen);
   }
