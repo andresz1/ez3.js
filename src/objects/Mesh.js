@@ -1,10 +1,10 @@
-EZ3.Mesh = function(data) {
+EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
   this._buffer = new EZ3.Buffer();
-  this.dynamic = data.dynamic || false;
-  this.material = data.material || null;
-  this.geometry = (data.geometry instanceof EZ3.Geometry) ? data.geometry : null;
+  this.dynamic = false;
+  this.material = (material instanceof EZ3.Material) ? material : null;
+  this.geometry = (geometry instanceof EZ3.Geometry) ? geometry : null;
 };
 
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
@@ -46,7 +46,7 @@ EZ3.Mesh.prototype.init = function(gl) {
   }
 };
 
-EZ3.Mesh.prototype.draw = function(gl) {
+EZ3.Mesh.prototype.render = function(gl) {
   if(this.geometry){
     if (this.geometry.indices.length)
       this._buffer.draw(gl, EZ3.ELEMENTS_DRAW, this.geometry.indices.length);
