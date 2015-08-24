@@ -8,14 +8,10 @@ EZ3.Screen = function(position, size) {
   this.scene = new EZ3.Scene();
 };
 
-EZ3.Screen.prototype.load = function() {
-
-};
-
 EZ3.Screen.prototype.create = function() {
 
 };
 
 EZ3.Screen.prototype.update = function() {
-  
+
 };

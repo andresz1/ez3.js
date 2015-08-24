@@ -16,6 +16,7 @@ EZ3.Loader = function(cache) {
 EZ3.Loader.prototype._processFileLoad = function(file) {
   this._numOfFilesLoaded++;
   this._cache.set(file.id, file.content);
+
   this._processProgress(file, EZ3.Loader.FILE.LOADED);
 };
 
@@ -48,8 +49,8 @@ EZ3.Loader.prototype._processProgress = function(file, status) {
 EZ3.Loader.prototype.start = function() {
   this.started = true;
 
-  for (var id in this._resources)
-    this._resources[id].load(this._processFileLoad.bind(this), this._processFileError.bind(this));
+  for (var url in this._files)
+    this._files[url].load(this._processFileLoad.bind(this), this._processFileError.bind(this));
 };
 
 EZ3.Loader.prototype.add = function(id, file) {
