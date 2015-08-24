@@ -4,32 +4,33 @@
 
 EZ3.Engine = function(canvas, options) {
   this.device = EZ3.Device;
-  this.time = null;
-  this.animationFrame = null;
-  this.renderer = null;
-  this.inputManager = null;
-  this.screens = [];
+  this.input = null;
+  this.screens = null;
+
+  this._animationFrame = null;
+  this._time = null;
+  this._renderer = null;
+  this._cache = null;
 
   this.device.onReady(this._init, this, [canvas, options]);
 };
 
 EZ3.Engine.prototype._init = function(canvas, options) {
-  this.time = new EZ3.Time();
-  this.animationFrame = new EZ3.AnimationFrame(this.device, false);
-  this.renderer = new EZ3.Renderer(canvas, options);
-  this.inputManager = new EZ3.InputManager(this.device, canvas);
+  this._animationFrame = new EZ3.AnimationFrame(this.device, false);
+  this._time = new EZ3.Time();
+  this._renderer = new EZ3.Renderer(canvas, options);
+  this._cache = new EZ3.Cache();
+  this.input = new EZ3.InputManager(this.device, canvas);
+  this.screens = new EZ3.ScreenManager(this._device, this._time, this._renderer, this.input, this._cache);
 
-  this.renderer.initContext();
-  this.time.start();
+
+  this._renderer.initContext();
+  this._time.start();
   this._update();
 };
 
 EZ3.Engine.prototype._update = function() {
-  for (var i=0; i < this.screens.length; i++) {
-    this.renderer.render(this.screens[i]);
-    this.screens[i].update();
-  }
-
-  this.time.update();
-  this.animationFrame.request(this._update.bind(this));
+  this.screens.update();
+  this._time.update();
+  this._animationFrame.request(this._update.bind(this));
 };
