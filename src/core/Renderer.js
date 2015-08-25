@@ -85,16 +85,20 @@ EZ3.Renderer.prototype.setupBasic = function(material) {
   vec3.set(up, 0, 1, 0);
 
   mat4.lookAt(view, position, target, up);
-  mat4.perspective(projection, 70, 800 / 600, 1, 1000);
+  mat4.perspective(projection, 70, 400 / 600, 1, 1000);
   mat4.multiply(mvp, projection, view);
 
   material.program.loadUniformf(this.context, 'color', EZ3.Program.UNIFORM_SIZE_3D, material.color);
   material.program.loadUniformMatrix(this.context, 'modelViewProjectionMatrix', EZ3.Program.UNIFORM_SIZE_4X4, mvp);
 };
 
-EZ3.Renderer.prototype.render = function(screen) {
-  this.context.clearColor(0.0,0.0,0.0,1.0);
+EZ3.Renderer.prototype.clear = function() {
   this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+};
+
+EZ3.Renderer.prototype.render = function(screen) {
+  this.context.viewport(screen.position[0], screen.position[1], screen.size[0], screen.size[1]);
+  this.context.clearColor(0.0,0.0,0.0,1.0);
 
   screen.scene.update();
   this._entities.push(screen.scene);

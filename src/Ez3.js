@@ -5,8 +5,7 @@ var EZ3 = {
   Vec4: vec4,
   Mat2: mat2,
   Mat3: mat3,
-  Mat4: mat4,
-  Signal: signals.Signal
+  Mat4: mat4
 };
 
 EZ3.PI = Math.PI;
