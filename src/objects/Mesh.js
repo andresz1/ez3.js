@@ -1,8 +1,8 @@
 EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
-  this._buffer = new EZ3.Buffer();
   this.dynamic = false;
+  this._buffer = new EZ3.Buffer();
   this.material = (material instanceof EZ3.Material) ? material : null;
   this.geometry = (geometry instanceof EZ3.Geometry) ? geometry : null;
 };
