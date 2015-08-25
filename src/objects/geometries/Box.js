@@ -9,21 +9,21 @@ EZ3.Box = function(width, height, depth) {
   this._halfDepth  = this._depth * 0.5;
   this._halfHeight = this._height * 0.5;
 
-  var scope = this;
+  var that = this;
 
   function _create () {
-    scope.vertices = [
-      +scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
-      -scope._halfWidth, +scope._halfHeight, +scope._halfDepth,
-      -scope._halfWidth, -scope._halfHeight, +scope._halfDepth,
-      +scope._halfWidth, -scope._halfHeight, +scope._halfDepth,
-      +scope._halfWidth, -scope._halfHeight, -scope._halfDepth,
-      -scope._halfWidth, -scope._halfHeight, -scope._halfDepth,
-      -scope._halfWidth, +scope._halfHeight, -scope._halfDepth,
-      +scope._halfWidth, +scope._halfHeight, -scope._halfDepth
+    that.vertices = [
+      +that._halfWidth, +that._halfHeight, +that._halfDepth,
+      -that._halfWidth, +that._halfHeight, +that._halfDepth,
+      -that._halfWidth, -that._halfHeight, +that._halfDepth,
+      +that._halfWidth, -that._halfHeight, +that._halfDepth,
+      +that._halfWidth, -that._halfHeight, -that._halfDepth,
+      -that._halfWidth, -that._halfHeight, -that._halfDepth,
+      -that._halfWidth, +that._halfHeight, -that._halfDepth,
+      +that._halfWidth, +that._halfHeight, -that._halfDepth
     ];
 
-    scope.indices = [
+    that.indices = [
       0, 1 ,2,
       0, 2, 3,
       7, 4, 5,
@@ -38,7 +38,7 @@ EZ3.Box = function(width, height, depth) {
       3, 5, 4
     ];
 
-    scope.calculateNormals();
+    that.calculateNormals();
   }
 
   _create();
