@@ -24,7 +24,6 @@
   ],
   "devDependencies": {
     "gl-matrix": "~2.3.1",
-    "js-signals": "~1.0.0",
     "mixin.js": "~1.0.0"
   }
 }
