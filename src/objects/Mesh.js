@@ -1,3 +1,7 @@
+/**
+ * @class Mesh
+ */
+
 EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
@@ -11,7 +15,7 @@ EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 
 EZ3.Mesh.prototype.init = function(gl) {
-  if(this.geometry){
+  if (this.geometry) {
     var hint = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
 
     if (this.geometry.verticesNeedUpdate) {
@@ -47,7 +51,7 @@ EZ3.Mesh.prototype.init = function(gl) {
 };
 
 EZ3.Mesh.prototype.render = function(gl) {
-  if(this.geometry){
+  if (this.geometry) {
     if (this.geometry.indices.length)
       this._buffer.draw(gl, EZ3.ELEMENTS_DRAW, this.geometry.indices.length);
     else

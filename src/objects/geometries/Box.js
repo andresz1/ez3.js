@@ -1,3 +1,8 @@
+/**
+ * @class Box
+ * @extends Geometry
+ */
+
 EZ3.Box = function(width, height, depth) {
   EZ3.Geometry.call(this);
 

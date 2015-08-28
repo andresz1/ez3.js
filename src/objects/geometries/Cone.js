@@ -1,3 +1,8 @@
+/**
+ * @class Cone
+ * @extends Geometry
+ */
+
 EZ3.Cone = function(base, height, slices, stacks) {
   EZ3.Geometry.call(this);
 
@@ -24,8 +29,8 @@ EZ3.Cone = function(base, height, slices, stacks) {
     vertex = vec3.create();
     normal = vec3.create();
 
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
+    for (s = 0; s < that._slices; ++s) {
+      for (t = 0; t < that._stacks; ++t) {
 
         u = s * totalSlices;
         v = t * totalStacks;
@@ -53,13 +58,13 @@ EZ3.Cone = function(base, height, slices, stacks) {
 
       actualHeight -= step;
 
-      if(actualHeight < that._base)
+      if (actualHeight < that._base)
         break;
 
     }
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
+    for (s = 0; s < that._slices - 1; ++s) {
+      for (t = 0; t < that._stacks - 1; ++t) {
 
         that.indices.push((s + 0) * that._stacks + (t + 0));
         that.indices.push((s + 0) * that._stacks + (t + 1));

@@ -1,3 +1,8 @@
+/**
+ * @class Torus
+ * @extends Geometry
+ */
+
 EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
   EZ3.Geometry.call(this);
 
@@ -22,8 +27,8 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
     vertex = vec3.create();
     normal = vec3.create();
 
-    for(s = 0; s < that._sides; ++s){
-      for(r = 0; r < that._rings; ++r){
+    for (s = 0; s < that._sides; ++s) {
+      for (r = 0; r < that._rings; ++r) {
         u = s * totalSides;
         v = r * totalRings;
 
@@ -58,8 +63,8 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
       }
     }
 
-    for(s = 0; s < that._sides - 1; ++s){
-      for(r = 0; r < that._rings - 1; ++r){
+    for (s = 0; s < that._sides - 1; ++s) {
+      for (r = 0; r < that._rings - 1; ++r) {
         that.indices.push((s + 0) * that._rings + (r + 0));
         that.indices.push((s + 0) * that._rings + (r + 1));
         that.indices.push((s + 1) * that._rings + (r + 1));

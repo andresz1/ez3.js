@@ -1,3 +1,8 @@
+/**
+ * @class Ellipsoid
+ * @extends Geometry
+ */
+
 EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
   EZ3.Geometry.call(this);
 
@@ -22,8 +27,8 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
     totalSlices = 1.0 / (that._slices - 1);
     totalStacks = 1.0 / (that._stacks - 1);
 
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
+    for (s = 0; s < that._slices; ++s) {
+      for (t = 0; t < that._stacks; ++t) {
         u = s * totalSlices;
         v = t * totalStacks;
 
@@ -53,8 +58,8 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
       }
     }
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
+    for (s = 0; s < that._slices - 1; ++s) {
+      for (t = 0; t < that._stacks - 1; ++t) {
         that.indices.push((s + 0) * that._stacks + (t + 0));
         that.indices.push((s + 0) * that._stacks + (t + 1));
         that.indices.push((s + 1) * that._stacks + (t + 1));
