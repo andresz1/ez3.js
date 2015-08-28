@@ -23,7 +23,7 @@ EZ3.Entity = function() {
 };
 
 EZ3.Entity.prototype.add = function(child) {
-  if(child instanceof EZ3.Mesh){
+  if(child instanceof EZ3.Entity){
 
     if(child.parent)
       child.parent.remove(child);
@@ -62,7 +62,7 @@ EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
     mat3.normalFromMat4(this.normalMatrix, this.worldMatrix);
 
     for(var k = this.children.length - 1; k >= 0; --k)
-      this.children[k].update(this.worldMatrix, this.dirty);
+      this.children[k].update(this.dirty, this.worldMatrix);
 
     this.dirty = false;
     this.scale.dirty = false;
