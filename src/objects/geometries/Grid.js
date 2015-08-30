@@ -1,3 +1,8 @@
+/**
+ * @class Grid
+ * @extends Geometry
+ */
+
 EZ3.Grid = function(width, height) {
   EZ3.Geometry.call(this);
 
@@ -9,8 +14,8 @@ EZ3.Grid = function(width, height) {
   function _create() {
     var index0, index1, index2, index3, z, x;
 
-    for(z = 0; z < that._height + 1; ++z) {
-      for(x = 0; x < that._width + 1; ++x) {
+    for (z = 0; z < that._height + 1; ++z) {
+      for (x = 0; x < that._width + 1; ++x) {
         that.vertices.push(x);
         that.vertices.push(0);
         that.vertices.push(z);
@@ -20,8 +25,8 @@ EZ3.Grid = function(width, height) {
       }
     }
 
-    for(z = 0; z < that._height; ++z) {
-      for(x = 0; x < that._width; ++x) {
+    for (z = 0; z < that._height; ++z) {
+      for (x = 0; x < that._width; ++x) {
         index0 = z * (that._height + 1) + x;
         index1 = index0 + 1;
         index2 = index0 + (that._height + 1);
@@ -38,7 +43,6 @@ EZ3.Grid = function(width, height) {
     }
 
     that.calculateNormals();
-
   }
 
   _create();

@@ -1,3 +1,7 @@
+/**
+ * @class Geometry
+ */
+
 EZ3.Geometry = function() {
   this.uvs = [];
   this.indices = [];
@@ -129,7 +133,7 @@ EZ3.Geometry.prototype.calculateTangents = function() {
   var tempT = this.initArray(this.vertices.length, 0);
   var tempB = this.initArray(this.vertices.length, 0);
 
-  for(k = 0; k < this.indices.length; k += 3) {
+  for (k = 0; k < this.indices.length; k += 3) {
     x = this.indices[k + 0];
     y = this.indices[k + 1];
     z = this.indices[k + 2];
@@ -183,7 +187,7 @@ EZ3.Geometry.prototype.calculateTangents = function() {
     tempB[3 * z + 2] += bitangent[2];
   }
 
-  for(k = 0; k < this._vertices.length / 3; ++k) {
+  for (k = 0; k < this._vertices.length / 3; ++k) {
 
     x = 3 * k + 0;
     y = 3 * k + 1;
