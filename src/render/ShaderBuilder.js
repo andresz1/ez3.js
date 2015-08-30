@@ -20,14 +20,11 @@ EZ3.ShaderBuilder.prototype._buildVertex = function(material) {
       'precision highp float;',
 
       'attribute vec3 vertex;',
-      'attribute vec3 normal;',
       'attribute vec2 uv;',
-      'attribute vec4 tangent;',
-      'attribute vec3 bitangent;',
 
       'uniform mat4 mvpMatrix;',
 
-      'varying vec2 texCoordinates;',
+      'varying highp vec2 texCoordinates;',
 
       'void main(){',
         'texCoordinates = uv;',
@@ -103,12 +100,11 @@ EZ3.ShaderBuilder.prototype._buildFragment = function(material) {
       'uniform bool hasDiffuseTexture;',
       'uniform sampler2D diffuseTexture;',
 
-      'varying vec2 texCoordinates;',
+      'varying highp vec2 texCoordinates;',
 
       'void main() {',
         'if(hasDiffuseTexture) {',
-        ' vec4 texColor = texture2D(diffuseTexture, texCoordinates);',
-        ' gl_FragColor = texColor;',
+        ' gl_FragColor = vec4(color, 1.0) * texture2D(diffuseTexture, texCoordinates);',
         '}else{',
         ' gl_FragColor = vec4(color, 1.0);',
         '}',
