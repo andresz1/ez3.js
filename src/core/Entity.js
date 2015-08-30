@@ -1,3 +1,7 @@
+/**
+ * @class Entity
+ */
+
 EZ3.Entity = function() {
   this.parent = null;
   this.children = [];
@@ -8,8 +12,8 @@ EZ3.Entity = function() {
   this.worldMatrix = mat4.create();
   this.normalMatrix = mat3.create();
 
-  vec3.set(this.scale, 1, 1 ,1);
-  vec3.set(this.position, 0, 0 ,0);
+  vec3.set(this.scale, 1, 1, 1);
+  vec3.set(this.position, 0, 0, 0);
   quat.set(this.rotation, 0, 0, 0, 0);
 
   mat4.identity(this.modelMatrix);
@@ -23,25 +27,25 @@ EZ3.Entity = function() {
 };
 
 EZ3.Entity.prototype.add = function(child) {
-  if(child instanceof EZ3.Entity){
+  if (child instanceof EZ3.Entity) {
 
-    if(child.parent)
+    if (child.parent)
       child.parent.remove(child);
 
     this.dirty = true;
     child.parent = this;
     this.children.push(child);
 
-  }else{
-    throw('Child object must have a prototype of Entity');
+  } else {
+    throw ('Child object must have a prototype of Entity Or Light');
   }
 };
 
 EZ3.Entity.prototype.remove = function(child) {
   var position = this.children.indexOf(child);
 
-  if(~position){
-    this.children.splice(position,1);
+  if (~position) {
+    this.children.splice(position, 1);
     this.dirty = true;
   }
 };
@@ -49,19 +53,19 @@ EZ3.Entity.prototype.remove = function(child) {
 EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
   this.dirty = this.dirty || parentIsDirty || this.scale.dirty || this.position.dirty || this.rotation.dirty;
 
-  if(this.dirty){
+  if (this.dirty) {
 
     mat4.fromRotationTranslation(this.modelMatrix, this.rotation, this.position);
     mat4.scale(this.modelMatrix, this.modelMatrix, this.scale);
 
-    if(!parentWorldMatrix)
-        mat4.copy(this.worldMatrix, this.modelMatrix);
+    if (!parentWorldMatrix)
+      mat4.copy(this.worldMatrix, this.modelMatrix);
     else
-        mat4.multiply(this.worldMatrix, parentWorldMatrix, this.modelMatrix);
+      mat4.multiply(this.worldMatrix, parentWorldMatrix, this.modelMatrix);
 
     mat3.normalFromMat4(this.normalMatrix, this.worldMatrix);
 
-    for(var k = this.children.length - 1; k >= 0; --k)
+    for (var k = this.children.length - 1; k >= 0; --k)
       this.children[k].update(this.dirty, this.worldMatrix);
 
     this.dirty = false;
