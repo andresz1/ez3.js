@@ -43,7 +43,6 @@ EZ3.Grid = function(width, height) {
     }
 
     that.calculateNormals();
-
   }
 
   _create();

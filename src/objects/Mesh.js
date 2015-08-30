@@ -1,5 +1,6 @@
 /**
  * @class Mesh
+ * @extends Entity
  */
 
 EZ3.Mesh = function(geometry, material) {
@@ -14,40 +15,69 @@ EZ3.Mesh = function(geometry, material) {
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 
-EZ3.Mesh.prototype.init = function(gl) {
+EZ3.Mesh.prototype._setupBuffer = function(gl) {
   if (this.geometry) {
     var hint = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
 
     if (this.geometry.verticesNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.VERTEX, this.geometry.vertices.length, this.geometry.vertices, hint);
+      this._buffer.setup(gl, EZ3.Buffer.VERTEX, this.geometry.vertices.length, this.geometry.vertices, hint);
       this.geometry.verticesNeedUpdate = false;
     }
 
     if (this.geometry.normalsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.NORMAL, this.geometry.normals.length, this.geometry.normals, hint);
+      this._buffer.setup(gl, EZ3.Buffer.NORMAL, this.geometry.normals.length, this.geometry.normals, hint);
       this.geometry.normalsNeedUpdate = false;
     }
 
     if (this.geometry.uvsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.UV, this.geometry.uvs.length, this.geometry.uvs, hint);
+      this._buffer.setup(gl, EZ3.Buffer.UV, this.geometry.uvs.length, this.geometry.uvs, hint);
       this.geometry.uvNeedUpdate = false;
     }
 
     if (this.geometry.tangentsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.TANGENTS, this.geometry.tangents.length, this.geometry.tangents, hint);
+      this._buffer.setup(gl, EZ3.Buffer.TANGENTS, this.geometry.tangents.length, this.geometry.tangents, hint);
       this.geometry.tangentNeedUpdate = false;
     }
 
     if (this.geometry.bitangentsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.BITANGENTS, this.geometry.bitangents.length, this.geometry.bitangents, hint);
+      this._buffer.setup(gl, EZ3.Buffer.BITANGENTS, this.geometry.bitangents.length, this.geometry.bitangents, hint);
       this.geometry.bitangentsNeedUpdate = false;
     }
 
     if (this.geometry.indicesNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.INDEX, this.geometry.indices.length, this.geometry.indices, hint);
+      this._buffer.setup(gl, EZ3.Buffer.INDEX, this.geometry.indices.length, this.geometry.indices, hint);
       this.geometry.indicesNeedUpdate = false;
     }
   }
+};
+
+EZ3.Mesh.prototype._setupMaterial = function(gl) {
+  if (this.material.dirty) {
+    var program, builder;
+
+    builder = new EZ3.ShaderBuilder();
+    builder.build(this.material);
+
+    program = new EZ3.GLSLProgram(gl, this.material, 1);
+    this.material.program = program;
+
+    this.material.dirty = false;
+  }
+};
+
+EZ3.Mesh.prototype._setupBufferLayouts = function() {
+  var program = this.material.program;
+  this._buffer.setupLayout(EZ3.Buffer.UV, program.getLayout('uv'));
+  this._buffer.setupLayout(EZ3.Buffer.VERTEX, program.getLayout('vertex'));
+  this._buffer.setupLayout(EZ3.Buffer.NORMAL, program.getLayout('normal'));
+  this._buffer.setupLayout(EZ3.Buffer.TANGENT, program.getLayout('tangent'));
+  this._buffer.setupLayout(EZ3.Buffer.BITANGENT, program.getLayout('bitangent'));
+};
+
+EZ3.Mesh.prototype.setup = function(gl) {
+  this._setupBuffer(gl);
+  this._setupMaterial(gl);
+  this._setupBufferLayouts();
 };
 
 EZ3.Mesh.prototype.render = function(gl) {

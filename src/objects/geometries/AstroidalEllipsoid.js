@@ -19,19 +19,15 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
     var phi, rho;
     var normal, vertex;
     var cosS, cosT, sinS, sinT;
-    var totalSlices, totalStacks;
     var s, t;
 
     vertex = vec3.create();
     normal = vec3.create();
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
-
     for (s = 0; s < that._slices; ++s) {
       for (t = 0; t < that._stacks; ++t) {
-        u = s * totalSlices;
-        v = t * totalStacks;
+        u = s / (that._slices - 1);
+        v = t / (that._stacks - 1);
 
         phi = EZ3.DOUBLE_PI * u - EZ3.PI;
         rho = EZ3.PI * v - EZ3.HALF_PI;
@@ -75,7 +71,6 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
         that.indices.push((s + 1) * that._stacks + (t + 0));
       }
     }
-
   }
 
   _create();
