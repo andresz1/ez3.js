@@ -38,6 +38,8 @@ EZ3.LoadManager.prototype.add = function(url) {
 
 EZ3.LoadManager.prototype.processLoad = function(url, data) {
   this.loaded++;
+
+  console.log(this.loaded);
   this.cache.add(url, data);
   this._processProgress(url);
 };
