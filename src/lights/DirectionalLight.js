@@ -5,9 +5,9 @@
 
 EZ3.DirectionalLight = function(config) {
   EZ3.Light.call(this);
-  
-  this._type = EZ3.Light.DIRECTIONAL;
-  this._direction = config.direction || null;
+
+  this.type = EZ3.Light.DIRECTIONAL;
+  this.direction = config.direction || null;
 
   this._setup(config);
 };
