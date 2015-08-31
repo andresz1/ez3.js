@@ -10,7 +10,7 @@ EZ3.Light = function() {
   this._quadraticAttenuation = null;
 };
 
-EZ3.Light.prototype.setup = function(config) {
+EZ3.Light.prototype._setup = function(config) {
   this._mesh = config.mesh || null;
   this._linearAttenuation = config.attenuation[EZ3.Light.LINEAR_ATTENUATION] || 0.2;
   this._constantAttenuation = config.attenuation[EZ3.Light.CONSTANT_ATTENUATION] || 0.3;
@@ -64,6 +64,10 @@ EZ3.Light.prototype.setConstantAttenuation = function(constantAttenuation) {
 EZ3.Light.prototype.setQuadraticAttenuation = function(quadraticAttenuation) {
   this.quadraticAttenuation = quadraticAttenuation;
 };
+
+EZ3.Light.SPOT = 0;
+EZ3.Light.POINT = 1;
+EZ3.Light.DIRECTIONAL = 1;
 
 EZ3.Light.LINEAR_ATTENUATION = 0;
 EZ3.Light.CONSTANT_ATTENUATION = 1;
