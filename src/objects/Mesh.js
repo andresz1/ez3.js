@@ -51,15 +51,12 @@ EZ3.Mesh.prototype._setupBuffer = function(gl) {
   }
 };
 
-EZ3.Mesh.prototype._setupMaterial = function(gl) {
+EZ3.Mesh.prototype._setupProgram = function(gl) {
   if (this.material.dirty) {
-    var program, builder;
+    var programBuilder;
 
-    builder = new EZ3.ShaderBuilder();
-    builder.build(this.material);
-
-    program = new EZ3.GLSLProgram(gl, this.material, 1);
-    this.material.program = program;
+    programBuilder = new EZ3.GLSLProgramBuilder();
+    this.material.program = programBuilder.buildProgram(gl, this.material);
 
     this.material.dirty = false;
   }
@@ -76,7 +73,7 @@ EZ3.Mesh.prototype._setupBufferLayouts = function() {
 
 EZ3.Mesh.prototype.setup = function(gl) {
   this._setupBuffer(gl);
-  this._setupMaterial(gl);
+  this._setupProgram(gl);
   this._setupBufferLayouts();
 };
 
