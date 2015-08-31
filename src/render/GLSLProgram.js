@@ -100,50 +100,56 @@ EZ3.GLSLProgram.prototype.disable = function(gl) {
 };
 
 EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {
-  switch (size) {
-    case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-      gl.uniform1f(this._getUniform(name), data);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-      gl.uniform2f(this._getUniform(name), data[0], data[1]);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-      gl.uniform3f(this._getUniform(name), data[0], data[1], data[2]);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-      gl.uniform4f(this._getUniform(name), data[0], data[1], data[2], data[3]);
-      break;
+  if (data) {
+    switch (size) {
+      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
+        gl.uniform1f(this._getUniform(name), data);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
+        gl.uniform2f(this._getUniform(name), data[0], data[1]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
+        gl.uniform3f(this._getUniform(name), data[0], data[1], data[2]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
+        gl.uniform4f(this._getUniform(name), data[0], data[1], data[2], data[3]);
+        break;
+    }
   }
 };
 
 EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
-  switch (size) {
-    case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-      gl.uniform1i(this._getUniform(name), data);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-      gl.uniform2i(this._getUniform(name), data[0], data[1]);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-      gl.uniform3i(this._getUniform(name), data[0], data[1], data[2]);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-      gl.uniform4i(this._getUniform(name), data[0], data[1], data[2], data[3]);
-      break;
+  if (data) {
+    switch (size) {
+      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
+        gl.uniform1i(this._getUniform(name), data);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
+        gl.uniform2i(this._getUniform(name), data[0], data[1]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
+        gl.uniform3i(this._getUniform(name), data[0], data[1], data[2]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
+        gl.uniform4i(this._getUniform(name), data[0], data[1], data[2], data[3]);
+        break;
+    }
   }
 };
 
 EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
-  switch (size) {
-    case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
-      gl.uniformMatrix2fv(this._getUniform(name), false, data);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
-      gl.uniformMatrix3fv(this._getUniform(name), false, data);
-      break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
-      gl.uniformMatrix4fv(this._getUniform(name), false, data);
-      break;
+  if (data) {
+    switch (size) {
+      case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
+        gl.uniformMatrix2fv(this._getUniform(name), false, data);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
+        gl.uniformMatrix3fv(this._getUniform(name), false, data);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
+        gl.uniformMatrix4fv(this._getUniform(name), false, data);
+        break;
+    }
   }
 };
 

@@ -6,12 +6,26 @@ EZ3.Renderer = function(canvas, options) {
   this._entities = [];
   this._programs = [];
 
-  this._mvMatrix = mat4.create();
-  this._mvpMatrix = mat4.create();
-  this._viewMatrix = mat4.create();
-  this._modelMatrix = mat4.create();
-  this._normalMatrix = mat3.create();
-  this._projectionMatrix = mat4.create();
+  this._mvMatrix = {};
+  this._mvpMatrix = {};
+  this._viewMatrix = {};
+  this._modelMatrix = {};
+  this._normalMatrix = {};
+  this._projectionMatrix = {};
+
+  this._mvMatrix.value = mat4.create();
+  this._mvpMatrix.value = mat4.create();
+  this._viewMatrix.value = mat4.create();
+  this._modelMatrix.value = mat4.create();
+  this._normalMatrix.value = mat3.create();
+  this._projectionMatrix.value = mat4.create();
+
+  this._mvMatrix.dirty = true;
+  this._mvpMatrix.dirty = true;
+  this._viewMatrix.dirty = true;
+  this._modelMatrix.dirty = true;
+  this._normalMatrix.dirty = true;
+  this._projectionMatrix.dirty = true;
 
   this.context = null;
   this.canvas = canvas;
@@ -27,59 +41,133 @@ EZ3.Renderer.prototype._processContextRecovered = function() {
 };
 
 EZ3.Renderer.prototype._updateMatrices = function(entity) {
-  var position = vec3.create();
-  vec3.set(position, 45, 45, 45);
+  if(this._modelMatrix.dirty) {
+    mat4.copy(this._modelMatrix.value, entity.worldMatrix);
+  }
 
-  var target = vec3.create();
-  vec3.set(target, 0, 0, 0);
+  if(this._normalMatrix.dirty) {
+    mat4.copy(this._normalMatrix.value, entity.normalMatrix);
+  }
 
-  var up = vec3.create();
-  vec3.set(up, 0, 1, 0);
+  if(this._viewMatrix.dirty){
+    var up = vec3.create();
+    var target = vec3.create();
+    var position = vec3.create();
 
-  mat4.lookAt(this._viewMatrix, position, target, up);
-  mat4.perspective(this._projectionMatrix, 70, 800 / 600, 1, 1000);
+    vec3.set(up, 0, 1, 0);
+    vec3.set(target, 0, 0, 0);
+    vec3.set(position, 45, 45, 45);
 
-  mat4.copy(this._modelMatrix, entity.worldMatrix);
-  mat4.copy(this._normalMatrix, entity.normalMatrix);
-  mat4.multiply(this._mvMatrix, this._viewMatrix, this._modelMatrix);
-  mat4.multiply(this._mvpMatrix, this._projectionMatrix, this._mvMatrix);
+    mat4.lookAt(this._viewMatrix.value, position, target, up);
+  }
+
+  if(this._projectionMatrix.dirty) {
+    mat4.perspective(this._projectionMatrix.value, 70, 800 / 600, 1, 1000);
+  }
+
+  if(this._mvMatrix.dirty) {
+    mat4.multiply(this._mvMatrix.value, this._viewMatrix.value, this._modelMatrix.value);
+  }
+
+  if(this._mvMatrix.dirty) {
+      mat4.multiply(this._mvpMatrix.value, this._projectionMatrix.value, this._mvMatrix.value);
+  }
 };
 
 EZ3.Renderer.prototype._updateUniforms = function(material) {
   var gl = this.context;
   var program = material.program;
 
-  if(material.heightMap && !material.heightTexture)
-    material.heightTexture = material.setupTexture(gl, material.heightMap);
-
-  if(material.normalMap && !material.normalTexture)
-    material.normalTexture = material.setupTexture(gl, material.normalMap);
-
-  if(material.diffuseMap && !material.diffuseTexture)
-    material.diffuseTexture = material.setupTexture(gl, material.diffuseMap);
-
-  if(material.heightTexture) {
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, material.heightTexture);
-    program.loadUniformi(gl, 'heightTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 0);
+  if(this._mvMatrix.dirty){
+    this._mvMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.value);
   }
 
-  if(material.normalTexture) {
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, material.normalTexture);
-    program.loadUniformi(gl, 'normalTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 1);
+  if(this._mvpMatrix.dirty) {
+    this._mvpMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.value);
   }
 
-  if(material.diffuseTexture) {
-    gl.activeTexture(gl.TEXTURE2);
-    gl.bindTexture(gl.TEXTURE_2D, material.diffuseTexture);
-    program.loadUniformi(gl, 'diffuseTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 2);
+  if(this._viewMatrix.dirty) {
+    this._viewMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix.value);
   }
 
-  if(material.color)
-    program.loadUniformf(gl, 'uColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.color);
+  if(this._modelMatrix.dirty) {
+    this._modelMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix.value);
+  }
 
-  program.loadUniformMatrix(gl, 'mvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix);
+  if(this._normalMatrix.dirty) {
+    this._normalMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix.value);
+  }
+
+  if(this._projectionMatrix.dirty) {
+    this._projectionMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix.value);
+  }
+
+  if(material.color.dirty) {
+    material.color.dirty = false;
+    program.loadUniformf(gl, 'uMaterial.color', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.color.value);
+  }
+
+  if(material.shininess.dirty) {
+    material.shininess.dirty = false;
+    program.loadUniformf(gl, 'uMaterial.shininess', EZ3.GLSLProgram.UNIFORM_SIZE_1D, material.shininess.value);
+  }
+
+  if(material.ambientColor.dirty) {
+    material.ambientColor.dirty = false;
+    program.loadUniformf(gl, 'uMaterial.ambientColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.ambientColor.value);
+  }
+
+  if(material.diffuseColor.dirty) {
+    material.diffuseColor.dirty = false;
+    program.loadUniformf(gl, 'uMaterial.diffuseColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.diffuseColor.value);
+  }
+
+  if(material.specularColor.dirty) {
+    material.specularColor.dirty = false;
+    program.loadUniformf(gl, 'uMaterial.specularColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.specularColor.value);
+  }
+
+  if(material.heightTexture.dirty) {
+    material.heightTexture.dirty = false;
+
+    if(material.heightTexture.map) {
+      material.heightTexture.value = material.setupTexture(gl, material.heightTexture.map);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, material.heightTexture.value);
+      program.loadUniformi(gl, 'uHeightTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 0);
+    }
+  }
+
+  if(material.normalTexture.dirty) {
+    material.normalTexture.dirty = false;
+
+    if(material.normalTexture.map) {
+      material.normalTexture.value = material.setupTexture(gl, material.normalTexture.map);
+
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, material.normalTexture.value);
+      program.loadUniformi(gl, 'uNormalTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 1);
+    }
+  }
+
+  if(material.diffuseTexture.dirty) {
+    material.diffuseTexture.dirty = false;
+
+    if(material.diffuseTexture.map) {
+      material.diffuseTexture.value = material.setupTexture(gl, material.diffuseTexture.map);
+
+      gl.activeTexture(gl.TEXTURE2);
+      gl.bindTexture(gl.TEXTURE_2D, material.diffuseTexture.value);
+      program.loadUniformi(gl, 'uDiffuseTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 2);
+    }
+  }
 };
 
 EZ3.Renderer.prototype.initContext = function() {

@@ -6,7 +6,7 @@
 EZ3.PointLight = function(config) {
   EZ3.Light.call(this);
 
-  this._type = EZ3.Light.POINT;
+  this.type = EZ3.Light.POINT;
 
   this._setup(config);
 };

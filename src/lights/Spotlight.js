@@ -6,9 +6,9 @@
 EZ3.Spotlight = function(config) {
   EZ3.Light.call(this);
 
-  this._type = EZ3.Light.SPOT;
-  this._spot = config.spot || 0.0;  
-  this._exponent = config.exponent || 0.0;
+  this.type = EZ3.Light.SPOT;
+  this.spot = config.spot || 0.0;  
+  this.exponent = config.exponent || 0.0;
 
   this._setup(config);
 };
