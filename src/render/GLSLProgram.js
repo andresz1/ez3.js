@@ -2,14 +2,13 @@
  * @class GLSLProgram
  */
 
-EZ3.GLSLProgram = function(gl, material, code) {
-  this._code = code;
+EZ3.GLSLProgram = function(gl, vertexCode, fragmentCode) {
   this._shaders = [];
   this._program = null;
   this._uniformList = {};
   this._attributeList = {};
 
-  this._create(gl, material);
+  this._create(gl, vertexCode, fragmentCode);
 };
 
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
@@ -28,11 +27,11 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
   }
 };
 
-EZ3.GLSLProgram.prototype._create = function(gl, material) {
+EZ3.GLSLProgram.prototype._create = function(gl, vertexCode, fragmentCode) {
   this._program = gl.createProgram();
 
-  this._compile(gl, gl.VERTEX_SHADER, material.vertex);
-  this._compile(gl, gl.FRAGMENT_SHADER, material.fragment);
+  this._compile(gl, gl.VERTEX_SHADER, vertexCode);
+  this._compile(gl, gl.FRAGMENT_SHADER, fragmentCode);
 
   gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
   gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);
