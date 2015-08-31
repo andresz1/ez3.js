@@ -5,7 +5,6 @@
 EZ3.Renderer = function(canvas, options) {
   this._entities = [];
   this._programs = [];
-  this._builder = new EZ3.ShaderBuilder();
 
   this._mvMatrix = mat4.create();
   this._mvpMatrix = mat4.create();
@@ -27,24 +26,6 @@ EZ3.Renderer.prototype._processContextRecovered = function() {
   this.initContext();
 };
 
-EZ3.Renderer.prototype._createTexture = function(map) {
-    var gl;
-    var texture;
-
-    texture = null;
-    gl = this.context;
-
-    texture = gl.createTexture();
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, map);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.bindTexture(gl.TEXTURE_2D, null);
-
-    return texture;
-};
-
 EZ3.Renderer.prototype._updateMatrices = function(entity) {
   var position = vec3.create();
   vec3.set(position, 45, 45, 45);
@@ -64,73 +45,41 @@ EZ3.Renderer.prototype._updateMatrices = function(entity) {
   mat4.multiply(this._mvpMatrix, this._projectionMatrix, this._mvMatrix);
 };
 
-EZ3.Renderer.prototype._setupBasic = function(material) {
+EZ3.Renderer.prototype._updateUniforms = function(material) {
   var gl = this.context;
   var program = material.program;
 
+  if(material.heightMap && !material.heightTexture)
+    material.heightTexture = material.setupTexture(gl, material.heightMap);
+
+  if(material.normalMap && !material.normalTexture)
+    material.normalTexture = material.setupTexture(gl, material.normalMap);
+
   if(material.diffuseMap && !material.diffuseTexture)
-    material.diffuseTexture = this._createTexture(material.diffuseMap);
+    material.diffuseTexture = material.setupTexture(gl, material.diffuseMap);
 
-  var color = vec3.create();
-  vec3.copy(color, material.color);
-  program.loadUniformf(gl, 'color', EZ3.GLSLProgram.UNIFORM_SIZE_3D, color);
-
-  var mvpMatrix = mat4.create();
-  mat4.copy(mvpMatrix, this._mvpMatrix);
-  program.loadUniformMatrix(gl, 'mvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, mvpMatrix);
-
-  var hasDiffuseTexture = (material.diffuseTexture) ? true : false;
-  program.loadUniformi(gl, 'hasDiffuseTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, hasDiffuseTexture);
-
-  if(hasDiffuseTexture) {
+  if(material.heightTexture) {
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, material.diffuseTexture);
-    program.loadUniformi(gl, 'diffuseTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 0);
+    gl.bindTexture(gl.TEXTURE_2D, material.heightTexture);
+    program.loadUniformi(gl, 'heightTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 0);
   }
-};
 
-EZ3.Renderer.prototype._setupBlinnPhong = function(material) {
+  if(material.normalTexture) {
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, material.normalTexture);
+    program.loadUniformi(gl, 'normalTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 1);
+  }
 
-};
+  if(material.diffuseTexture) {
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, material.diffuseTexture);
+    program.loadUniformi(gl, 'diffuseTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 2);
+  }
 
-EZ3.Renderer.prototype._setupCookTorrance = function(material) {
+  if(material.color)
+    program.loadUniformf(gl, 'uColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.color);
 
-};
-
-EZ3.Renderer.prototype._setupFlat = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupGouraud = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupMultiTexturing = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupNormalMapping = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupOrenNayar = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupParallaxMapping = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupPhong = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupReflection = function(material) {
-
-};
-
-EZ3.Renderer.prototype._setupRefraction = function(material) {
-
+  program.loadUniformMatrix(gl, 'mvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix);
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -179,13 +128,10 @@ EZ3.Renderer.prototype.clear = function() {
 };
 
 EZ3.Renderer.prototype.render = function(screen) {
-  var gl = this.context;
   var entity;
-  var program;
-  var material;
 
-  gl.viewport(screen.position[0], screen.position[1], screen.size[0], screen.size[1]);
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  this.context.viewport(screen.position[0], screen.position[1], screen.size[0], screen.size[1]);
+  this.context.clearColor(0.0, 0.0, 0.0, 1.0);
 
   screen.scene.update();
   this._entities.push(screen.scene);
@@ -196,42 +142,15 @@ EZ3.Renderer.prototype.render = function(screen) {
 
     if (entity instanceof EZ3.Mesh) {
 
-      entity.setup(gl);
+      entity.setup(this.context);
       this._updateMatrices(entity);
 
-      material = entity.material;
-      program = material.program;
+      entity.material.program.enable(this.context);
 
-      program.enable(gl);
+      this._updateUniforms(entity.material);
+      entity.render(this.context);
 
-      if (material instanceof EZ3.BasicMaterial)
-        this._setupBasic(material);
-      else if (material instanceof EZ3.BlinnPhongMaterial)
-        this._setupBlinnPhong(material);
-      else if(material instanceof EZ3.CookTorranceMaterial)
-        this._setupCookTorrance(material);
-      else if (material instanceof EZ3.FlatMaterial)
-        this._setupFlat(material);
-      else if (material instanceof EZ3.GouraudMaterial)
-        this._setupGouraud(material);
-      else if (material instanceof EZ3.MultiTexturingMaterial)
-        this._setupMultiTexturing(material);
-      else if (material instanceof EZ3.NormalMappingMaterial)
-        this._setupNormalMapping(material);
-      else if(material instanceof EZ3.OrenNayarMaterial)
-        this._setupOrenNayar(material);
-      else if (material instanceof EZ3.ParallaxMappingMaterial)
-        this._setupParallax(material);
-      else if (material instanceof EZ3.PhongMaterial)
-        this._setupPhong(material);
-      else if (material instanceof EZ3.ReflectionMaterial)
-        this._setupReflection(material);
-      else if (material instanceof EZ3.RefractionMaterial)
-        this._setupRefraction(material);
-
-      entity.render(gl);
-
-      program.disable(gl);
+      entity.material.program.disable(this.context);
     }
 
     for (var k = entity.children.length - 1; k >= 0; --k)
