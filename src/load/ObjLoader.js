@@ -5,14 +5,14 @@ EZ3.ObjLoader = function(manager, crossOrigin) {
 };
 
 EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
-  var vertexPattern, normalPattern, uvPattern, facePattern1, facePattern2, facePattern3, facePattern4;
-  var lines, line, result, face, i, j;
+  var patterns, lines, line, result;
+  var geometry, normals, uvs, indicesCount;
 
   function triangulate(face) {
     var data, i;
 
     data = [];
-    face = face.split(" ");
+    face = face.split(' ');
 
     for (i = 1; i < face.length - 1; i++)
       data.push(face[0], face[i], face[i + 1]);
@@ -20,57 +20,174 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
     return data;
   }
 
-  vertexPattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
-  normalPattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
-  uvPattern = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
-  facePattern1 = /f\s(([\d]{1,}[\s]?){3,})+/;
-  facePattern2 = /f\s((([\d]{1,}\/[\d]{1,}[\s]?){3,})+)/;
-  facePattern3 = /f\s((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/;
-  facePattern4 = /f\s((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/;
+  function processVertex(vertex) {
+    var i;
 
+    for (i = 1; i < 4; i++) {
+      geometry.vertices.push(parseFloat(vertex[i]));
+      geometry.normals.push(0);
+    }
+
+    indicesCount.push(0);
+  }
+
+  function processNormal(normal) {
+    var i;
+
+    for (i = 1; i < 4; i++)
+      normals.push(parseFloat(normal[i]));
+  }
+
+  function processUv(uv) {
+    var i;
+
+    for (i = 1; i < 3; i++)
+      uvs.push(parseFloat(uv[i]));
+  }
+
+  function processNormalIndex(vertexIndex, normalIndex) {
+    var i;
+
+    indicesCount[vertexIndex]++;
+
+    vertexIndex = 3 * vertexIndex;
+    normalIndex = 3 * normalIndex;
+
+    for (i = 0; i < 3; i++)
+      geometry.normals[vertexIndex + i] += normals[normalIndex + i];
+  }
+
+  function processUvIndex(vertexIndex, uvIndex) {
+    var i;
+
+    vertexIndex = 3 * vertexIndex;
+    uvIndex = 2 * uvIndex;
+
+    for(i = 0; i < 2; i++)
+      geometry.uvs[vertexIndex + i] = uvs[uvIndex + i];
+  }
+
+  function processFace1(face) {
+    var i;
+
+    for (i = 0; i < face.length; i++)
+      indices.vertices.push(parseInt(face[i]) - 1);
+  }
+
+  function processFace2(face) {
+    var point, vertexIndex, uvIndex, i;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('/');
+      vertexIndex = parseInt(point[0]) - 1;
+      uvIndex = parseInt(point[1]) - 1;
+
+      geometry.indices.push(vertexIndex);  
+      processUvIndex(vertexIndex, uvIndex);
+    }
+  }
+
+  function processFace3(face) {
+    var point, vertexIndex, normalIndex, uvIndex, i;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('/');
+      vertexIndex = parseInt(point[0]) - 1;
+      uvIndex = parseInt(point[1]) - 1;
+      normalIndex = parseInt(point[2]) - 1;
+
+      geometry.indices.push(vertexIndex);
+      processUvIndex(vertexIndex, uvIndex);
+      processNormalIndex(vertexIndex, normalIndex);
+    }
+  }
+
+  function processFace4(face) {
+    var point, vertexIndex, normalIndex, i;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('//');
+      vertexIndex = parseInt(point[0]) - 1;
+      normalIndex = parseInt(point[1]) - 1;
+
+      geometry.indices.push(vertexIndex);
+      processNormalIndex(vertexIndex, normalIndex);
+    }
+  }
+
+  function avarageNormals() {
+    var i, j, k;
+
+    for (i = 0, j = 0; i < geometry.normals.length; i += 3, j++)
+      for (k = 0; k < 3; k++)
+        geometry.normals[i + k] /= indicesCount[j];
+  }
+
+  patterns = {
+    obj: /^o/,
+    group: /^g/,
+    mtllib: /^mtllib/,
+    usemtl: /^usemtl/,
+    smooth: /^s/,
+    vertex: /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
+    normal: /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
+    uv: /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
+    face1: /f\s(([\d]{1,}[\s]?){3,})+/,
+    face2: /f\s((([\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
+    face3: /f\s((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
+    face4: /f\s((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
+  };
   lines = text.split('\n');
 
-  if (!/^o /gm.test(text)) {}
+  geometry = new EZ3.Geometry();
+  normals = [];
+  uvs = [];
+  indicesCount = [];
+
+  //if (!/^o /gm.test(text)) {}
 
   for (i = 0; i < lines.length; i++) {
     line = lines[i].trim().replace(/ +(?= )/g, '');
 
     if (line.length === 0 || line.charAt(0) === '#') {
       continue;
-    } else if ((result = vertexPattern.exec(line))) {
+    } else if ((result = patterns.vertex.exec(line))) {
+      processVertex(result);
+    } else if ((result = patterns.normal.exec(line))) {
+      processNormal(result);
+    } else if ((result = patterns.uv.exec(line))) {
+      processUv(result);
+    } else if ((result = patterns.face1.exec(line))) {
+      processFace1(triangulate(result[1]));
+    } else if ((result = patterns.face2.exec(line))) {
+      processFace2(triangulate(result[1]));
+    } else if ((result = patterns.face3.exec(line))) {
+      processFace3(triangulate(result[1]));
+    } else if ((result = patterns.face4.exec(line))) {
+      processFace4(triangulate(result[1]));
+    } else if (patterns.obj.test(line)) {
 
-    } else if ((result = normalPattern.exec(line))) {
+    } else if (patterns.group.test(line)) {
 
-    } else if ((result = uvPattern.exec(line))) {
+    } else if (patterns.mtllib.test(line)) {
 
-    } else if ((result = facePattern1.exec(line))) {
+    } else if (patterns.usemtl.test(line)) {
 
-    } else if ((result = facePattern2.exec(line))) {
-
-    } else if ((result = facePattern3.exec(line))) {
-
-    } else if ((result = facePattern4.exec(line))) {
-
-      face = triangulate(result[1]);
-
-      for (j = 0; j < face.length; j++) {
-        var point = face[j].split("//");
-        var indicePositionFromObj = parseInt(point[0]) - 1;
-        var indiceNormalFromObj = parseInt(point[1]) - 1;
-      }
-
-    } else if (/^o /.test(line)) {
-
-    } else if (/^g /.test(line)) {
-
-    } else if (/^usemtl /.test(line)) {
-
-    } else if (/^mtllib /.test(line)) {
-
-    } else if (/^s /.test(line)) {
+    } else if (patterns.smooth.test(line)) {
 
     }
   }
+
+  if (normals.length)
+    avarageNormals();
+  else {
+    geometry.normals = [];
+    geometry.calculateNormals();
+  }
+
+  console.log(geometry.vertices);
+  console.log(geometry.indices);
+  console.log(geometry.normals);
 };
 
 EZ3.ObjLoader.prototype.start = function(url, onLoad, onError) {

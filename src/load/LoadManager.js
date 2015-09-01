@@ -13,7 +13,7 @@ EZ3.LoadManager.prototype._processProgress = function(url, error) {
 
   this.onProgress.dispatch(url, error, this.loaded, this.errors, this.toLoad);
 
-  if(this.toLoad == this.loaded + this.errors) {
+  if(this.toLoad === this.loaded + this.errors) {
     loaded = this.loaded;
     errors = this.errors;
 
