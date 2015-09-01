@@ -1,26 +1,14 @@
 EZ3.ShaderChunk = {};
 
 EZ3.ShaderChunk['world-space-uv-main'] = [
-'#if defined( USE_DIFFUSE_TEXTURE ) || defined( USE_HEIGHT_TEXTURE ) || defined( USE_NORMAL_TEXTURE )',
+'#if defined( USE_DIFFUSE_TEXTURE )',
 ' vUV = uv;',
 '#endif'
 ].join('\n\n');
 
 EZ3.ShaderChunk['world-space-uv-header'] = [
-'#if defined( USE_DIFFUSE_TEXTURE ) || defined( USE_HEIGHT_TEXTURE ) || defined( USE_NORMAL_TEXTURE )',
+'#if defined( USE_DIFFUSE_TEXTURE )',
 ' varying vec2 vUV;',
-'#endif'
-].join('\n\n');
-
-EZ3.ShaderChunk['world-space-vertex-main'] = [
-'#ifdef USE_WORLD_SPACE_VERTEX',
-' vVertex = uModelMatrix * vec4(vertex, 1.0);',
-'#endif'
-].join('\n\n');
-
-EZ3.ShaderChunk['world-space-vertex-header'] = [
-'#ifdef USE_WORLD_SPACE_VERTEX',
-' varying vec3 vVertex;',
 '#endif'
 ].join('\n\n');
 
@@ -50,39 +38,9 @@ EZ3.ShaderChunk['material-header'] = [
 '#endif'
 ].join('\n\n');
 
-EZ3.ShaderChunk['material-ads-main'] = [
-'#ifdef USE_ADS_MATERIAL',
-'',
-'#endif'
-].join('\n\n');
-
 EZ3.ShaderChunk['material-color-main'] = [
 '#ifdef USE_COLOR_MATERIAL',
 ' color *= vec4(uMaterial.color, 1.0);',
-'#endif'
-].join('\n\n');
-
-EZ3.ShaderChunk['height-texture-main'] = [
-'#ifdef USE_HEIGHT_TEXTURE',
-' float height = texture2D(uHeightTexture, vUV).r;',
-'#endif'
-].join('\n\n');
-
-EZ3.ShaderChunk['height-texture-header'] = [
-'#ifdef USE_HEIGHT_TEXTURE',
-' uniform sampler2D uHeightTexture;',
-'#endif'
-].join('\n\n');
-
-EZ3.ShaderChunk['normal-texture-main'] = [
-'#ifdef USE_NORMAL_TEXTURE',
-' vec3 tsNormal = texture2D(uNormalTexture, vUV).rgb;',
-'#endif'
-].join('\n\n');
-
-EZ3.ShaderChunk['normal-texture-header'] = [
-'#ifdef USE_NORMAL_TEXTURE',
-' uniform sampler2D uNormalTexture;',
 '#endif'
 ].join('\n\n');
 
@@ -98,17 +56,50 @@ EZ3.ShaderChunk['diffuse-texture-header'] = [
 '#endif'
 ].join('\n\n');
 
-EZ3.ShaderChunk['tangent-space-matrix-main'] = [
-'#ifdef USE_TANGENT_SPACE_MATRIX',
-' vec3 nNormal = uNormalMatrix * normal;',
-' vec3 nBitangent = uNormalMatrix * binormal;',
-' vec3 nTangent = uNormalMatrix * tangent.rgb;',
-' vTBNMatrix = transpose(mat3(nTangent, nBitangent, nNormal));',
+EZ3.ShaderChunk['eye-position-fragment-header'] = [
+'#if defined( USE_PHONG_SHADING ) || defined( USE_BLINN_PHONG_SHADING ) || defined( NORMAL_MAPPING ) || defined( PARALLAX_MAPPING )',
+' uniform vec3 uEyePosition;',
 '#endif'
 ].join('\n\n');
 
-EZ3.ShaderChunk['tangent-space-matrix-header'] = [
-'#ifdef USE_TANGENT_SPACE_MATRIX',
-' varying mat3 vTBNMatrix;',
+EZ3.ShaderChunk['phong-shading-spot-header'] = [
+'#if defined( USE_PHONG_SHADING ) && (SPOT_LIGHTS > 0)',
+' vec3 spotPhong() {',
+' ',
+' ',
+' ',
+' ',
+' }',
+'#endif'
+].join('\n\n');
+
+EZ3.ShaderChunk['phong-shading-puntual-header'] = [
+'#if defined( USE_PHONG_SHADING ) && (PUNTUAL_LIGHTS > 0)',
+' vec3 puntualPhong() {',
+' ',
+' ',
+' ',
+' ',
+' }',
+'#endif'
+].join('\n\n');
+
+EZ3.ShaderChunk['phong-shading-directional-header'] = [
+'#if defined( USE_PHONG_SHADING ) && (DIRECTIONAL_LIGHTS > 0)',
+' vec3 directionalPhong() {',
+' ',
+' ',
+' ',
+' ',
+' }',
+'#endif'
+].join('\n\n');
+
+EZ3.ShaderChunk['phong-shading-header'] = [
+
+].join('\n\n');
+
+EZ3.ShaderChunk['phong-shading-main'] = [
+'#if defined(USE_PHONG_SHADING) && defined( USE_ADS_MATERIAL )',
 '#endif'
 ].join('\n\n');
