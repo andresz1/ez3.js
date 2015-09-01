@@ -82,7 +82,7 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
       vertexIndex = parseInt(point[0]) - 1;
       uvIndex = parseInt(point[1]) - 1;
 
-      geometry.indices.push(vertexIndex);  
+      geometry.indices.push(vertexIndex);
       processUvIndex(vertexIndex, uvIndex);
     }
   }
@@ -180,11 +180,9 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
 
   if (normals.length)
     avarageNormals();
-  else {
+  else
     geometry.normals = [];
-    geometry.calculateNormals();
-  }
-
+    
   console.log(geometry.vertices);
   console.log(geometry.indices);
   console.log(geometry.normals);
