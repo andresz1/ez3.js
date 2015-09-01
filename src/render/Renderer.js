@@ -3,8 +3,17 @@
  */
 
 EZ3.Renderer = function(canvas, options) {
+  this._spots = [];
+  this._puntuals = [];
+  this._directionals = [];
+
   this._entities = [];
   this._programs = [];
+
+  this._eyePosition = {};
+  this._eyePosition.dirty = true;
+  this._eyePosition.value = vec3.create();
+  vec3.set(this._eyePosition, 45, 45, 45);
 
   this._mvMatrix = {};
   this._mvpMatrix = {};
@@ -20,11 +29,7 @@ EZ3.Renderer = function(canvas, options) {
   this._normalMatrix.value = mat3.create();
   this._projectionMatrix.value = mat4.create();
 
-  this._mvMatrix.dirty = true;
-  this._mvpMatrix.dirty = true;
   this._viewMatrix.dirty = true;
-  this._modelMatrix.dirty = true;
-  this._normalMatrix.dirty = true;
   this._projectionMatrix.dirty = true;
 
   this.context = null;
@@ -41,102 +46,96 @@ EZ3.Renderer.prototype._processContextRecovered = function() {
 };
 
 EZ3.Renderer.prototype._updateMatrices = function(entity) {
-  if(this._modelMatrix.dirty) {
-    mat4.copy(this._modelMatrix.value, entity.worldMatrix);
-  }
-
-  if(this._normalMatrix.dirty) {
-    mat4.copy(this._normalMatrix.value, entity.normalMatrix);
-  }
-
-  if(this._viewMatrix.dirty){
+  // Importante: reguntar por la matriz de vista de la camara,
+  // seterarle su dirty a falso y setear el dirty de la
+  // matriz de vista del renderer en true
+  if (this._viewMatrix.dirty) {
     var up = vec3.create();
-    var target = vec3.create();
-    var position = vec3.create();
-
     vec3.set(up, 0, 1, 0);
-    vec3.set(target, 0, 0, 0);
-    vec3.set(position, 45, 45, 45);
 
-    mat4.lookAt(this._viewMatrix.value, position, target, up);
+    var target = vec3.create();
+    vec3.set(target, 0, 0, 0);
+
+    mat4.lookAt(this._viewMatrix.value, this._eyePosition, target, up);
   }
 
-  if(this._projectionMatrix.dirty) {
+  // Importante: Preguntar por la matriz de proyeccion de la camara,
+  // seterarle su dirty a falso y setear el dirty de la
+  // matriz de proyeccion del renderer en true
+  if (this._projectionMatrix.dirty) {
     mat4.perspective(this._projectionMatrix.value, 70, 800 / 600, 1, 1000);
   }
 
-  if(this._mvMatrix.dirty) {
-    mat4.multiply(this._mvMatrix.value, this._viewMatrix.value, this._modelMatrix.value);
-  }
+  mat4.copy(this._modelMatrix.value, entity.worldMatrix.value);
 
-  if(this._mvMatrix.dirty) {
-      mat4.multiply(this._mvpMatrix.value, this._projectionMatrix.value, this._mvMatrix.value);
-  }
+  mat4.copy(this._normalMatrix.value, entity.normalMatrix.value);
+
+  mat4.multiply(this._mvMatrix.value, this._viewMatrix.value, this._modelMatrix.value);
+
+  mat4.multiply(this._mvpMatrix.value, this._projectionMatrix.value, this._mvMatrix.value);
 };
 
-EZ3.Renderer.prototype._updateUniforms = function(material) {
+EZ3.Renderer.prototype._updateUniformMaterial = function(material) {
   var gl = this.context;
   var program = material.program;
 
-  if(this._mvMatrix.dirty){
-    this._mvMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.value);
-  }
-
-  if(this._mvpMatrix.dirty) {
-    this._mvpMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.value);
-  }
-
-  if(this._viewMatrix.dirty) {
-    this._viewMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix.value);
-  }
-
-  if(this._modelMatrix.dirty) {
-    this._modelMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix.value);
-  }
-
-  if(this._normalMatrix.dirty) {
-    this._normalMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix.value);
-  }
-
-  if(this._projectionMatrix.dirty) {
-    this._projectionMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix.value);
-  }
-
-  if(material.color.dirty) {
+  if (material.color.dirty) {
     material.color.dirty = false;
     program.loadUniformf(gl, 'uMaterial.color', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.color.value);
   }
 
-  if(material.shininess.dirty) {
+  if (material.shininess.dirty) {
     material.shininess.dirty = false;
     program.loadUniformf(gl, 'uMaterial.shininess', EZ3.GLSLProgram.UNIFORM_SIZE_1D, material.shininess.value);
   }
 
-  if(material.ambientColor.dirty) {
+  if (material.ambientColor.dirty) {
     material.ambientColor.dirty = false;
     program.loadUniformf(gl, 'uMaterial.ambientColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.ambientColor.value);
   }
 
-  if(material.diffuseColor.dirty) {
+  if (material.diffuseColor.dirty) {
     material.diffuseColor.dirty = false;
     program.loadUniformf(gl, 'uMaterial.diffuseColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.diffuseColor.value);
   }
 
-  if(material.specularColor.dirty) {
+  if (material.specularColor.dirty) {
     material.specularColor.dirty = false;
     program.loadUniformf(gl, 'uMaterial.specularColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.specularColor.value);
   }
+};
 
-  if(material.heightTexture.dirty) {
+EZ3.Renderer.prototype._updateUniformMatrices = function(material) {
+  var gl = this.context;
+  var program = material.program;
+
+  program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.value);
+
+  program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.value);
+
+  program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix.value);
+
+  program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix.value);
+
+  if (this._viewMatrix.dirty) {
+    this._viewMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix.value);
+  }
+
+  if (this._projectionMatrix.dirty) {
+    this._projectionMatrix.dirty = false;
+    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix.value);
+  }
+};
+
+EZ3.Renderer.prototype._updateUniformTextures = function(material) {
+  var gl = this.context;
+  var program = material.program;
+
+  if (material.heightTexture.dirty) {
     material.heightTexture.dirty = false;
 
-    if(material.heightTexture.map) {
+    if (material.heightTexture.map) {
       material.heightTexture.value = material.setupTexture(gl, material.heightTexture.map);
 
       gl.activeTexture(gl.TEXTURE0);
@@ -145,10 +144,10 @@ EZ3.Renderer.prototype._updateUniforms = function(material) {
     }
   }
 
-  if(material.normalTexture.dirty) {
+  if (material.normalTexture.dirty) {
     material.normalTexture.dirty = false;
 
-    if(material.normalTexture.map) {
+    if (material.normalTexture.map) {
       material.normalTexture.value = material.setupTexture(gl, material.normalTexture.map);
 
       gl.activeTexture(gl.TEXTURE1);
@@ -157,10 +156,10 @@ EZ3.Renderer.prototype._updateUniforms = function(material) {
     }
   }
 
-  if(material.diffuseTexture.dirty) {
+  if (material.diffuseTexture.dirty) {
     material.diffuseTexture.dirty = false;
 
-    if(material.diffuseTexture.map) {
+    if (material.diffuseTexture.map) {
       material.diffuseTexture.value = material.setupTexture(gl, material.diffuseTexture.map);
 
       gl.activeTexture(gl.TEXTURE2);
@@ -168,6 +167,120 @@ EZ3.Renderer.prototype._updateUniforms = function(material) {
       program.loadUniformi(gl, 'uDiffuseTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 2);
     }
   }
+};
+
+EZ3.Renderer.prototype._updateUniformSpots = function(material) {
+  var gl = this.context;
+  var program = material.program;
+
+  for (k = 0; k < this._spots.length; ++k) {
+    if (this._spots[k].cutoff.dirty) {
+      this._spots[k].cutoff.dirty = false;
+      program.loadUniformf(gl, 'uSpots[' + k + '].cutoff', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].cutoff.value);
+    }
+
+    if (this._spots[k].exponent.dirty) {
+      this._spots[k].exponent.dirty = false;
+      program.loadUniformf(gl, 'uSpots[' + k + '].exponent', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].exponent.value);
+    }
+
+    if (this._spots[k].position.dirty) {
+      this._spots[k].position.dirty = false;
+      program.loadUniformf(gl, 'uSpots[' + k + '].position', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._spots[k].position.value);
+    }
+
+    if (this._spots[k].linearAttenuation.dirty) {
+      this._spots[k].linearAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uSpots[' + k + '].linearAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].linearAttenuation.value);
+    }
+
+    if (this._spots[k].constantAttenuation.dirty) {
+      this._spots[k].constantAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uSpots[' + k + '].constantAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].constantAttenuation.value);
+    }
+
+    if (this._spots[k].quadraticAttenuation.dirty) {
+      this._spots[k].quadraticAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uSpots[' + k + '].quadraticAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].quadraticAttenuation.value);
+    }
+  }
+};
+
+EZ3.Renderer.prototype._updateUniformPuntuals = function(material) {
+  var gl = this.context;
+  var program = material.program;
+
+  for (var k = 0; k < this._puntuals.length; ++k) {
+    if (this._puntuals[k].position.dirty) {
+      this._puntuals[k].position.dirty = false;
+      program.loadUniformf(gl, 'uPuntuals[' + k + '].position', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._puntuals[k].position.value);
+    }
+
+    if (this._puntuals[k].linearAttenuation.dirty) {
+      this._puntuals[k].linearAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uPuntuals[' + k + '].linearAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._puntuals[k].linearAttenuation.value);
+    }
+
+    if (this._puntuals[k].constantAttenuation.dirty) {
+      this._puntuals[k].constantAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uPuntuals[' + k + '].constantAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._puntuals[k].constantAttenuation.value);
+    }
+
+    if (this._puntuals[k].quadraticAttenuation.dirty) {
+      this._puntuals[k].quadraticAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uPuntuals[' + k + '].quadraticAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._puntuals[k].quadraticAttenuation.value);
+    }
+  }
+};
+
+EZ3.Renderer.prototype._updateUniformDirectionals = function(material) {
+  var gl = this.context;
+  var program = material.program;
+
+  for (var k = 0; k < this._directionals.length; ++k) {
+    if (this._directional[k].direction.dirty) {
+      this._directional[k].direction.dirty = false;
+      program.loadUniformf(gl, 'uDirectionals[' + k + '].direction', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._directional[k].direction.value);
+    }
+
+    if (this._directionals[k].linearAttenuation.dirty) {
+      this._directionals[k].linearAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uDirectionals[' + k + '].linearAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._directionals[k].linearAttenuation.value);
+    }
+
+    if (this._directionals[k].constantAttenuation.dirty) {
+      this._directionals[k].constantAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uDirectionals[' + k + '].constantAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._directionals[k].constantAttenuation.value);
+    }
+
+    if (this._directionals[k].quadraticAttenuation.dirty) {
+      this._directionals[k].quadraticAttenuation.dirty = false;
+      program.loadUniformf(gl, 'uDirectionals[' + k + '].quadraticAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._directionals[k].quadraticAttenuation.value);
+    }
+  }
+};
+
+EZ3.Renderer.prototype._updateMeshUniforms = function(entity) {
+  var gl = this.context;
+  var material = entity.material;
+  var program = material.program;
+
+  this._updateUniformSpots(entity.material);
+  this._updateUniformPuntuals(entity.material);
+  this._updateUniformDirectionals(entity.material);
+
+  this._updateUniformMaterial(entity.material);
+  this._updateUniformMatrices(entity.material);
+  this._updateUniformTextures(entity.material);
+
+  /*if(this._eyePosition.dirty) {
+    this._eyePosition.dirty = false;
+    program.loadUniformf(gl, 'uEyePosition', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._eyePosition.value);
+  }*/
+};
+
+EZ3.Renderer.prototype._updateLightUniforms = function(entity) {
+  this._updateUniformMatrices(entity.material);
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -221,6 +334,10 @@ EZ3.Renderer.prototype.render = function(screen) {
   this.context.viewport(screen.position[0], screen.position[1], screen.size[0], screen.size[1]);
   this.context.clearColor(0.0, 0.0, 0.0, 1.0);
 
+  this._spots = screen.scene.spots;
+  this._puntuals = screen.scene.puntuals;
+  this._directionals = screen.scene.directionals;
+
   screen.scene.update();
   this._entities.push(screen.scene);
 
@@ -228,17 +345,28 @@ EZ3.Renderer.prototype.render = function(screen) {
 
     entity = this._entities.pop();
 
-    if (entity instanceof EZ3.Mesh) {
+    if (entity instanceof EZ3.Mesh || entity instanceof EZ3.Light) {
+
+      if (entity instanceof EZ3.Mesh) {
+        entity.material.spots = this._spots.length;
+        entity.material.puntuals = this._puntuals.length;
+        entity.material.directionals = this._puntuals.length;
+      }
 
       entity.setup(this.context);
       this._updateMatrices(entity);
 
       entity.material.program.enable(this.context);
 
-      this._updateUniforms(entity.material);
+      if (entity instanceof EZ3.Mesh)
+        this._updateMeshUniforms(entity);
+      else
+        this._updateLightUniforms(entity);
+
       entity.render(this.context);
 
       entity.material.program.disable(this.context);
+
     }
 
     for (var k = entity.children.length - 1; k >= 0; --k)

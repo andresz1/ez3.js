@@ -5,25 +5,33 @@
 EZ3.Entity = function() {
   this.parent = null;
   this.children = [];
-  this.scale = vec3.create();
-  this.position = vec3.create();
-  this.rotation = quat.create();
-  this.modelMatrix = mat4.create();
-  this.worldMatrix = mat4.create();
-  this.normalMatrix = mat3.create();
 
-  vec3.set(this.scale, 1, 1, 1);
-  vec3.set(this.position, 0, 0, 0);
-  quat.set(this.rotation, 0, 0, 0, 0);
+  this.scale = {};
+  this.scale.dirty = true;
+  this.scale.value = vec3.create();
+  vec3.set(this.scale.value, 1, 1 ,1);
 
-  mat4.identity(this.modelMatrix);
-  mat4.identity(this.worldMatrix);
-  mat3.identity(this.normalMatrix);
-
-  this.dirty = true;
-  this.scale.dirty = false;
+  this.position = {};
   this.position.dirty = false;
-  this.rotation.dirty = false;
+  this.position.value = vec3.create();
+  vec3.set(this.position.value, 0, 0 ,0);
+
+  this.rotation = {};
+  this.rotation.dirty = true;
+  this.rotation.value = quat.create();
+  quat.set(this.rotation.value, 0, 0 ,0 ,0);
+
+  this.modelMatrix = {};
+  this.modelMatrix.value = mat4.create();
+  mat4.identity(this.modelMatrix.value);
+
+  this.worldMatrix = {};
+  this.worldMatrix.value = mat4.create();
+  mat4.identity(this.worldMatrix.value);
+
+  this.normalMatrix = {};
+  this.normalMatrix.value = mat3.create();
+  mat3.identity(this.normalMatrix.value);
 };
 
 EZ3.Entity.prototype.add = function(child) {
@@ -51,26 +59,34 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
-  this.dirty = this.dirty || parentIsDirty || this.scale.dirty || this.position.dirty || this.rotation.dirty;
+  var dirty = this.scale.dirty || this.position.dirty || this.rotation.dirty || parentIsDirty;
 
-  if (this.dirty) {
+  if (dirty) {
 
-    mat4.fromRotationTranslation(this.modelMatrix, this.rotation, this.position);
-    mat4.scale(this.modelMatrix, this.modelMatrix, this.scale);
+    if(this.scale.dirty || this.position.dirty || this.rotation.dirty) {
+
+      if (this.scale.dirty)
+        this.scale.dirty = false;
+
+      if (this.rotation.dirty)
+        this.rotation.dirty = false;
+
+      if (this.position.dirty)
+        if (!(this instanceof EZ3.Spot || this instanceof EZ3.Puntual))
+          this.position.dirty = false;
+
+      mat4.fromRotationTranslation(this.modelMatrix.value, this.rotation.value, this.position.value);
+      mat4.scale(this.modelMatrix.value, this.modelMatrix.value, this.scale.value);
+    }
 
     if (!parentWorldMatrix)
-      mat4.copy(this.worldMatrix, this.modelMatrix);
+      mat4.copy(this.worldMatrix.value, this.modelMatrix.value);
     else
-      mat4.multiply(this.worldMatrix, parentWorldMatrix, this.modelMatrix);
+      mat4.multiply(this.worldMatrix.value, parentWorldMatrix.value, this.modelMatrix.value);
 
-    mat3.normalFromMat4(this.normalMatrix, this.worldMatrix);
+    mat3.normalFromMat4(this.normalMatrix.value, this.worldMatrix.value);
 
     for (var k = this.children.length - 1; k >= 0; --k)
-      this.children[k].update(this.dirty, this.worldMatrix);
-
-    this.dirty = false;
-    this.scale.dirty = false;
-    this.position.dirty = false;
-    this.rotation.dirty = false;
+      this.children[k].update(dirty, this.worldMatrix);
   }
 };
