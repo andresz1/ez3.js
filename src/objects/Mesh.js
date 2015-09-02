@@ -14,7 +14,6 @@ EZ3.Mesh = function(geometry, material) {
   this._tangent = null;
   this._bitangent = null;
 
-  this._dynamic = false;
   this._material = (material instanceof EZ3.Material) ? material : null;
   this._geometry = (geometry instanceof EZ3.Geometry) ? geometry : null;
 };
@@ -25,67 +24,69 @@ EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 EZ3.Mesh.prototype._setupBuffer = function(gl) {
   if (this._geometry) {
 
-    if (this._geometry.uvs.dirty) {
-      this._geometry.uvs.dirty = false;
+    var geometry = this._geometry;
+
+    if (geometry.uvs.dirty) {
+      geometry.uvs.dirty = false;
 
       if (!this._uv)
         this._uv = new EZ3.Buffer();
 
-      this._uv.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.uvs, gl.STATIC_DRAW);
+      this._uv.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.uvs, geometry.uvs.dynamic);
     }
 
-    if (this._geometry.colors.dirty) {
-      this._geometry.colors.dirty = false;
+    if (geometry.colors.dirty) {
+      geometry.colors.dirty = false;
 
       if (!this._color)
         this._color = new EZ3.Buffer();
 
-      this._color.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.colors, gl.STATIC_DRAW);
+      this._color.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.colors, geometry.colors.dynamic);
     }
 
-    if (this._geometry.normals.dirty) {
-      this._geometry.normals.dirty = false;
+    if (geometry.normals.dirty) {
+      geometry.normals.dirty = false;
 
-      if(!this._normal)
+      if (!this._normal)
         this._normal = new EZ3.Buffer();
 
-      this._normal.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.normals, gl.STATIC_DRAW);
+      this._normal.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.normals, geometry.normals.dynamic);
     }
 
-    if (this._geometry.vertices.dirty) {
-      this._geometry.vertices.dirty = false;
+    if (geometry.vertices.dirty) {
+      geometry.vertices.dirty = false;
 
-      if(!this._vertex)
+      if (!this._vertex)
         this._vertex = new EZ3.Buffer();
 
-      this._vertex.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.vertices, gl.STATIC_DRAW);
+      this._vertex.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.vertices, geometry.vertices.dynamic);
     }
 
-    if (this._geometry.tangents.dirty) {
-      this._geometry.tangents.dirty = false;
+    if (geometry.tangents.dirty) {
+      geometry.tangents.dirty = false;
 
-      if(!this._tangent)
+      if (!this._tangent)
         this._tangent = new EZ3.Buffer();
 
-      this._tangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.tangents, gl.STATIC_DRAW);
+      this._tangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.tangents, geometry.tangents.dynamic);
     }
 
-    if (this._geometry.bitangents.dirty) {
-      this._geometry.bitangents.dirty = false;
+    if (geometry.bitangents.dirty) {
+      geometry.bitangents.dirty = false;
 
-      if(!this._bitangent)
+      if (!this._bitangent)
         this._bitangent = new EZ3.Buffer();
 
-      this._bitangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.bitangents, gl.STATIC_DRAW);
+      this._bitangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.bitangents, geometry.bitangents.dynamic);
     }
 
-    if (this._geometry.indices.dirty) {
-      this._geometry.indices.dirty = false;
+    if (geometry.indices.dirty) {
+      geometry.indices.dirty = false;
 
-      if(!this._index)
-        this._index= new EZ3.Buffer();
+      if (!this._index)
+        this._index = new EZ3.Buffer();
 
-      this._index.update(gl, gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, this._geometry.indices, gl.STATIC_DRAW);
+      this._index.update(gl, gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, geometry.indices, geometry.indices.dynamic);
     }
   }
 };
@@ -100,33 +101,34 @@ EZ3.Mesh.prototype._setupProgram = function(gl) {
 };
 
 EZ3.Mesh.prototype.render = function(gl) {
-  var program = this._material.program;
+  if (this._geometry) {
+    var geometry = this._geometry;
+    var program = this._material.program;
 
-  if (this._index)
-    this._index.setup(gl, gl.ELEMENT_ARRAY_BUFFER);
+    if (this._uv)
+      this._uv.setup(gl, gl.ARRAY_BUFFER, program.uvLayout, EZ3.Buffer.UV_LENGTH, gl.FLOAT, geometry.uvs.normalized, geometry.uvs.stride, geometry.uvs.offset);
 
-  if (this._uv)
-    this._uv.setup(gl, gl.ARRAY_BUFFER, program.uvLayout, EZ3.Buffer.UV_LENGTH, gl.FLOAT, false, 0, 0);
+    if (this._color)
+      this._color.setup(gl, gl.ARRAY_BUFFER, program.colorLayout, EZ3.Buffer.COLOR_LENGTH, gl.FLOAT, geometry.colors.normalized, geometry.colors.stride, geometry.colors.offset);
 
-  if (this._color)
-    this._color.setup(gl, gl.ARRAY_BUFFER, program.colorLayout, EZ3.Buffer.COLOR_LENGTH, gl.FLOAT, false, 0, 0);
+    if (this._normal)
+      this._normal.setup(gl, gl.ARRAY_BUFFER, program.normalLayout, EZ3.Buffer.NORMAL_LENGTH, gl.FLOAT, geometry.normals.normalized, geometry.normals.stride, geometry.normals.offset);
 
-  if (this._normal)
-    this._normal.setup(gl, gl.ARRAY_BUFFER, program.normalLayout, EZ3.Buffer.NORMAL_LENGTH, gl.FLOAT, false, 0, 0);
+    if (this._vertex)
+      this._vertex.setup(gl, gl.ARRAY_BUFFER, program.vertexLayout, EZ3.Buffer.VERTEX_LENGTH, gl.FLOAT, geometry.vertices.normalized, geometry.vertices.stride, geometry.vertices.offset);
 
-  if (this._vertex)
-    this._vertex.setup(gl, gl.ARRAY_BUFFER, program.vertexLayout, EZ3.Buffer.VERTEX_LENGTH, gl.FLOAT, false, 0, 0);
+    if (this._tangent)
+      this._tangent.setup(gl, gl.ARRAY_BUFFER, program.tangentLayout, EZ3.Buffer.TANGENT_LENGTH, gl.FLOAT, geometry.tangents.normalized, geometry.tangents.stride, geometry.tangents.offset);
 
-  if (this._tangent)
-    this._tangent.setup(gl, gl.ARRAY_BUFFER, program.tangentLayout, EZ3.Buffer.TANGENT_LENGTH, gl.FLOAT, false, 0, 0);
+    if (this._bitangent)
+      this._bitangent.setup(gl, gl.ARRAY_BUFFER, program.bitangentLayout, EZ3.Buffer.BITANGENT_LENGTH, gl.FLOAT, geometry.bitangents.normalized, geometry.bitangents.stride, geometry.bitangents.offset);
 
-  if (this._bitangent)
-    this._bitangent.setup(gl, gl.ARRAY_BUFFER, program.bitangentLayout, EZ3.Buffer.BITANGENT_LENGTH, gl.FLOAT, false, 0, 0);
-
-  if (this._index && this._index.data.length)
-    gl.drawElements(gl.TRIANGLES, this._index.data.length, gl.UNSIGNED_SHORT, 0);
-  else if (this._vertex && this._vertex.data.length)
-    gl.drawArrays(gl.TRIANGLES, 0, this._vertex.data.length / 3);
+    if (this._index && this._index.data.length) {
+      this._index.setup(gl, gl.ELEMENT_ARRAY_BUFFER);
+      gl.drawElements(gl.TRIANGLES, this._index.data.length, gl.UNSIGNED_SHORT, 0);
+    } else if (this._vertex && this._vertex.data.length)
+      gl.drawArrays(gl.TRIANGLES, 0, this._vertex.data.length / 3);
+  }
 };
 
 Object.defineProperty(EZ3.Mesh.prototype, "material", {
