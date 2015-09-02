@@ -50,8 +50,8 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
 
     indicesCount[vertexIndex]++;
 
-    vertexIndex = 3 * vertexIndex;
-    normalIndex = 3 * normalIndex;
+    vertexIndex *= 3;
+    normalIndex *= 3;
 
     for (i = 0; i < 3; i++)
       geometry.normals[vertexIndex + i] += normals[normalIndex + i];
@@ -60,8 +60,8 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
   function processUvIndex(vertexIndex, uvIndex) {
     var i;
 
-    vertexIndex = 3 * vertexIndex;
-    uvIndex = 2 * uvIndex;
+    vertexIndex *= 2;
+    uvIndex *= 2;
 
     for(i = 0; i < 2; i++)
       geometry.uvs[vertexIndex + i] = uvs[uvIndex + i];
@@ -139,12 +139,14 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
   };
   lines = text.split('\n');
 
-  geometry = new EZ3.Geometry();
-  normals = [];
-  uvs = [];
-  indicesCount = [];
+  if (!/^o /gm.test(text)) {
+    geometry = new EZ3.Geometry();
+    normals = [];
+    uvs = [];
+    indicesCount = [];
 
-  //if (!/^o /gm.test(text)) {}
+    container.add(new EZ3.Mesh(geometry, new EZ3.Material({})));
+  }
 
   for (i = 0; i < lines.length; i++) {
     line = lines[i].trim().replace(/ +(?= )/g, '');
@@ -166,7 +168,12 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
     } else if ((result = patterns.face4.exec(line))) {
       processFace4(triangulate(result[1]));
     } else if (patterns.obj.test(line)) {
+      geometry = new EZ3.Geometry();
+      normals = [];
+      uvs = [];
+      indicesCount = [];
 
+      container.add(new EZ3.Mesh(geometry, new EZ3.Material({})));
     } else if (patterns.group.test(line)) {
 
     } else if (patterns.mtllib.test(line)) {
@@ -178,14 +185,12 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
     }
   }
 
+  console.log(geometry.uvs);
+
   if (normals.length)
     avarageNormals();
   else
     geometry.normals = [];
-    
-  console.log(geometry.vertices);
-  console.log(geometry.indices);
-  console.log(geometry.normals);
 };
 
 EZ3.ObjLoader.prototype.start = function(url, onLoad, onError) {
