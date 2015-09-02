@@ -24,8 +24,7 @@ Object.defineProperty(EZ3.Buffer.prototype, "data", {
 
 EZ3.Buffer.prototype.setup = function(gl, bufferType, layout, unitLength, dataType, normalized, stride, pointer) {
   gl.bindBuffer(bufferType, this._id);
-
-  if(bufferType === gl.ARRAY_BUFFER) {
+  if(layout !== undefined) {
     gl.enableVertexAttribArray(layout);
     gl.vertexAttribPointer(layout, unitLength, dataType, normalized, stride, pointer);
   }
