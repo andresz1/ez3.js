@@ -3,9 +3,9 @@ module.exports = {
     'depconcat:deps',
     'depconcat:src',
     'uglify:deps',
-    'depconcat:std',
     'uglify:src',
     'depconcat:min',
+    'depconcat:std',
     'clean:deps'
   ],
   'debug': [
@@ -19,9 +19,9 @@ module.exports = {
     'depconcat:deps',
     'depconcat:src',
     'uglify:deps',
-    'depconcat:std',
     'uglify:src',
     'depconcat:min',
+    'depconcat:std',
     'clean:deps'
   ]
 };
