@@ -4,18 +4,12 @@
 
 EZ3.Material = function(config) {
   this.dirty = true;
-  this.vertex = null;
   this.program = null;
-  this.fragment = null;
   this.fill = config.fill || EZ3.Material.SOLID;
 
   this.spots = 0;
   this.puntuals = 0;
   this.directionals = 0;
-
-  this.eyePosition = {};
-  this.eyePosition.dirty = true;
-  this.eyePosition.value = null;
 
   this.shininess = {};
   this.shininess.dirty = true;

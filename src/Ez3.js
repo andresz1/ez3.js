@@ -8,6 +8,8 @@ var EZ3 = {
   Mat4: mat4
 };
 
+EZ3.INF = 0xFFFFFF;
+
 EZ3.PI = Math.PI;
 EZ3.HALF_PI = 0.5 * EZ3.PI;
 EZ3.DOUBLE_PI = 2.0 * EZ3.PI;

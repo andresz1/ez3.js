@@ -10,24 +10,16 @@ EZ3.Renderer = function(canvas, options) {
   this._entities = [];
   this._programs = [];
 
-  this._eyePosition = {};
+  this._eyePosition = vec3.create();
   this._eyePosition.dirty = true;
-  this._eyePosition.value = vec3.create();
   vec3.set(this._eyePosition, 45, 45, 45);
 
-  this._mvMatrix = {};
-  this._mvpMatrix = {};
-  this._viewMatrix = {};
-  this._modelMatrix = {};
-  this._normalMatrix = {};
-  this._projectionMatrix = {};
-
-  this._mvMatrix.value = mat4.create();
-  this._mvpMatrix.value = mat4.create();
-  this._viewMatrix.value = mat4.create();
-  this._modelMatrix.value = mat4.create();
-  this._normalMatrix.value = mat3.create();
-  this._projectionMatrix.value = mat4.create();
+  this._mvMatrix = mat4.create();
+  this._mvpMatrix = mat4.create();
+  this._viewMatrix = mat4.create();
+  this._modelMatrix = mat4.create();
+  this._normalMatrix = mat3.create();
+  this._projectionMatrix = mat4.create();
 
   this._viewMatrix.dirty = true;
   this._projectionMatrix.dirty = true;
@@ -46,7 +38,7 @@ EZ3.Renderer.prototype._processContextRecovered = function() {
 };
 
 EZ3.Renderer.prototype._updateMatrices = function(entity) {
-  // Importante: reguntar por la matriz de vista de la camara,
+  // Importante: Preguntar por la matriz de vista de la camara,
   // seterarle su dirty a falso y setear el dirty de la
   // matriz de vista del renderer en true
   if (this._viewMatrix.dirty) {
@@ -56,23 +48,23 @@ EZ3.Renderer.prototype._updateMatrices = function(entity) {
     var target = vec3.create();
     vec3.set(target, 0, 0, 0);
 
-    mat4.lookAt(this._viewMatrix.value, this._eyePosition, target, up);
+    mat4.lookAt(this._viewMatrix, this._eyePosition, target, up);
   }
 
   // Importante: Preguntar por la matriz de proyeccion de la camara,
   // seterarle su dirty a falso y setear el dirty de la
   // matriz de proyeccion del renderer en true
   if (this._projectionMatrix.dirty) {
-    mat4.perspective(this._projectionMatrix.value, 70, 800 / 600, 1, 1000);
+    mat4.perspective(this._projectionMatrix, 70, 800 / 600, 1, 1000);
   }
 
-  mat4.copy(this._modelMatrix.value, entity.worldMatrix.value);
+  mat4.copy(this._modelMatrix, entity.worldMatrix);
 
-  mat4.copy(this._normalMatrix.value, entity.normalMatrix.value);
+  mat4.copy(this._normalMatrix, entity.normalMatrix);
 
-  mat4.multiply(this._mvMatrix.value, this._viewMatrix.value, this._modelMatrix.value);
+  mat4.multiply(this._mvMatrix, this._viewMatrix, this._modelMatrix);
 
-  mat4.multiply(this._mvpMatrix.value, this._projectionMatrix.value, this._mvMatrix.value);
+  mat4.multiply(this._mvpMatrix, this._projectionMatrix, this._mvMatrix);
 };
 
 EZ3.Renderer.prototype._updateUniformMaterial = function(material) {
@@ -109,22 +101,22 @@ EZ3.Renderer.prototype._updateUniformMatrices = function(material) {
   var gl = this.context;
   var program = material.program;
 
-  program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.value);
+  program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix);
 
-  program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.value);
+  program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix);
 
-  program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix.value);
+  program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix);
 
-  program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix.value);
+  program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix);
 
   if (this._viewMatrix.dirty) {
     this._viewMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix.value);
+    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix);
   }
 
   if (this._projectionMatrix.dirty) {
     this._projectionMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix.value);
+    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix);
   }
 };
 
@@ -173,7 +165,7 @@ EZ3.Renderer.prototype._updateUniformSpots = function(material) {
   var gl = this.context;
   var program = material.program;
 
-  for (k = 0; k < this._spots.length; ++k) {
+  for (var k = 0; k < this._spots.length; ++k) {
     if (this._spots[k].cutoff.dirty) {
       this._spots[k].cutoff.dirty = false;
       program.loadUniformf(gl, 'uSpots[' + k + '].cutoff', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].cutoff.value);
@@ -260,27 +252,22 @@ EZ3.Renderer.prototype._updateUniformDirectionals = function(material) {
   }
 };
 
-EZ3.Renderer.prototype._updateMeshUniforms = function(entity) {
+EZ3.Renderer.prototype._updateUniforms = function(entity) {
   var gl = this.context;
   var material = entity.material;
-  var program = material.program;
+  var program = entity.material.program;
 
-  this._updateUniformSpots(entity.material);
-  this._updateUniformPuntuals(entity.material);
-  this._updateUniformDirectionals(entity.material);
+  this._updateUniformSpots(material);
+  this._updateUniformMaterial(material);
+  this._updateUniformMatrices(material);
+  this._updateUniformTextures(material);
+  this._updateUniformPuntuals(material);
+  this._updateUniformDirectionals(material);
 
-  this._updateUniformMaterial(entity.material);
-  this._updateUniformMatrices(entity.material);
-  this._updateUniformTextures(entity.material);
-
-  /*if(this._eyePosition.dirty) {
+  if(this._eyePosition.dirty) {
     this._eyePosition.dirty = false;
     program.loadUniformf(gl, 'uEyePosition', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._eyePosition.value);
-  }*/
-};
-
-EZ3.Renderer.prototype._updateLightUniforms = function(entity) {
-  this._updateUniformMatrices(entity.material);
+  }
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -294,7 +281,9 @@ EZ3.Renderer.prototype.initContext = function() {
   for (var i = 0; i < names.length; i++) {
     try {
       this.context = this.canvas.getContext(names[i], this.options);
-    } catch (e) {}
+    } catch (e) {
+
+    }
 
     if (this.context)
       break;
@@ -345,24 +334,18 @@ EZ3.Renderer.prototype.render = function(screen) {
 
     entity = this._entities.pop();
 
-    if (entity instanceof EZ3.Mesh || entity instanceof EZ3.Light) {
+    if (entity instanceof EZ3.Mesh) {
 
-      if (entity instanceof EZ3.Mesh) {
-        entity.material.spots = this._spots.length;
-        entity.material.puntuals = this._puntuals.length;
-        entity.material.directionals = this._puntuals.length;
-      }
+      entity.material.spots = 0;
+      entity.material.puntuals = 0;
+      entity.material.directionals = 0;
 
       entity.setup(this.context);
       this._updateMatrices(entity);
 
       entity.material.program.enable(this.context);
 
-      if (entity instanceof EZ3.Mesh)
-        this._updateMeshUniforms(entity);
-      else
-        this._updateLightUniforms(entity);
-
+      this._updateUniforms(entity);
       entity.render(this.context);
 
       entity.material.program.disable(this.context);
