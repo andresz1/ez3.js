@@ -99,33 +99,6 @@ EZ3.Mesh.prototype._setupProgram = function(gl) {
   }
 };
 
-Object.defineProperty(EZ3.Mesh.prototype, "material", {
-  get: function() {
-    return this._material;
-  },
-  set: function(material) {
-    if (material instanceof EZ3.Material) {
-      this._material = material;
-      this._material.dirty = true;
-    }
-  }
-});
-
-Object.defineProperty(EZ3.Mesh.prototype, "geometry", {
-  get: function() {
-    return this._geometry;
-  },
-  set: function(geometry) {
-    if (geometry instanceof EZ3.Geometry)
-      this._geometry = geometry;
-  }
-});
-
-EZ3.Mesh.prototype.setup = function(gl) {
-  this._setupProgram(gl);
-  this._setupBuffer(gl);
-};
-
 EZ3.Mesh.prototype.render = function(gl) {
   var program = this._material.program;
 
@@ -154,4 +127,31 @@ EZ3.Mesh.prototype.render = function(gl) {
     gl.drawElements(gl.TRIANGLES, this._index.data.length, gl.UNSIGNED_SHORT, 0);
   else if (this._vertex && this._vertex.data.length)
     gl.drawArrays(gl.TRIANGLES, 0, this._vertex.data.length / 3);
+};
+
+Object.defineProperty(EZ3.Mesh.prototype, "material", {
+  get: function() {
+    return this._material;
+  },
+  set: function(material) {
+    if (material instanceof EZ3.Material) {
+      this._material = material;
+      this._material.dirty = true;
+    }
+  }
+});
+
+Object.defineProperty(EZ3.Mesh.prototype, "geometry", {
+  get: function() {
+    return this._geometry;
+  },
+  set: function(geometry) {
+    if (geometry instanceof EZ3.Geometry)
+      this._geometry = geometry;
+  }
+});
+
+EZ3.Mesh.prototype.setup = function(gl) {
+  this._setupProgram(gl);
+  this._setupBuffer(gl);
 };
