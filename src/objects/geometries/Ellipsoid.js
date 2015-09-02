@@ -73,6 +73,11 @@ EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
   }
 
   _create();
+
+  this._uvs.dirty = true;
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.Ellipsoid.prototype = Object.create(EZ3.Geometry.prototype);

@@ -4,25 +4,25 @@
 
 EZ3.Geometry = function() {
   this._uvs = [];
-  this._uvs.dirty = true;
+  this._uvs.dirty = false;
 
   this._colors = [];
-  this._colors.dirty = true;
+  this._colors.dirty = false;
 
   this._indices = [];
-  this._indices.dirty = true;
+  this._indices.dirty = false;
 
   this._normals = [];
-  this._normals.dirty = true;
+  this._normals.dirty = false;
 
   this._vertices = [];
-  this._vertices.dirty = true;
+  this._vertices.dirty = false;
 
   this._tangents = [];
-  this._tangents.dirty = true;
+  this._tangents.dirty = false;
 
   this._bitangents = [];
-  this._bitangents.dirty = true;
+  this._bitangents.dirty = false;
 };
 
 Object.defineProperty(EZ3.Geometry.prototype, "uvs", {

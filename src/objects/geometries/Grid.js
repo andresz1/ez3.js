@@ -46,6 +46,11 @@ EZ3.Grid = function(width, height) {
   }
 
   _create();
+
+  this._uvs.dirty = true;
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
