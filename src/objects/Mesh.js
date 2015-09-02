@@ -25,37 +25,37 @@ EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 EZ3.Mesh.prototype._setupBuffer = function(gl) {
   if (this._geometry) {
 
-    if (this._geometry.uvs.dirty) {
+    if (this._geometry.uvs.dirty && this._geometry.uvs.length) {
       this._geometry.uvs.dirty = false;
       this._uv.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.uvs, gl.STATIC_DRAW);
     }
 
-    if(this._geometry.colors.dirty) {
+    if(this._geometry.colors.dirty && this._geometry.colors.length) {
       this._geometry.colors.dirty = false;
       this._color.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.colors, gl.STATIC_DRAW);
     }
 
-    if(this._geometry.normals.dity) {
+    if(this._geometry.normals.dirty && this._geometry.normals.length) {
       this._geometry.normals.dirty = false;
       this._normal.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.normals, gl.STATIC_DRAW);
     }
 
-    if(this._geometry.vertices.dirty) {
+    if(this._geometry.vertices.dirty && this._geometry.vertices.length) {
       this._geometry.vertices.dirty = false;
       this._vertex.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.vertices, gl.STATIC_DRAW);
     }
 
-    if(this._geometry.tangents.dirty) {
+    if(this._geometry.tangents.dirty && this._geometry.tangents.length) {
       this._geometry.tangents.dirty = false;
       this._tangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.tangents, gl.STATIC_DRAW);
     }
 
-    if(this._geometry.bitangents.dirty) {
+    if(this._geometry.bitangents.dirty && this._geometry.bitangents.length) {
       this._geometry.bitangents.dirty = false;
       this._bitangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, this._geometry.bitangents, gl.STATIC_DRAW);
     }
 
-    if(this._geometry.indices.dirty) {
+    if(this._geometry.indices.dirty && this.geometry.indices.length) {
       this._geometry.indices.dirty = false;
       this._index.update(gl, gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, this._geometry.indices, gl.STATIC_DRAW);
     }
@@ -104,26 +104,26 @@ EZ3.Mesh.prototype.render = function(gl) {
   if(this._index.id)
     this._index.setup(gl, gl.ELEMENT_ARRAY_BUFFER);
 
-  if (this._uv.id && (typeof program.uvLayout !== undefined))
+  if (this._uv.id)
     this._uv.setup(gl, gl.ARRAY_BUFFER, program.uvLayout, EZ3.Buffer.UV_LENGTH, gl.FLOAT, false, 0, 0);
 
-  if (this._color.id && (typeof program.colorLayout !== undefined))
+  if (this._color.id)
     this._color.setup(gl, gl.ARRAY_BUFFER, program.colorLayout, EZ3.Buffer.COLOR_LENGTH, gl.FLOAT, false, 0, 0);
 
-  if(this._normal.id && (typeof program.normalLayout !== undefined))
+  if(this._normal.id)
     this._normal.setup(gl, gl.ARRAY_BUFFER, program.normalLayout, EZ3.Buffer.NORMAL_LENGTH, gl.FLOAT, false, 0, 0);
 
-  if(this._vertex.id && (typeof program.vertexLayout !== undefined))
+  if(this._vertex.id)
     this._vertex.setup(gl, gl.ARRAY_BUFFER, program.vertexLayout, EZ3.Buffer.VERTEX_LENGTH, gl.FLOAT, false, 0, 0);
 
-  if(this._tangent.id && (typeof program.tangentLayout !== undefined))
+  if(this._tangent.id)
     this._tangent.setup(gl, gl.ARRAY_BUFFER, program.tangentLayout, EZ3.Buffer.TANGENT_LENGTH, gl.FLOAT, false, 0, 0);
 
-  if(this._bitangent.id && (typeof program.bitangentLayout !== undefined))
+  if(this._bitangent.id)
     this._bitangent.setup(gl, gl.ARRAY_BUFFER, program.bitangentLayout, EZ3.Buffer.BITANGENT_LENGTH, gl.FLOAT, false, 0, 0);
 
-  if(this._index.id)
+  if(this._index.id && this._index.data.length)
     gl.drawElements(gl.TRIANGLES, this._index.data.length, gl.UNSIGNED_SHORT, 0);
-  else if(this._vertex.id)
+  else if(this._vertex.id && this._vertex.data.length)
     gl.drawArrays(gl.TRIANGLES, 0, this._vertex.data.length / 3);
 };
