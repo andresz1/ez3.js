@@ -153,9 +153,41 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
   }
 };
 
-EZ3.GLSLProgram.prototype.getLayout = function(name) {
-  return this._getAttribute(name);
-};
+Object.defineProperty(EZ3.GLSLProgram.prototype, "uvLayout", {
+  get: function() {
+    return this._attributeList.uv;
+  }
+});
+
+Object.defineProperty(EZ3.GLSLProgram.prototype, "colorLayout", {
+  get: function() {
+    return this._attributeList.color;
+  }
+});
+
+Object.defineProperty(EZ3.GLSLProgram.prototype, "normalLayout", {
+  get: function() {
+    return this._attributeList.normal;
+  }
+});
+
+Object.defineProperty(EZ3.GLSLProgram.prototype, "vertexLayout", {
+  get: function() {
+    return this._attributeList.vertex;
+  }
+});
+
+Object.defineProperty(EZ3.GLSLProgram.prototype, "tangentLayout", {
+  get: function() {
+    return this._attributeList.tangent;
+  }
+});
+
+Object.defineProperty(EZ3.GLSLProgram.prototype, "bitangentLayout", {
+  get: function() {
+    return this._attributeList.bitangent;
+  }
+});
 
 EZ3.GLSLProgram.UNIFORM_SIZE_1D = 1;
 EZ3.GLSLProgram.UNIFORM_SIZE_2D = 2;

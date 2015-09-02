@@ -13,6 +13,7 @@ EZ3.GLSLProgramBuilder.prototype.constructor = EZ3.ShaderBuilder;
 EZ3.GLSLProgramBuilder.prototype._buildVertex = function(prefix) {
   var suffix = [
     'attribute vec2 uv;',
+    'attribute vec3 color;',
     'attribute vec3 normal;',
     'attribute vec3 vertex;',
     'attribute vec4 tangent;',
@@ -63,8 +64,6 @@ EZ3.GLSLProgramBuilder.prototype._buildFragment = function(prefix) {
   ].join('\n\n');
 
   this._fragment = prefix + '\n\n' + suffix;
-
-  console.log(this._fragment);
 };
 
 EZ3.GLSLProgramBuilder.prototype._buildConfig = function(material) {
