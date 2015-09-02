@@ -3,23 +3,97 @@
  */
 
 EZ3.Geometry = function() {
-  this.uvs = [];
-  this.indices = [];
-  this.normals = [];
-  this.vertices = [];
-  this.tangents = [];
-  this.bitangents = [];
-  this.maxPoint = vec3.create();
-  this.minPoint = vec3.create();
-  this.midPoint = vec3.create();
+  this._uvs = [];
+  this._uvs.dirty = true;
 
-  this.uvsNeedUpdate = true;
-  this.normalsNeedUpdate = true;
-  this.indicesNeedUpdate = true;
-  this.verticesNeedUpdate = true;
-  this.tangentsNeedUpdate = true;
-  this.bitangentsNeedUpdate = true;
+  this._colors = [];
+  this._colors.dirty = true;
+
+  this._indices = [];
+  this._indices.dirty = true;
+
+  this._normals = [];
+  this._normals.dirty = true;
+
+  this._vertices = [];
+  this._vertices.dirty = true;
+
+  this._tangents = [];
+  this._tangents.dirty = true;
+
+  this._bitangents = [];
+  this._bitangents.dirty = true;
 };
+
+Object.defineProperty(EZ3.Geometry.prototype, "uvs", {
+  get: function() {
+    return this._uvs;
+  },
+  set: function(uvs) {
+    this._uvs = uvs;
+    this._uvs.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "colors", {
+  get: function() {
+    return this._colors;
+  },
+  set: function(colors) {
+    this._colors = colors;
+    this._colors.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "indices", {
+  get: function() {
+    return this._indices;
+  },
+  set: function(indices) {
+    this._indices = indices;
+    this._indices.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "normals", {
+  get: function() {
+    return this._normals;
+  },
+  set: function(normals) {
+    this._normals = normals;
+    this._normals.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "vertices", {
+  get: function() {
+    return this._vertices;
+  },
+  set: function(vertices) {
+    this._vertices = colors;
+    this._vertices.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "tangents", {
+  get: function() {
+    return this._tangents;
+  },
+  set: function(tangents) {
+    this._tangents = tangents;
+    this._tangents.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "bitangents", {
+  get: function() {
+    return this._bitangents;
+  },
+  set: function(bitangents) {
+    this._bitangents = bitangents;
+    this._bitangents.dirty = true;
+  }
+});
 
 EZ3.Geometry.prototype.initArray = function(size, value) {
   return Array.apply(null, new Array(size)).map(function() {
@@ -89,24 +163,6 @@ EZ3.Geometry.prototype.calculateNormals = function() {
 
   tempNormals.splice(0, tempNormals.length);
   tempAppearances.splice(0, tempAppearances.length);
-};
-
-EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
-  this._maxPoint[0] = Math.max(this._maxPoint[0], x);
-  this._maxPoint[1] = Math.max(this._maxPoint[1], y);
-  this._maxPoint[2] = Math.max(this._maxPoint[2], z);
-};
-
-EZ3.Geometry.prototype.updateMinPoint = function(x, y, z) {
-  this._minPoint[0] = Math.min(this._minPoint[0], x);
-  this._minPoint[1] = Math.min(this._minPoint[1], y);
-  this._minPoint[2] = Math.min(this._minPoint[2], z);
-};
-
-EZ3.Geometry.prototype.calculateMidPoint = function() {
-  this._midPoint[0] = (this._maxPoint[0] + this._minPoint[0]) * 0.5;
-  this._midPoint[0] = (this._maxPoint[1] + this._minPoint[1]) * 0.5;
-  this._midPoint[0] = (this._maxPoint[2] + this._minPoint[2]) * 0.5;
 };
 
 EZ3.Geometry.prototype.calculateTangents = function() {
@@ -197,8 +253,4 @@ EZ3.Geometry.prototype.calculateTangents = function() {
     vec3.set(bitangent, tempB[x], tempB[y], tempB[z]);
     vec3.set(normal, this.normals[x], this.normals[y], this.normals[z]);
   }
-};
-
-EZ3.Geometry.prototype.calculateBoundingBox = function() {
-
 };
