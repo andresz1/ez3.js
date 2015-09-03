@@ -106,22 +106,22 @@ EZ3.Mesh.prototype.render = function(gl) {
     var program = this._material.program;
 
     if (this._uv)
-      this._uv.setup(gl, gl.ARRAY_BUFFER, program.uvLayout, EZ3.Buffer.UV_LENGTH, gl.FLOAT, geometry.uvs.normalized, geometry.uvs.stride, geometry.uvs.offset);
+      this._uv.setup(gl, gl.ARRAY_BUFFER, program.attribute.uv, EZ3.Buffer.UV_LENGTH, gl.FLOAT, geometry.uvs.normalized, geometry.uvs.stride, geometry.uvs.offset);
 
     if (this._color)
-      this._color.setup(gl, gl.ARRAY_BUFFER, program.colorLayout, EZ3.Buffer.COLOR_LENGTH, gl.FLOAT, geometry.colors.normalized, geometry.colors.stride, geometry.colors.offset);
+      this._color.setup(gl, gl.ARRAY_BUFFER, program.attribute.color, EZ3.Buffer.COLOR_LENGTH, gl.FLOAT, geometry.colors.normalized, geometry.colors.stride, geometry.colors.offset);
 
     if (this._normal)
-      this._normal.setup(gl, gl.ARRAY_BUFFER, program.normalLayout, EZ3.Buffer.NORMAL_LENGTH, gl.FLOAT, geometry.normals.normalized, geometry.normals.stride, geometry.normals.offset);
+      this._normal.setup(gl, gl.ARRAY_BUFFER, program.attribute.normal, EZ3.Buffer.NORMAL_LENGTH, gl.FLOAT, geometry.normals.normalized, geometry.normals.stride, geometry.normals.offset);
 
     if (this._vertex)
-      this._vertex.setup(gl, gl.ARRAY_BUFFER, program.vertexLayout, EZ3.Buffer.VERTEX_LENGTH, gl.FLOAT, geometry.vertices.normalized, geometry.vertices.stride, geometry.vertices.offset);
+      this._vertex.setup(gl, gl.ARRAY_BUFFER, program.attribute.vertex, EZ3.Buffer.VERTEX_LENGTH, gl.FLOAT, geometry.vertices.normalized, geometry.vertices.stride, geometry.vertices.offset);
 
     if (this._tangent)
-      this._tangent.setup(gl, gl.ARRAY_BUFFER, program.tangentLayout, EZ3.Buffer.TANGENT_LENGTH, gl.FLOAT, geometry.tangents.normalized, geometry.tangents.stride, geometry.tangents.offset);
+      this._tangent.setup(gl, gl.ARRAY_BUFFER, program.attribute.tangent, EZ3.Buffer.TANGENT_LENGTH, gl.FLOAT, geometry.tangents.normalized, geometry.tangents.stride, geometry.tangents.offset);
 
     if (this._bitangent)
-      this._bitangent.setup(gl, gl.ARRAY_BUFFER, program.bitangentLayout, EZ3.Buffer.BITANGENT_LENGTH, gl.FLOAT, geometry.bitangents.normalized, geometry.bitangents.stride, geometry.bitangents.offset);
+      this._bitangent.setup(gl, gl.ARRAY_BUFFER, program.attribute.bitangent, EZ3.Buffer.BITANGENT_LENGTH, gl.FLOAT, geometry.bitangents.normalized, geometry.bitangents.stride, geometry.bitangents.offset);
 
     if (this._index && this._index.data.length) {
       this._index.setup(gl, gl.ELEMENT_ARRAY_BUFFER);
