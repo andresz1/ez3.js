@@ -26,15 +26,9 @@ EZ3.Vector3.prototype.set = function(x, y, z) {
 };
 
 EZ3.Vector3.prototype.add = function(v1, v2) {
-  if (v2 !== undefined) {
-    this.x = v1.x + v2.x;
-    this.y = v1.y + v2.y;
-    this.z = v1.z + v2.z;
-  } else {
-    this.x = this.x + v1.x;
-    this.x = this.x + v1.x;
-    this.x = this.x + v1.x;
-  }
+  this.x = v1.x + v2.x;
+  this.y = v1.y + v2.y;
+  this.z = v1.z + v2.z;
   return this;
 };
 
@@ -46,15 +40,9 @@ EZ3.Vector3.prototype.addEqual = function(v) {
 };
 
 EZ3.Vector3.prototype.sub = function(v1, v2) {
-  if (v2 !== undefined) {
-    this.x = v1.x - v2.x;
-    this.y = v1.y - v2.y;
-    this.z = v1.z - v2.z;
-  } else {
-    this.x = this.x - v1.x;
-    this.x = this.x - v1.x;
-    this.x = this.x - v1.x;
-  }
+  this.x = v1.x - v2.x;
+  this.y = v1.y - v2.y;
+  this.z = v1.z - v2.z;
   return this;
 };
 
@@ -315,7 +303,7 @@ EZ3.Vector3.prototype.testDiff = function(v) {
 };
 
 EZ3.Vector3.prototype.toString = function() {
-  return '[' + this.x.toFixed(3) + ', ' + this.y.toFixed(3) + ', ' + this.z.toFixed(3) + ']';
+  return 'Vector3[' + this.x.toFixed(3) + ', ' + this.y.toFixed(3) + ', ' + this.z.toFixed(3) + ']';
 };
 
 Object.defineProperty(EZ3.Vector3.prototype, "x", {
