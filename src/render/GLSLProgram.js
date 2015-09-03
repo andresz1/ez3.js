@@ -5,8 +5,8 @@
 EZ3.GLSLProgram = function(gl, vertexCode, fragmentCode) {
   this._shaders = [];
   this._program = null;
-  this._uniformList = {};
-  this._attributeList = {};
+  this._uniform = {};
+  this._attribute = {};
 
   this._create(gl, vertexCode, fragmentCode);
 };
@@ -67,19 +67,19 @@ EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
 };
 
 EZ3.GLSLProgram.prototype._addUniform = function(gl, name) {
-  this._uniformList[name] = gl.getUniformLocation(this._program, name);
+  this.uniform[name] = gl.getUniformLocation(this._program, name);
 };
 
 EZ3.GLSLProgram.prototype._getUniform = function(name) {
-  return this._uniformList[name];
+  return this.uniform[name];
 };
 
 EZ3.GLSLProgram.prototype._addAttribute = function(gl, name) {
-  this._attributeList[name] = gl.getAttribLocation(this._program, name);
+  this.attribute[name] = gl.getAttribLocation(this._program, name);
 };
 
 EZ3.GLSLProgram.prototype._getAttribute = function(name) {
-  return this._attributeList[name];
+  return this.attribute[name];
 };
 
 EZ3.GLSLProgram.prototype._addLineNumbers = function(code) {
@@ -153,39 +153,15 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
   }
 };
 
-Object.defineProperty(EZ3.GLSLProgram.prototype, "uvLayout", {
+Object.defineProperty(EZ3.GLSLProgram.prototype, "uniform", {
   get: function() {
-    return this._attributeList.uv;
+    return this._uniform;
   }
 });
 
-Object.defineProperty(EZ3.GLSLProgram.prototype, "colorLayout", {
+Object.defineProperty(EZ3.GLSLProgram.prototype, "attribute", {
   get: function() {
-    return this._attributeList.color;
-  }
-});
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, "normalLayout", {
-  get: function() {
-    return this._attributeList.normal;
-  }
-});
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, "vertexLayout", {
-  get: function() {
-    return this._attributeList.vertex;
-  }
-});
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, "tangentLayout", {
-  get: function() {
-    return this._attributeList.tangent;
-  }
-});
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, "bitangentLayout", {
-  get: function() {
-    return this._attributeList.bitangent;
+    return this._attribute;
   }
 });
 
