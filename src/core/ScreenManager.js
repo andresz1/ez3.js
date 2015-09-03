@@ -81,10 +81,7 @@ EZ3.ScreenManager.prototype.add = function(screen) {
     screen.renderer = this._renderer;
     screen.input = this._input;
     screen.cache = this._cache;
-    screen.load = new EZ3.LoadManager(this._cache);
-    screen.load.data = new EZ3.DataLoader(screen.load);
-    screen.load.image = new EZ3.ImageLoader(screen.load);
-    screen.load.obj = new EZ3.ObjLoader(screen.load);
+    screen.load = new EZ3.Loader(this._cache);
 
     this._addEventListeners(screen);
 
@@ -92,6 +89,7 @@ EZ3.ScreenManager.prototype.add = function(screen) {
       screen.preload();
       // check empty ?
       screen.load.onComplete.add(screen.create, screen);
+      screen.load.start();
     } else
       screen.create();
 
