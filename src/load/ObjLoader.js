@@ -4,9 +4,10 @@ EZ3.ObjLoader = function(manager, crossOrigin) {
   this.crossOrigin = crossOrigin;
 };
 
-EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
+
+EZ3.ObjLoader.prototype._parse = function(text, container, loader, manager, onLoad, onError) {
   var patterns, lines, line, result;
-  var geometry, normals, uvs, indicesCount;
+  var mtllibs, materials, material, geometry, mesh, indices, normals, uvs;
 
   function triangulate(face) {
     var data, i;
@@ -23,12 +24,8 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
   function processVertex(vertex) {
     var i;
 
-    for (i = 1; i < 4; i++) {
-      geometry.vertices.push(parseFloat(vertex[i]));
-      geometry.normals.push(0);
-    }
-
-    indicesCount.push(0);
+    for (i = 1; i < 4; i++)
+      vertices.push(parseFloat(vertex[i]));
   }
 
   function processNormal(normal) {
@@ -45,82 +42,105 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
       uvs.push(parseFloat(uv[i]));
   }
 
-  function processNormalIndex(vertexIndex, normalIndex) {
-    var i;
-
-    indicesCount[vertexIndex]++;
-
-    vertexIndex *= 3;
-    normalIndex *= 3;
-
-    for (i = 0; i < 3; i++)
-      geometry.normals[vertexIndex + i] += normals[normalIndex + i];
-  }
-
-  function processUvIndex(vertexIndex, uvIndex) {
-    var i;
-
-    vertexIndex *= 2;
-    uvIndex *= 2;
-
-    for(i = 0; i < 2; i++)
-      geometry.uvs[vertexIndex + i] = uvs[uvIndex + i];
-  }
-
   function processFace1(face) {
     var i;
 
     for (i = 0; i < face.length; i++)
-      indices.vertices.push(parseInt(face[i]) - 1);
+      indices.vertex.push(parseInt(face[i]) - 1);
   }
 
   function processFace2(face) {
-    var point, vertexIndex, uvIndex, i;
+    var point, i;
 
     for (i = 0; i < face.length; i++) {
       point = face[i].split('/');
-      vertexIndex = parseInt(point[0]) - 1;
-      uvIndex = parseInt(point[1]) - 1;
 
-      geometry.indices.push(vertexIndex);
-      processUvIndex(vertexIndex, uvIndex);
+      indices.vertex.push(parseInt(point[0]) - 1);
+      indices.uv.push(parseInt(point[1]) - 1);
     }
   }
 
   function processFace3(face) {
-    var point, vertexIndex, normalIndex, uvIndex, i;
+    var point, i;
 
     for (i = 0; i < face.length; i++) {
       point = face[i].split('/');
-      vertexIndex = parseInt(point[0]) - 1;
-      uvIndex = parseInt(point[1]) - 1;
-      normalIndex = parseInt(point[2]) - 1;
 
-      geometry.indices.push(vertexIndex);
-      processUvIndex(vertexIndex, uvIndex);
-      processNormalIndex(vertexIndex, normalIndex);
+      indices.vertex.push(parseInt(point[0]) - 1);
+      indices.uv.push(parseInt(point[1]) - 1);
+      indices.normal.push(parseInt(point[2]) - 1);
     }
   }
 
   function processFace4(face) {
-    var point, vertexIndex, normalIndex, i;
+    var point, i;
 
     for (i = 0; i < face.length; i++) {
       point = face[i].split('//');
-      vertexIndex = parseInt(point[0]) - 1;
-      normalIndex = parseInt(point[1]) - 1;
 
-      geometry.indices.push(vertexIndex);
-      processNormalIndex(vertexIndex, normalIndex);
+      indices.vertex.push(parseInt(point[0]) - 1);
+      indices.normal.push(parseInt(point[1]) - 1);
     }
   }
 
-  function avarageNormals() {
-    var i, j, k;
+  function computeNormals() {
+    var indicesCount, i, j, k;
 
-    for (i = 0, j = 0; i < geometry.normals.length; i += 3, j++)
+    indicesCount = [];
+
+    for (i = 0; i < vertices.length / 3; i++) {
+      indicesCount.push(0);
+
+      for (j = 0; j < 3; j++)
+        geometry.normals.push(0);
+    }
+
+    for (i = 0; i < indices.vertex.length; i++) {
+      indicesCount[indices.vertex[i]]++;
+
+      for (j = 0; j < 3; j++)
+        geometry.normals[3 * indices.vertex[i] + j] += normals[3 * indices.normal[i] + j];
+    }
+
+    for (i = 0, j = 0; i < vertices.length; i += 3, j++)
       for (k = 0; k < 3; k++)
         geometry.normals[i + k] /= indicesCount[j];
+  }
+
+  function computeUvs() {
+    for (i = 0; i < indices.vertex.length; i++)
+      for (j = 0; j < 2; j++)
+        geometry.uvs[2 * indices.vertex[i] + j] = uvs[2 * indices.uv[i] + j];
+  }
+
+  function processMesh() {
+    if (indices.vertex.length && vertices.length) {
+      geometry.indices = indices.vertex;
+      geometry.vertices = vertices;
+
+      if (indices.normal.length && normals.length)
+        computeNormals();
+
+      if (indices.uv.length && uvs.length)
+        computeUvs();
+
+      container.add(mesh);
+
+      material = new EZ3.Material({});
+      geometry = new EZ3.Geometry();
+      mesh = new EZ3.Mesh(geometry, material);
+
+      indices.vertex = [];
+      indices.normal = [];
+      indices.uv = [];
+    }
+  }
+
+  function processMtls() {
+    var i;
+
+    for (i = 0; i < mtllibs.length; i++)
+      loader.start('assets/' + mtllibs[i]);
   }
 
   patterns = {
@@ -139,14 +159,20 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
   };
   lines = text.split('\n');
 
-  if (!/^o /gm.test(text)) {
-    geometry = new EZ3.Geometry();
-    normals = [];
-    uvs = [];
-    indicesCount = [];
+  mtllibs = [];
+  materials = {};
+  material = new EZ3.Material({});
+  geometry = new EZ3.Geometry();
+  mesh = new EZ3.Mesh(geometry, material);
 
-    container.add(new EZ3.Mesh(geometry, new EZ3.Material({})));
-  }
+  indices = {
+    vertex: [],
+    normal: [],
+    uv: []
+  };
+  vertices = [];
+  normals = [];
+  uvs = [];
 
   for (i = 0; i < lines.length; i++) {
     line = lines[i].trim().replace(/ +(?= )/g, '');
@@ -167,34 +193,26 @@ EZ3.ObjLoader.prototype._parse = function(manager, text, container) {
       processFace3(triangulate(result[1]));
     } else if ((result = patterns.face4.exec(line))) {
       processFace4(triangulate(result[1]));
-    } else if (patterns.obj.test(line)) {
-      geometry = new EZ3.Geometry();
-      normals = [];
-      uvs = [];
-      indicesCount = [];
-
-      container.add(new EZ3.Mesh(geometry, new EZ3.Material({})));
-    } else if (patterns.group.test(line)) {
-
+    } else if (patterns.obj.test(line) || patterns.group.test(line)) {
+      processMesh();
+      mesh.name = line.substring(2).trim();
     } else if (patterns.mtllib.test(line)) {
-
+      mtllibs.push(line.substring(7).trim());
     } else if (patterns.usemtl.test(line)) {
-
+      processMesh();
+      material.name = line.substring(7).trim();
+      materials[material.name] = material;
     } else if (patterns.smooth.test(line)) {
 
     }
   }
 
-  console.log(geometry.uvs);
-
-  if (normals.length)
-    avarageNormals();
-  else
-    geometry.normals = [];
+  processMesh();
+  processMtls();
 };
 
 EZ3.ObjLoader.prototype.start = function(url, onLoad, onError) {
-  var that, manager, dataLoader, file, container, cached;
+  var that, manager, loader, container, cached;
 
   cached = this._manager.add(url);
 
@@ -207,13 +225,11 @@ EZ3.ObjLoader.prototype.start = function(url, onLoad, onError) {
 
   that = this;
   manager = new EZ3.LoadManager(this._manager.cache);
-  dataLoader = new EZ3.DataLoader(manager);
+  loader = new EZ3.DataLoader(manager);
   container = new EZ3.Entity();
 
-  file = dataLoader.start(url);
-
-  manager.onComplete.add(function() {
-    that._parse(manager, file.response, container);
+  loader.start(url, function(file) {
+    that._parse(file.response, container, loader, that._manager, onLoad, onError);
     that._manager.processLoad(url, container);
   });
 
