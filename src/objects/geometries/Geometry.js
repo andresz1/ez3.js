@@ -4,25 +4,53 @@
 
 EZ3.Geometry = function() {
   this._uvs = [];
-  this._uvs.dirty = true;
+  this._uvs.offset = 0;
+  this._uvs.stride = 0;
+  this._uvs.dirty = false;
+  this._uvs.dynamic = false;
+  this._uvs.normalized = false;
 
   this._colors = [];
-  this._colors.dirty = true;
+  this._colors.offset = 0;
+  this._colors.stride = 0;
+  this._colors.dirty = false;
+  this._colors.dynamic = false;
+  this._colors.normalized = false;
 
   this._indices = [];
-  this._indices.dirty = true;
+  this._indices.offset = 0;
+  this._indices.stride = 0;
+  this._indices.dirty = false;
+  this._indices.dynamic = false;
+  this._indices.normalized = false;
 
   this._normals = [];
-  this._normals.dirty = true;
+  this._normals.offset = 0;
+  this._normals.stride = 0;
+  this._normals.dirty = false;
+  this._normals.dynamic = false;
+  this._normals.normalized = false;
 
   this._vertices = [];
-  this._vertices.dirty = true;
+  this._vertices.offset = 0;
+  this._vertices.stride = 0;
+  this._vertices.dirty = false;
+  this._vertices.dynamic = false;
+  this._vertices.normalized = false;
 
   this._tangents = [];
-  this._tangents.dirty = true;
+  this._tangents.offset = 0;
+  this._tangents.stride = 0;
+  this._tangents.dirty = false;
+  this._tangents.dynamic = false;
+  this._tangents.normalized = false;
 
   this._bitangents = [];
-  this._bitangents.dirty = true;
+  this._bitangents.offset = 0;
+  this._bitangents.stride = 0;
+  this._bitangents.dirty = false;
+  this._bitangents.dynamic = false;
+  this._bitangents.normalized = false;
 };
 
 Object.defineProperty(EZ3.Geometry.prototype, "uvs", {
@@ -70,7 +98,7 @@ Object.defineProperty(EZ3.Geometry.prototype, "vertices", {
     return this._vertices;
   },
   set: function(vertices) {
-    this._vertices = colors;
+    this._vertices = vertices;
     this._vertices.dirty = true;
   }
 });

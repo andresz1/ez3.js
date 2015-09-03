@@ -78,6 +78,11 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
   }
 
   _create();
+
+  this._uvs.dirty = true;
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);

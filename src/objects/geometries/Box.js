@@ -44,9 +44,14 @@ EZ3.Box = function(width, height, depth) {
     ];
 
     that.calculateNormals();
+
   }
 
   _create();
+  
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);

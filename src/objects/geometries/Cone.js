@@ -78,10 +78,14 @@ EZ3.Cone = function(base, height, slices, stacks) {
     }
 
     that.calculateNormals();
-
   }
 
   _create();
+
+  this._uvs.dirty = true;
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);

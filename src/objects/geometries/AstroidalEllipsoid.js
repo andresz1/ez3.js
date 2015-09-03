@@ -74,6 +74,11 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
   }
 
   _create();
+
+  this._uvs.dirty = true;
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);

@@ -76,6 +76,11 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
   }
 
   _create();
+
+  this._uvs.dirty = true;
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.Cylinder.prototype = Object.create(EZ3.Geometry.prototype);

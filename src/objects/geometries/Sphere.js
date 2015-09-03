@@ -68,6 +68,11 @@ EZ3.Sphere = function(radius, slices, stacks) {
   }
 
   _create();
+
+  this._uvs.dirty = true;
+  this._indices.dirty = true;
+  this._normals.dirty = true;
+  this._vertices.dirty = true;
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
