@@ -1,0 +1,4 @@
+/**
+ * @class BasicMaterial
+ * @extends Material
+ */
