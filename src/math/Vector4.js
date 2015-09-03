@@ -51,7 +51,7 @@ EZ3.Vector4.prototype.sub = function(v1, v2) {
   return this;
 };
 
-EZ3.Vec4.prototype.subEqual = function(v) {
+EZ3.Vector4.prototype.subEqual = function(v) {
   this.x -= v.x;
   this.y -= v.y;
   this.z -= v.z;
