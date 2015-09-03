@@ -6,7 +6,7 @@ EZ3.Vector3 = function(x, y, z) {
   this._x = x || 0;
   this._y = y || 0;
   this._z = z || 0;
-  this._dirty = false;
+  this.dirty = true;
 };
 
 EZ3.Vector3.prototype.constructor = EZ3.Vector3;
@@ -48,33 +48,33 @@ EZ3.Vector3.prototype.dot = function(v) {
 };
 
 EZ3.Vector3.prototype.max = function(v) {
-  if(this.x < v.x)
+  if (this.x < v.x)
     this.x = v.x;
 
-  if(this.y < v.y)
+  if (this.y < v.y)
     this.y = v.y;
 
-  if(this.z < v.z)
+  if (this.z < v.z)
     this.z = v.z;
 
   return this;
 };
 
 EZ3.Vector3.prototype.min = function(v) {
-  if(this.x > v.x)
+  if (this.x > v.x)
     this.x = v.x;
 
-  if(this.y > v.y)
+  if (this.y > v.y)
     this.y = v.y;
 
-  if(this.z > v.z)
+  if (this.z > v.z)
     this.z = v.z;
 
   return this;
 };
 
 EZ3.Vector3.prototype.equals = function(v) {
-  return ((this.x === v.x ) && (this.y === v.y) && (this.z === v.z));
+  return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
 };
 
 EZ3.Vector3.prototype.scale = function(s) {
@@ -129,9 +129,9 @@ EZ3.Vector3.prototype.mulMatrix = function(m) {
 
   var e = m.elements;
 
-  this.x = x * e[0] + y * e[3] + z * e[6];
-  this.y = x * e[1] + y * e[4] + z * e[7];
-  this.z = x * e[2] + y * e[5] + z * e[8];
+  this.x = x * e[0] + y * e[1] + z * e[2];
+  this.y = x * e[3] + y * e[4] + z * e[5];
+  this.z = x * e[6] + y * e[7] + z * e[8];
 
   return this;
 };
@@ -201,7 +201,7 @@ EZ3.Vector3.prototype.scaleVector = function(v, s) {
 };
 
 EZ3.Vector3.prototype.lengthVector = function(v) {
-  return Math.sqrt(this.dotVectors(v,v));
+  return Math.sqrt(this.dotVectors(v, v));
 };
 
 EZ3.Vector3.prototype.normalizeVector = function(v) {
@@ -219,9 +219,9 @@ EZ3.Vector3.prototype.crossVectors = function(a, b) {
 EZ3.Vector3.prototype.mulMatrixVector = function(v, m) {
   var e = m.elements;
 
-  this.x = v.x * e[0] + v.y * e[3] + v.z * e[6];
-  this.y = v.x * e[1] + v.y * e[4] + v.z * e[7];
-  this.z = v.x * e[2] + v.y * e[5] + v.z * e[8];
+  this.x = v.x * e[0] + v.y * e[1] + v.z * e[2];
+  this.y = v.x * e[3] + v.y * e[4] + v.z * e[5];
+  this.z = v.x * e[6] + v.y * e[7] + v.z * e[8];
 
   return this;
 };
@@ -232,7 +232,7 @@ Object.defineProperty(EZ3.Vector3.prototype, "x", {
   },
   set: function(x) {
     this._x = x;
-    this._dirty = true;
+    this.dirty = true;
   }
 });
 
@@ -242,7 +242,7 @@ Object.defineProperty(EZ3.Vector3.prototype, "y", {
   },
   set: function(y) {
     this._y = y;
-    this._dirty = true;
+    this.dirty = true;
   }
 });
 
@@ -252,15 +252,6 @@ Object.defineProperty(EZ3.Vector3.prototype, "z", {
   },
   set: function(z) {
     this._z = z;
-    this._dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Vector3.prototype, "dirty", {
-  get: function() {
-    return this._dirty;
-  },
-  set: function(dirty) {
-    this._dirty = dirty;
+    this.dirty = true;
   }
 });
