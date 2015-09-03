@@ -9,6 +9,8 @@ EZ3.Vector3 = function(x, y, z) {
   this._dirty = false;
 };
 
+EZ3.Vector3.prototype.constructor = EZ3.Vector3;
+
 EZ3.Vector3.prototype.sum = function(v) {
   this.x += v.x;
   this.y += v.y;
@@ -223,8 +225,6 @@ EZ3.Vector3.prototype.mulMatrixVector = function(v, m) {
 
   return this;
 };
-
-EZ3.Vector3.prototype.constructor = EZ3.Vector3;
 
 Object.defineProperty(EZ3.Vector3.prototype, "x", {
   get: function() {
