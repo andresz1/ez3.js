@@ -20,23 +20,29 @@ EZ3.GeometryBuffer.prototype.setup = function(config) {
 
 EZ3.GeometryBuffer.prototype.update = function(config) {
   var gl = config.context;
-  
+  var array;
+
+  if(config.type === gl.UNSIGNED_SHORT)
+    array = new Uint16Array(config.data);
+  else
+    array = new Float32Array(config.data);
+
   if (config.dynamic) {
     if (!this._id) {
       this._id = gl.createBuffer();
       gl.bindBuffer(config.target, this._id);
-      gl.bufferData(config.target, (config.type === gl.FLOAT) ? new Float32Array(config.data) : new Uint16Array(config.data), gl.DYNAMIC_DRAW);
+      gl.bufferData(config.target, array, gl.DYNAMIC_DRAW);
       gl.bindBuffer(config.target, null);
     } else {
       gl.bindBuffer(config.target, this._id);
-      gl.bufferSubData(config.target, 0, (config.type === gl.FLOAT) ? new Float32Array(config.data) : new Uint16Array(config.data));
+      gl.bufferSubData(config.target, 0, array);
       gl.bindBuffer(config.target, null);
     }
   } else {
     if (!this._id) {
       this._id = gl.createBuffer();
       gl.bindBuffer(config.target, this._id);
-      gl.bufferData(config.target, (config.type === gl.FLOAT) ? new Float32Array(config.data) : new Uint16Array(config.data), gl.STATIC_DRAW);
+      gl.bufferData(config.target, array, gl.STATIC_DRAW);
       gl.bindBuffer(config.target, null);
     }
   }
