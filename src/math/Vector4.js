@@ -168,15 +168,36 @@ EZ3.Vector4.prototype.len = function() {
 };
 
 EZ3.Vector4.prototype.mul = function(o, v, m) {
-  // TODO
+  var e = m.elements;
+  this.x = o.x + v.x * e[0] + v.y * e[1] + v.z * e[2] + v.w * e[3];
+  this.y = o.y + v.x * e[4] + v.y * e[5] + v.z * e[6] + v.w * e[7];
+  this.z = o.z + v.x * e[8] + v.y * e[9] + v.z * e[10] + v.w * e[11];
+  this.w = o.w + v.x * e[12] + v.y * e[13] + v.z * e[14] + v.w * e[15];
+  return this;
 };
 
 EZ3.Vector4.prototype.mulMat = function(m, v) {
-  // TODO
-};
+  var x, y, z, w;
+  var e = m.elements;
 
-EZ3.Vector4.prototype.applyQuaternion = function(q) {
-  // TODO
+  if (v !== undefined) {
+    x = v.x;
+    y = v.y;
+    z = v.z;
+    w = v.w;
+  } else {
+    x = this.x;
+    y = this.y;
+    z = this.z;
+    w = this.w;
+  }
+
+  this.x = x * e[0] + y * e[1] + z * e[2] + w * e[3];
+  this.y = x * e[4] + y * e[5] + z * e[6] + w * e[7];
+  this.z = x * e[8] + y * e[9] + z * e[10] + w * e[11];
+  this.w = x * e[12] + y * e[13] + z * e[14] + w * e[15];
+
+  return this;
 };
 
 EZ3.Vector4.prototype.length = function(v) {
