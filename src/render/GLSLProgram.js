@@ -2,13 +2,36 @@
  * @class GLSLProgram
  */
 
-EZ3.GLSLProgram = function(gl, vertexCode, fragmentCode) {
+EZ3.GLSLProgram = function(gl, config) {
   this._shaders = [];
   this._program = null;
   this._uniform = {};
   this._attribute = {};
+  this._create(gl, config);
+};
 
-  this._create(gl, vertexCode, fragmentCode);
+EZ3.GLSLProgram.prototype._buildPrefix = function(config) {
+  var prefix = [
+
+  ].join('\n');
+
+  return prefix;
+};
+
+EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
+  var vertex = [
+
+  ].join('\n');
+
+  return prefix + vertex;
+};
+
+EZ3.GLSLProgram.prototype._buildFragment = function(prefix) {
+  var fragment = [
+
+  ].join('\n');
+
+  return prefix + fragment;
 };
 
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
@@ -27,11 +50,12 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
   }
 };
 
-EZ3.GLSLProgram.prototype._create = function(gl, vertexCode, fragmentCode) {
-  this._program = gl.createProgram();
+EZ3.GLSLProgram.prototype._create = function(gl, config) {
+  var prefix = this._buildPrefix(config);
 
-  this._compile(gl, gl.VERTEX_SHADER, vertexCode);
-  this._compile(gl, gl.FRAGMENT_SHADER, fragmentCode);
+  this._program = gl.createProgram();
+  this._compile(gl, gl.VERTEX_SHADER, this._buildVertex(prefix));
+  this._compile(gl, gl.FRAGMENT_SHADER, this._buildFragment(prefix));
 
   gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
   gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);

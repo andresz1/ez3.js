@@ -336,11 +336,8 @@ EZ3.Renderer.prototype.render = function(screen) {
 
     if (entity instanceof EZ3.Mesh) {
 
-      entity.material.spots = 0;
-      entity.material.puntuals = 0;
-      entity.material.directionals = 0;
-
       entity.setup(this.context);
+      
       this._updateMatrices(entity);
 
       entity.material.program.enable(this.context);

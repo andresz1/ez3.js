@@ -1,13 +1,13 @@
 /**
- * @class GeometryBuffer
+ * @class BufferGeometry
  */
 
-EZ3.GeometryBuffer = function() {
+EZ3.BufferGeometry = function() {
   this._id = null;
   this._data = [];
 };
 
-EZ3.GeometryBuffer.prototype.setup = function(config) {
+EZ3.BufferGeometry.prototype.setup = function(config) {
   var gl = config.context;
 
   gl.bindBuffer(config.target, this._id);
@@ -18,7 +18,7 @@ EZ3.GeometryBuffer.prototype.setup = function(config) {
   }
 };
 
-EZ3.GeometryBuffer.prototype.update = function(config) {
+EZ3.BufferGeometry.prototype.update = function(config) {
   var gl = config.context;
   var array;
 
@@ -49,13 +49,13 @@ EZ3.GeometryBuffer.prototype.update = function(config) {
   this._data = config.data;
 };
 
-Object.defineProperty(EZ3.GeometryBuffer.prototype, "id", {
+Object.defineProperty(EZ3.BufferGeometry.prototype, "id", {
   get: function() {
     return this._id;
   }
 });
 
-Object.defineProperty(EZ3.GeometryBuffer.prototype, "data", {
+Object.defineProperty(EZ3.BufferGeometry.prototype, "data", {
   get: function() {
     return this._data;
   },
@@ -64,9 +64,9 @@ Object.defineProperty(EZ3.GeometryBuffer.prototype, "data", {
   }
 });
 
-EZ3.GeometryBuffer.UV_LENGTH = 2;
-EZ3.GeometryBuffer.COLOR_LENGTH = 3;
-EZ3.GeometryBuffer.VERTEX_LENGTH = 3;
-EZ3.GeometryBuffer.NORMAL_LENGTH = 3;
-EZ3.GeometryBuffer.TANGENT_LENGTH = 4;
-EZ3.GeometryBuffer.BITANGENT_LENGTH = 3;
+EZ3.BufferGeometry.UV_LENGTH = 2;
+EZ3.BufferGeometry.COLOR_LENGTH = 3;
+EZ3.BufferGeometry.VERTEX_LENGTH = 3;
+EZ3.BufferGeometry.NORMAL_LENGTH = 3;
+EZ3.BufferGeometry.TANGENT_LENGTH = 4;
+EZ3.BufferGeometry.BITANGENT_LENGTH = 3;
