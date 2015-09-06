@@ -188,7 +188,6 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
         gl.uniformMatrix3fv(this._getUniform(name), false, data);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
-        console.log(data);
         gl.uniformMatrix4fv(this._getUniform(name), false, data);
         break;
     }
