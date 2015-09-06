@@ -1,12 +1,11 @@
-EZ3.ObjLoader = function(manager, crossOrigin) {
-  this._manager = manager;
-
+EZ3.OBJ = function(url, crossOrigin) {
+  this.url = url;
   this.crossOrigin = crossOrigin;
+  this.content = new EZ3.Entity();
 };
 
-
-EZ3.ObjLoader.prototype._parse = function(text, container, loader, manager, onLoad, onError) {
-  var patterns, lines, line, result;
+EZ3.OBJ.prototype._parse = function(data, onLoad, onError) {
+  var that, patterns, lines, line, result;
   var mtllibs, materials, material, geometry, mesh, indices, normals, uvs;
 
   function triangulate(face) {
@@ -124,7 +123,7 @@ EZ3.ObjLoader.prototype._parse = function(text, container, loader, manager, onLo
       if (indices.uv.length && uvs.length)
         computeUvs();
 
-      container.add(mesh);
+      that.content.add(mesh);
 
       material = new EZ3.Material({});
       geometry = new EZ3.Geometry();
@@ -136,13 +135,82 @@ EZ3.ObjLoader.prototype._parse = function(text, container, loader, manager, onLo
     }
   }
 
-  function processMtls() {
+  function processMaterials() {
+    var load, data, tokens, baseUrl;
     var i;
 
+    load = new EZ3.LoadManager();
+    data = [];
+
+    tokens = that.url.split('/');
+    baseUrl = that.url.substr(0, that.url.length - tokens[tokens.length - 1].length);
+
     for (i = 0; i < mtllibs.length; i++)
-      loader.start('assets/' + mtllibs[i]);
+      data.push(load.data(baseUrl + mtllibs[i]));
+
+    load.onComplete.add(function() {
+      var i;
+
+      for (i = 0; i < data.length; i++)
+        processMaterial(baseUrl, data[i].response);
+
+      load.onComplete.removeAll();
+      load.onComplete.add(function() {
+        onLoad(that.url, that.content);
+      });
+
+      load.start();
+    });
+
+    load.start();
   }
 
+  function processMaterial(baseUrl, data) {
+    var lines, line, key, value, material;
+    var i, j;
+
+    lines = data.split('\n');
+
+    for (i = 0; i < lines.length; i++) {
+      line = lines[i].trim();
+
+      j = line.indexOf(' ');
+
+      key = (j >= 0) ? line.substring(0, j) : line;
+      key = key.toLowerCase();
+
+      value = (j >= 0) ? line.substring(j + 1) : '';
+      value = value.trim();
+
+      if (key === "newmtl") {
+        material = materials[value];
+      } else if (key === "kd") {
+
+      } else if (key === "ka") {
+
+      } else if (key === "ks") {
+
+      } else if (key === "ns") {
+
+      } else if (key === "d") {
+
+      } else if (key === "map_ka") {
+
+      } else if (key === "map_kd") {
+
+      } else if (key === "map_ks") {
+
+      } else if (key === "map_ns") {
+
+      } else if (key === "map_bump") {
+
+      } else if (key === "map_d") {
+
+      }
+    }
+  }
+
+  that = this;
   patterns = {
     obj: /^o/,
     group: /^g/,
@@ -157,14 +225,13 @@ EZ3.ObjLoader.prototype._parse = function(text, container, loader, manager, onLo
     face3: /f\s((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
     face4: /f\s((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
   };
-  lines = text.split('\n');
+  lines = data.split('\n');
 
   mtllibs = [];
   materials = {};
   material = new EZ3.Material({});
   geometry = new EZ3.Geometry();
   mesh = new EZ3.Mesh(geometry, material);
-
   indices = {
     vertex: [],
     normal: [],
@@ -208,30 +275,21 @@ EZ3.ObjLoader.prototype._parse = function(text, container, loader, manager, onLo
   }
 
   processMesh();
-  processMtls();
+  processMaterials();
 };
 
-EZ3.ObjLoader.prototype.start = function(url, onLoad, onError) {
-  var that, manager, loader, container, cached;
-
-  cached = this._manager.add(url);
-
-  if (cached) {
-    if (onLoad)
-      onLoad(cached);
-
-    return cached;
-  }
+EZ3.OBJ.prototype.load = function(onLoad, onError) {
+  var that, load, data;
 
   that = this;
-  manager = new EZ3.LoadManager(this._manager.cache);
-  loader = new EZ3.DataLoader(manager);
-  container = new EZ3.Entity();
+  load = new EZ3.LoadManager();
 
-  loader.start(url, function(file) {
-    that._parse(file.response, container, loader, that._manager, onLoad, onError);
-    that._manager.processLoad(url, container);
+  data = load.data(this.url);
+  load.onComplete.add(function() {
+    that._parse(data.response, onLoad, onError);
   });
 
-  return container;
+  load.start();
+
+  return this.content;
 };

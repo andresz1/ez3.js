@@ -10,7 +10,6 @@ EZ3.Engine = function(canvas, options) {
   this._animationFrame = null;
   this._time = null;
   this._renderer = null;
-  this._cache = null;
 
   this.device.onReady(this._init, this, [canvas, options]);
 };
@@ -19,9 +18,8 @@ EZ3.Engine.prototype._init = function(canvas, options) {
   this._animationFrame = new EZ3.AnimationFrame(this.device, false);
   this._time = new EZ3.Time();
   this._renderer = new EZ3.Renderer(canvas, options);
-  this._cache = new EZ3.Cache();
   this.input = new EZ3.InputManager(this.device, canvas);
-  this.screens = new EZ3.ScreenManager(this._device, this._time, this._renderer, this.input, this._cache);
+  this.screens = new EZ3.ScreenManager(this._device, this._time, this._renderer, this.input);
 
 
   this._renderer.initContext();

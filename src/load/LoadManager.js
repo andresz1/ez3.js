@@ -1,50 +1,98 @@
-EZ3.LoadManager = function(cache) {
-  this.cache = cache;
+EZ3.LoadManager = function() {
+  this._cache = EZ3.Cache;
+  this._files = {};
 
-  this.toLoad = 0;
-  this.loaded = 0;
-  this.errors = 0;
+  this.started = false;
+  this.filesToLoad = 0;
+  this.loadedFiles = 0;
+  this.failedFiles = 0;
   this.onComplete = new EZ3.Signal();
   this.onProgress = new EZ3.Signal();
 };
 
+EZ3.LoadManager.prototype._processLoad = function(url, data) {
+  this.loadedFiles++;
+
+  this._cache.add(url, data);
+  this._processProgress(url);
+};
+
+EZ3.LoadManager.prototype._processError = function(url, data) {
+  this.failedFiles++;
+
+  this._processProgress(url, data);
+};
+
 EZ3.LoadManager.prototype._processProgress = function(url, error) {
-  var loaded, errors;
+  var loadedFiles, failedFiles;
 
-  this.onProgress.dispatch(url, error, this.loaded, this.errors, this.toLoad);
+  this.onProgress.dispatch(url, error, this.loadedFiles, this.failedFiles, this.filesToLoad);
 
-  if(this.toLoad === this.loaded + this.errors) {
-    loaded = this.loaded;
-    errors = this.errors;
+  if(this.filesToLoad === this.loadedFiles + this.failedFiles) {
+    loadedFiles = this.loadedFiles;
+    failedFiles = this.failedFiles;
 
-    this.toLoad = 0;
-    this.loaded = 0;
-    this.errors = 0;
+    this._files = {};
+    this.filesToLoad = 0;
+    this.loadedFiles = 0;
+    this.failedFiles = 0;
+    this.started = false;
 
-    this.onComplete.dispatch(loaded, errors);
+    this.onComplete.dispatch(failedFiles, loadedFiles);
   }
 };
 
-EZ3.LoadManager.prototype.add = function(url) {
+EZ3.LoadManager.prototype.data = function(url, crossOrigin, responseType) {
   var cached;
 
-  cached = this.cache.get(url);
+  cached = this._cache.data(url);
 
   if(cached)
     return cached;
 
-  this.toLoad++;
+  this._files[url] = new EZ3.Data(url, crossOrigin, responseType);
+  this.filesToLoad++;
+
+  return this._files[url].content;
 };
 
-EZ3.LoadManager.prototype.processLoad = function(url, data) {
-  this.loaded++;
+EZ3.LoadManager.prototype.image = function(url, crossOrigin) {
+  var cached;
 
-  console.log(this.loaded);
-  this.cache.add(url, data);
-  this._processProgress(url);
+  cached = this._cache.image(url);
+
+  if(cached)
+    return cached;
+
+  this._files[url] = new EZ3.Image(url, crossOrigin);
+  this.filesToLoad++;
+
+  return this._files[url].content;
 };
 
-EZ3.LoadManager.prototype.processError = function(url, data) {
-  this.errors++;
-  this._processProgress(url, data);
+
+EZ3.LoadManager.prototype.obj = function(url, crossOrigin) {
+  var cached;
+
+  cached = this._cache.entity(url);
+
+  if(cached)
+    return cached;
+
+  this._files[url] = new EZ3.OBJ(url, crossOrigin);
+  this.filesToLoad++;
+
+  return this._files[url].content;
+};
+
+EZ3.LoadManager.prototype.start = function() {
+  var i;
+
+  if (!this.filesToLoad)
+    this.onComplete.dispatch(0, 0);
+
+  this.started = true;
+
+  for (i in this._files)
+    this._files[i].load(this._processLoad.bind(this), this._processError.bind(this));
 };
