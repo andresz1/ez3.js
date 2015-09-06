@@ -2,12 +2,11 @@
  * @class ScreenManager
  */
 
-EZ3.ScreenManager = function(device, time, renderer, input, cache) {
+EZ3.ScreenManager = function(device, time, renderer, input) {
   this._device = device;
   this._time = time;
   this._renderer = renderer;
   this._input = input;
-  this._cache = cache;
   this._screens = [];
 };
 
@@ -80,8 +79,7 @@ EZ3.ScreenManager.prototype.add = function(screen) {
     screen.time = this._time;
     screen.renderer = this._renderer;
     screen.input = this._input;
-    screen.cache = this._cache;
-    screen.load = new EZ3.Loader(this._cache);
+    screen.load = new EZ3.LoadManager();
 
     this._addEventListeners(screen);
 
