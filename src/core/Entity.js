@@ -8,93 +8,14 @@ EZ3.Entity = function() {
   this._parent = null;
   this._children = [];
 
-  this._scale = vec3.create();
-  this._scale.dirty = true;
-  vec3.set(this._scale, 1, 1 ,1);
+  this._modelMatrix = new EZ3.Matrix4();
+  this._worldMatrix = new EZ3.Matrix4();
+  this._normalMatrix = new EZ3.Matrix3();
 
-  this._position = vec3.create();
-  this._position.dirty = true;
-  vec3.set(this._position, 0, 0 ,0);
-
-  this._rotation = quat.create();
-  this._rotation.dirty = true;
-  quat.set(this._rotation, 0, 0 ,0 ,0);
-
-  this._modelMatrix = mat4.create();
-  mat4.identity(this._modelMatrix);
-
-  this._worldMatrix = mat4.create();
-  mat4.identity(this._worldMatrix);
-
-  this._normalMatrix = mat3.create();
-  mat3.identity(this._normalMatrix);
+  this._scale = new EZ3.Vector3(1, 1 ,1);
+  this._position = new EZ3.Vector3(0, 0, 0);
+  this._rotation = new EZ3.Quaternion(1, 0, 0, 0);
 };
-
-Object.defineProperty(EZ3.Entity.prototype, "children", {
-  get: function() {
-    return this._children;
-  },
-  set: function(children) {
-    this._children = children;
-  }
-});
-
-Object.defineProperty(EZ3.Entity.prototype, "scale", {
-  get: function() {
-    return this._scale;
-  },
-  set: function(scale) {
-    this._scale = bitangents;
-    this._scale.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Entity.prototype, "position", {
-  get: function() {
-    return this._scale;
-  },
-  set: function(scale) {
-    this._scale = bitangents;
-    this._scale.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Entity.prototype, "rotation", {
-  get: function() {
-    return this._rotation;
-  },
-  set: function(scale) {
-    this._rotation = rotation;
-    this._rotation.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Entity.prototype, "modelMatrix", {
-  get: function() {
-    return this._modelMatrix;
-  },
-  set: function(modelMatrix) {
-    this._modelMatrix = modelMatrix;
-  }
-});
-
-Object.defineProperty(EZ3.Entity.prototype, "worldMatrix", {
-  get: function() {
-    return this._worldMatrix;
-  },
-  set: function(worldMatrix) {
-    this._worldMatrix = worldMatrix;
-  }
-});
-
-Object.defineProperty(EZ3.Entity.prototype, "normalMatrix", {
-  get: function() {
-    return this._normalMatrix;
-  },
-  set: function(normalMatrix) {
-    this._normalMatrix = normalMatrix;
-  }
-});
 
 EZ3.Entity.prototype.add = function(child) {
   if (child instanceof EZ3.Entity) {
@@ -121,33 +42,123 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
-  this._dirty = this._dirty || this._scale.dirty || this._position.dirty || this._rotation.dirty || parentIsDirty;
+  this.dirty = this.dirty || this.scale.dirty || this.position.dirty || this.rotation.dirty || parentIsDirty;
 
-  if (this._dirty) {
+  if (this.dirty) {
 
-    if(this._scale.dirty || this._position.dirty || this._rotation.dirty) {
+    if(this.scale.dirty || this.position.dirty || this.rotation.dirty) {
 
       if (this.scale.dirty)
-        this._scale.dirty = false;
+        this.scale.dirty = false;
 
       if (this.rotation.dirty)
-        this._rotation.dirty = false;
+        this.rotation.dirty = false;
 
       if (this.position.dirty)
-        this._position.dirty = false;
+        this.position.dirty = false;
 
-      mat4.fromRotationTranslation(this._modelMatrix, this._rotation, this._position);
-      mat4.scale(this._modelMatrix, this._modelMatrix, this._scale);
+      this.modelMatrix = this.modelMatrix.fromRotationTranslation(this.modelMatrix, this.rotation, this.position);
+      this.modelMatrix = this.modelMatrix.scale(this.modelMatrix, this.scale);
+
     }
 
     if (!parentWorldMatrix)
-      mat4.copy(this._worldMatrix, this._modelMatrix);
+      this.worldMatrix.copy(this.modelMatrix);
     else
-      mat4.multiply(this._worldMatrix, parentWorldMatrix, this._modelMatrix);
+      this.worldMatrix.mul(this.modelMatrix, parentWorldMatrix);
 
-    mat3.normalFromMat4(this._normalMatrix, this._worldMatrix);
+    this.normalMatrix = this.normalMatrix.normalFromMat4(this.worldMatrix);
 
     for (var k = this._children.length - 1; k >= 0; --k)
-      this._children[k].update(this._dirty, this._worldMatrix);
+      this._children[k].update(this.dirty, this.worldMatrix);
   }
 };
+
+Object.defineProperty(EZ3.Entity.prototype, "dirty", {
+  get: function() {
+    return this._dirty;
+  },
+  set: function(dirty) {
+    this._dirty = dirty;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "parent", {
+  get: function() {
+    return this._parent;
+  },
+  set: function(parent) {
+    this._parent = parent;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "children", {
+  get: function() {
+    return this._children;
+  },
+  set: function(children) {
+    this._children = children;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "scale", {
+  get: function() {
+    return this._scale;
+  },
+  set: function(scale) {
+    this._scale = scale;
+    this._scale.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "position", {
+  get: function() {
+    return this._position;
+  },
+  set: function(position) {
+    this._position = position;
+    this._position.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "rotation", {
+  get: function() {
+    return this._rotation;
+  },
+  set: function(rotation) {
+    this._rotation = rotation;
+    this._rotation.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "modelMatrix", {
+  get: function() {
+    return this._modelMatrix;
+  },
+  set: function(modelMatrix) {
+    this._modelMatrix = modelMatrix;
+    this._modelMatrix.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "worldMatrix", {
+  get: function() {
+    return this._worldMatrix;
+  },
+  set: function(worldMatrix) {
+    this._worldMatrix = worldMatrix;
+    this._worldMatrix.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Entity.prototype, "normalMatrix", {
+  get: function() {
+    return this._normalMatrix;
+  },
+  set: function(normalMatrix) {
+    this._normalMatrix = normalMatrix;
+    this._normalMatrix.dirty = true;
+  }
+});
