@@ -4,12 +4,9 @@
 
 EZ3.BufferGeometry = function() {
   this._id = null;
-  this._data = [];
 };
 
-EZ3.BufferGeometry.prototype.setup = function(config) {
-  var gl = config.context;
-
+EZ3.BufferGeometry.prototype.setup = function(gl, config) {
   gl.bindBuffer(config.target, this._id);
 
   if(config.layout !== undefined) {
@@ -18,8 +15,7 @@ EZ3.BufferGeometry.prototype.setup = function(config) {
   }
 };
 
-EZ3.BufferGeometry.prototype.update = function(config) {
-  var gl = config.context;
+EZ3.BufferGeometry.prototype.update = function(gl, config) {
   var array;
 
   if(config.type === gl.UNSIGNED_SHORT)
@@ -46,23 +42,7 @@ EZ3.BufferGeometry.prototype.update = function(config) {
       gl.bindBuffer(config.target, null);
     }
   }
-  this._data = config.data;
 };
-
-Object.defineProperty(EZ3.BufferGeometry.prototype, "id", {
-  get: function() {
-    return this._id;
-  }
-});
-
-Object.defineProperty(EZ3.BufferGeometry.prototype, "data", {
-  get: function() {
-    return this._data;
-  },
-  set: function(data) {
-    this._data = data;
-  }
-});
 
 EZ3.BufferGeometry.UV_LENGTH = 2;
 EZ3.BufferGeometry.COLOR_LENGTH = 3;
