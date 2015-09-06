@@ -39,8 +39,7 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
       if (!this._uv)
         this._uv = new EZ3.BufferGeometry();
 
-      this._uv.update({
-        context: gl,
+      this._uv.update(gl, {
         type: gl.FLOAT,
         data: geometry.uvs,
         target: gl.ARRAY_BUFFER,
@@ -54,8 +53,7 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
       if (!this._color)
         this._color = new EZ3.BufferGeometry();
 
-      this._color.update({
-        context: gl,
+      this._color.update(gl, {
         type: gl.FLOAT,
         data: geometry.colors,
         target: gl.ARRAY_BUFFER,
@@ -69,8 +67,7 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
       if (!this._normal)
         this._normal = new EZ3.BufferGeometry();
 
-      this._normal.update({
-        context: gl,
+      this._normal.update(gl, {
         type: gl.FLOAT,
         data: geometry.normals,
         target: gl.ARRAY_BUFFER,
@@ -84,8 +81,7 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
       if (!this._vertex)
         this._vertex = new EZ3.BufferGeometry();
 
-      this._vertex.update({
-        context: gl,
+      this._vertex.update(gl, {
         type: gl.FLOAT,
         data: geometry.vertices,
         target: gl.ARRAY_BUFFER,
@@ -99,8 +95,7 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
       if (!this._tangent)
         this._tangent = new EZ3.BufferGeometry();
 
-      this._tangent.update({
-        context: gl,
+      this._tangent.update(gl, {
         type: gl.FLOAT,
         data: geometry.tangents,
         target: gl.ARRAY_BUFFER,
@@ -114,8 +109,7 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
       if (!this._bitangent)
         this._bitangent = new EZ3.BufferGeometry();
 
-      this._bitangent.update({
-        context: gl,
+      this._bitangent.update(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
         data: geometry.bitangents,
@@ -129,8 +123,7 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
       if (!this._index)
         this._index = new EZ3.BufferGeometry();
 
-      this._index.update({
-        context: gl,
+      this._index.update(gl, {
         data: geometry.indices,
         type: gl.UNSIGNED_SHORT,
         target: gl.ELEMENT_ARRAY_BUFFER,
@@ -144,12 +137,12 @@ EZ3.Mesh.prototype.render = function(gl) {
   if (this._geometry) {
 
     var length;
-    var geometry = this._geometry;
-    var program = this._material.program;
+    var material = this.material;
+    var geometry = this.geometry;
+    var program = material.program;
 
     if (this._uv) {
-      this._uv.setup({
-        context: gl,
+      this._uv.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
         offset: geometry.uvs.offset,
@@ -161,8 +154,7 @@ EZ3.Mesh.prototype.render = function(gl) {
     }
 
     if (this._color) {
-      this._color.setup({
-        context: gl,
+      this._color.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
         offset: geometry.colors.offset,
@@ -174,8 +166,7 @@ EZ3.Mesh.prototype.render = function(gl) {
     }
 
     if (this._normal) {
-      this._normal.setup({
-        context: gl,
+      this._normal.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
         offset: geometry.normals.offset,
@@ -187,8 +178,7 @@ EZ3.Mesh.prototype.render = function(gl) {
     }
 
     if (this._vertex) {
-      this._vertex.setup({
-        context: gl,
+      this._vertex.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
         offset: geometry.vertices.offset,
@@ -200,8 +190,7 @@ EZ3.Mesh.prototype.render = function(gl) {
     }
 
     if (this._tangent) {
-      this._tangent.setup({
-        context: gl,
+      this._tangent.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
         offset: geometry.tangents.offset,
@@ -213,8 +202,7 @@ EZ3.Mesh.prototype.render = function(gl) {
     }
 
     if (this._bitangent) {
-      this._bitangent.setup({
-        context: gl,
+      this._bitangent.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
         offset: geometry.bitangents.offset,
@@ -225,34 +213,34 @@ EZ3.Mesh.prototype.render = function(gl) {
       });
     }
 
-    if (this._index && this._index.data.length) {
+    if (this._index && geometry.indices.length) {
       length = geometry.indices.length;
 
-      this._index.setup({
-        context: gl,
+      this._index.setup(gl, {
         target: gl.ELEMENT_ARRAY_BUFFER
       });
 
-      if(material.fill === EZ3.Material.WIREFRAME)
-        gl.drawElements(gl.LINES, length, gl.UNSIGNED_SHORT, 0);
+      if(material.fill === EZ3.Material.SOLID)
+        gl.drawElements(gl.TRIANGLES, length, gl.UNSIGNED_SHORT, 0);
 
       else if(material.fill === EZ3.Material.POINTS)
         gl.drawElements(gl.POINTS, length, gl.UNSIGNED_SHORT, 0);
 
-      else if(material.fill === EZ3.Material.FILL)
-        gl.drawElements(gl.TRIANGLES, length, gl.UNSIGNED_SHORT, 0);
+      else if(material.fill === EZ3.Material.WIREFRAME)
+        gl.drawElements(gl.LINES, length, gl.UNSIGNED_SHORT, 0);
+    }
 
-    } else if (this._vertex && this._vertex.data.length) {
+    else if (this._vertex && geometry.vertices.length) {
       length = geometry.vertices.length / 3;
 
-      if(material.fill === EZ3.Material.WIREFRAME)
-        gl.drawArrays(gl.LINES, 0, length);
+      if(material.fill === EZ3.Material.SOLID)
+        gl.drawArrays(gl.TRIANGLES, 0, length);
 
       else if(material.fill === EZ3.Material.POINTS)
         gl.drawArrays(gl.POINTS, 0, length);
 
-      else if(material.fill === EZ3.Material.FILL)
-        gl.drawArrays(gl.TRIANGLES, 0, length);
+      else if(material.fill === EZ3.Material.WIREFRAME)
+        gl.drawArrays(gl.LINES, 0, length);
     }
   }
 };
