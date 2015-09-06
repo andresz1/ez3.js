@@ -303,7 +303,7 @@ EZ3.Vector3.prototype.testDiff = function(v) {
 };
 
 EZ3.Vector3.prototype.toString = function() {
-  return 'Vector3[' + this.x.toFixed(3) + ', ' + this.y.toFixed(3) + ', ' + this.z.toFixed(3) + ']';
+  return 'Vector3[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ', ' + this.z.toFixed(4) + ']';
 };
 
 Object.defineProperty(EZ3.Vector3.prototype, "x", {
