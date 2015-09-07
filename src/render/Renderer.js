@@ -35,12 +35,10 @@ EZ3.Renderer.prototype._updateMatrices = function(entity) {
   // seterarle su dirty a falso y setear el dirty de la
   // matriz de vista del renderer en true
   if (this._viewMatrix.dirty) {
-
     var up = new EZ3.Vector3(0, 1, 0);
     var target = new EZ3.Vector3(0, 0, 0);
     var position = new EZ3.Vector3(45, 45, 45);
     this._viewMatrix.lookAt(position, target, up);
-
   }
 
   // Importante: Preguntar por la matriz de proyeccion de la camara,
