@@ -114,7 +114,7 @@ EZ3.Vector2.prototype.length = function(v) {
     return Math.sqrt(this.dot(this));
 };
 
-EZ3.Vector3.prototype.normalize = function(v) {
+EZ3.Vector2.prototype.normalize = function(v) {
   var l;
 
   if (v !== undefined) {
