@@ -7,10 +7,6 @@ module.exports = function(grunt) {
     data: {
       pkg: grunt.file.readJSON('package.json'),
       dest: 'build/<%= pkg.name %>',
-      deps: [
-        'bower_components/gl-matrix/dist/gl-matrix-min.js',
-        'bower_components/mixin.js/build/mixin.min.js'
-      ],
       src: [
         'src/*.js',
         'src/**/*.js'

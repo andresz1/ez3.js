@@ -21,9 +21,5 @@
     "bower_components",
     "src",
     "gruntfile"
-  ],
-  "devDependencies": {
-    "gl-matrix": "~2.3.1",
-    "mixin.js": "~1.0.0"
-  }
+  ]
 }

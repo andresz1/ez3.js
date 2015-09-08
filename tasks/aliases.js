@@ -1,27 +1,14 @@
 module.exports = {
   'default': [
-    'depconcat:deps',
-    'depconcat:src',
-    'uglify:deps',
-    'uglify:src',
-    'depconcat:min',
-    'depconcat:std',
-    'clean:deps'
+    'depsconcat',
+    'uglify'
   ],
   'debug': [
-    'depconcat:deps',
-    'depconcat:src',
-    'uglify:deps',
-    'depconcat:std',
+    'depsconcat',
     'watch'
   ],
   'release': [
-    'depconcat:deps',
-    'depconcat:src',
-    'uglify:deps',
-    'uglify:src',
-    'depconcat:min',
-    'depconcat:std',
-    'clean:deps'
+    'depsconcat',
+    'uglify'
   ]
 };
