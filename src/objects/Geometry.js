@@ -53,164 +53,205 @@ EZ3.Geometry = function() {
   this._bitangents.normalized = false;
 };
 
-EZ3.Geometry.prototype.initArray = function(size, value) {
-  return Array.apply(null, new Array(size)).map(function() {
-    return value;
-  });
-};
-
-EZ3.Geometry.prototype.calculateNormals = function() {
+EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
+  var normals;
   var x, y, z, k;
+  var tempNormals, tempAppearances;
   var normal, point0, point1, point2, vector0, vector1;
 
-  normal = vec3.create();
-  point0 = vec3.create();
-  point1 = vec3.create();
-  point2 = vec3.create();
-  vector0 = vec3.create();
-  vector1 = vec3.create();
+  normals = [];
 
-  var tempNormals = this.initArray(this.vertices.length, 0);
-  var tempAppearances = this.initArray(this.vertices.length / 3, 0);
+  normal = new EZ3.Vector3();
+  point0 = new EZ3.Vector3();
+  point1 = new EZ3.Vector3();
+  point2 = new EZ3.Vector3();
+  vector0 = new EZ3.Vector3();
+  vector1 = new EZ3.Vector3();
 
-  for (k = 0; k < this.indices.length; k += 3) {
+  for (k = 0; k < vertices.length / 3; ++k) {
+    tempNormals.push(0);
+    tempNormals.push(0);
+    tempNormals.push(0);
+    tempAppearances.push(0);
+  }
 
-    x = 3 * this.indices[k + 0];
-    y = 3 * this.indices[k + 1];
-    z = 3 * this.indices[k + 2];
+  for (k = 0; k < indices.length; k += 3) {
 
-    vec3.set(point0, this.vertices[x + 0], this.vertices[x + 1], this.vertices[x + 2]);
-    vec3.set(point1, this.vertices[y + 0], this.vertices[y + 1], this.vertices[y + 2]);
-    vec3.set(point2, this.vertices[z + 0], this.vertices[z + 1], this.vertices[z + 2]);
+    x = 3 * indices[k + 0];
+    y = 3 * indices[k + 1];
+    z = 3 * indices[k + 2];
 
-    vec3.sub(vector0, point1, point0);
-    vec3.sub(vector1, point2, point0);
+    point0.set(vertices[x + 0], vertices[x + 1], vertices[x + 2]);
+    point1.set(vertices[y + 0], vertices[y + 1], vertices[y + 2]);
+    point2.set(vertices[z + 0], vertices[z + 1], vertices[z + 2]);
 
-    vec3.cross(normal, vector0, vector1);
+    vector0 = point1.sub(point0);
+    vector1 = point2.sub(point0);
 
-    if (normal.x !== 0 || normal.y !== 0 || normal.z !== 0) {
-      vec3.normalize(normal, normal);
-    }
+    normal = vector0.cross(vector1);
 
-    tempNormals[x + 0] += normal[0];
-    tempNormals[x + 1] += normal[1];
-    tempNormals[x + 2] += normal[2];
+    if (!normal.testZero())
+      normal.normalize();
 
-    tempNormals[y + 0] += normal[0];
-    tempNormals[y + 1] += normal[1];
-    tempNormals[y + 2] += normal[2];
+    tempNormals[x + 0] += normal.x;
+    tempNormals[x + 1] += normal.y;
+    tempNormals[x + 2] += normal.z;
 
-    tempNormals[z + 0] += normal[0];
-    tempNormals[z + 1] += normal[1];
-    tempNormals[z + 2] += normal[2];
+    tempNormals[y + 0] += normal.x;
+    tempNormals[y + 1] += normal.y;
+    tempNormals[y + 2] += normal.z;
+
+    tempNormals[z + 0] += normal.x;
+    tempNormals[z + 1] += normal.y;
+    tempNormals[z + 2] += normal.z;
 
     ++tempAppearances[x / 3];
     ++tempAppearances[y / 3];
     ++tempAppearances[z / 3];
   }
 
-  for (k = 0; k < this.vertices.length / 3; ++k) {
+  for (k = 0; k < vertices.length / 3; ++k) {
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    this.normals.push(tempNormals[x] / tempAppearances[k]);
-    this.normals.push(tempNormals[y] / tempAppearances[k]);
-    this.normals.push(tempNormals[z] / tempAppearances[k]);
+    normals.push(tempNormals[x] / tempAppearances[k]);
+    normals.push(tempNormals[y] / tempAppearances[k]);
+    normals.push(tempNormals[z] / tempAppearances[k]);
   }
 
-  tempNormals.splice(0, tempNormals.length);
-  tempAppearances.splice(0, tempAppearances.length);
+  tempNormals = [];
+  tempAppearances = [];
+
+  return normals;
 };
 
-EZ3.Geometry.prototype.calculateTangents = function() {
-  var x, y, z, k, r;
+EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, vertices) {
+  var vector0, vector1;
+  var tangents, bitangents;
+  var point0, point1, point2;
+  var textVector0, textVector1;
+  var textPoint0, textPoint1, textPoint2;
+  var normal, normalT, tangent, bitangent;
+  var vx, vy, vz, tx, ty, k, r, handedness;
 
-  var point0 = vec3.create();
-  var point1 = vec3.create();
-  var point2 = vec3.create();
+  point0 = new EZ3.Vector3();
+  point1 = new EZ3.Vector3();
+  point2 = new EZ3.Vector3();
 
-  var vector0 = vec3.create();
-  var vector1 = vec3.create();
+  vector0 = new EZ3.Vector3();
+  vector1 = new EZ3.Vector3();
 
-  var normal = vec3.create();
-  var tangent = vec4.create();
-  var bitangent = vec3.create();
+  normal = new EZ3.Vector3();
+  notmalT = new EZ3.Vector3();
+  tangent = new EZ3.Vector3();
+  bitangent = new EZ3.Vector3();
 
-  var textPoint0 = vec2.create();
-  var textPoint1 = vec2.create();
-  var textPoint2 = vec2.create();
+  textPoint0 = new EZ3.Vector2();
+  textPoint1 = new EZ3.Vector2();
+  textPoint2 = new EZ3.Vector2();
 
-  var textVector0 = vec2.create();
-  var textVector1 = vec2.create();
+  textVector0 = new EZ3.Vector2();
+  textVector1 = new EZ3.Vector2();
 
-  var tempT = this.initArray(this.vertices.length, 0);
-  var tempB = this.initArray(this.vertices.length, 0);
+  tangents = [];
+  bitangents = [];
 
-  for (k = 0; k < this.indices.length; k += 3) {
-    x = this.indices[k + 0];
-    y = this.indices[k + 1];
-    z = this.indices[k + 2];
-
-    vec3.set(point0, this.vertices[3 * x + 0], this.vertices[3 * x + 1], this.vertices[3 * x + 2]);
-    vec3.set(point1, this.vertices[3 * y + 0], this.vertices[3 * y + 1], this.vertices[3 * y + 2]);
-    vec3.set(point2, this.vertices[3 * z + 0], this.vertices[3 * z + 1], this.vertices[3 * z + 2]);
-
-    vec2.set(textPoint0, this.uv[2 * x + 0], this.uv[2 * x + 1]);
-    vec2.set(textPoint1, this.uv[2 * y + 0], this.uv[2 * y + 1]);
-    vec2.set(textPoint2, this.uv[2 * z + 0], this.uv[2 * z + 1]);
-
-    vec3.sub(vector0, point1, point0);
-    vec3.sub(vector1, point2, point0);
-
-    vec2.sub(textVector0, textPoint1, textPoint0);
-    vec2.sub(textVector1, textPoint2, textPoint0);
-
-    r = 1.0 / (textVector0[0] * textVector1[1] - textVector1[0] * textVector0[1]);
-
-    tangent[0] = (textVector1[1] * vector0[0] - textVector0[1] * vector1[0]) * r;
-    tangent[1] = (textVector1[1] * vector0[1] - textVector0[1] * vector1[1]) * r;
-    tangent[2] = (textVector1[1] * vector0[2] - textVector0[1] * vector1[2]) * r;
-
-    bitangent[0] = (textVector0[0] * vector1[0] - textVector1[0] * vector0[0]) * r;
-    bitangent[1] = (textVector0[0] * vector1[1] - textVector1[0] * vector0[1]) * r;
-    bitangent[2] = (textVector0[0] * vector1[2] - textVector1[0] * vector0[2]) * r;
-
-    tempT[3 * x + 0] += tangent[0];
-    tempT[3 * y + 0] += tangent[1];
-    tempT[3 * z + 0] += tangent[2];
-
-    tempT[3 * x + 1] += tangent[0];
-    tempT[3 * y + 1] += tangent[1];
-    tempT[3 * z + 1] += tangent[2];
-
-    tempT[3 * x + 2] += tangent[0];
-    tempT[3 * y + 2] += tangent[1];
-    tempT[3 * z + 2] += tangent[2];
-
-    tempB[3 * x + 0] += bitangent[0];
-    tempB[3 * y + 0] += bitangent[1];
-    tempB[3 * z + 0] += bitangent[2];
-
-    tempB[3 * x + 1] += bitangent[0];
-    tempB[3 * y + 1] += bitangent[1];
-    tempB[3 * z + 1] += bitangent[2];
-
-    tempB[3 * x + 2] += bitangent[0];
-    tempB[3 * y + 2] += bitangent[1];
-    tempB[3 * z + 2] += bitangent[2];
+  for(k = 0; k < vertices.length; ++k) {
+    tempT.push(0);
+    tempB.push(0);
   }
 
-  for (k = 0; k < this._vertices.length / 3; ++k) {
+  for (k = 0; k < indices.length; k += 3) {
 
+    vx = 3 * indices[k + 0];
+    vy = 3 * indices[k + 1];
+    vz = 3 * indices[k + 2];
+
+    tx = 2 * indices[k + 0];
+    ty = 2 * indices[k + 1];
+
+    textPoint0.set(uvs[tx + 0], uvs[2 * tx + 1]);
+    textPoint1.set(uvs[ty + 0], uvs[2 * ty + 1]);
+    textPoint2.set(uvs[tz + 0], uvs[2 * tz + 1]);
+
+    point0.set(vertices[vx + 0], vertices[vx + 1], vertices[vx + 2]);
+    point1.set(vertices[vy + 0], vertices[vy + 1], vertices[vy + 2]);
+    point2.set(vertices[vz + 0], vertices[vz + 1], vertices[vz + 2]);
+
+    vector0 = point1.sub(point0);
+    vector1 = point2.sub(point0);
+
+    textVector0 = textPoint1.sub(textPoint0);
+    textVector1 = textPoint2.sub(textPoint0);
+
+    r = 1.0 / (textVector0.x * textVector1.y - textVector1.x * textVector0.y);
+
+    tangent.x = (textVector1.y * vector0.x - textVector0.y * vector1.x) * r;
+    tangent.y = (textVector1.y * vector0.y - textVector0.y * vector1.y) * r;
+    tangent.z = (textVector1.y * vector0.z - textVector0.y * vector1.z) * r;
+
+    bitangent.x = (textVector0.x * vector1.x - textVector1.x * vector0.x) * r;
+    bitangent.y = (textVector0.x * vector1.y - textVector1.x * vector0.y) * r;
+    bitangent.z = (textVector0.x * vector1.z - textVector1.x * vector0.z) * r;
+
+    tempT[vx + 0] += tangent.x;
+    tempT[vy + 0] += tangent.y;
+    tempT[vz + 0] += tangent.z;
+
+    tempT[vx + 1] += tangent.x;
+    tempT[vy + 1] += tangent.y;
+    tempT[vz + 1] += tangent.z;
+
+    tempT[vx + 2] += tangent.x;
+    tempT[vy + 2] += tangent.y;
+    tempT[vz + 2] += tangent.z;
+
+    tempB[vx + 0] += bitangent.x;
+    tempB[vy + 0] += bitangent.y;
+    tempB[vz + 0] += bitangent.z;
+
+    tempB[vx + 1] += bitangent.x;
+    tempB[vy + 1] += bitangent.y;
+    tempB[vz + 1] += bitangent.z;
+
+    tempB[vx + 2] += bitangent.x;
+    tempB[vy + 2] += bitangent.y;
+    tempB[vz + 2] += bitangent.z;
+  }
+
+  for (k = 0; k < vertices.length / 3; ++k) {
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    vec3.set(tangent, tempT[x], tempT[y], tempT[z]);
-    vec3.set(bitangent, tempB[x], tempB[y], tempB[z]);
-    vec3.set(normal, this.normals[x], this.normals[y], this.normals[z]);
+    tangent.set(tempT[x], tempT[y], tempT[z]);
+    bitangent.set(tempB[x], tempB[y], tempB[z]);
+    normal.set(normals[x], normals[y], normals[z]);
+
+    normalT.copy(normal);
+    tangent.normalize(tangent.sub(normalT.scaleEqual(normalT.dot(tangent))));
+
+    normalT.copy(normal);
+    handedness = (bitagent.dot(normalT.cross(tangent))) < 0 ? -1 : 1;
+
+    tangents.push(tangent.x);
+    tangents.push(tangent.y);
+    tangents.push(tangent.z);
+    tangents.push(handedness);
+
+    bitangents.push(bitangent.x);
+    bitangents.push(bitangent.y);
+    bitangents.push(bitangent.z);
   }
+
+  tempB = [];
+  tempT = [];
+
+  return {
+    tangents: tangents,
+    bitangents: bitangents
+  };
 };
 
 Object.defineProperty(EZ3.Geometry.prototype, "uvs", {
