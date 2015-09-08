@@ -53,76 +53,6 @@ EZ3.Geometry = function() {
   this._bitangents.normalized = false;
 };
 
-Object.defineProperty(EZ3.Geometry.prototype, "uvs", {
-  get: function() {
-    return this._uvs;
-  },
-  set: function(uvs) {
-    this._uvs = uvs;
-    this._uvs.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "colors", {
-  get: function() {
-    return this._colors;
-  },
-  set: function(colors) {
-    this._colors = colors;
-    this._colors.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "indices", {
-  get: function() {
-    return this._indices;
-  },
-  set: function(indices) {
-    this._indices = indices;
-    this._indices.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "normals", {
-  get: function() {
-    return this._normals;
-  },
-  set: function(normals) {
-    this._normals = normals;
-    this._normals.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "vertices", {
-  get: function() {
-    return this._vertices;
-  },
-  set: function(vertices) {
-    this._vertices = vertices;
-    this._vertices.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "tangents", {
-  get: function() {
-    return this._tangents;
-  },
-  set: function(tangents) {
-    this._tangents = tangents;
-    this._tangents.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "bitangents", {
-  get: function() {
-    return this._bitangents;
-  },
-  set: function(bitangents) {
-    this._bitangents = bitangents;
-    this._bitangents.dirty = true;
-  }
-});
-
 EZ3.Geometry.prototype.initArray = function(size, value) {
   return Array.apply(null, new Array(size)).map(function() {
     return value;
@@ -282,3 +212,73 @@ EZ3.Geometry.prototype.calculateTangents = function() {
     vec3.set(normal, this.normals[x], this.normals[y], this.normals[z]);
   }
 };
+
+Object.defineProperty(EZ3.Geometry.prototype, "uvs", {
+  get: function() {
+    return this._uvs;
+  },
+  set: function(uvs) {
+    this._uvs = uvs;
+    this._uvs.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "colors", {
+  get: function() {
+    return this._colors;
+  },
+  set: function(colors) {
+    this._colors = colors;
+    this._colors.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "indices", {
+  get: function() {
+    return this._indices;
+  },
+  set: function(indices) {
+    this._indices = indices;
+    this._indices.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "normals", {
+  get: function() {
+    return this._normals;
+  },
+  set: function(normals) {
+    this._normals = normals;
+    this._normals.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "vertices", {
+  get: function() {
+    return this._vertices;
+  },
+  set: function(vertices) {
+    this._vertices = vertices;
+    this._vertices.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "tangents", {
+  get: function() {
+    return this._tangents;
+  },
+  set: function(tangents) {
+    this._tangents = tangents;
+    this._tangents.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Geometry.prototype, "bitangents", {
+  get: function() {
+    return this._bitangents;
+  },
+  set: function(bitangents) {
+    this._bitangents = bitangents;
+    this._bitangents.dirty = true;
+  }
+});

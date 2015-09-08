@@ -12,7 +12,7 @@ EZ3.GLSLProgram = function(gl, config) {
 
 EZ3.GLSLProgram.prototype._buildPrefix = function(config) {
   var prefix = [
-
+    'precision highp float;'
   ].join('\n');
 
   return prefix;
@@ -20,7 +20,16 @@ EZ3.GLSLProgram.prototype._buildPrefix = function(config) {
 
 EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
   var vertex = [
-
+    'attribute vec3 vertex;',
+    'uniform mat4 uMvMatrix;',
+    'uniform mat4 uMvpMatrix;',
+    'uniform mat4 uViewMatrix;',
+    'uniform mat4 uModelMatrix;',
+    'uniform mat3 uNormalMatrix;',
+    'uniform mat4 uProjectionMatrix;',
+    'void main() {',
+    ' gl_Position = uMvpMatrix * vec4(vertex, 1.0);',
+    '}'
   ].join('\n');
 
   return prefix + vertex;
@@ -28,7 +37,9 @@ EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
 
 EZ3.GLSLProgram.prototype._buildFragment = function(prefix) {
   var fragment = [
-
+    'void main() {',
+    ' gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);',
+    '}'
   ].join('\n');
 
   return prefix + fragment;
@@ -51,14 +62,17 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
 };
 
 EZ3.GLSLProgram.prototype._create = function(gl, config) {
+  var infoLog;
   var prefix = this._buildPrefix(config);
 
-  this._program = gl.createProgram();
   this._compile(gl, gl.VERTEX_SHADER, this._buildVertex(prefix));
   this._compile(gl, gl.FRAGMENT_SHADER, this._buildFragment(prefix));
 
+  this._program = gl.createProgram();
+
   gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
   gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);
+
   gl.linkProgram(this._program);
 
   if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
@@ -67,25 +81,28 @@ EZ3.GLSLProgram.prototype._create = function(gl, config) {
   } else {
     this._loadUniforms(gl);
     this._loadAttributes(gl);
+
     gl.deleteShader(this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
     gl.deleteShader(this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);
   }
 };
 
 EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
+  var uniformInfo;
   var totalUniforms = gl.getProgramParameter(this._program, gl.ACTIVE_UNIFORMS);
 
   for (var k = 0; k < totalUniforms; ++k) {
-    var uniformInfo = gl.getActiveUniform(this._program, k);
+    uniformInfo = gl.getActiveUniform(this._program, k);
     this._addUniform(gl, uniformInfo.name);
   }
 };
 
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
+  var attributeInfo;
   var totalAttributes = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
 
   for (var k = 0; k < totalAttributes; ++k) {
-    var attributeInfo = gl.getActiveAttrib(this._program, k);
+    attributeInfo = gl.getActiveAttrib(this._program, k);
     this._addAttribute(gl, attributeInfo.name);
   }
 };
@@ -162,7 +179,7 @@ EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
 };
 
 EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
-  if (data) {
+  if (data !== undefined) {
     switch (size) {
       case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
         gl.uniformMatrix2fv(this._getUniform(name), false, data);

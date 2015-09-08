@@ -3,14 +3,19 @@
  * @extends Geometry
  */
 
-EZ3.Cylinder = function(radius, base, height, slices, stacks) {
+EZ3.Cylinder = function(radius, base, height, resolution) {
   EZ3.Geometry.call(this);
 
   this._base = base;
+  this._base.dirty = false;
+
   this._radius = radius;
+  this._radius.dirty = false;
+
   this._height = height;
-  this._slices = slices;
-  this._stacks = stacks;
+  this._height.dirty = false;
+
+  this._resolution = resolution;
 
   var that = this;
 
@@ -18,70 +23,115 @@ EZ3.Cylinder = function(radius, base, height, slices, stacks) {
     var u, v;
     var vertex, normal;
     var actualHeight, step;
-    var totalSlices, totalStacks;
+    var vertices, normals, uvs, indices;
     var s, t;
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
+    actualHeight = that.height;
+    step = (that.height - that.base) / that.resolution.x;
 
-    actualHeight = that._height;
-    step = (that._height - that._base) / that._slices;
+    vertex = new EZ3.Vector3();
+    normal = new EZ3.Vector3();
 
-    vertex = vec3.create();
-    normal = vec3.create();
+    uvs = [];
+    indices = [];
+    normals = [];
+    vertices = [];
 
-    for (s = 0; s < that._slices; ++s) {
-      for (t = 0; t < that._stacks; ++t) {
+    for (s = 0; s < that.resolution.x; ++s) {
+      for (t = 0; t < that.resolution.y; ++t) {
+        u = s / (that.resolution.x - 1);
+        v = t / (that.resolution.y - 1);
 
-        u = s * totalSlices;
-        v = t * totalStacks;
+        vertex.x = that.radius * Math.cos(EZ3.DOUBLE_PI * v);
+        vertex.y = actualHeight;
+        vertex.z = that.radius * Math.sin(EZ3.DOUBLE_PI * v);
 
-        vertex[0] = that._radius * Math.cos(EZ3.DOUBLE_PI * v);
-        vertex[1] = actualHeight;
-        vertex[2] = that._radius * Math.sin(EZ3.DOUBLE_PI * v);
+        normal.x = vertex.x;
+        normal.y = vertex.y;
+        normal.z = vertex.z;
 
-        vec3.set(normal, vertex[0], vertex[1], vertex[2]);
-        vec3.normalize(normal, normal);
+        normal.normalize();
 
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
+        vertices.push(vertex.x);
+        vertices.push(vertex.y);
+        vertices.push(vertex.z);
 
-        that.uvs.push(u);
-        that.uvs.push(v);
+        normals.push(normal.x);
+        normals.push(normal.y);
+        normals.push(normal.z);
+
+        uvs.push(u);
+        uvs.push(v);
 
       }
 
       actualHeight -= step;
 
-      if (actualHeight < that._base)
+      if (actualHeight < that.base)
         break;
 
     }
 
-    for (s = 0; s < that._slices - 1; ++s) {
-      for (t = 0; t < that._stacks - 1; ++t) {
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
+    for (s = 0; s < that.resolution.x - 1; ++s) {
+      for (t = 0; t < that.resolution.y - 1; ++t) {
+        indices.push((s + 0) * that.resolution.y + (t + 0));
+        indices.push((s + 0) * that.resolution.y + (t + 1));
+        indices.push((s + 1) * that.resolution.y + (t + 1));
 
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
+        indices.push((s + 0) * that.resolution.y + (t + 0));
+        indices.push((s + 1) * that.resolution.y + (t + 1));
+        indices.push((s + 1) * that.resolution.y + (t + 0));
       }
     }
 
-    that.calculateNormals();
-
+    that.uvs = uvs;
+    that.indices = indices;
+    that.normals = normals;
+    that.vertices = vertices;
   }
 
   _create();
-
-  this._uvs.dirty = true;
-  this._indices.dirty = true;
-  this._normals.dirty = true;
-  this._vertices.dirty = true;
 };
 
 EZ3.Cylinder.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Cylinder.prototype.constructor = EZ3.Cylinder;
+
+Object.defineProperty(EZ3.Cylinder.prototype, 'base', {
+  get: function() {
+    return this._base;
+  },
+  set: function(base) {
+    this._base = base;
+    this._base.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Cylinder.prototype, 'radius', {
+  get: function() {
+    return this._radius;
+  },
+  set: function(radius) {
+    this._radius = radius;
+    this._radius.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Cylinder.prototype, 'height', {
+  get: function() {
+    return this._height;
+  },
+  set: function(height) {
+    this._height = height;
+    this._height.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Cylinder.prototype, 'resolution', {
+  get: function() {
+    return this._resolution;
+  },
+  set: function(resolution) {
+    this._resolution.x = resolution.x;
+    this._resolution.y = resolution.y;
+  }
+});

@@ -10,19 +10,12 @@ EZ3.Renderer = function(canvas, options) {
   this._entities = [];
   this._programs = [];
 
-  this._eyePosition = vec3.create();
-  this._eyePosition.dirty = true;
-  vec3.set(this._eyePosition, 45, 45, 45);
-
-  this._mvMatrix = mat4.create();
-  this._mvpMatrix = mat4.create();
-  this._viewMatrix = mat4.create();
-  this._modelMatrix = mat4.create();
-  this._normalMatrix = mat3.create();
-  this._projectionMatrix = mat4.create();
-
-  this._viewMatrix.dirty = true;
-  this._projectionMatrix.dirty = true;
+  this._mvMatrix = new EZ3.Matrix4();
+  this._mvpMatrix = new EZ3.Matrix4();
+  this._viewMatrix = new EZ3.Matrix4();
+  this._modelMatrix = new EZ3.Matrix4();
+  this._normalMatrix = new EZ3.Matrix3();
+  this._projectionMatrix = new EZ3.Matrix4();
 
   this.context = null;
   this.canvas = canvas;
@@ -42,29 +35,26 @@ EZ3.Renderer.prototype._updateMatrices = function(entity) {
   // seterarle su dirty a falso y setear el dirty de la
   // matriz de vista del renderer en true
   if (this._viewMatrix.dirty) {
-    var up = vec3.create();
-    vec3.set(up, 0, 1, 0);
-
-    var target = vec3.create();
-    vec3.set(target, 0, 0, 0);
-
-    mat4.lookAt(this._viewMatrix, this._eyePosition, target, up);
+    var up = new EZ3.Vector3(0, 1, 0);
+    var target = new EZ3.Vector3(0, 0, 0);
+    var position = new EZ3.Vector3(45, 45, 45);
+    this._viewMatrix.lookAt(position, target, up);
   }
 
   // Importante: Preguntar por la matriz de proyeccion de la camara,
   // seterarle su dirty a falso y setear el dirty de la
   // matriz de proyeccion del renderer en true
-  if (this._projectionMatrix.dirty) {
-    mat4.perspective(this._projectionMatrix, 70, 800 / 600, 1, 1000);
-  }
+  if (this._projectionMatrix.dirty)
+    this._projectionMatrix.perspective(70, 800 / 600, 1, 1000);
 
-  mat4.copy(this._modelMatrix, entity.worldMatrix);
+  this._modelMatrix.copy(entity.worldMatrix);
 
-  mat4.copy(this._normalMatrix, entity.normalMatrix);
+  this._normalMatrix.copy(entity.normalMatrix);
 
-  mat4.multiply(this._mvMatrix, this._viewMatrix, this._modelMatrix);
+  this._mvMatrix.mul(this._modelMatrix, this._viewMatrix);
 
-  mat4.multiply(this._mvpMatrix, this._projectionMatrix, this._mvMatrix);
+  this._mvpMatrix.mul(this._mvMatrix, this._projectionMatrix);
+
 };
 
 EZ3.Renderer.prototype._updateUniformMaterial = function(material) {
@@ -101,22 +91,22 @@ EZ3.Renderer.prototype._updateUniformMatrices = function(material) {
   var gl = this.context;
   var program = material.program;
 
-  program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix);
+  program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.toArray());
 
-  program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix);
+  program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.toArray());
 
-  program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix);
+  program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix.toArray());
 
-  program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix);
+  program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix.toArray());
 
   if (this._viewMatrix.dirty) {
     this._viewMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix);
+    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix.toArray());
   }
 
   if (this._projectionMatrix.dirty) {
     this._projectionMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix);
+    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix.toArray());
   }
 };
 
@@ -256,18 +246,7 @@ EZ3.Renderer.prototype._updateUniforms = function(entity) {
   var gl = this.context;
   var material = entity.material;
   var program = entity.material.program;
-
-  this._updateUniformSpots(material);
-  this._updateUniformMaterial(material);
   this._updateUniformMatrices(material);
-  this._updateUniformTextures(material);
-  this._updateUniformPuntuals(material);
-  this._updateUniformDirectionals(material);
-
-  if(this._eyePosition.dirty) {
-    this._eyePosition.dirty = false;
-    program.loadUniformf(gl, 'uEyePosition', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._eyePosition.value);
-  }
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -335,9 +314,8 @@ EZ3.Renderer.prototype.render = function(screen) {
     entity = this._entities.pop();
 
     if (entity instanceof EZ3.Mesh) {
-
       entity.setup(this.context);
-      
+
       this._updateMatrices(entity);
 
       entity.material.program.enable(this.context);
@@ -346,7 +324,6 @@ EZ3.Renderer.prototype.render = function(screen) {
       entity.render(this.context);
 
       entity.material.program.disable(this.context);
-
     }
 
     for (var k = entity.children.length - 1; k >= 0; --k)

@@ -3,13 +3,11 @@
  * @extends Geometry
  */
 
-EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
+EZ3.Torus = function(radiuses, resolution) {
   EZ3.Geometry.call(this);
 
-  this._sides = sides;
-  this._rings = rings;
-  this._innerRadius = innerRadius;
-  this._outerRadius = outerRadius;
+  this._radiuses = radiuses;
+  this._resolution = resolution;
 
   var that = this;
 
@@ -18,19 +16,21 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
     var rho, phi;
     var vertex, normal;
     var cosS, cosR, sinS, sinR;
-    var totalSides, totalRings;
+    var vertices, normals, uvs, indices;
     var s, r;
 
-    totalSides = 1.0 / (that._sides - 1);
-    totalRings = 1.0 / (that._rings - 1);
+    vertex = new EZ3.Vector3();
+    normal = new EZ3.Vector3();
 
-    vertex = vec3.create();
-    normal = vec3.create();
+    uvs = [];
+    indices = [];
+    normals = [];
+    vertices = [];
 
-    for (s = 0; s < that._sides; ++s) {
-      for (r = 0; r < that._rings; ++r) {
-        u = s * totalSides;
-        v = r * totalRings;
+    for (s = 0; s < that.resolution.x; ++s) {
+      for (r = 0; r < that.resolution.y; ++r) {
+        u = s / (that.resolution.x - 1);
+        v = r / (that.resolution.y - 1);
 
         rho = EZ3.DOUBLE_PI * u;
         phi = EZ3.DOUBLE_PI * v;
@@ -40,50 +40,69 @@ EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
         sinS = Math.sin(rho);
         sinR = Math.sin(phi);
 
-        vertex[0] = (that._innerRadius + that._outerRadius * cosR) * cosS;
-        vertex[1] = (that._outerRadius * sinR);
-        vertex[2] = (that._innerRadius + that._outerRadius * cosR) * sinS;
+        vertex.x = (that.radiuses.x + that.radiuses.y * cosR) * cosS;
+        vertex.y = (that.radiuses.y * sinR);
+        vertex.z = (that.radiuses.x + that.radiuses.y * cosR) * sinS;
 
-        normal[0] = vertex[0] - that._innerRadius * cosS;
-        normal[1] = vertex[1];
-        normal[2] = vertex[2] - that._innerRadius * sinS;
+        normal.x = vertex.x - that.radiuses.x * cosS;
+        normal.y = vertex.y;
+        normal.z = vertex.z - that.radiuses.x * sinS;
 
-        vec3.normalize(normal, normal);
+        normal.normalize();
 
-        that.uvs.push(u);
-        that.uvs.push(v);
+        uvs.push(u);
+        uvs.push(v);
 
-        that.normals.push(normal[0]);
-        that.normals.push(normal[1]);
-        that.normals.push(normal[2]);
+        normals.push(normal.x);
+        normals.push(normal.y);
+        normals.push(normal.z);
 
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
+        vertices.push(vertex.x);
+        vertices.push(vertex.y);
+        vertices.push(vertex.z);
       }
     }
 
-    for (s = 0; s < that._sides - 1; ++s) {
-      for (r = 0; r < that._rings - 1; ++r) {
-        that.indices.push((s + 0) * that._rings + (r + 0));
-        that.indices.push((s + 0) * that._rings + (r + 1));
-        that.indices.push((s + 1) * that._rings + (r + 1));
+    for (s = 0; s < that.resolution.x - 1; ++s) {
+      for (r = 0; r < that.resolution.y - 1; ++r) {
+        indices.push((s + 0) * that.resolution.y + (r + 0));
+        indices.push((s + 0) * that.resolution.y + (r + 1));
+        indices.push((s + 1) * that.resolution.y + (r + 1));
 
-        that.indices.push((s + 0) * that._rings + (r + 0));
-        that.indices.push((s + 1) * that._rings + (r + 1));
-        that.indices.push((s + 1) * that._rings + (r + 0));
+        indices.push((s + 0) * that.resolution.y + (r + 0));
+        indices.push((s + 1) * that.resolution.y + (r + 1));
+        indices.push((s + 1) * that.resolution.y + (r + 0));
       }
     }
 
+    that.uvs = uvs;
+    that.indices = indices;
+    that.normals = normals;
+    that.vertices = vertices;
   }
 
   _create();
-
-  this._uvs.dirty = true;
-  this._indices.dirty = true;
-  this._normals.dirty = true;
-  this._vertices.dirty = true;
 };
 
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Torus.prototype.constructor = EZ3.Torus;
+
+Object.defineProperty(EZ3.Torus.prototype, 'radiuses', {
+  get: function() {
+    return this._radiuses;
+  },
+  set: function(radiuses) {
+    this._radiuses.x = radiuses.x;
+    this._radiuses.y = radiuses.y;
+  }
+});
+
+Object.defineProperty(EZ3.Torus.prototype, 'resolution', {
+  get: function(){
+    return this._resolution;
+  },
+  set: function(resolution) {
+    this._resolution.x = resolution.x;
+    this._resolution.y = resolution.y;
+  }
+});

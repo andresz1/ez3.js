@@ -3,32 +3,33 @@
  * @extends Geometry
  */
 
-EZ3.Box = function(width, height, depth) {
+EZ3.Box = function(resolution) {
   EZ3.Geometry.call(this);
 
-  this._width = width;
-  this._depth = depth;
-  this._height = height;
-
-  this._halfWidth  = this._width * 0.5;
-  this._halfDepth  = this._depth * 0.5;
-  this._halfHeight = this._height * 0.5;
+  this._resolution = resolution;
 
   var that = this;
 
   function _create () {
-    that.vertices = [
-      +that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, +that._halfHeight, -that._halfDepth,
-      +that._halfWidth, +that._halfHeight, -that._halfDepth
+    var halfWidth, halfHeight, halfDepth;
+    var vertices, indices, normals;
+
+    halfWidth  = that.resolution.x * 0.5;
+    halfHeight = that.resolution.y * 0.5;
+    halfDepth  = that.resolution.z * 0.5;
+
+    vertices = [
+      +halfWidth, +halfHeight, +halfDepth,
+      -halfWidth, +halfHeight, +halfDepth,
+      -halfWidth, -halfHeight, +halfDepth,
+      +halfWidth, -halfHeight, +halfDepth,
+      +halfWidth, -halfHeight, -halfDepth,
+      -halfWidth, -halfHeight, -halfDepth,
+      -halfWidth, +halfHeight, -halfDepth,
+      +halfWidth, +halfHeight, -halfDepth
     ];
 
-    that.indices = [
+    indices = [
       0, 1 ,2,
       0, 2, 3,
       7, 4, 5,
@@ -45,14 +46,25 @@ EZ3.Box = function(width, height, depth) {
 
     that.calculateNormals();
 
+    normals = that.normals;
+
+    that.indices = indices;
+    that.normals = normals;
+    that.vertices = vertices;
   }
 
   _create();
-  
-  this._indices.dirty = true;
-  this._normals.dirty = true;
-  this._vertices.dirty = true;
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Box.prototype.constructor = EZ3.Box;
+
+Object.defineProperty(EZ3.Box.prototype, 'resolution', {
+  get: function(){
+    return this._resolution;
+  },
+  set: function(resolution) {
+    this._resolution.x = resolution.x;
+    this._resolution.y = resolution.y;
+  }
+});
