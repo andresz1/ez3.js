@@ -126,14 +126,15 @@ EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
   return normals;
 };
 
-EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, vertices) {
+EZ3.Geometry.prototype.calculateTangentsAndBitangents = function(indices, uvs, normals, vertices) {
+  var tempT, tempB;
   var vector0, vector1;
   var tangents, bitangents;
   var point0, point1, point2;
   var textVector0, textVector1;
   var textPoint0, textPoint1, textPoint2;
   var normal, normalT, tangent, bitangent;
-  var vx, vy, vz, tx, ty, k, r, handedness;
+  var vx, vy, vz, tx, ty, tz, k, r, handedness;
 
   point0 = new EZ3.Vector3();
   point1 = new EZ3.Vector3();
@@ -143,7 +144,7 @@ EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, verti
   vector1 = new EZ3.Vector3();
 
   normal = new EZ3.Vector3();
-  notmalT = new EZ3.Vector3();
+  normalT = new EZ3.Vector3();
   tangent = new EZ3.Vector3();
   bitangent = new EZ3.Vector3();
 
@@ -154,6 +155,8 @@ EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, verti
   textVector0 = new EZ3.Vector2();
   textVector1 = new EZ3.Vector2();
 
+  tempT = [];
+  tempB = [];
   tangents = [];
   bitangents = [];
 
@@ -170,6 +173,7 @@ EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, verti
 
     tx = 2 * indices[k + 0];
     ty = 2 * indices[k + 1];
+    tz = 2 * indices[k + 2];
 
     textPoint0.set(uvs[tx + 0], uvs[tx + 1]);
     textPoint1.set(uvs[ty + 0], uvs[ty + 1]);
@@ -179,11 +183,11 @@ EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, verti
     point1.set(vertices[vy + 0], vertices[vy + 1], vertices[vy + 2]);
     point2.set(vertices[vz + 0], vertices[vz + 1], vertices[vz + 2]);
 
-    vector0 = point1.sub(point0);
-    vector1 = point2.sub(point0);
+    vector0.sub(point1, point0);
+    vector1.sub(point2, point0);
 
-    textVector0 = textPoint1.sub(textPoint0);
-    textVector1 = textPoint2.sub(textPoint0);
+    textVector0.sub(textPoint1, textPoint0);
+    textVector1.sub(textPoint2, textPoint0);
 
     r = 1.0 / (textVector0.x * textVector1.y - textVector1.x * textVector0.y);
 
@@ -230,10 +234,10 @@ EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, verti
     normal.set(normals[x], normals[y], normals[z]);
 
     normalT.copy(normal);
-    tangent.normalize(tangent.sub(normalT.scaleEqual(normalT.dot(tangent))));
+    tangent.normalize(tangent.subEqual(normalT.scaleEqual(normalT.dot(tangent))));
 
     normalT.copy(normal);
-    handedness = (bitagent.dot(normalT.cross(tangent))) < 0 ? -1 : 1;
+    handedness = (bitangent.dot(normalT.cross(tangent))) < 0 ? -1 : 1;
 
     tangents.push(tangent.x);
     tangents.push(tangent.y);

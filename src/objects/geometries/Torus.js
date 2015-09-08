@@ -13,6 +13,7 @@ EZ3.Torus = function(radiuses, resolution) {
 
   function _create() {
     var u, v;
+    var result;
     var rho, phi;
     var vertex, normal;
     var cosS, cosR, sinS, sinR;
