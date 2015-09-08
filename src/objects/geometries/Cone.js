@@ -3,90 +3,127 @@
  * @extends Geometry
  */
 
-EZ3.Cone = function(base, height, slices, stacks) {
+EZ3.Cone = function(base, height, resolution) {
   EZ3.Geometry.call(this);
 
   this._base = base;
+  this._base.dirty = false;
+
   this._height = height;
-  this._slices = slices;
-  this._stacks = stacks;
+  this._height.dirty = false;
+
+  this._resolution = resolution;
 
   var that = this;
 
   function _create() {
     var u, v;
     var vertex, normal;
-    var totalSlices, totalStacks;
     var radius, actualHeight, step;
+    var vertices, normals, uvs, indices;
     var s, t;
 
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
+    actualHeight = that.height;
+    step = (that.height - that.base) / that.resolution.x;
 
-    actualHeight = that._height;
-    step = (that._height - that._base) / that._slices;
+    vertex = new EZ3.Vector3();
+    normal = new EZ3.Vector3();
 
-    vertex = vec3.create();
-    normal = vec3.create();
+    uvs = [];
+    indices = [];
+    normals = [];
+    vertices = [];
 
-    for (s = 0; s < that._slices; ++s) {
-      for (t = 0; t < that._stacks; ++t) {
+    for (s = 0; s < that.resolution.x; ++s) {
+      for (t = 0; t < that.resolution.y; ++t) {
+        u = s / (that.resolution.x - 1);
+        v = t / (that.resolution.y - 1);
 
-        u = s * totalSlices;
-        v = t * totalStacks;
+        radius = Math.abs(that.height - actualHeight) * 0.5;
 
-        radius = Math.abs(that._height - actualHeight) * 0.5;
+        vertex.x = radius * Math.cos(EZ3.DOUBLE_PI * v);
+        vertex.y = actualHeight;
+        vertex.z = radius * Math.sin(EZ3.DOUBLE_PI * v);
 
-        vertex[0] = radius * Math.cos(EZ3.DOUBLE_PI * v);
-        vertex[1] = actualHeight;
-        vertex[2] = radius * Math.sin(EZ3.DOUBLE_PI * v);
+        normal.x = vertex.x;
+        normal.y = vertex.y;
+        normal.z = vertex.z;
 
-        normal[0] = vertex[0];
-        normal[1] = vertex[1];
-        normal[2] = vertex[2];
+        normal.normalize();
 
-        vec3.normalize(normal, normal);
+        vertices.push(vertex.x);
+        vertices.push(vertex.y);
+        vertices.push(vertex.z);
 
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
+        normals.push(normal.x);
+        normals.push(normal.y);
+        normals.push(normal.z);
 
-        that.uvs.push(u);
-        that.uvs.push(v);
+        uvs.push(u);
+        uvs.push(v);
 
       }
 
       actualHeight -= step;
 
-      if (actualHeight < that._base)
+      if (actualHeight < that.base)
         break;
 
     }
 
-    for (s = 0; s < that._slices - 1; ++s) {
-      for (t = 0; t < that._stacks - 1; ++t) {
+    for (s = 0; s < that.resolution.x - 1; ++s) {
+      for (t = 0; t < that.resolution.y - 1; ++t) {
+        indices.push((s + 0) * that.resolution.y + (t + 0));
+        indices.push((s + 0) * that.resolution.y + (t + 1));
+        indices.push((s + 1) * that.resolution.y + (t + 1));
 
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
-
+        indices.push((s + 0) * that.resolution.y + (t + 0));
+        indices.push((s + 1) * that.resolution.y + (t + 1));
+        indices.push((s + 1) * that.resolution.y + (t + 0));
       }
     }
 
-    that.calculateNormals();
+    that.uvs = uvs;
+    that.indices = indices;
+    that.normals = normals;
+    that.vertices = vertices;
+
+    console.log(indices);
+    console.log(vertices);
   }
 
   _create();
-
-  this._uvs.dirty = true;
-  this._indices.dirty = true;
-  this._normals.dirty = true;
-  this._vertices.dirty = true;
 };
 
 EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Cone.prototype.constructor = EZ3.Cone;
+
+Object.defineProperty(EZ3.Cone.prototype, 'base', {
+  get: function() {
+    return this._base;
+  },
+  set: function(base) {
+    this._base = base;
+    this._base.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Cone.prototype, 'height', {
+  get: function() {
+    return this._height;
+  },
+  set: function(height) {
+    this._height = height;
+    this._height.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Cone.prototype, 'resolution', {
+  get: function() {
+    return this._resolution;
+  },
+  set: function(resolution) {
+    this._resolution.x = resolution.x;
+    this._resolution.y = resolution.y;
+  }
+});

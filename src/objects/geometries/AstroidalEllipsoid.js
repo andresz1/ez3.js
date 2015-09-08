@@ -3,14 +3,11 @@
  * @extends Geometry
  */
 
-EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
+EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
   EZ3.Geometry.call(this);
 
-  this._slices = slices;
-  this._stacks = stacks;
-  this._xRadius = xRadius;
-  this._yRadius = yRadius;
-  this._zRadius = zRadius;
+  this._radiuses = radiuses;
+  this._resolution = resolution;
 
   var that = this;
 
@@ -19,15 +16,21 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
     var phi, rho;
     var normal, vertex;
     var cosS, cosT, sinS, sinT;
+    var vertices, normals, uvs, indices;
     var s, t;
 
-    vertex = vec3.create();
-    normal = vec3.create();
+    vertex = new EZ3.Vector3();
+    normal = new EZ3.Vector3();
 
-    for (s = 0; s < that._slices; ++s) {
-      for (t = 0; t < that._stacks; ++t) {
-        u = s / (that._slices - 1);
-        v = t / (that._stacks - 1);
+    uvs = [];
+    normals = [];
+    indices = [];
+    vertices = [];
+
+    for (s = 0; s < that.resolution.x; ++s) {
+      for (t = 0; t < that.resolution.y; ++t) {
+        u = s / (that.resolution.x - 1);
+        v = t / (that.resolution.y - 1);
 
         phi = EZ3.DOUBLE_PI * u - EZ3.PI;
         rho = EZ3.PI * v - EZ3.HALF_PI;
@@ -37,49 +40,70 @@ EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
         sinS = Math.pow(Math.sin(phi), 3.0);
         sinT = Math.pow(Math.sin(rho), 3.0);
 
-        vertex[0] = (that._xRadius * cosT * cosS);
-        vertex[1] = (that._yRadius * sinT);
-        vertex[2] = (that._zRadius * cosT * sinS);
+        vertex.x = (that.radiuses.x * cosT * cosS);
+        vertex.y = (that.radiuses.y * sinT);
+        vertex.z = (that.radiuses.z * cosT * sinS);
 
-        normal[0] = vertex[0] / that._xRadius;
-        normal[1] = vertex[1] / that._yRadius;
-        normal[2] = vertex[2] / that._zRadius;
+        normal.x = vertex.x / that.radiuses.x;
+        normal.y = vertex.y / that.radiuses.y;
+        normal.z = vertex.z / that.radiuses.z;
 
-        vec3.normalize(normal, normal);
+        normal.normalize();
 
-        that.uvs.push(u);
-        that.uvs.push(v);
+        uvs.push(u);
+        uvs.push(v);
 
-        that.normals.push(normal[0]);
-        that.normals.push(normal[1]);
-        that.normals.push(normal[2]);
+        normals.push(normal.x);
+        normals.push(normal.y);
+        normals.push(normal.z);
 
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
+        vertices.push(vertex.x);
+        vertices.push(vertex.y);
+        vertices.push(vertex.z);
       }
     }
 
-    for (s = 0; s < that._slices - 1; ++s) {
-      for (t = 0; t < that._stacks - 1; ++t) {
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
+    for (s = 0; s < that.resolution.x - 1; ++s) {
+      for (t = 0; t < that.resolution.y - 1; ++t) {
+        indices.push((s + 0) * that.resolution.y + (t + 0));
+        indices.push((s + 0) * that.resolution.y + (t + 1));
+        indices.push((s + 1) * that.resolution.y + (t + 1));
 
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
+        indices.push((s + 0) * that.resolution.y + (t + 0));
+        indices.push((s + 1) * that.resolution.y + (t + 1));
+        indices.push((s + 1) * that.resolution.y + (t + 0));
       }
     }
+
+    that.uvs = uvs;
+    that.indices = indices;
+    that.normals = normals;
+    that.vertices = vertices;
   }
 
   _create();
-
-  this._uvs.dirty = true;
-  this._indices.dirty = true;
-  this._normals.dirty = true;
-  this._vertices.dirty = true;
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
+
+Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'radiuses', {
+  get: function() {
+    return this._radiuses;
+  },
+  set: function(radiuses) {
+    this._radiuses.x = radiuses.x;
+    this._radiuses.y = radiuses.y;
+    this._radiuses.z = radiuses.z;
+  }
+});
+
+Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'resolution', {
+  get: function() {
+    return this._resolution;
+  },
+  set: function(resolution) {
+    this._resolution.x = resolution.x;
+    this._resolution.y = resolution.y;
+  }
+});
