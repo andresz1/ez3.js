@@ -14,8 +14,8 @@ EZ3.Mesh = function(geometry, material) {
   this._tangent = null;
   this._bitangent = null;
 
-  this._material = (material instanceof EZ3.Material) ? material : null;
   this._geometry = (geometry instanceof EZ3.Geometry) ? geometry : null;
+  this._material = (material instanceof EZ3.MeshMaterial) ? material : null;
 };
 
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
@@ -220,26 +220,26 @@ EZ3.Mesh.prototype.render = function(gl) {
         target: gl.ELEMENT_ARRAY_BUFFER
       });
 
-      if(material.fill === EZ3.Material.SOLID)
+      if(material.fill === EZ3.MeshMaterial.SOLID)
         gl.drawElements(gl.TRIANGLES, length, gl.UNSIGNED_SHORT, 0);
 
-      else if(material.fill === EZ3.Material.POINTS)
+      else if(material.fill === EZ3.MeshMaterial.POINTS)
         gl.drawElements(gl.POINTS, length, gl.UNSIGNED_SHORT, 0);
 
-      else if(material.fill === EZ3.Material.WIREFRAME)
+      else if(material.fill === EZ3.MeshMaterial.WIREFRAME)
         gl.drawElements(gl.LINES, length, gl.UNSIGNED_SHORT, 0);
     }
 
     else if (this._vertex && geometry.vertices.length) {
       length = geometry.vertices.length / 3;
 
-      if(material.fill === EZ3.Material.SOLID)
+      if(material.fill === EZ3.MeshMaterial.SOLID)
         gl.drawArrays(gl.TRIANGLES, 0, length);
 
-      else if(material.fill === EZ3.Material.POINTS)
+      else if(material.fill === EZ3.MeshMaterial.POINTS)
         gl.drawArrays(gl.POINTS, 0, length);
 
-      else if(material.fill === EZ3.Material.WIREFRAME)
+      else if(material.fill === EZ3.MeshMaterial.WIREFRAME)
         gl.drawArrays(gl.LINES, 0, length);
     }
   }
