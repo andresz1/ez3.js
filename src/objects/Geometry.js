@@ -171,9 +171,9 @@ EZ3.Geometry.prototype.calculateTangents = function(indices, uvs, normals, verti
     tx = 2 * indices[k + 0];
     ty = 2 * indices[k + 1];
 
-    textPoint0.set(uvs[tx + 0], uvs[2 * tx + 1]);
-    textPoint1.set(uvs[ty + 0], uvs[2 * ty + 1]);
-    textPoint2.set(uvs[tz + 0], uvs[2 * tz + 1]);
+    textPoint0.set(uvs[tx + 0], uvs[tx + 1]);
+    textPoint1.set(uvs[ty + 0], uvs[ty + 1]);
+    textPoint2.set(uvs[tz + 0], uvs[tz + 1]);
 
     point0.set(vertices[vx + 0], vertices[vx + 1], vertices[vx + 2]);
     point1.set(vertices[vy + 0], vertices[vy + 1], vertices[vy + 2]);
