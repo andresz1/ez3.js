@@ -12,7 +12,7 @@ EZ3.TouchPointer = function(code, id) {
 };
 
 EZ3.TouchPointer.prototype = Object.create(EZ3.Pointer.prototype);
-mixin(EZ3.TouchPointer.prototype, EZ3.Switch.prototype);
+EZ3.extends(EZ3.TouchPointer.prototype, EZ3.Switch.prototype);
 EZ3.TouchPointer.prototype.constructor = EZ3.TouchPointer;
 
 EZ3.TouchPointer.prototype.processPress = function(event, onPress, onMove) {

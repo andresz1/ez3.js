@@ -79,7 +79,7 @@ EZ3.LoadManager.prototype.obj = function(url, crossOrigin) {
   if(cached)
     return cached;
 
-  this._files[url] = new EZ3.OBJ(url, crossOrigin);
+  this._files[url] = new EZ3.Obj(url, crossOrigin);
   this.filesToLoad++;
 
   return this._files[url].content;

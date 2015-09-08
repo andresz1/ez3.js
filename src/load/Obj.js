@@ -1,10 +1,10 @@
-EZ3.OBJ = function(url, crossOrigin) {
+EZ3.Obj = function(url, crossOrigin) {
   this.url = url;
   this.crossOrigin = crossOrigin;
   this.content = new EZ3.Entity();
 };
 
-EZ3.OBJ.prototype._parse = function(data, onLoad, onError) {
+EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
   var that, patterns, lines, line, result;
   var mtllibs, materials, material, geometry, mesh, indices, normals, uvs;
 
@@ -278,7 +278,7 @@ EZ3.OBJ.prototype._parse = function(data, onLoad, onError) {
   processMaterials();
 };
 
-EZ3.OBJ.prototype.load = function(onLoad, onError) {
+EZ3.Obj.prototype.load = function(onLoad, onError) {
   var that, load, data;
 
   that = this;
