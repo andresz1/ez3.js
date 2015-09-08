@@ -8,9 +8,7 @@ EZ3.MousePointer = function() {
 
   this._buttons = [];
 
-  this.wheel = EZ3.Vec2.create();
-
-  EZ3.Vec2.set(this.wheel, 0, 0);
+  this.wheel = new EZ3.Vector2();
 };
 
 EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
@@ -43,14 +41,14 @@ EZ3.MousePointer.prototype.processUp = function(event, onUp) {
 
 EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
   if (event.wheelDeltaX)
-    this.wheel[0] = event.wheelDeltaX;
+    this.wheel.x = event.wheelDeltaX;
   else
-    this.wheel[1] = event.deltaX;
+    this.wheel.y = event.deltaX;
 
   if (event.wheelDeltaY)
-    this.wheel[0] = event.wheelDeltaY;
+    this.wheel.x = event.wheelDeltaY;
   else
-    this.wheel[1] = event.deltaY;
+    this.wheel.y = event.deltaY;
 
   onWheel.dispatch(this);
 };
