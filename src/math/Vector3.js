@@ -306,6 +306,8 @@ EZ3.Vector3.prototype.toString = function() {
   return 'Vector3[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ', ' + this.z.toFixed(4) + ']';
 };
 
+EZ3.Vector3.prototype.set = EZ3.Vector3.prototype.init;
+
 Object.defineProperty(EZ3.Vector3.prototype, "x", {
   get: function() {
     return this._x;
