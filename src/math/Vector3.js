@@ -75,13 +75,13 @@ EZ3.Vector3.prototype.scaleEqual = function(s) {
 
 EZ3.Vector3.prototype.div = function(v1, v2) {
   if (v2 !== undefined) {
-    if (!v2.haveZero()) {
+    if (!v2.hasZero()) {
       this.x = v1.x / v2.x;
       this.y = v1.y / v2.y;
       this.z = v1.z / v2.z;
     }
   } else {
-    if (!v1.haveZero()) {
+    if (!v1.hasZero()) {
       this.x = this.x / v1.x;
       this.y = this.y / v1.y;
       this.z = this.z / v1.z;
@@ -91,7 +91,7 @@ EZ3.Vector3.prototype.div = function(v1, v2) {
 };
 
 EZ3.Vector3.prototype.divEqual = function(v) {
-  if (!v.haveZero()) {
+  if (!v.hasZero()) {
     this.x /= v.x;
     this.y /= v.y;
     this.z /= v.z;
@@ -284,18 +284,18 @@ EZ3.Vector3.prototype.testEqual = function(v) {
   return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
 };
 
+EZ3.Vector3.prototype.hasZero = function(v) {
+  if (v !== undefined)
+    return ((v.x === 0.0) || (v.y === 0.0) || (v.z === 0.0));
+  else
+    return ((this.x === 0.0) || (this.y === 0.0) || (this.z === 0.0));
+};
+
 EZ3.Vector3.prototype.testZero = function(v) {
   if (v !== undefined)
     return ((v.x === 0.0) && (v.y === 0.0) && (v.z === 0.0));
   else
     return ((this.x === 0.0) && (this.y === 0.0) && (this.z === 0.0));
-};
-
-EZ3.Vector3.prototype.haveZero = function(v) {
-  if (v !== undefined)
-    return ((v.x === 0.0) || (v.y === 0.0) || (v.z === 0.0));
-  else
-    return ((this.x === 0.0) || (this.y === 0.0) || (this.z === 0.0));
 };
 
 EZ3.Vector3.prototype.testDiff = function(v) {
