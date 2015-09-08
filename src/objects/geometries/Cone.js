@@ -87,9 +87,6 @@ EZ3.Cone = function(base, height, resolution) {
     that.indices = indices;
     that.normals = normals;
     that.vertices = vertices;
-
-    console.log(indices);
-    console.log(vertices);
   }
 
   _create();

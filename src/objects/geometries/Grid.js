@@ -47,8 +47,7 @@ EZ3.Grid = function(resolution) {
       }
     }
 
-    that.calculateNormals();
-    normals = that.normals;
+    normals = that.calculateNormals(indices, vertices);
 
     that.uvs = uvs;
     that.indices = indices;

@@ -44,9 +44,7 @@ EZ3.Box = function(resolution) {
       3, 5, 4
     ];
 
-    that.calculateNormals();
-
-    normals = that.normals;
+    normals = that.calculateNormals(indices, vertices);
 
     that.indices = indices;
     that.normals = normals;
