@@ -299,7 +299,7 @@ EZ3.Renderer.prototype.clear = function() {
 EZ3.Renderer.prototype.render = function(screen) {
   var entity;
 
-  this.context.viewport(screen.position[0], screen.position[1], screen.size[0], screen.size[1]);
+  this.context.viewport(screen.position.x, screen.position.y, screen.size.x, screen.size.y);
   this.context.clearColor(0.0, 0.0, 0.0, 1.0);
 
   this._spots = screen.scene.spots;
