@@ -4,9 +4,9 @@
 
 EZ3.GLSLProgram = function(gl, config) {
   this._shaders = [];
-  this._program = null;
   this._uniform = {};
   this._attribute = {};
+  this._program = null;
   this._create(gl, config);
 };
 
@@ -38,7 +38,7 @@ EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
 EZ3.GLSLProgram.prototype._buildFragment = function(prefix) {
   var fragment = [
     'void main() {',
-    ' gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);',
+    ' gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);',
     '}'
   ].join('\n');
 

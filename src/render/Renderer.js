@@ -302,10 +302,6 @@ EZ3.Renderer.prototype.render = function(screen) {
   this.context.viewport(screen.position.x, screen.position.y, screen.size.x, screen.size.y);
   this.context.clearColor(0.0, 0.0, 0.0, 1.0);
 
-  this._spots = screen.scene.spots;
-  this._puntuals = screen.scene.puntuals;
-  this._directionals = screen.scene.directionals;
-
   screen.scene.update();
   this._entities.push(screen.scene);
 
