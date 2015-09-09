@@ -8,7 +8,7 @@ EZ3.GeometryBuffer = function() {
 
 EZ3.GeometryBuffer.prototype.setup = function(gl, config) {
   gl.bindBuffer(config.target, this._id);
-  
+
   if(config.layout !== undefined) {
     gl.enableVertexAttribArray(config.layout);
     gl.vertexAttribPointer(config.layout, config.length, config.type, config.normalized, config.stride, config.offset);
