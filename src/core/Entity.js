@@ -3,7 +3,7 @@
  */
 
 EZ3.Entity = function() {
-  this._dirty = true;
+  this.dirty = true;
 
   this._parent = null;
   this._children = [];
@@ -61,26 +61,27 @@ EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
       this.modelMatrix = this.modelMatrix.scale(this.modelMatrix, this.scale);
     }
 
-    if (!parentWorldMatrix)
-      this.worldMatrix.copy(this.modelMatrix);
-    else
-      this.worldMatrix.mul(this.modelMatrix, parentWorldMatrix);
+    if((parentWorldMatrix && parentWorldMatrix.dirty) || this.modelMatrix.dirty) {
 
-    this.normalMatrix = this.normalMatrix.normalFromMat4(this.worldMatrix);
+      this.modelMatrix.dirty = false;
+
+      if (!parentWorldMatrix)
+        this.worldMatrix.copy(this.modelMatrix);
+      else
+        this.worldMatrix.mul(this.modelMatrix, parentWorldMatrix);
+    }
 
     for (var k = this._children.length - 1; k >= 0; --k)
       this._children[k].update(this.dirty, this.worldMatrix);
+
+    if(this.worldMatrix.dirty) {
+      this.worldMatrix.dirty = false;
+      this.normalMatrix.normalFromMat4(this.worldMatrix);
+    }
+
+    this.dirty = false;
   }
 };
-
-Object.defineProperty(EZ3.Entity.prototype, "dirty", {
-  get: function() {
-    return this._dirty;
-  },
-  set: function(dirty) {
-    this._dirty = dirty;
-  }
-});
 
 Object.defineProperty(EZ3.Entity.prototype, "parent", {
   get: function() {
