@@ -13,6 +13,22 @@ EZ3.GeometryArray = function(config) {
 
 EZ3.GeometryArray.prototype.constructor = EZ3.GeometryArray;
 
+EZ3.GeometryArray.prototype.clear = function() {
+  this.data = [];
+  this.offset = 0;
+  this.stride = 0;
+  this.dynamic = false;
+  this.normalized = false;
+};
+
+EZ3.GeometryArray.prototype.update = function(config) {
+  this.data = config.data || [];
+  this.offset = config.offset || 0;
+  this.stride = config.stride || 0;
+  this.dynamic = config.dynamic || false;
+  this.normalized = config.normalized || false;
+};
+
 Object.defineProperty(EZ3.GeometryArray.prototype, 'data', {
   get: function() {
     return this._data;
