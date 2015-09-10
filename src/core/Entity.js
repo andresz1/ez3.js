@@ -59,7 +59,6 @@ EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
 
       this.modelMatrix = this.modelMatrix.fromRotationTranslation(this.modelMatrix, this.rotation, this.position);
       this.modelMatrix = this.modelMatrix.scale(this.modelMatrix, this.scale);
-
     }
 
     if (!parentWorldMatrix)
@@ -108,8 +107,7 @@ Object.defineProperty(EZ3.Entity.prototype, "scale", {
     return this._scale;
   },
   set: function(scale) {
-    this._scale = scale;
-    this._scale.dirty = true;
+    this._scale.copy(scale);
   }
 });
 
@@ -118,8 +116,7 @@ Object.defineProperty(EZ3.Entity.prototype, "position", {
     return this._position;
   },
   set: function(position) {
-    this._position = position;
-    this._position.dirty = true;
+    this._position.copy(position);
   }
 });
 
@@ -128,8 +125,7 @@ Object.defineProperty(EZ3.Entity.prototype, "rotation", {
     return this._rotation;
   },
   set: function(rotation) {
-    this._rotation = rotation;
-    this._rotation.dirty = true;
+    this._rotation.copy(rotation);
   }
 });
 
@@ -138,8 +134,7 @@ Object.defineProperty(EZ3.Entity.prototype, "modelMatrix", {
     return this._modelMatrix;
   },
   set: function(modelMatrix) {
-    this._modelMatrix = modelMatrix;
-    this._modelMatrix.dirty = true;
+    this._modelMatrix.copy(modelMatrix);
   }
 });
 
@@ -148,8 +143,7 @@ Object.defineProperty(EZ3.Entity.prototype, "worldMatrix", {
     return this._worldMatrix;
   },
   set: function(worldMatrix) {
-    this._worldMatrix = worldMatrix;
-    this._worldMatrix.dirty = true;
+    this._worldMatrix.copy(worldMatrix);
   }
 });
 
@@ -158,7 +152,6 @@ Object.defineProperty(EZ3.Entity.prototype, "normalMatrix", {
     return this._normalMatrix;
   },
   set: function(normalMatrix) {
-    this._normalMatrix = normalMatrix;
-    this._normalMatrix.dirty = true;
+    this._normalMatrix.copy(normalMatrix);
   }
 });
