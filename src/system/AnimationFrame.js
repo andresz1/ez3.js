@@ -2,8 +2,12 @@
  * @class AnimationFrame
  */
 
-EZ3.AnimationFrame = function(device, timeOut) {
+EZ3.AnimationFrame = function(timeOut) {
+  var device;
+
   this._id = 0;
+  
+  device = EZ3.Device;
 
   if (device.animationFrame === device.ANIMATION_FRAME.TIME_OUT || timeOut) {
     this._onRequestAnimationFrame = function(callback) {

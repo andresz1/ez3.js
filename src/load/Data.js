@@ -1,8 +1,12 @@
+/**
+ * @class Data
+ */
+
 EZ3.Data = function(url, crossOrigin, responseType) {
   this.url = url;
   this.crossOrigin = crossOrigin;
   this.responseType = responseType;
-  this.content = request = new XMLHttpRequest();
+  this.content = new XMLHttpRequest();
 };
 
 EZ3.Data.prototype._processLoad = function(request, onLoad) {

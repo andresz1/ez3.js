@@ -12,7 +12,7 @@ EZ3.Device = function() {
 EZ3.Device = new EZ3.Device();
 
 EZ3.Device._check = function() {
-  var that = this;
+  var that;
 
   function checkOperatingSystem() {
     if (/Playstation Vita/.test(navigator.userAgent))
@@ -68,6 +68,8 @@ EZ3.Device._check = function() {
         that.touch = EZ3.Device.TOUCH.MSPOINTER;
     }
   }
+
+  that = this;
 
   checkOperatingSystem();
   checkAnimationFrame();

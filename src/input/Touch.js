@@ -2,9 +2,9 @@
  * @class Touch
  */
 
-EZ3.Touch = function(device, domElement) {
+EZ3.Touch = function(domElement) {
+  this._device = EZ3.Device;
   this._domElement = domElement;
-  this._device = device;
   this._pointers = [];
 
   this.enabled = false;

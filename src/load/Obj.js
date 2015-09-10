@@ -1,3 +1,7 @@
+/**
+ * @class Obj
+ */
+
 EZ3.Obj = function(url, crossOrigin) {
   this.url = url;
   this.crossOrigin = crossOrigin;
@@ -225,8 +229,6 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
     face3: /f\s((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
     face4: /f\s((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
   };
-  lines = data.split('\n');
-
   mtllibs = [];
   materials = {};
   material = new EZ3.Material({});
@@ -240,6 +242,7 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
   vertices = [];
   normals = [];
   uvs = [];
+  lines = data.split('\n');
 
   for (i = 0; i < lines.length; i++) {
     line = lines[i].trim().replace(/ +(?= )/g, '');

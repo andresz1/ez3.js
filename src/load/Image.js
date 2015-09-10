@@ -1,3 +1,7 @@
+/**
+ * @class Image
+ */
+
 EZ3.Image = function(url, crossOrigin) {
   this.url = url;
   this.crossOrigin = crossOrigin;

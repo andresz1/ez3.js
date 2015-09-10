@@ -2,10 +2,9 @@
  * @class ScreenManager
  */
 
-EZ3.ScreenManager = function(device, time, renderer, input) {
-  this._device = device;
-  this._time = time;
+EZ3.ScreenManager = function(renderer, time, input) {
   this._renderer = renderer;
+  this._time = time;
   this._input = input;
   this._screens = [];
 };
@@ -73,11 +72,11 @@ EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
 };
 
 EZ3.ScreenManager.prototype.add = function(screen) {
-  if (screen instanceof EZ3.Screen) {
+  if (screen instanceof EZ3.Screen && !this.get(screen.id)) {
     screen.manager = this;
-    screen.device = this._device;
+    screen.device = EZ3.Device;
+    screen.cache = EZ3.Cache;
     screen.time = this._time;
-    screen.renderer = this._renderer;
     screen.input = this._input;
     screen.load = new EZ3.LoadManager();
 
@@ -85,13 +84,16 @@ EZ3.ScreenManager.prototype.add = function(screen) {
 
     if (screen.preload) {
       screen.preload();
-      // check empty ?
       screen.load.onComplete.add(screen.create, screen);
-      screen.load.start();
-    } else
-      screen.create();
+      screen.load.onComplete.add(function() {
+        this._screens.unshift(screen);
+      }, this);
 
-    this._screens.unshift(screen);
+      screen.load.start();
+    } else {
+      screen.create();
+      this._screens.unshift(screen);
+    }
 
     return screen;
   }
