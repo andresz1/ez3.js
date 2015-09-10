@@ -1,11 +1,13 @@
 /**
- * @class Puntual
+ * @class PointLight
  * @extends Light
  */
 
-EZ3.Puntual = function(mesh) {
+EZ3.PointLight = function(config) {
   EZ3.Light.call(this);
+
+  this._setup(config);
 };
 
-EZ3.Puntual.prototype = Object.create(EZ3.Light.prototype);
-EZ3.Puntual.prototype.constructor = EZ3.Puntual;
+EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.PointLight.prototype.constructor = EZ3.PointLight;
