@@ -4,7 +4,7 @@
 
 EZ3.Matrix4 = function(e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, e30, e31, e32, e33) {
   this._elements = [];
-  this._dirty = true;
+  this.dirty = true;
 
   this.init(
     e00 || 1, e01 || 0, e02 || 0, e03 || 0,
@@ -141,6 +141,8 @@ EZ3.Matrix4.prototype.invert = function(m) {
   this.elements[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
   this.elements[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
 
+  this.dirty = true;
+
   return this;
 };
 
@@ -219,6 +221,8 @@ EZ3.Matrix4.prototype.mul = function(m1, m2) {
   this.elements[14] = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32;
   this.elements[15] = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33;
 
+  this.dirty = true;
+
   return this;
 };
 
@@ -262,6 +266,8 @@ EZ3.Matrix4.prototype.translate = function(m, v) {
   this.elements[14] = a02 * x + a12 * y + a22 * z + this.elements[14];
   this.elements[15] = a03 * x + a13 * y + a23 * z + this.elements[15];
 
+  this.dirty = true;
+
   return this;
 };
 
@@ -294,6 +300,8 @@ EZ3.Matrix4.prototype.scale = function(m, s) {
   this.elements[13] = em[13];
   this.elements[14] = em[14];
   this.elements[15] = em[15];
+
+  this.dirty = true;
 
   return this;
 };
@@ -338,6 +346,8 @@ EZ3.Matrix4.prototype.setQuat = function(q) {
   this.elements[14] = 0;
   this.elements[15] = 1;
 
+  this.dirty = true;
+
   return this;
 };
 
@@ -381,6 +391,8 @@ EZ3.Matrix4.prototype.fromRotationTranslation = function(m, q, v) {
   this.elements[14] = v.z;
   this.elements[15] = 1;
 
+  this.dirty = false;
+
   return this;
 };
 
@@ -407,6 +419,8 @@ EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
   this.elements[13] = 0;
   this.elements[14] = (2 * far * near) * nf;
   this.elements[15] = 0;
+
+  this.dirty = false;
 
   return this;
 };
@@ -436,6 +450,8 @@ EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
   this.elements[14] = (far * near * 2) * nf;
   this.elements[15] = 0;
 
+  this.dirty = false;
+
   return this;
 };
 
@@ -463,6 +479,8 @@ EZ3.Matrix4.prototype.ortho = function(left, right, bottom, top, near, far) {
   this.elements[13] = (top + bottom) * bt;
   this.elements[14] = (far + near) * nf;
   this.elements[15] = 1;
+
+  this.dirty = false;
 
   return this;
 };
@@ -555,6 +573,8 @@ EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
   this.elements[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
   this.elements[15] = 1;
 
+  this.dirty = false;
+
   return this;
 };
 
@@ -615,14 +635,5 @@ Object.defineProperty(EZ3.Matrix4.prototype, 'elements', {
   set: function(e) {
     this._elements = e;
     this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Matrix4.prototype, 'dirty', {
-  get: function() {
-    return this._dirty;
-  },
-  set: function(dirty) {
-    this._dirty = dirty;
   }
 });

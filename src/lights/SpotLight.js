@@ -1,9 +1,9 @@
 /**
- * @class Spot
+ * @class SpotLight
  * @extends Light
  */
 
-EZ3.Spot = function(config) {
+EZ3.SpotLight = function(config) {
   EZ3.Light.call(this);
 
   this._cutoff = config.cutoff || 0.0;
@@ -11,12 +11,14 @@ EZ3.Spot = function(config) {
 
   this._exponent = config.exponent || 0.0;
   this._exponent.dirty = true;
+  
+  this._setup(config);
 };
 
-EZ3.Spot.prototype = Object.create(EZ3.Light.prototype);
-EZ3.Spot.prototype.constructor = EZ3.Spot;
+EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
 
-Object.defineProperty(EZ3.Spot.prototype, "cutoff", {
+Object.defineProperty(EZ3.SpotLight.prototype, "cutoff", {
   get: function() {
     return this._cutoff;
   },
@@ -26,7 +28,7 @@ Object.defineProperty(EZ3.Spot.prototype, "cutoff", {
   }
 });
 
-Object.defineProperty(EZ3.Spot.prototype, "exponent", {
+Object.defineProperty(EZ3.SpotLight.prototype, "exponent", {
   get: function() {
     return this._exponent;
   },

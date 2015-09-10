@@ -46,9 +46,17 @@ EZ3.Box = function(resolution) {
 
     normals = that.calculateNormals(indices, vertices);
 
-    that.indices = indices;
-    that.normals = normals;
-    that.vertices = vertices;
+    that.indices = new EZ3.GeometryArray({
+      data: indices
+    });
+
+    that.normals = new EZ3.GeometryArray({
+      data: normals
+    });
+
+    that.vertices = new EZ3.GeometryArray({
+      data: vertices
+    });
   }
 
   _create();

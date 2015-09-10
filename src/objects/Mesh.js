@@ -33,99 +33,99 @@ EZ3.Mesh.prototype._setupGeometryBuffers = function(gl) {
 
     var geometry = this._geometry;
 
-    if (geometry.uvs.dirty) {
+    if (geometry.uvs && geometry.uvs.dirty) {
       geometry.uvs.dirty = false;
 
       if (!this._uv)
-        this._uv = new EZ3.BufferGeometry();
+        this._uv = new EZ3.GeometryBuffer();
 
       this._uv.update(gl, {
         type: gl.FLOAT,
-        data: geometry.uvs,
         target: gl.ARRAY_BUFFER,
+        data: geometry.uvs.data,
         dynamic: geometry.uvs.dynamic
       });
     }
 
-    if (geometry.colors.dirty) {
+    if (geometry.colors && geometry.colors.dirty) {
       geometry.colors.dirty = false;
 
       if (!this._color)
-        this._color = new EZ3.BufferGeometry();
+        this._color = new EZ3.GeometryBuffer();
 
       this._color.update(gl, {
         type: gl.FLOAT,
-        data: geometry.colors,
         target: gl.ARRAY_BUFFER,
+        data: geometry.colors.data,
         dynamic: geometry.colors.dynamic
       });
     }
 
-    if (geometry.normals.dirty) {
+    if (geometry.normals && geometry.normals.dirty) {
       geometry.normals.dirty = false;
 
       if (!this._normal)
-        this._normal = new EZ3.BufferGeometry();
+        this._normal = new EZ3.GeometryBuffer();
 
       this._normal.update(gl, {
         type: gl.FLOAT,
-        data: geometry.normals,
         target: gl.ARRAY_BUFFER,
+        data: geometry.normals.data,
         dynamic: geometry.normals.dynamic
       });
     }
 
-    if (geometry.vertices.dirty) {
+    if (geometry.vertices && geometry.vertices.dirty) {
       geometry.vertices.dirty = false;
 
       if (!this._vertex)
-        this._vertex = new EZ3.BufferGeometry();
+        this._vertex = new EZ3.GeometryBuffer();
 
       this._vertex.update(gl, {
         type: gl.FLOAT,
-        data: geometry.vertices,
         target: gl.ARRAY_BUFFER,
+        data: geometry.vertices.data,
         dynamic: geometry.vertices.dynamic
       });
     }
 
-    if (geometry.tangents.dirty) {
+    if (geometry.tangents && geometry.tangents.dirty) {
       geometry.tangents.dirty = false;
 
       if (!this._tangent)
-        this._tangent = new EZ3.BufferGeometry();
+        this._tangent = new EZ3.GeometryBuffer();
 
       this._tangent.update(gl, {
         type: gl.FLOAT,
-        data: geometry.tangents,
         target: gl.ARRAY_BUFFER,
+        data: geometry.tangents.data,
         dynamic: geometry.tangents.dynamic
       });
     }
 
-    if (geometry.bitangents.dirty) {
+    if (geometry.bitangents && geometry.bitangents.dirty) {
       geometry.bitangents.dirty = false;
 
       if (!this._bitangent)
-        this._bitangent = new EZ3.BufferGeometry();
+        this._bitangent = new EZ3.GeometryBuffer();
 
       this._bitangent.update(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
-        data: geometry.bitangents,
+        data: geometry.bitangents.data,
         dynamic: geometry.bitangents.dynamic
       });
     }
 
-    if (geometry.indices.dirty) {
+    if (geometry.indices && geometry.indices.dirty) {
       geometry.indices.dirty = false;
 
       if (!this._index)
-        this._index = new EZ3.BufferGeometry();
+        this._index = new EZ3.GeometryBuffer();
 
       this._index.update(gl, {
-        data: geometry.indices,
         type: gl.UNSIGNED_SHORT,
+        data: geometry.indices.data,
         target: gl.ELEMENT_ARRAY_BUFFER,
         dynamic: geometry.indices.dynamic
       });
@@ -141,7 +141,7 @@ EZ3.Mesh.prototype.render = function(gl) {
     var geometry = this.geometry;
     var program = material.program;
 
-    if (this._uv) {
+    if (this._uv && geometry.uvs) {
       this._uv.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
@@ -149,11 +149,11 @@ EZ3.Mesh.prototype.render = function(gl) {
         stride: geometry.uvs.stride,
         layout: program.attribute.uv,
         normalized: geometry.uvs.normalized,
-        length: EZ3.BufferGeometry.UV_LENGTH
+        length: EZ3.GeometryBuffer.UV_LENGTH
       });
     }
 
-    if (this._color) {
+    if (this._color && geometry.colors) {
       this._color.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
@@ -161,11 +161,11 @@ EZ3.Mesh.prototype.render = function(gl) {
         stride: geometry.colors.stride,
         layout: program.attribute.color,
         normalized: geometry.colors.normalized,
-        length: EZ3.BufferGeometry.COLOR_LENGTH
+        length: EZ3.GeometryBuffer.COLOR_LENGTH
       });
     }
 
-    if (this._normal) {
+    if (this._normal && geometry.normals) {
       this._normal.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
@@ -173,11 +173,11 @@ EZ3.Mesh.prototype.render = function(gl) {
         stride: geometry.normals.stride,
         layout: program.attribute.normal,
         normalized: geometry.normals.normalized,
-        length: EZ3.BufferGeometry.NORMAL_LENGTH
+        length: EZ3.GeometryBuffer.NORMAL_LENGTH
       });
     }
 
-    if (this._vertex) {
+    if (this._vertex && geometry.vertices) {
       this._vertex.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
@@ -185,11 +185,11 @@ EZ3.Mesh.prototype.render = function(gl) {
         stride: geometry.vertices.stride,
         layout: program.attribute.vertex,
         normalized: geometry.vertices.normalized,
-        length: EZ3.BufferGeometry.VERTEX_LENGTH
+        length: EZ3.GeometryBuffer.VERTEX_LENGTH
       });
     }
 
-    if (this._tangent) {
+    if (this._tangent && geometry.tangents) {
       this._tangent.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
@@ -197,11 +197,11 @@ EZ3.Mesh.prototype.render = function(gl) {
         stride: geometry.tangents.stride,
         layout: program.attribute.tangent,
         normalized: geometry.tangents.normalized,
-        length: EZ3.BufferGeometry.TANGENT_LENGTH
+        length: EZ3.GeometryBuffer.TANGENT_LENGTH
       });
     }
 
-    if (this._bitangent) {
+    if (this._bitangent && geometry.bitangents) {
       this._bitangent.setup(gl, {
         type: gl.FLOAT,
         target: gl.ARRAY_BUFFER,
@@ -209,12 +209,12 @@ EZ3.Mesh.prototype.render = function(gl) {
         stride: geometry.bitangents.stride,
         layout: program.attribute.bitangent,
         normalized: geometry.bitangents.normalized,
-        length: EZ3.BufferGeometry.BITANGENT_LENGTH
+        length: EZ3.GeometryBuffer.BITANGENT_LENGTH
       });
     }
 
-    if (this._index && geometry.indices.length) {
-      length = geometry.indices.length;
+    if (this._index && geometry.indices) {
+      length = geometry.indices.data.length;
 
       this._index.setup(gl, {
         target: gl.ELEMENT_ARRAY_BUFFER
@@ -230,8 +230,8 @@ EZ3.Mesh.prototype.render = function(gl) {
         gl.drawElements(gl.LINES, length, gl.UNSIGNED_SHORT, 0);
     }
 
-    else if (this._vertex && geometry.vertices.length) {
-      length = geometry.vertices.length / 3;
+    else if (this._vertex && geometry.vertices) {
+      length = geometry.vertices.data.length / 3;
 
       if(material.fill === EZ3.MeshMaterial.SOLID)
         gl.drawArrays(gl.TRIANGLES, 0, length);

@@ -1,12 +1,12 @@
 /**
- * @class BufferGeometry
+ * @class GeometryBuffer
  */
 
-EZ3.BufferGeometry = function() {
+EZ3.GeometryBuffer = function() {
   this._id = null;
 };
 
-EZ3.BufferGeometry.prototype.setup = function(gl, config) {
+EZ3.GeometryBuffer.prototype.setup = function(gl, config) {
   gl.bindBuffer(config.target, this._id);
 
   if(config.layout !== undefined) {
@@ -15,7 +15,7 @@ EZ3.BufferGeometry.prototype.setup = function(gl, config) {
   }
 };
 
-EZ3.BufferGeometry.prototype.update = function(gl, config) {
+EZ3.GeometryBuffer.prototype.update = function(gl, config) {
   var array;
 
   if(config.type === gl.UNSIGNED_SHORT)
@@ -44,9 +44,9 @@ EZ3.BufferGeometry.prototype.update = function(gl, config) {
   }
 };
 
-EZ3.BufferGeometry.UV_LENGTH = 2;
-EZ3.BufferGeometry.COLOR_LENGTH = 3;
-EZ3.BufferGeometry.VERTEX_LENGTH = 3;
-EZ3.BufferGeometry.NORMAL_LENGTH = 3;
-EZ3.BufferGeometry.TANGENT_LENGTH = 4;
-EZ3.BufferGeometry.BITANGENT_LENGTH = 3;
+EZ3.GeometryBuffer.UV_LENGTH = 2;
+EZ3.GeometryBuffer.COLOR_LENGTH = 3;
+EZ3.GeometryBuffer.VERTEX_LENGTH = 3;
+EZ3.GeometryBuffer.NORMAL_LENGTH = 3;
+EZ3.GeometryBuffer.TANGENT_LENGTH = 4;
+EZ3.GeometryBuffer.BITANGENT_LENGTH = 3;

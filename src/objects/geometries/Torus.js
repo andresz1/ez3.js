@@ -76,10 +76,21 @@ EZ3.Torus = function(radiuses, resolution) {
       }
     }
 
-    that.uvs = uvs;
-    that.indices = indices;
-    that.normals = normals;
-    that.vertices = vertices;
+    that.uvs = new EZ3.GeometryArray({
+      data: uvs
+    });
+
+    that.indices = new EZ3.GeometryArray({
+      data: indices
+    });
+
+    that.normals = new EZ3.GeometryArray({
+      data: normals
+    });
+
+    that.vertices = new EZ3.GeometryArray({
+      data: vertices
+    });
   }
 
   _create();

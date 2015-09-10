@@ -3,7 +3,7 @@
  */
 
 EZ3.Entity = function() {
-  this._dirty = true;
+  this.dirty = true;
 
   this._parent = null;
   this._children = [];
@@ -59,29 +59,29 @@ EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
 
       this.modelMatrix = this.modelMatrix.fromRotationTranslation(this.modelMatrix, this.rotation, this.position);
       this.modelMatrix = this.modelMatrix.scale(this.modelMatrix, this.scale);
-
     }
 
-    if (!parentWorldMatrix)
-      this.worldMatrix.copy(this.modelMatrix);
-    else
-      this.worldMatrix.mul(this.modelMatrix, parentWorldMatrix);
+    if((parentWorldMatrix && parentWorldMatrix.dirty) || this.modelMatrix.dirty) {
 
-    this.normalMatrix = this.normalMatrix.normalFromMat4(this.worldMatrix);
+      this.modelMatrix.dirty = false;
+
+      if (!parentWorldMatrix)
+        this.worldMatrix.copy(this.modelMatrix);
+      else
+        this.worldMatrix.mul(this.modelMatrix, parentWorldMatrix);
+    }
 
     for (var k = this._children.length - 1; k >= 0; --k)
       this._children[k].update(this.dirty, this.worldMatrix);
+
+    if(this.worldMatrix.dirty) {
+      this.worldMatrix.dirty = false;
+      this.normalMatrix.normalFromMat4(this.worldMatrix);
+    }
+
+    this.dirty = false;
   }
 };
-
-Object.defineProperty(EZ3.Entity.prototype, "dirty", {
-  get: function() {
-    return this._dirty;
-  },
-  set: function(dirty) {
-    this._dirty = dirty;
-  }
-});
 
 Object.defineProperty(EZ3.Entity.prototype, "parent", {
   get: function() {
@@ -108,8 +108,7 @@ Object.defineProperty(EZ3.Entity.prototype, "scale", {
     return this._scale;
   },
   set: function(scale) {
-    this._scale = scale;
-    this._scale.dirty = true;
+    this._scale.copy(scale);
   }
 });
 
@@ -118,8 +117,7 @@ Object.defineProperty(EZ3.Entity.prototype, "position", {
     return this._position;
   },
   set: function(position) {
-    this._position = position;
-    this._position.dirty = true;
+    this._position.copy(position);
   }
 });
 
@@ -128,8 +126,7 @@ Object.defineProperty(EZ3.Entity.prototype, "rotation", {
     return this._rotation;
   },
   set: function(rotation) {
-    this._rotation = rotation;
-    this._rotation.dirty = true;
+    this._rotation.copy(rotation);
   }
 });
 
@@ -138,8 +135,7 @@ Object.defineProperty(EZ3.Entity.prototype, "modelMatrix", {
     return this._modelMatrix;
   },
   set: function(modelMatrix) {
-    this._modelMatrix = modelMatrix;
-    this._modelMatrix.dirty = true;
+    this._modelMatrix.copy(modelMatrix);
   }
 });
 
@@ -148,8 +144,7 @@ Object.defineProperty(EZ3.Entity.prototype, "worldMatrix", {
     return this._worldMatrix;
   },
   set: function(worldMatrix) {
-    this._worldMatrix = worldMatrix;
-    this._worldMatrix.dirty = true;
+    this._worldMatrix.copy(worldMatrix);
   }
 });
 
@@ -158,7 +153,6 @@ Object.defineProperty(EZ3.Entity.prototype, "normalMatrix", {
     return this._normalMatrix;
   },
   set: function(normalMatrix) {
-    this._normalMatrix = normalMatrix;
-    this._normalMatrix.dirty = true;
+    this._normalMatrix.copy(normalMatrix);
   }
 });
