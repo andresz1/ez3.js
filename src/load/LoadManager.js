@@ -1,3 +1,7 @@
+/**
+ * @class LoadManager
+ */
+
 EZ3.LoadManager = function() {
   this._cache = EZ3.Cache;
   this._files = {};
@@ -69,7 +73,6 @@ EZ3.LoadManager.prototype.image = function(url, crossOrigin) {
 
   return this._files[url].content;
 };
-
 
 EZ3.LoadManager.prototype.obj = function(url, crossOrigin) {
   var cached;
