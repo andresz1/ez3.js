@@ -42,7 +42,11 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
-  this.dirty = this.dirty || this.scale.dirty || this.position.dirty || this.rotation.dirty || parentIsDirty;
+
+  if(parentIsDirty !== undefined)
+    this.dirty = this.dirty || this.scale.dirty || this.position.dirty || this.rotation.dirty || parentIsDirty;
+  else
+    this.dirty = this.dirty || this.scale.dirty || this.position.dirty || this.rotation.dirty;
 
   if (this.dirty) {
 
@@ -62,7 +66,6 @@ EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
     }
 
     if((parentWorldMatrix && parentWorldMatrix.dirty) || this.modelMatrix.dirty) {
-
       this.modelMatrix.dirty = false;
 
       if (!parentWorldMatrix)
@@ -79,7 +82,8 @@ EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
       this.normalMatrix.normalFromMat4(this.worldMatrix);
     }
 
-    this.dirty = false;
+    if(this instanceof EZ3.Mesh)
+      this.dirty = false;
   }
 };
 
