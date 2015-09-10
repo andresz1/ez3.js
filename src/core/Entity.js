@@ -81,9 +81,6 @@ EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
       this.worldMatrix.dirty = false;
       this.normalMatrix.normalFromMat4(this.worldMatrix);
     }
-
-    if(this instanceof EZ3.Mesh)
-      this.dirty = false;
   }
 };
 
