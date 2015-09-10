@@ -3,7 +3,7 @@
  */
 
 EZ3.Matrix3 = function(e00, e01, e02, e10, e11, e12, e20, e21, e22) {
-  this._dirty = true;
+  this.dirty = true;
   this._elements = [];
 
   this.init(
@@ -534,15 +534,6 @@ Object.defineProperty(EZ3.Matrix3.prototype, 'elements', {
   },
   set: function(e) {
     this._elements = e;
-    this._dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Matrix3.prototype, 'dirty', {
-  get: function() {
-    return this._dirty;
-  },
-  set: function(dirty) {
-    this._dirty = dirty;
+    this.dirty = true;
   }
 });
