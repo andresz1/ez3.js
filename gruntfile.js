@@ -10,7 +10,14 @@ module.exports = function(grunt) {
       src: [
         'src/*.js',
         'src/**/*.js'
-      ]
+      ],
+      shdrs: {
+        dest: 'src/render/ShaderLibrary.js',
+        src: [
+          'src/render/shaders/*.vert',
+          'src/render/shaders/*.frag'
+        ]
+      }
     }
   });
 };
