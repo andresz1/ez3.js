@@ -3,7 +3,7 @@ module.exports = {
     files: [
       '<%= src %>',
       '<%= shdrs.src %>',
-      '!src/render/ShaderLibrary.js'
+      '!<%= shdrs.dest %>'
     ],
     tasks: [
       'shdrsconcat',
