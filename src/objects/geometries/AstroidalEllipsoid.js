@@ -166,8 +166,10 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'radiuses', {
     return this._radiuses;
   },
   set: function(radiuses) {
-    if(radiuses instanceof EZ3.Vector3)
+    if(radiuses instanceof EZ3.Vector3){
       this._radiuses.copy(radiuses);
+      this.dirty = true;
+    }
   }
 });
 
@@ -176,7 +178,9 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'resolution', {
     return this._resolution;
   },
   set: function(resolution) {
-    if(resolution instanceof EZ3.Vector2)
+    if(resolution instanceof EZ3.Vector2){
       this._resolution.copy(resolution);
+      this.dirty = true;
+    }
   }
 });

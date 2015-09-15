@@ -12,6 +12,93 @@ EZ3.Geometry = function() {
   this._bitangents = null;
 };
 
+EZ3.Geometry.prototype.calculateLinearIndices = function(triangularIndices) {
+  var linearIndices = [];
+  var k;
+
+  for (k = 0; k < triangularIndices.length; k += 3) {
+    linearIndices.push(triangularIndices[k + 0]);
+    linearIndices.push(triangularIndices[k + 1]);
+    linearIndices.push(triangularIndices[k + 0]);
+    linearIndices.push(triangularIndices[k + 2]);
+    linearIndices.push(triangularIndices[k + 1]);
+    linearIndices.push(triangularIndices[k + 2]);
+  }
+
+  return linearIndices;
+};
+
+EZ3.Geometry.prototype.calculateTriangularIndices = function(linearIndices) {
+  var triangularIndices = [];
+  var k;
+
+  for (k = 0; k < linearIndices.length; k += 6) {
+    triangularIndices.push(linearIndices[k + 0]);
+    triangularIndices.push(linearIndices[k + 1]);
+    triangularIndices.push(linearIndices[k + 3]);
+  }
+
+  return triangularIndices;
+};
+
+EZ3.Geometry.prototype.mergeVertices = function(indices, uvs, vertices) {
+  var key;
+  var presicion;
+  var vertex, uv;
+  var uniqueVerticesCounter;
+  var verticesMap, appearanceMap;
+  var uniqueVertices, uniqueIndices, uniqueUvs, uniqueNormals, uniqueTag;
+  var k, n;
+
+  verticesMap = {};
+  appearanceMap = {};
+
+  uniqueUvs = [];
+  uniqueTag = [];
+  uniqueIndices = [];
+  uniqueVertices = [];
+  uniqueVerticesCounter = 0;
+
+  var faceIndices;
+  var indicesToRemove = [];
+
+  uv = new EZ3.Vector2();
+  vertex = new EZ3.Vector3();
+
+  precision = Math.pow(10, 4);
+
+  for(k = 0; k < indices.length; k++) {
+    vertex.x = vertices[3 * indices[k] + 0];
+    vertex.y = vertices[3 * indices[k] + 1];
+    vertex.z = vertices[3 * indices[k] + 2];
+
+    key = Math.round(vertex.x * precision) +
+      '_' +
+      Math.round(vertex.y * precision) +
+      '_' +
+      Math.round(vertex.z * precision);
+
+      if(verticesMap[key] === undefined) {
+        verticesMap[key] = k;
+        appearanceMap[verticesMap[key]] = uniqueVerticesCounter++;
+
+        uv.x = uvs[2 * indices[k] + 0];
+        uv.y = uvs[2 * indices[k] + 1];
+
+        uniqueUvs.push(uv.x, uv.y);
+        uniqueVertices.push(vertex.x, vertex.y, vertex.z);
+      }
+
+      uniqueIndices.push(appearanceMap[verticesMap[key]]);
+  }
+
+  return {
+    uvs: uniqueUvs,
+    indices: uniqueIndices,
+    vertices: uniqueVertices
+  };
+};
+
 EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
   var normals;
   var x, y, z, k;
@@ -19,6 +106,8 @@ EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
   var normal, point0, point1, point2, vector0, vector1;
 
   normals = [];
+  tempNormals = [];
+  tempAppearances = [];
 
   normal = new EZ3.Vector3();
   point0 = new EZ3.Vector3();
@@ -44,8 +133,8 @@ EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
     point1.set(vertices[y + 0], vertices[y + 1], vertices[y + 2]);
     point2.set(vertices[z + 0], vertices[z + 1], vertices[z + 2]);
 
-    vector0 = point1.sub(point0);
-    vector1 = point2.sub(point0);
+    vector0.sub(point1, point0);
+    vector1.sub(point2, point0);
 
     normal = vector0.cross(vector1);
 
@@ -119,7 +208,7 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function(indices, uvs, n
   tangents = [];
   bitangents = [];
 
-  for(k = 0; k < vertices.length; ++k) {
+  for (k = 0; k < vertices.length; ++k) {
     tempT.push(0);
     tempB.push(0);
   }
