@@ -9,7 +9,7 @@ module.exports = {
         '',
         'EZ3.ShaderLibrary = function() {',
         '  this.mesh = {};',
-        '}',
+        '};',
         '',
         'EZ3.ShaderLibrary = new EZ3.ShaderLibrary();',
         '\n'
