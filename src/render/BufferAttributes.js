@@ -1,8 +1,8 @@
 /**
- * @class GeometryArray
+ * @class BufferAttributes
  */
 
-EZ3.GeometryArray = function(config) {
+EZ3.BufferAttributes = function(config) {
   this._data = config.data || [];
   this._offset = config.offset || 0;
   this._stride = config.stride || 0;
@@ -11,25 +11,9 @@ EZ3.GeometryArray = function(config) {
   this.dirty = true;
 };
 
-EZ3.GeometryArray.prototype.constructor = EZ3.GeometryArray;
+EZ3.BufferAttributes.prototype.constructor = EZ3.BufferAttributes;
 
-EZ3.GeometryArray.prototype.clear = function() {
-  this.data = [];
-  this.offset = 0;
-  this.stride = 0;
-  this.dynamic = false;
-  this.normalized = false;
-};
-
-EZ3.GeometryArray.prototype.update = function(config) {
-  this.data = config.data || [];
-  this.offset = config.offset || 0;
-  this.stride = config.stride || 0;
-  this.dynamic = config.dynamic || false;
-  this.normalized = config.normalized || false;
-};
-
-Object.defineProperty(EZ3.GeometryArray.prototype, 'data', {
+Object.defineProperty(EZ3.BufferAttributes.prototype, 'data', {
   get: function() {
     return this._data;
   },
@@ -39,7 +23,7 @@ Object.defineProperty(EZ3.GeometryArray.prototype, 'data', {
   }
 });
 
-Object.defineProperty(EZ3.GeometryArray.prototype, 'offset', {
+Object.defineProperty(EZ3.BufferAttributes.prototype, 'offset', {
   get: function() {
     return this._offset;
   },
@@ -49,7 +33,7 @@ Object.defineProperty(EZ3.GeometryArray.prototype, 'offset', {
   }
 });
 
-Object.defineProperty(EZ3.GeometryArray.prototype, 'stride', {
+Object.defineProperty(EZ3.BufferAttributes.prototype, 'stride', {
   get: function() {
     return this._stride;
   },
@@ -59,7 +43,7 @@ Object.defineProperty(EZ3.GeometryArray.prototype, 'stride', {
   }
 });
 
-Object.defineProperty(EZ3.GeometryArray.prototype, 'dynamic', {
+Object.defineProperty(EZ3.BufferAttributes.prototype, 'dynamic', {
   get: function() {
     return this._dynamic;
   },
@@ -69,7 +53,7 @@ Object.defineProperty(EZ3.GeometryArray.prototype, 'dynamic', {
   }
 });
 
-Object.defineProperty(EZ3.GeometryArray.prototype, 'normalized', {
+Object.defineProperty(EZ3.BufferAttributes.prototype, 'normalized', {
   get: function() {
     return this._normalized;
   },
