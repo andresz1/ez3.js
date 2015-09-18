@@ -22,11 +22,10 @@ EZ3.Box.prototype.update = function() {
   var width, height, depth;
   var widthHalf, heightHalf, depthHalf;
   var widthSegments, heightSegments, depthSegments;
-  var vertices, indices, uvs, normals, tangents, bitangents;
+  var vertices, indices, uvs;
 
   uvs = [];
   indices = [];
-  normals = [];
   vertices = [];
 
   width = this.dimensions.x;
@@ -131,74 +130,16 @@ EZ3.Box.prototype.update = function() {
   buildPlane('x', 'y', +1, -1, width, height, +depthHalf);
   buildPlane('x', 'y', -1, -1, width, height, -depthHalf);
 
-  output = this.mergeVertices(indices, uvs, vertices);
-  normals = this.calculateNormals(indices, vertices);
+  this.uvs.data = uvs;
+  this.uvs.dynamic = true;
 
-  if (!this.uvs) {
-    this.uvs = new EZ3.GeometryArray({
-      data: uvs
-    });
-  } else {
-    this.uvs.clear();
-    this.uvs.update({
-      data: uvs
-    });
-  }
+  this.indices.data = indices;
+  this.indices.dynamic = true;
 
-  if (!this.indices) {
-    this.indices = new EZ3.GeometryArray({
-      data: this.calculateLinearIndices(indices)
-    });
-  } else {
-    this.indices.clear();
-    this.indices.update({
-      data: indices
-    });
-  }
+  this.vertices.data = vertices;
+  this.vertices.dynamic = true;
 
-  if (!this.normals) {
-    this.normals = new EZ3.GeometryArray({
-      data: normals
-    });
-  } else {
-    this.normals.clear();
-    this.normals.update({
-      data: normals
-    });
-  }
-
-  if (!this.vertices) {
-    this.vertices = new EZ3.GeometryArray({
-      data: vertices
-    });
-  } else {
-    this.vertices.clear();
-    this.vertices.update({
-      data: vertices
-    });
-  }
-
-  if (!this.tangents) {
-    this.tangents = new EZ3.GeometryArray({
-      data: tangents
-    });
-  } else {
-    this.tangents.clear();
-    this.tangents.update({
-      data: tangents
-    });
-  }
-
-  if (!this.bitangents) {
-    this.bitangents = new EZ3.GeometryArray({
-      data: bitangents
-    });
-  } else {
-    this.bitangents.clear();
-    this.bitangents.update({
-      data: bitangents
-    });
-  }
+  this.mergeVertices();
 };
 
 Object.defineProperty(EZ3.Box.prototype, 'dimensions', {

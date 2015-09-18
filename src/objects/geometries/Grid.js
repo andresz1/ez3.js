@@ -17,11 +17,10 @@ EZ3.Grid.prototype.constructor = EZ3.Grid;
 EZ3.Grid.prototype.update = function() {
 
   var index0, index1, index2, index3, z, x;
-  var vertices, normals, uvs, indices;
+  var vertices, uvs, indices;
 
   uvs = [];
   indices = [];
-  normals = [];
   vertices = [];
 
   for (z = 0; z < this.resolution.x + 1; ++z) {
@@ -52,87 +51,16 @@ EZ3.Grid.prototype.update = function() {
     }
   }
 
-  normals = this.calculateNormals(indices, vertices);
+  this.uvs.data = uvs;
+  this.uvs.dynamic = true;
 
-  output = this.calculateTangentsAndBitangents(indices, uvs, normals, vertices);
+  this.indices.data = indices;
+  this.indices.dynamic = true;
 
-  if(!this.uvs) {
-    this.uvs = new EZ3.GeometryArray({
-      data: uvs,
-      dynamic: true
-    });
-  } else {
-    this.uvs.clear();
-    this.uvs.update({
-      data: uvs,
-      dynamic: true
-    });
-  }
+  this.vertices.data = vertices;
+  this.vertices.dynamic = true;
 
-  if(!this.indices) {
-    this.indices = new EZ3.GeometryArray({
-      data: indices,
-      dynamic: true
-    });
-  } else {
-    this.indices.clear();
-    this.indices.update({
-      data: indices,
-      dynamic: true
-    });
-  }
-
-  if(!this.normals) {
-    this.normals = new EZ3.GeometryArray({
-      data: normals,
-      dynamic: true
-    });
-  } else {
-    this.normals.clear();
-    this.normals.update({
-      data: normals,
-      dynamic: true
-    });
-  }
-
-  if(!this.vertices) {
-    this.vertices = new EZ3.GeometryArray({
-      data: vertices,
-      dynamic: true
-    });
-  } else {
-    this.vertices.clear();
-    this.vertices.update({
-      data: vertices,
-      dynamic: true
-    });
-  }
-
-  if(!this.tangents) {
-    this.tangents = new EZ3.GeometryArray({
-      data: output.tangents,
-      dynamic: true
-    });
-  } else {
-    this.tangents.clear();
-    this.tangents.update({
-      data: output.tangents,
-      dynamic: true
-    });
-  }
-
-  if(!this.bitangents) {
-    this.bitangents = new EZ3.GeometryArray({
-      data: output.bitangents,
-      dynamic: true
-    });
-  } else {
-    this.bitangents.clear();
-    this.bitangents.update({
-      data: output.bitangents,
-      dynamic: true
-    });
-  }
+  this.mergeVertices();
 };
 
 Object.defineProperty(EZ3.Grid.prototype, 'resolution', {
