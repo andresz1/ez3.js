@@ -5,8 +5,18 @@
 EZ3.MeshMaterial = function(config) {
   this.dirty = true;
   this._program = null;
+  this._wireframeActivated = false;
   this._fill = config.fill || EZ3.MeshMaterial.SOLID;
 };
+
+Object.defineProperty(EZ3.MeshMaterial.prototype, 'wireframeActivated', {
+  get: function() {
+    return this._wireframeActivated;
+  },
+  set: function(wireframeActivated) {
+    this._wireframeActivated = wireframeActivated;
+  }
+});
 
 Object.defineProperty(EZ3.MeshMaterial.prototype, 'program', {
   get: function() {

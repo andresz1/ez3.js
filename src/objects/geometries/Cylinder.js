@@ -25,20 +25,18 @@ EZ3.Cylinder.prototype.constructor = EZ3.Cylinder;
 
 EZ3.Cylinder.prototype.update = function() {
   var u, v;
-  var vertex, normal;
+  var vertex;
   var actualHeight, step;
-  var vertices, normals, uvs, indices;
+  var vertices, uvs, indices;
   var s, t;
 
   actualHeight = this.height;
   step = (this.height - this.base) / this.resolution.x;
 
   vertex = new EZ3.Vector3();
-  normal = new EZ3.Vector3();
 
   uvs = [];
   indices = [];
-  normals = [];
   vertices = [];
 
   for (s = 0; s < this.resolution.x; ++s) {
@@ -50,23 +48,12 @@ EZ3.Cylinder.prototype.update = function() {
       vertex.y = actualHeight;
       vertex.z = this.radius * Math.sin(EZ3.DOUBLE_PI * v);
 
-      normal.x = vertex.x;
-      normal.y = vertex.y;
-      normal.z = vertex.z;
-
-      normal.normalize();
-
       vertices.push(vertex.x);
       vertices.push(vertex.y);
       vertices.push(vertex.z);
 
-      normals.push(normal.x);
-      normals.push(normal.y);
-      normals.push(normal.z);
-
       uvs.push(u);
       uvs.push(v);
-
     }
 
     actualHeight -= step;
@@ -88,85 +75,16 @@ EZ3.Cylinder.prototype.update = function() {
     }
   }
 
-  output = this.calculateTangentsAndBitangents(indices, uvs, normals, vertices);
+  this.uvs.data = uvs;
+  this.uvs.dynamic = true;
 
-  if(!this.uvs) {
-    this.uvs = new EZ3.GeometryArray({
-      data: uvs,
-      dynamic: true
-    });
-  } else {
-    this.uvs.clear();
-    this.uvs.update({
-      data: uvs,
-      dynamic: true
-    });
-  }
+  this.indices.data = indices;
+  this.indices.dynamic = true;
 
-  if(!this.indices) {
-    this.indices = new EZ3.GeometryArray({
-      data: indices,
-      dynamic: true
-    });
-  } else {
-    this.indices.clear();
-    this.indices.update({
-      data: indices,
-      dynamic: true
-    });
-  }
+  this.vertices.data = vertices;
+  this.vertices.dynamic = true;
 
-  if(!this.normals) {
-    this.normals = new EZ3.GeometryArray({
-      data: normals,
-      dynamic: true
-    });
-  } else {
-    this.normals.clear();
-    this.normals.update({
-      data: normals,
-      dynamic: true
-    });
-  }
-
-  if(!this.vertices) {
-    this.vertices = new EZ3.GeometryArray({
-      data: vertices,
-      dynamic: true
-    });
-  } else {
-    this.vertices.clear();
-    this.vertices.update({
-      data: vertices,
-      dynamic: true
-    });
-  }
-
-  if(!this.tangents) {
-    this.tangents = new EZ3.GeometryArray({
-      data: output.tangents,
-      dynamic: true
-    });
-  } else {
-    this.tangents.clear();
-    this.tangents.update({
-      data: output.tangents,
-      dynamic: true
-    });
-  }
-
-  if(!this.bitangents) {
-    this.bitangents = new EZ3.GeometryArray({
-      data: output.bitangents,
-      dynamic: true
-    });
-  } else {
-    this.bitangents.clear();
-    this.bitangents.update({
-      data: output.bitangents,
-      dynamic: true
-    });
-  }
+  this.mergeVertices();
 };
 
 Object.defineProperty(EZ3.Cylinder.prototype, 'base', {

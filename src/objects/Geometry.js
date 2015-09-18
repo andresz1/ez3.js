@@ -3,22 +3,123 @@
  */
 
 EZ3.Geometry = function() {
-  this._uvs = null;
-  this._colors = null;
-  this._indices = null;
-  this._normals = null;
-  this._vertices = null;
-  this._tangents = null;
-  this._bitangents = null;
+  this.uvs = new EZ3.BufferAttributes({});
+  this.colors = new EZ3.BufferAttributes({});
+  this.indices = new EZ3.BufferAttributes({});
+  this.normals = new EZ3.BufferAttributes({});
+  this.vertices = new EZ3.BufferAttributes({});
+  this.tangents = new EZ3.BufferAttributes({});
+  this.bitangents = new EZ3.BufferAttributes({});
 };
 
-EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
+EZ3.Geometry.prototype.calculateLinearIndices = function() {
+  var linearIndices, triangularIndices;
+  var k;
+
+  linearIndices = [];
+  triangularIndices = this.indices.data;
+
+  for (k = 0; k < triangularIndices.length; k += 3) {
+    linearIndices.push(triangularIndices[k + 0]);
+    linearIndices.push(triangularIndices[k + 1]);
+    linearIndices.push(triangularIndices[k + 0]);
+    linearIndices.push(triangularIndices[k + 2]);
+    linearIndices.push(triangularIndices[k + 1]);
+    linearIndices.push(triangularIndices[k + 2]);
+  }
+
+  this.indices.data = linearIndices;
+};
+
+EZ3.Geometry.prototype.calculateTriangularIndices = function() {
+  var indices, triangularIndices;
+
+  indices = this.indices.data;
+  triangularIndices = [];
+
+  for (k = 0; k < linearIndices.length; k += 6) {
+    triangularIndices.push(indices[k + 0]);
+    triangularIndices.push(indices[k + 1]);
+    triangularIndices.push(indices[k + 3]);
+  }
+
+  this.indices.data = triangularIndices;
+};
+
+EZ3.Geometry.prototype.mergeVertices = function() {
+  var key;
+  var presicion;
+  var vertex, uv;
+  var uniqueVerticesCounter;
+  var indices, uvs, vertices;
+  var verticesMap, appearanceMap;
+  var uniqueVertices, uniqueIndices, uniqueUvs, uniqueNormals, uniqueTag;
+  var k, n;
+
+  uvs = this.uvs.data;
+  indices = this.indices.data;
+  vertices = this.vertices.data;
+
+  verticesMap = {};
+  appearanceMap = {};
+
+  uniqueUvs = [];
+  uniqueTag = [];
+  uniqueIndices = [];
+  uniqueVertices = [];
+  uniqueVerticesCounter = 0;
+
+  var faceIndices;
+  var indicesToRemove = [];
+
+  uv = new EZ3.Vector2();
+  vertex = new EZ3.Vector3();
+
+  precision = Math.pow(10, 4);
+
+  for(k = 0; k < indices.length; k++) {
+    vertex.x = vertices[3 * indices[k] + 0];
+    vertex.y = vertices[3 * indices[k] + 1];
+    vertex.z = vertices[3 * indices[k] + 2];
+
+    key = Math.round(vertex.x * precision) +
+      '_' +
+      Math.round(vertex.y * precision) +
+      '_' +
+      Math.round(vertex.z * precision);
+
+      if(verticesMap[key] === undefined) {
+        verticesMap[key] = k;
+        appearanceMap[verticesMap[key]] = uniqueVerticesCounter++;
+
+        uv.x = uvs[2 * indices[k] + 0];
+        uv.y = uvs[2 * indices[k] + 1];
+
+        uniqueUvs.push(uv.x, uv.y);
+        uniqueVertices.push(vertex.x, vertex.y, vertex.z);
+      }
+
+      uniqueIndices.push(appearanceMap[verticesMap[key]]);
+  }
+
+  this.uvs.data = uniqueUvs;
+  this.indices.data = uniqueIndices;
+  this.vertices.data = uniqueVertices;
+};
+
+EZ3.Geometry.prototype.calculateNormals = function() {
   var normals;
   var x, y, z, k;
+  var indices, vertices;
   var tempNormals, tempAppearances;
   var normal, point0, point1, point2, vector0, vector1;
 
+  indices = this.indices.data;
+  vertices = this.vertices.data;
+
   normals = [];
+  tempNormals = [];
+  tempAppearances = [];
 
   normal = new EZ3.Vector3();
   point0 = new EZ3.Vector3();
@@ -44,8 +145,8 @@ EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
     point1.set(vertices[y + 0], vertices[y + 1], vertices[y + 2]);
     point2.set(vertices[z + 0], vertices[z + 1], vertices[z + 2]);
 
-    vector0 = point1.sub(point0);
-    vector1 = point2.sub(point0);
+    vector0.sub(point1, point0);
+    vector1.sub(point2, point0);
 
     normal = vector0.cross(vector1);
 
@@ -82,18 +183,24 @@ EZ3.Geometry.prototype.calculateNormals = function(indices, vertices) {
   tempNormals = [];
   tempAppearances = [];
 
-  return normals;
+  this.normals.data = normals;
 };
 
-EZ3.Geometry.prototype.calculateTangentsAndBitangents = function(indices, uvs, normals, vertices) {
+EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
   var tempT, tempB;
   var vector0, vector1;
   var tangents, bitangents;
   var point0, point1, point2;
   var textVector0, textVector1;
+  var indices, uvs, normals, vertices;
   var textPoint0, textPoint1, textPoint2;
   var normal, normalT, tangent, bitangent;
   var vx, vy, vz, tx, ty, tz, k, r, handedness;
+
+  uvs = this.uvs.data;
+  indices = this.indices.data;
+  normals = this.normals.data;
+  vertices = this.vertices.data;
 
   point0 = new EZ3.Vector3();
   point1 = new EZ3.Vector3();
@@ -119,7 +226,7 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function(indices, uvs, n
   tangents = [];
   bitangents = [];
 
-  for(k = 0; k < vertices.length; ++k) {
+  for (k = 0; k < vertices.length; ++k) {
     tempT.push(0);
     tempB.push(0);
   }
@@ -211,72 +318,6 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function(indices, uvs, n
   tempB = [];
   tempT = [];
 
-  return {
-    tangents: tangents,
-    bitangents: bitangents
-  };
+  this.tangents.data = tangents;
+  this.bitangents.data = bitangents;
 };
-
-Object.defineProperty(EZ3.Geometry.prototype, "uvs", {
-  get: function() {
-    return this._uvs;
-  },
-  set: function(uvs) {
-    this._uvs = uvs;
-    this._uvs.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "colors", {
-  get: function() {
-    return this._colors;
-  },
-  set: function(colors) {
-    this._colors = colors;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "indices", {
-  get: function() {
-    return this._indices;
-  },
-  set: function(indices) {
-    this._indices = indices;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "normals", {
-  get: function() {
-    return this._normals;
-  },
-  set: function(normals) {
-    this._normals = normals;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "vertices", {
-  get: function() {
-    return this._vertices;
-  },
-  set: function(vertices) {
-    this._vertices = vertices;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "tangents", {
-  get: function() {
-    return this._tangents;
-  },
-  set: function(tangents) {
-    this._tangents = tangents;
-  }
-});
-
-Object.defineProperty(EZ3.Geometry.prototype, "bitangents", {
-  get: function() {
-    return this._bitangents;
-  },
-  set: function(bitangents) {
-    this._bitangents = bitangents;
-  }
-});

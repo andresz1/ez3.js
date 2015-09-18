@@ -22,18 +22,121 @@ EZ3.Renderer = function(canvas, options) {
   this.options = options;
 };
 
-EZ3.Renderer.prototype._processContextLost = function(event) {
-  event.preventDefault();
+EZ3.Renderer.prototype._updateMesh = function(mesh) {
+  this._updateMeshBuffers(mesh);
+  this._updateMeshMatrices(mesh);
+  this._updateMeshUniforms(mesh);
 };
 
-EZ3.Renderer.prototype._processContextRecovered = function() {
-  this.initContext();
+EZ3.Renderer.prototype._updateMeshBuffers = function(mesh) {
+  var gl, geometry, material;
+
+  geometry = mesh.geometry;
+
+  if (geometry) {
+
+    gl = this.context;
+    material = mesh.material;
+
+    if (geometry.uvs.data.length && geometry.uvs.dirty) {
+      geometry.uvs.dirty = false;
+
+      mesh.uv.update(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        data: geometry.uvs.data,
+        dynamic: geometry.uvs.dynamic
+      });
+    }
+
+    if (geometry.colors.data.length && geometry.colors.dirty) {
+      geometry.colors.dirty = false;
+
+      mesh.color.update(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        data: geometry.colors.data,
+        dynamic: geometry.colors.dynamic
+      });
+    }
+
+    if (geometry.normals.data.length && geometry.normals.dirty) {
+      geometry.normals.dirty = false;
+
+      mesh.normal.update(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        data: geometry.normals.data,
+        dynamic: geometry.normals.dynamic
+      });
+    }
+
+    if (geometry.vertices.data.length && geometry.vertices.dirty) {
+      geometry.vertices.dirty = false;
+
+      mesh.vertex.update(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        data: geometry.vertices.data,
+        dynamic: geometry.vertices.dynamic
+      });
+    }
+
+    if (geometry.tangents.data.length && geometry.tangents.dirty) {
+      geometry.tangents.dirty = false;
+
+      mesh.tangent.update(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        data: geometry.tangents.data,
+        dynamic: geometry.tangents.dynamic
+      });
+    }
+
+    if (geometry.bitangents.data.length && geometry.bitangents.dirty) {
+      geometry.bitangents.dirty = false;
+
+      mesh.bitangent.update(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        data: geometry.bitangents.data,
+        dynamic: geometry.bitangents.dynamic
+      });
+    }
+
+    if (geometry.indices.data.length && geometry.indices.dirty) {
+      geometry.indices.dirty = false;
+
+      if(material.fill == EZ3.MeshMaterial.WIREFRAME && !material.wireframeActivated){
+        geometry.calculateLinearIndices();
+        material.wireframeActivated = true;
+      }
+
+      else if(material.fill === EZ3.MeshMaterial.SOLID && material.wireframeActivated){
+        geometry.calculateTriangularIndices();
+        material.wireframeActivated = false;
+      }
+
+      mesh.index.update(gl, {
+        type: gl.UNSIGNED_SHORT,
+        data: geometry.indices.data,
+        target: gl.ELEMENT_ARRAY_BUFFER,
+        dynamic: geometry.indices.dynamic
+      });
+    }
+  }
 };
 
-EZ3.Renderer.prototype._updateMatrices = function(entity) {
-  // Importante: Preguntar por la matriz de vista de la camara,
-  // seterarle su dirty a falso y setear el dirty de la
-  // matriz de vista del renderer en true
+EZ3.Renderer.prototype._updateMeshProgram = function(mesh) {
+  var gl = this.context;
+
+  if (mesh.material.dirty) {
+    mesh.material.dirty = false;
+    mesh.material.program = new EZ3.GLSLProgram(gl, mesh.material.config);
+  }
+};
+
+EZ3.Renderer.prototype._updateMeshMatrices = function(mesh) {
   if (this._viewMatrix.dirty) {
     var up = new EZ3.Vector3(0, 1, 0);
     var target = new EZ3.Vector3(0, 0, 0);
@@ -41,55 +144,24 @@ EZ3.Renderer.prototype._updateMatrices = function(entity) {
     this._viewMatrix.lookAt(position, target, up);
   }
 
-  // Importante: Preguntar por la matriz de proyeccion de la camara,
-  // seterarle su dirty a falso y setear el dirty de la
-  // matriz de proyeccion del renderer en true
   if (this._projectionMatrix.dirty)
     this._projectionMatrix.perspective(70, 800 / 600, 1, 1000);
 
-  this._modelMatrix.copy(entity.worldMatrix);
+  this._modelMatrix.copy(mesh.worldMatrix);
 
-  this._normalMatrix.copy(entity.normalMatrix);
+  this._normalMatrix.copy(mesh.normalMatrix);
 
   this._mvMatrix.mul(this._modelMatrix, this._viewMatrix);
 
   this._mvpMatrix.mul(this._mvMatrix, this._projectionMatrix);
-
 };
 
-EZ3.Renderer.prototype._updateUniformMaterial = function(material) {
-  var gl = this.context;
-  var program = material.program;
-
-  if (material.color.dirty) {
-    material.color.dirty = false;
-    program.loadUniformf(gl, 'uMaterial.color', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.color.value);
-  }
-
-  if (material.shininess.dirty) {
-    material.shininess.dirty = false;
-    program.loadUniformf(gl, 'uMaterial.shininess', EZ3.GLSLProgram.UNIFORM_SIZE_1D, material.shininess.value);
-  }
-
-  if (material.ambientColor.dirty) {
-    material.ambientColor.dirty = false;
-    program.loadUniformf(gl, 'uMaterial.ambientColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.ambientColor.value);
-  }
-
-  if (material.diffuseColor.dirty) {
-    material.diffuseColor.dirty = false;
-    program.loadUniformf(gl, 'uMaterial.diffuseColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.diffuseColor.value);
-  }
-
-  if (material.specularColor.dirty) {
-    material.specularColor.dirty = false;
-    program.loadUniformf(gl, 'uMaterial.specularColor', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.specularColor.value);
-  }
+EZ3.Renderer.prototype._updateMeshUniforms = function(mesh) {
+  this._updateMeshUniformMatrices(mesh.material.program);
 };
 
-EZ3.Renderer.prototype._updateUniformMatrices = function(material) {
+EZ3.Renderer.prototype._updateMeshUniformMatrices = function(program) {
   var gl = this.context;
-  var program = material.program;
 
   program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.toArray());
 
@@ -110,143 +182,126 @@ EZ3.Renderer.prototype._updateUniformMatrices = function(material) {
   }
 };
 
-EZ3.Renderer.prototype._updateUniformTextures = function(material) {
-  var gl = this.context;
-  var program = material.program;
+EZ3.Renderer.prototype._renderMesh = function(mesh) {
+  var gl, geometry, material, program, length;
 
-  if (material.heightTexture.dirty) {
-    material.heightTexture.dirty = false;
+  geometry = mesh.geometry;
 
-    if (material.heightTexture.map) {
-      material.heightTexture.value = material.setupTexture(gl, material.heightTexture.map);
+  if (geometry) {
+    gl = this.context;
+    material = mesh.material;
+    program = material.program;
 
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, material.heightTexture.value);
-      program.loadUniformi(gl, 'uHeightTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 0);
-    }
-  }
-
-  if (material.normalTexture.dirty) {
-    material.normalTexture.dirty = false;
-
-    if (material.normalTexture.map) {
-      material.normalTexture.value = material.setupTexture(gl, material.normalTexture.map);
-
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, material.normalTexture.value);
-      program.loadUniformi(gl, 'uNormalTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 1);
-    }
-  }
-
-  if (material.diffuseTexture.dirty) {
-    material.diffuseTexture.dirty = false;
-
-    if (material.diffuseTexture.map) {
-      material.diffuseTexture.value = material.setupTexture(gl, material.diffuseTexture.map);
-
-      gl.activeTexture(gl.TEXTURE2);
-      gl.bindTexture(gl.TEXTURE_2D, material.diffuseTexture.value);
-      program.loadUniformi(gl, 'uDiffuseTexture', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 2);
-    }
-  }
-};
-
-EZ3.Renderer.prototype._updateUniformSpots = function(material) {
-  var gl = this.context;
-  var program = material.program;
-
-  for (var k = 0; k < this._spots.length; ++k) {
-    if (this._spots[k].cutoff.dirty) {
-      this._spots[k].cutoff.dirty = false;
-      program.loadUniformf(gl, 'uSpots[' + k + '].cutoff', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].cutoff.value);
+    if (geometry.uvs.data.length) {
+      mesh.uv.setup(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        offset: geometry.uvs.offset,
+        stride: geometry.uvs.stride,
+        layout: program.attribute.uv,
+        normalized: geometry.uvs.normalized,
+        length: EZ3.BufferGeometry.UV_LENGTH
+      });
     }
 
-    if (this._spots[k].exponent.dirty) {
-      this._spots[k].exponent.dirty = false;
-      program.loadUniformf(gl, 'uSpots[' + k + '].exponent', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].exponent.value);
+    if (geometry.colors.data.length) {
+      mesh.color.setup(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        offset: geometry.colors.offset,
+        stride: geometry.colors.stride,
+        layout: program.attribute.color,
+        normalized: geometry.colors.normalized,
+        length: EZ3.BufferGeometry.COLOR_LENGTH
+      });
     }
 
-    if (this._spots[k].position.dirty) {
-      this._spots[k].position.dirty = false;
-      program.loadUniformf(gl, 'uSpots[' + k + '].position', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._spots[k].position.value);
+    if (geometry.normals.data.length) {
+      mesh.normal.setup(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        offset: geometry.normals.offset,
+        stride: geometry.normals.stride,
+        layout: program.attribute.normal,
+        normalized: geometry.normals.normalized,
+        length: EZ3.BufferGeometry.NORMAL_LENGTH
+      });
     }
 
-    if (this._spots[k].linearAttenuation.dirty) {
-      this._spots[k].linearAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uSpots[' + k + '].linearAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].linearAttenuation.value);
+    if (geometry.vertices.data.length) {
+      mesh.vertex.setup(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        offset: geometry.vertices.offset,
+        stride: geometry.vertices.stride,
+        layout: program.attribute.vertex,
+        normalized: geometry.vertices.normalized,
+        length: EZ3.BufferGeometry.VERTEX_LENGTH
+      });
     }
 
-    if (this._spots[k].constantAttenuation.dirty) {
-      this._spots[k].constantAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uSpots[' + k + '].constantAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].constantAttenuation.value);
+    if (geometry.tangents.data.length) {
+      mesh.tangent.setup(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        offset: geometry.tangents.offset,
+        stride: geometry.tangents.stride,
+        layout: program.attribute.tangent,
+        normalized: geometry.tangents.normalized,
+        length: EZ3.BufferGeometry.TANGENT_LENGTH
+      });
     }
 
-    if (this._spots[k].quadraticAttenuation.dirty) {
-      this._spots[k].quadraticAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uSpots[' + k + '].quadraticAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._spots[k].quadraticAttenuation.value);
-    }
-  }
-};
-
-EZ3.Renderer.prototype._updateUniformPuntuals = function(material) {
-  var gl = this.context;
-  var program = material.program;
-
-  for (var k = 0; k < this._puntuals.length; ++k) {
-    if (this._puntuals[k].position.dirty) {
-      this._puntuals[k].position.dirty = false;
-      program.loadUniformf(gl, 'uPuntuals[' + k + '].position', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._puntuals[k].position.value);
+    if (geometry.bitangents.data.length) {
+      mesh.bitangent.setup(gl, {
+        type: gl.FLOAT,
+        target: gl.ARRAY_BUFFER,
+        offset: geometry.bitangents.offset,
+        stride: geometry.bitangents.stride,
+        layout: program.attribute.bitangent,
+        normalized: geometry.bitangents.normalized,
+        length: EZ3.BufferGeometry.BITANGENT_LENGTH
+      });
     }
 
-    if (this._puntuals[k].linearAttenuation.dirty) {
-      this._puntuals[k].linearAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uPuntuals[' + k + '].linearAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._puntuals[k].linearAttenuation.value);
+    if (geometry.indices.data.length) {
+      length = geometry.indices.data.length;
+
+      mesh.index.setup(gl, {
+        target: gl.ELEMENT_ARRAY_BUFFER
+      });
+
+      if(material.fill === EZ3.MeshMaterial.SOLID)
+        gl.drawElements(gl.TRIANGLES, length, gl.UNSIGNED_SHORT, 0);
+
+      else if(material.fill === EZ3.MeshMaterial.POINTS)
+        gl.drawElements(gl.POINTS, length, gl.UNSIGNED_SHORT, 0);
+
+      else if(material.fill === EZ3.MeshMaterial.WIREFRAME)
+        gl.drawElements(gl.LINES, length, gl.UNSIGNED_SHORT, 0);
     }
 
-    if (this._puntuals[k].constantAttenuation.dirty) {
-      this._puntuals[k].constantAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uPuntuals[' + k + '].constantAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._puntuals[k].constantAttenuation.value);
-    }
+    else if (geometry.vertices.data.length) {
+      length = geometry.vertices.data.length / 3;
 
-    if (this._puntuals[k].quadraticAttenuation.dirty) {
-      this._puntuals[k].quadraticAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uPuntuals[' + k + '].quadraticAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._puntuals[k].quadraticAttenuation.value);
-    }
-  }
-};
+      if(material.fill === EZ3.MeshMaterial.SOLID)
+        gl.drawArrays(gl.TRIANGLES, 0, length);
 
-EZ3.Renderer.prototype._updateUniformDirectionals = function(material) {
-  var gl = this.context;
-  var program = material.program;
+      else if(material.fill === EZ3.MeshMaterial.POINTS)
+        gl.drawArrays(gl.POINTS, 0, length);
 
-  for (var k = 0; k < this._directionals.length; ++k) {
-    if (this._directional[k].direction.dirty) {
-      this._directional[k].direction.dirty = false;
-      program.loadUniformf(gl, 'uDirectionals[' + k + '].direction', EZ3.GLSLProgram.UNIFORM_SIZE_3D, this._directional[k].direction.value);
-    }
-
-    if (this._directionals[k].linearAttenuation.dirty) {
-      this._directionals[k].linearAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uDirectionals[' + k + '].linearAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._directionals[k].linearAttenuation.value);
-    }
-
-    if (this._directionals[k].constantAttenuation.dirty) {
-      this._directionals[k].constantAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uDirectionals[' + k + '].constantAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._directionals[k].constantAttenuation.value);
-    }
-
-    if (this._directionals[k].quadraticAttenuation.dirty) {
-      this._directionals[k].quadraticAttenuation.dirty = false;
-      program.loadUniformf(gl, 'uDirectionals[' + k + '].quadraticAttenuation', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this._directionals[k].quadraticAttenuation.value);
+      else if(material.fill === EZ3.MeshMaterial.WIREFRAME)
+        gl.drawArrays(gl.LINES, 0, length);
     }
   }
 };
 
-EZ3.Renderer.prototype._updateUniforms = function(entity) {
-  var gl = this.context;
-  var material = entity.material;
-  var program = entity.material.program;
-  this._updateUniformMatrices(material);
+EZ3.Renderer.prototype._processContextLost = function(event) {
+  event.preventDefault();
+};
+
+EZ3.Renderer.prototype._processContextRecovered = function() {
+  this.initContext();
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -266,7 +321,6 @@ EZ3.Renderer.prototype.initContext = function() {
 
     if (this.context)
       break;
-
   }
 
   if (!this.context)
@@ -297,7 +351,9 @@ EZ3.Renderer.prototype.clear = function() {
 };
 
 EZ3.Renderer.prototype.render = function(screen) {
-  var entity;
+  var gl, entity;
+
+  gl = this.context;
 
   this.context.viewport(screen.position.x, screen.position.y, screen.size.x, screen.size.y);
   this.context.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -310,16 +366,11 @@ EZ3.Renderer.prototype.render = function(screen) {
     entity = this._entities.pop();
 
     if (entity instanceof EZ3.Mesh) {
-      entity.setup(this.context);
-
-      this._updateMatrices(entity);
-
-      entity.material.program.enable(this.context);
-
-      this._updateUniforms(entity);
-      entity.render(this.context);
-
-      entity.material.program.disable(this.context);
+      this._updateMeshProgram(entity);
+      entity.material.program.enable(gl);
+      this._updateMesh(entity);
+      this._renderMesh(entity);
+      entity.material.program.disable(gl);
     }
 
     for (var k = entity.children.length - 1; k >= 0; --k)
