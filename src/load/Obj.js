@@ -8,6 +8,10 @@ EZ3.Obj = function(url, crossOrigin) {
   this.content = new EZ3.Entity();
 };
 
+EZ3.Obj.prototype._parseMaterial = function() {
+
+};
+
 EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
   var that, patterns, lines, line, result;
   var mtllibs, materials, material, geometry, mesh, indices, normals, uvs;
@@ -87,39 +91,49 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
   }
 
   function computeNormals() {
-    var indicesCount, i, j, k;
+    var indicesCount;
+    var i, j, k;
 
     indicesCount = [];
+
+    geometry.normals = new EZ3.GeometryArray({});
 
     for (i = 0; i < vertices.length / 3; i++) {
       indicesCount.push(0);
 
       for (j = 0; j < 3; j++)
-        geometry.normals.push(0);
+        geometry.normals.data.push(0);
     }
 
     for (i = 0; i < indices.vertex.length; i++) {
       indicesCount[indices.vertex[i]]++;
 
       for (j = 0; j < 3; j++)
-        geometry.normals[3 * indices.vertex[i] + j] += normals[3 * indices.normal[i] + j];
+        geometry.normals.data[3 * indices.vertex[i] + j] += normals[3 * indices.normal[i] + j];
     }
 
     for (i = 0, j = 0; i < vertices.length; i += 3, j++)
       for (k = 0; k < 3; k++)
-        geometry.normals[i + k] /= indicesCount[j];
+        geometry.normals.data[i + k] /= indicesCount[j];
   }
 
   function computeUvs() {
+    geometry.uvs = new EZ3.GeometryArray({});
+
     for (i = 0; i < indices.vertex.length; i++)
       for (j = 0; j < 2; j++)
-        geometry.uvs[2 * indices.vertex[i] + j] = uvs[2 * indices.uv[i] + j];
+        geometry.uvs.data[2 * indices.vertex[i] + j] = uvs[2 * indices.uv[i] + j];
   }
 
   function processMesh() {
     if (indices.vertex.length && vertices.length) {
-      geometry.indices = indices.vertex;
-      geometry.vertices = vertices;
+      geometry.indices = new EZ3.GeometryArray({
+        data: indices.vertex
+      });
+
+      geometry.vertices = new EZ3.GeometryArray({
+        data: vertices
+      });
 
       if (indices.normal.length && normals.length)
         computeNormals();
@@ -129,7 +143,9 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
 
       that.content.add(mesh);
 
-      material = new EZ3.Material({});
+      material = new EZ3.MeshMaterial({
+        fill: EZ3.MeshMaterial.WIREFRAME
+      });
       geometry = new EZ3.Geometry();
       mesh = new EZ3.Mesh(geometry, material);
 
@@ -231,7 +247,9 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
   };
   mtllibs = [];
   materials = {};
-  material = new EZ3.Material({});
+  material = new EZ3.MeshMaterial({
+    fill: EZ3.MeshMaterial.WIREFRAME
+  });
   geometry = new EZ3.Geometry();
   mesh = new EZ3.Mesh(geometry, material);
   indices = {
