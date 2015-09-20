@@ -22,121 +22,24 @@ EZ3.Renderer = function(canvas, options) {
   this.options = options;
 };
 
-EZ3.Renderer.prototype._updateMesh = function(mesh) {
-  this._updateMeshBuffers(mesh);
-  this._updateMeshMatrices(mesh);
-  this._updateMeshUniforms(mesh);
+EZ3.Renderer.prototype._processContextLost = function(event) {
+  event.preventDefault();
 };
 
-EZ3.Renderer.prototype._updateMeshBuffers = function(mesh) {
-  var gl, geometry, material;
-
-  geometry = mesh.geometry;
-
-  if (geometry) {
-
-    gl = this.context;
-    material = mesh.material;
-
-    if (geometry.uvs.data.length && geometry.uvs.dirty) {
-      geometry.uvs.dirty = false;
-
-      mesh.uv.update(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        data: geometry.uvs.data,
-        dynamic: geometry.uvs.dynamic
-      });
-    }
-
-    if (geometry.colors.data.length && geometry.colors.dirty) {
-      geometry.colors.dirty = false;
-
-      mesh.color.update(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        data: geometry.colors.data,
-        dynamic: geometry.colors.dynamic
-      });
-    }
-
-    if (geometry.normals.data.length && geometry.normals.dirty) {
-      geometry.normals.dirty = false;
-
-      mesh.normal.update(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        data: geometry.normals.data,
-        dynamic: geometry.normals.dynamic
-      });
-    }
-
-    if (geometry.vertices.data.length && geometry.vertices.dirty) {
-      geometry.vertices.dirty = false;
-
-      mesh.vertex.update(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        data: geometry.vertices.data,
-        dynamic: geometry.vertices.dynamic
-      });
-    }
-
-    if (geometry.tangents.data.length && geometry.tangents.dirty) {
-      geometry.tangents.dirty = false;
-
-      mesh.tangent.update(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        data: geometry.tangents.data,
-        dynamic: geometry.tangents.dynamic
-      });
-    }
-
-    if (geometry.bitangents.data.length && geometry.bitangents.dirty) {
-      geometry.bitangents.dirty = false;
-
-      mesh.bitangent.update(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        data: geometry.bitangents.data,
-        dynamic: geometry.bitangents.dynamic
-      });
-    }
-
-    if (geometry.indices.data.length && geometry.indices.dirty) {
-      geometry.indices.dirty = false;
-
-      if(material.fill == EZ3.MeshMaterial.WIREFRAME && !material.wireframeActivated){
-        geometry.calculateLinearIndices();
-        material.wireframeActivated = true;
-      }
-
-      else if(material.fill === EZ3.MeshMaterial.SOLID && material.wireframeActivated){
-        geometry.calculateTriangularIndices();
-        material.wireframeActivated = false;
-      }
-
-      mesh.index.update(gl, {
-        type: gl.UNSIGNED_SHORT,
-        data: geometry.indices.data,
-        target: gl.ELEMENT_ARRAY_BUFFER,
-        dynamic: geometry.indices.dynamic
-      });
-    }
-  }
+EZ3.Renderer.prototype._processContextRecovered = function() {
+  this.initContext();
 };
 
 EZ3.Renderer.prototype._updateMeshProgram = function(mesh) {
   var gl = this.context;
 
   if (mesh.material.dirty) {
-    mesh.material.dirty = false;
     mesh.material.program = new EZ3.GLSLProgram(gl, mesh.material.config);
+    mesh.material.dirty = false;
   }
 };
 
-EZ3.Renderer.prototype._updateMeshMatrices = function(mesh) {
+EZ3.Renderer.prototype._updateMatrices = function(mesh) {
   if (this._viewMatrix.dirty) {
     var up = new EZ3.Vector3(0, 1, 0);
     var target = new EZ3.Vector3(0, 0, 0);
@@ -148,27 +51,21 @@ EZ3.Renderer.prototype._updateMeshMatrices = function(mesh) {
     this._projectionMatrix.perspective(70, 800 / 600, 1, 1000);
 
   this._modelMatrix.copy(mesh.worldMatrix);
-
   this._normalMatrix.copy(mesh.normalMatrix);
-
   this._mvMatrix.mul(this._modelMatrix, this._viewMatrix);
-
   this._mvpMatrix.mul(this._mvMatrix, this._projectionMatrix);
 };
 
-EZ3.Renderer.prototype._updateMeshUniforms = function(mesh) {
-  this._updateMeshUniformMatrices(mesh.material.program);
-};
+EZ3.Renderer.prototype._updateProgramUniforms = function(mesh) {
+  var gl, material, program;
 
-EZ3.Renderer.prototype._updateMeshUniformMatrices = function(program) {
-  var gl = this.context;
+  gl = this.context;
+  material = mesh.material;
+  program = material.program;
 
   program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.toArray());
-
   program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.toArray());
-
   program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix.toArray());
-
   program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix.toArray());
 
   if (this._viewMatrix.dirty) {
@@ -180,10 +77,11 @@ EZ3.Renderer.prototype._updateMeshUniformMatrices = function(program) {
     this._projectionMatrix.dirty = false;
     program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix.toArray());
   }
+
 };
 
-EZ3.Renderer.prototype._renderMesh = function(mesh) {
-  var gl, geometry, material, program, length;
+EZ3.Renderer.prototype._processMesh = function(mesh) {
+  var gl, geometry, material, program, length, fill;
 
   geometry = mesh.geometry;
 
@@ -192,116 +90,90 @@ EZ3.Renderer.prototype._renderMesh = function(mesh) {
     material = mesh.material;
     program = material.program;
 
-    if (geometry.uvs.data.length) {
-      mesh.uv.setup(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        offset: geometry.uvs.offset,
-        stride: geometry.uvs.stride,
-        layout: program.attribute.uv,
-        normalized: geometry.uvs.normalized,
-        length: EZ3.BufferGeometry.UV_LENGTH
-      });
+    if (!geometry.uvs.empty) {
+      if (geometry.uvs.dirty) {
+        mesh.uv.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.uvs);
+        geometry.uvs.dirty = false;
+      }
+
+      mesh.uv.setup(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.uv, geometry.uvs);
     }
 
-    if (geometry.colors.data.length) {
-      mesh.color.setup(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        offset: geometry.colors.offset,
-        stride: geometry.colors.stride,
-        layout: program.attribute.color,
-        normalized: geometry.colors.normalized,
-        length: EZ3.BufferGeometry.COLOR_LENGTH
-      });
+    if (!geometry.colors.empty) {
+      if (geometry.colors.dirty) {
+        mesh.color.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.colors);
+        geometry.colors.dirty = false;
+      }
+
+      mesh.color.setup(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.color, geometry.colors);
     }
 
-    if (geometry.normals.data.length) {
-      mesh.normal.setup(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        offset: geometry.normals.offset,
-        stride: geometry.normals.stride,
-        layout: program.attribute.normal,
-        normalized: geometry.normals.normalized,
-        length: EZ3.BufferGeometry.NORMAL_LENGTH
-      });
+    if (!geometry.normals.empty) {
+      if (geometry.normals.dirty) {
+        mesh.normal.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.normals);
+        geometry.normals.dirty = false;
+      }
+
+      mesh.normal.setup(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.normal, geometry.normals);
     }
 
-    if (geometry.vertices.data.length) {
-      mesh.vertex.setup(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        offset: geometry.vertices.offset,
-        stride: geometry.vertices.stride,
-        layout: program.attribute.vertex,
-        normalized: geometry.vertices.normalized,
-        length: EZ3.BufferGeometry.VERTEX_LENGTH
-      });
+    if (!geometry.vertices.empty) {
+      if(geometry.indices.empty) {
+        // ...
+      }
+
+      if (geometry.vertices.dirty) {
+        mesh.vertex.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.vertices);
+        geometry.vertices.dirty = false;
+      }
+
+      mesh.vertex.setup(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.vertex, geometry.vertices);
     }
 
-    if (geometry.tangents.data.length) {
-      mesh.tangent.setup(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        offset: geometry.tangents.offset,
-        stride: geometry.tangents.stride,
-        layout: program.attribute.tangent,
-        normalized: geometry.tangents.normalized,
-        length: EZ3.BufferGeometry.TANGENT_LENGTH
-      });
+    if (!geometry.tangents.empty) {
+      if (geometry.tangents.dirty) {
+        mesh.tangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.tangents);
+        geometry.tangents.dirty = false;
+      }
+
+      mesh.tangents.setup(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.tangent, geometry.tangents);
     }
 
-    if (geometry.bitangents.data.length) {
-      mesh.bitangent.setup(gl, {
-        type: gl.FLOAT,
-        target: gl.ARRAY_BUFFER,
-        offset: geometry.bitangents.offset,
-        stride: geometry.bitangents.stride,
-        layout: program.attribute.bitangent,
-        normalized: geometry.bitangents.normalized,
-        length: EZ3.BufferGeometry.BITANGENT_LENGTH
-      });
+    if (!geometry.bitangents.empty) {
+      if (geometry.bitangents.dirty) {
+        mesh.bitangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.bitangents);
+        geometry.bitangents.dirty = false;
+      }
+
+      mesh.bitangent.setup(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.bitangent, geometry.bitangents);
     }
 
-    if (geometry.indices.data.length) {
-      length = geometry.indices.data.length;
+    if (!geometry.indices.empty) {
+      if (material.fill === EZ3.MeshMaterial.WIREFRAME && !geometry.linearIndices)
+        geometry.calculateLinearIndices();
+      else if (material.fill === EZ3.MeshMaterial.SOLID && geometry.linearIndices)
+        geometry.calculateTriangularIndices();
 
-      mesh.index.setup(gl, {
-        target: gl.ELEMENT_ARRAY_BUFFER
-      });
+      if (geometry.indices.dirty) {
+        mesh.index.update(gl, gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, geometry.indices);
+        geometry.indices.dirty = false;
+      }
 
-      if(material.fill === EZ3.MeshMaterial.SOLID)
-        gl.drawElements(gl.TRIANGLES, length, gl.UNSIGNED_SHORT, 0);
-
-      else if(material.fill === EZ3.MeshMaterial.POINTS)
-        gl.drawElements(gl.POINTS, length, gl.UNSIGNED_SHORT, 0);
-
-      else if(material.fill === EZ3.MeshMaterial.WIREFRAME)
-        gl.drawElements(gl.LINES, length, gl.UNSIGNED_SHORT, 0);
+      mesh.index.setup(gl, gl.ELEMENT_ARRAY_BUFFER);
     }
 
-    else if (geometry.vertices.data.length) {
-      length = geometry.vertices.data.length / 3;
+    if (material.fill === EZ3.MeshMaterial.SOLID)
+      fill = gl.TRIANGLES;
+    else if (material.fill === EZ3.MeshMaterial.POINTS)
+      fill = gl.POINTS;
+    else if (material.fill === EZ3.MeshMaterial.WIREFRAME)
+      fill = gl.LINES;
 
-      if(material.fill === EZ3.MeshMaterial.SOLID)
-        gl.drawArrays(gl.TRIANGLES, 0, length);
-
-      else if(material.fill === EZ3.MeshMaterial.POINTS)
-        gl.drawArrays(gl.POINTS, 0, length);
-
-      else if(material.fill === EZ3.MeshMaterial.WIREFRAME)
-        gl.drawArrays(gl.LINES, 0, length);
-    }
+    if(!geometry.indices.empty)
+      gl.drawElements(fill, geometry.indices.data.length, gl.UNSIGNED_SHORT, 0);
+    else if(!geometry.vertices.empty)
+      gl.drawArrays(fill, 0, geometry.vertices.data.length / 3);
   }
-};
-
-EZ3.Renderer.prototype._processContextLost = function(event) {
-  event.preventDefault();
-};
-
-EZ3.Renderer.prototype._processContextRecovered = function() {
-  this.initContext();
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -366,10 +238,12 @@ EZ3.Renderer.prototype.render = function(screen) {
     entity = this._entities.pop();
 
     if (entity instanceof EZ3.Mesh) {
+      this._updateMatrices(entity);
       this._updateMeshProgram(entity);
+
       entity.material.program.enable(gl);
-      this._updateMesh(entity);
-      this._renderMesh(entity);
+      this._updateProgramUniforms(entity);
+      this._processMesh(entity);
       entity.material.program.disable(gl);
     }
 
