@@ -3,13 +3,14 @@
  */
 
 EZ3.Geometry = function() {
-  this.uvs = new EZ3.BufferAttributes({});
-  this.colors = new EZ3.BufferAttributes({});
-  this.indices = new EZ3.BufferAttributes({});
-  this.normals = new EZ3.BufferAttributes({});
-  this.vertices = new EZ3.BufferAttributes({});
-  this.tangents = new EZ3.BufferAttributes({});
-  this.bitangents = new EZ3.BufferAttributes({});
+  this.indices = new EZ3.BufferAttribute();
+  this.uvs = new EZ3.BufferAttribute(EZ3.BufferAttribute.UV_LENGTH);
+  this.colors = new EZ3.BufferAttribute(EZ3.BufferAttribute.COLOR_LENGTH);
+  this.normals = new EZ3.BufferAttribute(EZ3.BufferAttribute.NORMAL_LENGTH);
+  this.vertices = new EZ3.BufferAttribute(EZ3.BufferAttribute.VERTEX_LENGTH);
+  this.tangents = new EZ3.BufferAttribute(EZ3.BufferAttribute.TANGENT_LENGTH);
+  this.bitangents = new EZ3.BufferAttribute(EZ3.BufferAttribute.BITANGENT_LENGTH);
+  this.linearIndices = false;
 };
 
 EZ3.Geometry.prototype.calculateLinearIndices = function() {
@@ -28,6 +29,7 @@ EZ3.Geometry.prototype.calculateLinearIndices = function() {
     linearIndices.push(triangularIndices[k + 2]);
   }
 
+  this.linearIndices = true;
   this.indices.data = linearIndices;
 };
 
@@ -43,6 +45,7 @@ EZ3.Geometry.prototype.calculateTriangularIndices = function() {
     triangularIndices.push(indices[k + 3]);
   }
 
+  this.linearIndices = false;
   this.indices.data = triangularIndices;
 };
 
