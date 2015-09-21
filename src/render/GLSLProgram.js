@@ -28,6 +28,7 @@ EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
     'uniform mat3 uNormalMatrix;',
     'uniform mat4 uProjectionMatrix;',
     'void main() {',
+    ' gl_PointSize = 3.0;',
     ' gl_Position = uMvpMatrix * vec4(vertex, 1.0);',
     '}'
   ].join('\n');

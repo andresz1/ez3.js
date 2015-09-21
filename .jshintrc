@@ -1,29 +1,17 @@
 {
+  "browser": true,
+  "devel": true,
   "undef": true,
   "unused": true,
   "eqeqeq": true,
   "indent": 2,
   "latedef": true,
-  "maxlen": 150,
+  "maxlen": 80,
   "newcap": true,
   "camelcase": true,
   "sub": true,
   "quotmark": "single",
   "predef": [
-    "document",
-    "window",
-    "navigator",
-    "EZ3",
-    "mat2",
-    "mat3",
-    "mat4",
-    "vec2",
-    "vec3",
-    "vec4",
-    "quat"
-    "signals",
-    "mixin",
-    "Float32Array",
-    "Uint16Array"
+    "EZ3"
   ]
 }
