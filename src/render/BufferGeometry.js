@@ -3,49 +3,54 @@
  */
 
 EZ3.BufferGeometry = function() {
-  this._id = null;
+  this._id = 0;
 };
 
+EZ3.BufferGeometry.prototype.constructor = EZ3.BufferGeometry;
+
 EZ3.BufferGeometry.prototype.bind = function(gl, target, type, layout, attr) {
-  var length, normalized, stride, offset;
-  
+  var size;
+  var normalized;
+  var stride;
+  var offset;
+
   gl.bindBuffer(target, this._id);
 
   if(layout !== undefined) {
-    length = attr.length;
+    size = attr.size;
     normalized = attr.normalized;
     stride = attr.stride;
     offset = attr.offset;
 
     gl.enableVertexAttribArray(layout);
-    gl.vertexAttribPointer(layout, length, type, normalized, stride, offset);
+    gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
   }
 };
 
-EZ3.BufferGeometry.prototype.update = function(gl, target, type, attribute) {
-  var array;
+EZ3.BufferGeometry.prototype.update = function(gl, target, type, attr) {
+  var data;
 
   if(type === gl.UNSIGNED_SHORT)
-    array = new Uint16Array(attribute.data);
+    data = new Uint16Array(attr.data);
   else
-    array = new Float32Array(attribute.data);
+    data = new Float32Array(attr.data);
 
-  if (attribute.dynamic) {
+  if (attr.dynamic) {
     if (!this._id) {
       this._id = gl.createBuffer();
       gl.bindBuffer(target, this._id);
-      gl.bufferData(target, array, gl.DYNAMIC_DRAW);
+      gl.bufferData(target, data, gl.DYNAMIC_DRAW);
       gl.bindBuffer(target, null);
     } else {
       gl.bindBuffer(target, this._id);
-      gl.bufferSubData(target, 0, array);
+      gl.bufferSubData(target, 0, data);
       gl.bindBuffer(target, null);
     }
   } else {
     if (!this._id) {
       this._id = gl.createBuffer();
       gl.bindBuffer(target, this._id);
-      gl.bufferData(target, array, gl.STATIC_DRAW);
+      gl.bufferData(target, data, gl.STATIC_DRAW);
       gl.bindBuffer(target, null);
     }
   }

@@ -147,8 +147,10 @@ Object.defineProperty(EZ3.Box.prototype, 'dimensions', {
     return this._dimensions;
   },
   set: function(dimensions) {
-    if (dimensions instanceof EZ3.Vector3)
+    if (dimensions instanceof EZ3.Vector3) {
       this._dimensions = dimensions;
+      this.update();
+    }
   }
 });
 
@@ -157,7 +159,9 @@ Object.defineProperty(EZ3.Box.prototype, 'resolution', {
     return this._resolution;
   },
   set: function(resolution) {
-    if (resolution instanceof EZ3.Vector3)
+    if (resolution instanceof EZ3.Vector3) {
       this._resolution.copy(resolution);
+      EZ3.Box.prototype.update.call(this);
+    }
   }
 });

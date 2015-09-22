@@ -2,31 +2,25 @@
  * @class BufferAttribute
  */
 
-EZ3.BufferAttribute = function(length) {
-  this._length = length || 0;
+EZ3.BufferAttribute = function(size) {
   this._data = [];
   this._offset = 0;
   this._stride = 0;
   this._dynamic = false;
   this._normalized = false;
+  this._size = size || 0;
 
   this.dirty = true;
 };
 
 EZ3.BufferAttribute.prototype.constructor = EZ3.BufferAttribute;
 
-Object.defineProperty(EZ3.BufferAttribute.prototype, 'empty', {
+Object.defineProperty(EZ3.BufferAttribute.prototype, 'size', {
   get: function() {
-    return this.data.length === 0;
-  }
-});
-
-Object.defineProperty(EZ3.BufferAttribute.prototype, 'length', {
-  get: function() {
-    return this._length;
+    return this._size;
   },
-  set: function(length) {
-    this._length = length;
+  set: function(size) {
+    this._size = size;
     this.dirty = true;
   }
 });
@@ -81,9 +75,10 @@ Object.defineProperty(EZ3.BufferAttribute.prototype, 'normalized', {
   }
 });
 
-EZ3.BufferAttribute.UV_LENGTH = 2;
-EZ3.BufferAttribute.COLOR_LENGTH = 3;
-EZ3.BufferAttribute.VERTEX_LENGTH = 3;
-EZ3.BufferAttribute.NORMAL_LENGTH = 3;
-EZ3.BufferAttribute.TANGENT_LENGTH = 4;
-EZ3.BufferAttribute.BITANGENT_LENGTH = 3;
+EZ3.BufferAttribute.SIZE = {};
+EZ3.BufferAttribute.SIZE.UV = 2;
+EZ3.BufferAttribute.SIZE.VERTEX = 3;
+EZ3.BufferAttribute.SIZE.COLOR = 3;
+EZ3.BufferAttribute.SIZE.NORMAL = 3;
+EZ3.BufferAttribute.SIZE.BITANGENT = 3;
+EZ3.BufferAttribute.SIZE.TANGENT = 4;

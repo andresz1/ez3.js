@@ -24,9 +24,7 @@ EZ3.Renderer.prototype._processContextRecovered = function() {
 };
 
 EZ3.Renderer.prototype._processProgram = function(material) {
-  var gl;
-
-  gl = this.context;
+  var gl = this.context;
 
   if (material.dirty) {
     material.program = new EZ3.GLSLProgram(gl, material.config);
@@ -52,10 +50,8 @@ EZ3.Renderer.prototype._processMatrices = function(mesh) {
 };
 
 EZ3.Renderer.prototype._processUniforms = function(material) {
-  var gl, program;
-
-  gl = this.context;
-  program = material.program;
+  var gl = this.context;
+  var program = material.program;
 
   program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.toArray());
   program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.toArray());
@@ -74,56 +70,63 @@ EZ3.Renderer.prototype._processUniforms = function(material) {
 };
 
 EZ3.Renderer.prototype._processGeometry = function(mesh) {
-  var gl, geometry, material, program, length, fill;
+  var gl = this.context;
+  var geometry = mesh.geometry;
+  var material = mesh.material;
+  var program = material.program;
+  var target = gl.ARRAY_BUFFER;
+  var type = gl.FLOAT;
+  var layout;
+  var fill;
 
-  gl = this.context;
-  geometry = mesh.geometry;
-  material = mesh.material;
-  program = material.program;
-
-  if (!geometry.uvs.empty) {
+  if (geometry.uvs.data.length) {
     if (geometry.uvs.dirty) {
-      mesh.uv.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.uvs);
+      mesh.uv.update(gl, target, type, geometry.uvs);
       geometry.uvs.dirty = false;
     }
 
-    mesh.uv.bind(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.uv, geometry.uvs);
+    layout = program.attribute.uv;
+    mesh.uv.bind(gl, target, type, layout, geometry.uvs);
   }
 
-  if (!geometry.colors.empty) {
+  if (geometry.colors.data.length) {
     if (geometry.colors.dirty) {
-      mesh.color.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.colors);
+      mesh.color.update(gl, target, type, geometry.colors);
       geometry.colors.dirty = false;
     }
 
-    mesh.color.bind(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.color, geometry.colors);
+    layout = program.attribute.color;
+    mesh.color.bind(gl, target, type, layout, geometry.colors);
   }
 
-  if (!geometry.normals.empty) {
+  if (geometry.normals.data.length) {
     if (geometry.normals.dirty) {
-      mesh.normal.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.normals);
+      mesh.normal.update(gl, target, type, geometry.normals);
       geometry.normals.dirty = false;
     }
 
-    mesh.normal.bind(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.normal, geometry.normals);
+    layout = program.attribute.normal;
+    mesh.normal.bind(gl, target, type, layout, geometry.normals);
   }
 
-  if (!geometry.tangents.empty) {
+  if (geometry.tangents.data.length) {
     if (geometry.tangents.dirty) {
-      mesh.tangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.tangents);
+      mesh.tangent.update(gl, target, type, geometry.tangents);
       geometry.tangents.dirty = false;
     }
 
-    mesh.tangents.bind(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.tangent, geometry.tangents);
+    layout = program.attribute.tangent;
+    mesh.tangents.bind(gl, target, type, layout, geometry.tangents);
   }
 
-  if (!geometry.bitangents.empty) {
+  if (geometry.bitangents.data.length) {
     if (geometry.bitangents.dirty) {
-      mesh.bitangent.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.bitangents);
+      mesh.bitangent.update(gl, target, type, geometry.bitangents);
       geometry.bitangents.dirty = false;
     }
 
-    mesh.bitangent.bind(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.bitangent, geometry.bitangents);
+    layout = program.attribute.tangent;
+    mesh.bitangent.bind(gl, target, type, layout, geometry.bitangents);
   }
 
   if (material.fill === EZ3.MeshMaterial.SOLID) {
@@ -139,38 +142,40 @@ EZ3.Renderer.prototype._processGeometry = function(mesh) {
       geometry.linearize();
   }
 
-  if (!geometry.vertices.empty) {
+  if (geometry.vertices.data.length) {
     if (geometry.vertices.dirty) {
-      mesh.vertex.update(gl, gl.ARRAY_BUFFER, gl.FLOAT, geometry.vertices);
+      mesh.vertex.update(gl, target, type, geometry.vertices);
       geometry.vertices.dirty = false;
     }
 
-    mesh.vertex.bind(gl, gl.ARRAY_BUFFER, gl.FLOAT, program.attribute.vertex, geometry.vertices);
+    layout = program.attribute.vertex;
+    mesh.vertex.bind(gl, target, type, layout, geometry.vertices);
 
-    if (!geometry.indices.empty) {
+    if (geometry.indices.data.length) {
+      target = gl.ELEMENT_ARRAY_BUFFER;
+      type = gl.UNSIGNED_SHORT;
+
       if (geometry.indices.dirty) {
-        mesh.index.update(gl, gl.ELEMENT_ARRAY_BUFFER, gl.UNSIGNED_SHORT, geometry.indices);
+        mesh.index.update(gl, target, type, geometry.indices);
         geometry.indices.dirty = false;
       }
 
-      mesh.index.bind(gl, gl.ELEMENT_ARRAY_BUFFER);
-      gl.drawElements(fill, geometry.indices.data.length, gl.UNSIGNED_SHORT, 0);
+      mesh.index.bind(gl, target);
+      gl.drawElements(fill, geometry.indices.data.length, type, 0);
     } else
       gl.drawArrays(fill, 0, geometry.vertices.data.length / 3);
   }
 };
 
 EZ3.Renderer.prototype.initContext = function() {
-  var that, names;
-  var i;
-
-  that = this;
-  names = [
+  var that = this;
+  var names = [
     'webgl',
     'experimental-webgl',
     'webkit-3d',
     'moz-webgl'
   ];
+  var i;
 
   for (i = 0; i < names.length; i++) {
     try {
@@ -182,7 +187,7 @@ EZ3.Renderer.prototype.initContext = function() {
   }
 
   if (!this.context)
-    throw new Error('Unable to initialize WebGL with selected options. Your browser may not support it.');
+    throw new Error('Unable to initialize WebGL with selected options.');
 
   this._onContextLost = function(event) {
     that._processContextLost(event);
@@ -197,9 +202,7 @@ EZ3.Renderer.prototype.initContext = function() {
 };
 
 EZ3.Renderer.prototype.clear = function() {
-  var gl;
-
-  gl = this.context;
+  var gl = this.context;
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
@@ -212,12 +215,15 @@ EZ3.Renderer.prototype.clear = function() {
 };
 
 EZ3.Renderer.prototype.render = function(screen) {
-  var gl, entities, entity, material, program;
+  var gl = this.context;
+  var entities = [];
+  var position = screen.position;
+  var size = screen.size;
+  var entity;
+  var material;
+  var program;
 
-  gl = this.context;
-  entities = [];
-
-  gl.viewport(screen.position.x, screen.position.y, screen.size.x, screen.size.y);
+  gl.viewport(position.x, position.y, size.x, size.y);
 
   screen.scene.update();
   entities.push(screen.scene);
