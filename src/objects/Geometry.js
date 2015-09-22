@@ -90,13 +90,13 @@ EZ3.Geometry.prototype.mergeVertices = function() {
   var appearanceMap = {};
   var uniqueIndices = [];
   var uniqueVertices = [];
-  var uvs = this.uvs.data;
   var uv = new EZ3.Vector2();
-  var uniqueVerticesCounter = 0;
   var vertex = new EZ3.Vector3();
-  var precision = Math.pow(10, 4);
+  var uvs = this.uvs.data;
   var indices = this.indices.data;
   var vertices = this.vertices.data;
+  var uniqueVerticesCounter = 0;
+  var precision = Math.pow(10, 4);
   var keyx;
   var keyy;
   var keyz;
@@ -128,9 +128,9 @@ EZ3.Geometry.prototype.mergeVertices = function() {
     uniqueIndices.push(appearanceMap[verticesMap[key]]);
   }
 
-  this.uvs.data = uniqueUvs.slice();
-  this.indices.data = uniqueIndices.slice();
-  this.vertices.data = uniqueVertices.slice();
+  this.uvs.data = uniqueUvs;
+  this.indices.data = uniqueIndices;
+  this.vertices.data = uniqueVertices;
 };
 
 EZ3.Geometry.prototype.calculateNormals = function() {
@@ -143,8 +143,8 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   var point2 = new EZ3.Vector3();
   var vector0 = new EZ3.Vector3();
   var vector1 = new EZ3.Vector3();
-  var indices = this.indices.data.slice();
-  var vertices = this.vertices.data.slice();
+  var indices = this.indices.data;
+  var vertices = this.vertices.data;
   var x;
   var y;
   var z;
@@ -204,7 +204,7 @@ EZ3.Geometry.prototype.calculateNormals = function() {
   tmpNormals = [];
   tmpAppearances = [];
 
-  this.normals.data = normals.slice();
+  this.normals.data = normals;
 };
 
 EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
@@ -219,7 +219,6 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
   var tangent = new EZ3.Vector3();
   var vector0 = new EZ3.Vector3();
   var vector1 = new EZ3.Vector3();
-  var uvs = this.uvs.data.slice();
   var tmpNormal  = new EZ3.Vector3();
   var bitangent  = new EZ3.Vector3();
   var textPoint0 = new EZ3.Vector2();
@@ -227,9 +226,10 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
   var textPoint2 = new EZ3.Vector2();
   var textVector0 = new EZ3.Vector2();
   var textVector1 = new EZ3.Vector2();
-  var indices = this.indices.data.slice();
-  var normals = this.normals.data.slice();
-  var vertices = this.vertices.data.slice();
+  var uvs = this.uvs.data;
+  var indices = this.indices.data;
+  var normals = this.normals.data;
+  var vertices = this.vertices.data;
   var handedness;
   var x;
   var y;
@@ -331,6 +331,19 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
   tmpTangents = [];
   tmpBitangents = [];
 
-  this.tangents.data = tangents.slice();
-  this.bitangents.data = bitangents.slice();
+  this.tangents.data = tangents;
+  this.bitangents.data = bitangents;
 };
+
+Object.defineProperty(EZ3.Geometry.prototype, 'mathematic', {
+  get: function() {
+    return this instanceof EZ3.AstroidalEllipsoid ||
+           this instanceof EZ3.Box ||
+           this instanceof EZ3.Cone ||
+           this instanceof EZ3.Cylinder ||
+           this instanceof EZ3.Ellipsoid ||
+           this instanceof EZ3.Grid ||
+           this instanceof EZ3.Sphere ||
+           this instanceof EZ3.Torus;
+  }
+});

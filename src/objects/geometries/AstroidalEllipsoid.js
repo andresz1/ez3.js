@@ -6,29 +6,39 @@
 EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
   EZ3.Geometry.call(this);
 
-  this._radiuses = radiuses;
-  this._resolution = resolution;
+  if (radiuses !== undefined) {
+    if(radiuses instanceof EZ3.Vector3)
+      this._radiuses = radiuses;
+    else
+      this._radiuses = new EZ3.Vector3(1,1,1);
+  }
 
-  this.update();
+  if (resolution !== undefined) {
+    if(resolution instanceof EZ3.Vector2)
+      this._resolution = resolution;
+    else
+      this._resolution = new EZ3.Vector2(5,5);
+  }
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
 
-EZ3.AstroidalEllipsoid.prototype.update = function() {
-  var u, v;
-  var vertex;
-  var output;
-  var phi, rho;
-  var cosS, cosT, sinS, sinT;
-  var vertices, uvs, indices;
-  var s, t;
-
-  vertex = new EZ3.Vector3();
-
-  uvs = [];
-  indices = [];
-  vertices = [];
+EZ3.AstroidalEllipsoid.prototype.generate = function() {
+  var uvs = [];
+  var indices= [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var phi;
+  var rho;
+  var cosS;
+  var cosT;
+  var sinS;
+  var sinT;
+  var u;
+  var v;
+  var s;
+  var t;
 
   for (s = 0; s < this.resolution.x; ++s) {
     for (t = 0; t < this.resolution.y; ++t) {
@@ -87,7 +97,6 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'radiuses', {
   set: function(radiuses) {
     if(radiuses instanceof EZ3.Vector3){
       this._radiuses.copy(radiuses);
-      this.dirty = true;
     }
   }
 });
@@ -99,7 +108,16 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'resolution', {
   set: function(resolution) {
     if(resolution instanceof EZ3.Vector2){
       this._resolution.copy(resolution);
-      this.dirty = true;
     }
+  }
+});
+
+Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'dirty', {
+  get: function() {
+    return this.radiuses.dirty || this.resolution.dirty;
+  },
+  set: function(dirty) {
+    this.radiuses.dirty = dirty;
+    this.resolution.dirty = dirty;
   }
 });

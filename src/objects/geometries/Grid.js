@@ -6,22 +6,27 @@
 EZ3.Grid = function(resolution) {
   EZ3.Geometry.call(this);
 
-  this._resolution = resolution;
-
-  this.update();
+  if (resolution !== undefined) {
+    if(resolution instanceof EZ3.Vector2)
+      this._resolution = resolution;
+    else
+      this._resolution = new EZ3.Vector2(2,2);
+  }
 };
 
 EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Grid.prototype.constructor = EZ3.Grid;
 
-EZ3.Grid.prototype.update = function() {
-
-  var index0, index1, index2, index3, z, x;
-  var vertices, uvs, indices;
-
-  uvs = [];
-  indices = [];
-  vertices = [];
+EZ3.Grid.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var index0;
+  var index1;
+  var index2;
+  var index3;
+  var x;
+  var z;
 
   for (z = 0; z < this.resolution.x + 1; ++z) {
     for (x = 0; x < this.resolution.y + 1; ++x) {
@@ -70,5 +75,14 @@ Object.defineProperty(EZ3.Grid.prototype, 'resolution', {
   set: function(resolution) {
     if(resolution instanceof EZ3.Vector2)
       this._resolution.copy(resolution);
+  }
+});
+
+Object.defineProperty(EZ3.Grid.prototype, 'dirty', {
+  get: function() {
+    return this.resolution.dirty;
+  },
+  set: function(dirty) {
+    this.resolution.dirty = dirty;
   }
 });

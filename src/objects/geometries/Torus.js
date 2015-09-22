@@ -6,29 +6,39 @@
 EZ3.Torus = function(radiuses, resolution) {
   EZ3.Geometry.call(this);
 
-  this._radiuses = radiuses;
-  this._resolution = resolution;
+  if (radiuses !== undefined) {
+    if(radiuses instanceof EZ3.Vector2)
+      this._radiuses = radiuses;
+    else
+      this._radiuses = new EZ3.Vector2(0.5, 1.0);
+  }
 
-  this.update();
+  if (resolution !== undefined) {
+    if(resolution instanceof EZ3.Vector2)
+      this._resolution = resolution;
+    else
+      this._resolution = new EZ3.Vector2(5,5);
+  }
 };
 
 EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Torus.prototype.constructor = EZ3.Torus;
 
-EZ3.Torus.prototype.update = function() {
-  var u, v;
-  var result;
-  var rho, phi;
-  var vertex;
-  var cosS, cosR, sinS, sinR;
-  var vertices, uvs, indices;
-  var s, r;
-
-  vertex = new EZ3.Vector3();
-
-  uvs = [];
-  indices = [];
-  vertices = [];
+EZ3.Torus.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var cosS;
+  var cosR;
+  var sinS;
+  var sinR;
+  var rho;
+  var phi;
+  var u;
+  var v;
+  var s;
+  var r;
 
   for (s = 0; s < this.resolution.x; ++s) {
     for (r = 0; r < this.resolution.y; ++r) {
@@ -97,5 +107,15 @@ Object.defineProperty(EZ3.Torus.prototype, 'resolution', {
   set: function(resolution) {
     if(resolution instanceof EZ3.Vector2)
       this._resolution.copy(resolution);
+  }
+});
+
+Object.defineProperty(EZ3.Torus.prototype, 'dirty', {
+  get: function() {
+    return this.radiuses.dirty || this.resolution.dirty;
+  },
+  set: function(dirty) {
+    this.radiuses.dirty = dirty;
+    this.resolution.dirty = dirty;
   }
 });

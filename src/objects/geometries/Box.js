@@ -6,35 +6,37 @@
 EZ3.Box = function(dimensions, resolution) {
   EZ3.Geometry.call(this);
 
-  if (dimensions !== undefined)
-    this._dimensions = (dimensions instanceof EZ3.Vector3) ? dimensions : new EZ3.Vector3();
+  if (dimensions !== undefined) {
+    if(dimensions instanceof EZ3.Vector3)
+      this._dimensions = dimensions;
+    else
+      this._dimensions = new EZ3.Vector3(1,1,1);
+  }
 
-  if (resolution !== undefined)
-    this._resolution = (resolution instanceof EZ3.Vector3) ? resolution : new EZ3.Vector3();
-
-  this.update();
+  if (resolution !== undefined) {
+    if(resolution instanceof EZ3.Vector3)
+      this._resolution = resolution;
+    else
+      this._resolution = new EZ3.Vector3(1,1,1);
+  }
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Box.prototype.constructor = EZ3.Box;
 
-EZ3.Box.prototype.update = function() {
-  var width, height, depth;
-  var widthHalf, heightHalf, depthHalf;
-  var widthSegments, heightSegments, depthSegments;
-  var vertices, indices, uvs;
-
-  uvs = [];
-  indices = [];
-  vertices = [];
-
-  width = this.dimensions.x;
-  height = this.dimensions.y;
-  depth = this.dimensions.z;
-
-  widthHalf = width * 0.5;
-  heightHalf = height * 0.5;
-  depthHalf = depth * 0.5;
+EZ3.Box.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var width = this.dimensions.x;
+  var height = this.dimensions.y;
+  var depth = this.dimensions.z;
+  var widthHalf = width * 0.5;
+  var depthHalf = depth * 0.5;
+  var heightHalf = height * 0.5;
+  var widthSegments;
+  var heightSegments;
+  var depthSegments;
 
   if (this.resolution !== undefined) {
     widthSegments = this.resolution.x;
@@ -47,31 +49,25 @@ EZ3.Box.prototype.update = function() {
   }
 
   function buildPlane(u, v, udir, vdir, width, height, depth) {
+    var gridX = widthSegments;
+    var gridY = heightSegments;
+    var widthHalf = width * 0.5;
+    var heightHalf = height * 0.5;
+    var offset = vertices.length / 3;
+    var uva = new EZ3.Vector2();
+    var uvb = new EZ3.Vector2();
+    var uvc = new EZ3.Vector2();
+    var uvd = new EZ3.Vector2();
+    var vector = new EZ3.Vector3();
+    var segmentWidth;
+    var segmentHeight;
     var w;
-    var vector;
-    var output;
-    var offset;
-    var a, b, c, d;
-    var gridX, gridY;
-    var uva, uvb, uvc, ubd;
-    var widthHalf, heightHalf;
-    var segmentWidth, segmentHeight;
-    var i, j;
-
-    gridX = widthSegments;
-    gridY = heightSegments;
-
-    widthHalf = width * 0.5;
-    heightHalf = height * 0.5;
-
-    offset = vertices.length / 3;
-
-    uva = new EZ3.Vector2();
-    uvb = new EZ3.Vector2();
-    uvc = new EZ3.Vector2();
-    uvd = new EZ3.Vector2();
-
-    vector = new EZ3.Vector3();
+    var a;
+    var b;
+    var c;
+    var d;
+    var i;
+    var j;
 
     if ((u === 'x' && v === 'y') || (u === 'y' && v === 'x')) {
 
@@ -149,7 +145,6 @@ Object.defineProperty(EZ3.Box.prototype, 'dimensions', {
   set: function(dimensions) {
     if (dimensions instanceof EZ3.Vector3) {
       this._dimensions = dimensions;
-      this.update();
     }
   }
 });
@@ -161,7 +156,16 @@ Object.defineProperty(EZ3.Box.prototype, 'resolution', {
   set: function(resolution) {
     if (resolution instanceof EZ3.Vector3) {
       this._resolution.copy(resolution);
-      EZ3.Box.prototype.update.call(this);
     }
+  }
+});
+
+Object.defineProperty(EZ3.Box.prototype, 'dirty', {
+  get: function() {
+    return this.dimensions.dirty || this.resolution.dirty;
+  },
+  set: function(dirty) {
+    this.dimensions.dirty = dirty;
+    this.resolution.dirty = dirty;
   }
 });

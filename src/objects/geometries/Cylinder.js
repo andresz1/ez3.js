@@ -7,37 +7,36 @@ EZ3.Cylinder = function(radius, base, height, resolution) {
   EZ3.Geometry.call(this);
 
   this._base = base;
-  this._base.dirty = false;
+  this._base.dirty = true;
 
   this._radius = radius;
-  this._radius.dirty = false;
+  this._radius.dirty = true;
 
   this._height = height;
-  this._height.dirty = false;
+  this._height.dirty = true;
 
-  this._resolution = resolution;
-
-  this.update();
+  if (resolution !== undefined) {
+    if(resolution instanceof EZ3.Vector2)
+      this._resolution = resolution;
+    else
+      this._resolution = new EZ3.Vector2(5,5);
+  }
 };
 
 EZ3.Cylinder.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Cylinder.prototype.constructor = EZ3.Cylinder;
 
-EZ3.Cylinder.prototype.update = function() {
-  var u, v;
-  var vertex;
-  var actualHeight, step;
-  var vertices, uvs, indices;
-  var s, t;
-
-  actualHeight = this.height;
-  step = (this.height - this.base) / this.resolution.x;
-
-  vertex = new EZ3.Vector3();
-
-  uvs = [];
-  indices = [];
-  vertices = [];
+EZ3.Cylinder.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var actualHeight = this.height;
+  var step = (this.height - this.base) / this.resolution.x;
+  var u;
+  var v;
+  var s;
+  var t;
 
   for (s = 0; s < this.resolution.x; ++s) {
     for (t = 0; t < this.resolution.y; ++t) {
@@ -124,5 +123,20 @@ Object.defineProperty(EZ3.Cylinder.prototype, 'resolution', {
   set: function(resolution) {
     if(resolution instanceof EZ3.Vector2)
       this._resolution.copy(resolution);
+  }
+});
+
+Object.defineProperty(EZ3.Cylinder.prototype, 'dirty', {
+  get: function() {
+    return this.base.dirty ||
+           this.height.dirty ||
+           this.radius.dirty ||
+           this.resolution.dirty;
+  },
+  set: function(dirty) {
+    this.base.dirty = dirty;
+    this.height.dirty = dirty;
+    this.radius.dirty = dirty;
+    this.resolution.dirty = dirty;
   }
 });
