@@ -21,15 +21,15 @@ EZ3.GLSLProgram.prototype._buildPrefix = function(config) {
 EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
   var vertex = [
     'attribute vec3 vertex;',
-    'uniform mat4 uMvMatrix;',
-    'uniform mat4 uMvpMatrix;',
-    'uniform mat4 uViewMatrix;',
-    'uniform mat4 uModelMatrix;',
-    'uniform mat3 uNormalMatrix;',
-    'uniform mat4 uProjectionMatrix;',
+    'uniform mat4 uModelView;',
+    'uniform mat4 uModelViewProjection;',
+    'uniform mat4 uView;',
+    'uniform mat4 uModel;',
+    'uniform mat3 uNormal;',
+    'uniform mat4 uProjection;',
     'void main() {',
     ' gl_PointSize = 3.0;',
-    ' gl_Position = uMvpMatrix * vec4(vertex, 1.0);',
+    ' gl_Position = uModelViewProjection * vec4(vertex, 1.0);',
     '}'
   ].join('\n');
 
@@ -99,8 +99,8 @@ EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
 };
 
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
-  var attributeInfo;
   var totalAttributes = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
+  var attributeInfo;
 
   for (var k = 0; k < totalAttributes; ++k) {
     attributeInfo = gl.getActiveAttrib(this._program, k);
