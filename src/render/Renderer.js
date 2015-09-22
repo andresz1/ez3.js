@@ -52,20 +52,44 @@ EZ3.Renderer.prototype._processMatrices = function(mesh) {
 EZ3.Renderer.prototype._processUniforms = function(material) {
   var gl = this.context;
   var program = material.program;
+  var data;
+  var name;
+  var length;
 
-  program.loadUniformMatrix(gl, 'uMvMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvMatrix.toArray());
-  program.loadUniformMatrix(gl, 'uMvpMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._mvpMatrix.toArray());
-  program.loadUniformMatrix(gl, 'uModelMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._modelMatrix.toArray());
-  program.loadUniformMatrix(gl, 'uNormalMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_3X3, this._normalMatrix.toArray());
+  name = 'uModelView';
+  data = this._mvMatrix.toArray();
+  length = EZ3.GLSLProgram.UNIFORM_SIZE_4X4;
+  program.loadUniformMatrix(gl, name, length, data);
+
+  name = 'uModelViewProjection';
+  data = this._mvpMatrix.toArray();
+  length = EZ3.GLSLProgram.UNIFORM_SIZE_4X4;
+  program.loadUniformMatrix(gl, name, length, data);
+
+  name = 'uModel';
+  data = this._modelMatrix.toArray();
+  length = EZ3.GLSLProgram.UNIFORM_SIZE_4X4;
+  program.loadUniformMatrix(gl, name, length, data);
+
+  name = 'uNormal';
+  data = this._normalMatrix.toArray();
+  length = EZ3.GLSLProgram.UNIFORM_SIZE_3X3;
+  program.loadUniformMatrix(gl, name, length, data);
 
   if (this._viewMatrix.dirty) {
+    name = 'uView';
+    data = this._this._viewMatrix.toArray();
+    length = EZ3.GLSLProgram.UNIFORM_SIZE_4X4;
+    program.loadUniformMatrix(gl, name, length, data);
     this._viewMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uViewMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._viewMatrix.toArray());
   }
 
   if (this._projectionMatrix.dirty) {
+    name = 'uProjection';
+    data = this._projectionMatrix.toArray();
+    length = EZ3.GLSLProgram.UNIFORM_SIZE_4X4;
+    program.loadUniformMatrix(gl, name, length, data);
     this._projectionMatrix.dirty = false;
-    program.loadUniformMatrix(gl, 'uProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, this._projectionMatrix.toArray());
   }
 };
 
@@ -169,6 +193,8 @@ EZ3.Renderer.prototype._processGeometry = function(mesh) {
 
 EZ3.Renderer.prototype.initContext = function() {
   var that = this;
+  var contextName;
+  var contextStatus;
   var names = [
     'webgl',
     'experimental-webgl',
@@ -193,10 +219,14 @@ EZ3.Renderer.prototype.initContext = function() {
     that._processContextLost(event);
   };
 
-  this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
+  contextName = 'webglcontextlost';
+  contextStatus = this._onContextLost;
+  this.canvas.addEventListener(contextName, contextStatus, false);
 
   if (this._onContextRestored) {
-    this.canvas.removeEventListener('webglcontextrestored', this._onContextRestored, false);
+    contextName = 'webglcontextrestored';
+    contextStatus = this._onContextRestored;
+    this.canvas.removeEventListener(contextName, contextStatus, false);
     delete this._onContextRestored;
   }
 };
