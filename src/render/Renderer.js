@@ -103,91 +103,102 @@ EZ3.Renderer.prototype._processGeometry = function(mesh) {
   var layout;
   var fill;
 
-  if (geometry.uvs.data.length) {
-    if (geometry.uvs.dirty) {
-      mesh.uv.update(gl, target, type, geometry.uvs);
-      geometry.uvs.dirty = false;
+  if(geometry) {
+
+    if(geometry.mathematic && geometry.dirty) {
+      geometry.generate();
+      geometry.dirty = false;
     }
 
-    layout = program.attribute.uv;
-    mesh.uv.bind(gl, target, type, layout, geometry.uvs);
-  }
-
-  if (geometry.colors.data.length) {
-    if (geometry.colors.dirty) {
-      mesh.color.update(gl, target, type, geometry.colors);
-      geometry.colors.dirty = false;
-    }
-
-    layout = program.attribute.color;
-    mesh.color.bind(gl, target, type, layout, geometry.colors);
-  }
-
-  if (geometry.normals.data.length) {
-    if (geometry.normals.dirty) {
-      mesh.normal.update(gl, target, type, geometry.normals);
-      geometry.normals.dirty = false;
-    }
-
-    layout = program.attribute.normal;
-    mesh.normal.bind(gl, target, type, layout, geometry.normals);
-  }
-
-  if (geometry.tangents.data.length) {
-    if (geometry.tangents.dirty) {
-      mesh.tangent.update(gl, target, type, geometry.tangents);
-      geometry.tangents.dirty = false;
-    }
-
-    layout = program.attribute.tangent;
-    mesh.tangents.bind(gl, target, type, layout, geometry.tangents);
-  }
-
-  if (geometry.bitangents.data.length) {
-    if (geometry.bitangents.dirty) {
-      mesh.bitangent.update(gl, target, type, geometry.bitangents);
-      geometry.bitangents.dirty = false;
-    }
-
-    layout = program.attribute.tangent;
-    mesh.bitangent.bind(gl, target, type, layout, geometry.bitangents);
-  }
-
-  if (material.fill === EZ3.MeshMaterial.SOLID) {
-    fill = gl.TRIANGLES;
-
-    if (!geometry.triangulated)
-      geometry.triangulate();
-
-  } else {
-    fill = (material.fill === EZ3.MeshMaterial.WIREFRAME) ? gl.LINES : gl.POINT;
-
-    if (geometry.triangulated)
-      geometry.linearize();
-  }
-
-  if (geometry.vertices.data.length) {
-    if (geometry.vertices.dirty) {
-      mesh.vertex.update(gl, target, type, geometry.vertices);
-      geometry.vertices.dirty = false;
-    }
-
-    layout = program.attribute.vertex;
-    mesh.vertex.bind(gl, target, type, layout, geometry.vertices);
-
-    if (geometry.indices.data.length) {
-      target = gl.ELEMENT_ARRAY_BUFFER;
-      type = gl.UNSIGNED_SHORT;
-
-      if (geometry.indices.dirty) {
-        mesh.index.update(gl, target, type, geometry.indices);
-        geometry.indices.dirty = false;
+    if (geometry.uvs.data.length) {
+      if (geometry.uvs.dirty) {
+        mesh.uv.update(gl, target, type, geometry.uvs);
+        geometry.uvs.dirty = false;
       }
 
-      mesh.index.bind(gl, target);
-      gl.drawElements(fill, geometry.indices.data.length, type, 0);
-    } else
-      gl.drawArrays(fill, 0, geometry.vertices.data.length / 3);
+      layout = program.attribute.uv;
+      mesh.uv.bind(gl, target, type, layout, geometry.uvs);
+    }
+
+    if (geometry.colors.data.length) {
+      if (geometry.colors.dirty) {
+        mesh.color.update(gl, target, type, geometry.colors);
+        geometry.colors.dirty = false;
+      }
+
+      layout = program.attribute.color;
+      mesh.color.bind(gl, target, type, layout, geometry.colors);
+    }
+
+    if (geometry.normals.data.length) {
+      if (geometry.normals.dirty) {
+        mesh.normal.update(gl, target, type, geometry.normals);
+        geometry.normals.dirty = false;
+      }
+
+      layout = program.attribute.normal;
+      mesh.normal.bind(gl, target, type, layout, geometry.normals);
+    }
+
+    if (geometry.tangents.data.length) {
+      if (geometry.tangents.dirty) {
+        mesh.tangent.update(gl, target, type, geometry.tangents);
+        geometry.tangents.dirty = false;
+      }
+
+      layout = program.attribute.tangent;
+      mesh.tangents.bind(gl, target, type, layout, geometry.tangents);
+    }
+
+    if (geometry.bitangents.data.length) {
+      if (geometry.bitangents.dirty) {
+        mesh.bitangent.update(gl, target, type, geometry.bitangents);
+        geometry.bitangents.dirty = false;
+      }
+
+      layout = program.attribute.tangent;
+      mesh.bitangent.bind(gl, target, type, layout, geometry.bitangents);
+    }
+
+    if (material.fill === EZ3.MeshMaterial.SOLID) {
+      fill = gl.TRIANGLES;
+
+      if (!geometry.triangulated)
+        geometry.triangulate();
+
+    } else {
+      if(material.fill === EZ3.MeshMaterial.WIREFRAME)
+        fill = gl.LINES;
+      else
+        fill = gl.POINTS;
+
+      if (geometry.triangulated)
+        geometry.linearize();
+    }
+
+    if (geometry.vertices.data.length) {
+      if (geometry.vertices.dirty) {
+        mesh.vertex.update(gl, target, type, geometry.vertices);
+        geometry.vertices.dirty = false;
+      }
+
+      layout = program.attribute.vertex;
+      mesh.vertex.bind(gl, target, type, layout, geometry.vertices);
+
+      if (geometry.indices.data.length) {
+        target = gl.ELEMENT_ARRAY_BUFFER;
+        type = gl.UNSIGNED_SHORT;
+
+        if (geometry.indices.dirty) {
+          mesh.index.update(gl, target, type, geometry.indices);
+          geometry.indices.dirty = false;
+        }
+
+        mesh.index.bind(gl, target);
+        gl.drawElements(fill, geometry.indices.data.length, type, 0);
+      } else
+        gl.drawArrays(fill, 0, geometry.vertices.data.length / 3);
+    }
   }
 };
 
