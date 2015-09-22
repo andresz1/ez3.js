@@ -63,7 +63,7 @@ Object.defineProperty(EZ3.Mesh.prototype, 'bitangent', {
   }
 });
 
-Object.defineProperty(EZ3.Mesh.prototype, "material", {
+Object.defineProperty(EZ3.Mesh.prototype, 'material', {
   get: function() {
     return this._material;
   },
@@ -75,7 +75,7 @@ Object.defineProperty(EZ3.Mesh.prototype, "material", {
   }
 });
 
-Object.defineProperty(EZ3.Mesh.prototype, "geometry", {
+Object.defineProperty(EZ3.Mesh.prototype, 'geometry', {
   get: function() {
     return this._geometry;
   },

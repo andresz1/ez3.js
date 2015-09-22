@@ -85,46 +85,34 @@ EZ3.Geometry.prototype.triangulate = function() {
 };
 
 EZ3.Geometry.prototype.mergeVertices = function() {
+  var uniqueUvs = [];
+  var verticesMap = {};
+  var appearanceMap = {};
+  var uniqueIndices = [];
+  var uniqueVertices = [];
+  var uvs = this.uvs.data;
+  var uv = new EZ3.Vector2();
+  var uniqueVerticesCounter = 0;
+  var vertex = new EZ3.Vector3();
+  var precision = Math.pow(10, 4);
+  var indices = this.indices.data;
+  var vertices = this.vertices.data;
+  var keyx;
+  var keyy;
+  var keyz;
   var key;
-  var precision;
-  var vertex, uv;
-  var uniqueVerticesCounter;
-  var indices, uvs, vertices;
-  var verticesMap, appearanceMap;
-  var uniqueVertices, uniqueIndices, uniqueUvs, uniqueNormals, uniqueTag;
-  var k, n;
-
-  uvs = this.uvs.data;
-  indices = this.indices.data;
-  vertices = this.vertices.data;
-
-  verticesMap = {};
-  appearanceMap = {};
-
-  uniqueUvs = [];
-  uniqueTag = [];
-  uniqueIndices = [];
-  uniqueVertices = [];
-  uniqueVerticesCounter = 0;
-
-  var faceIndices;
-  var indicesToRemove = [];
-
-  uv = new EZ3.Vector2();
-  vertex = new EZ3.Vector3();
-
-  precision = Math.pow(10, 4);
+  var k;
 
   for (k = 0; k < indices.length; k++) {
     vertex.x = vertices[3 * indices[k] + 0];
     vertex.y = vertices[3 * indices[k] + 1];
     vertex.z = vertices[3 * indices[k] + 2];
 
-    key = Math.round(vertex.x * precision) +
-      '_' +
-      Math.round(vertex.y * precision) +
-      '_' +
-      Math.round(vertex.z * precision);
+    keyx = Math.round(vertex.x * precision);
+    keyy = Math.round(vertex.y * precision);
+    keyz = Math.round(vertex.z * precision);
+
+    key = keyx + '_' + keyy + '_' + keyz;
 
     if (verticesMap[key] === undefined) {
       verticesMap[key] = k;
@@ -140,41 +128,36 @@ EZ3.Geometry.prototype.mergeVertices = function() {
     uniqueIndices.push(appearanceMap[verticesMap[key]]);
   }
 
-  this.uvs.data = uniqueUvs;
-  this.indices.data = uniqueIndices;
-  this.vertices.data = uniqueVertices;
+  this.uvs.data = uniqueUvs.slice();
+  this.indices.data = uniqueIndices.slice();
+  this.vertices.data = uniqueVertices.slice();
 };
 
 EZ3.Geometry.prototype.calculateNormals = function() {
-  var normals;
-  var x, y, z, k;
-  var indices, vertices;
-  var tempNormals, tempAppearances;
-  var normal, point0, point1, point2, vector0, vector1;
-
-  indices = this.indices.data;
-  vertices = this.vertices.data;
-
-  normals = [];
-  tempNormals = [];
-  tempAppearances = [];
-
-  normal = new EZ3.Vector3();
-  point0 = new EZ3.Vector3();
-  point1 = new EZ3.Vector3();
-  point2 = new EZ3.Vector3();
-  vector0 = new EZ3.Vector3();
-  vector1 = new EZ3.Vector3();
+  var normals = [];
+  var tmpNormals = [];
+  var tmpAppearances = [];
+  var normal = new EZ3.Vector3();
+  var point0 = new EZ3.Vector3();
+  var point1 = new EZ3.Vector3();
+  var point2 = new EZ3.Vector3();
+  var vector0 = new EZ3.Vector3();
+  var vector1 = new EZ3.Vector3();
+  var indices = this.indices.data.slice();
+  var vertices = this.vertices.data.slice();
+  var x;
+  var y;
+  var z;
+  var k;
 
   for (k = 0; k < vertices.length / 3; ++k) {
-    tempNormals.push(0);
-    tempNormals.push(0);
-    tempNormals.push(0);
-    tempAppearances.push(0);
+    tmpNormals.push(0);
+    tmpNormals.push(0);
+    tmpNormals.push(0);
+    tmpAppearances.push(0);
   }
 
   for (k = 0; k < indices.length; k += 3) {
-
     x = 3 * indices[k + 0];
     y = 3 * indices[k + 1];
     z = 3 * indices[k + 2];
@@ -191,21 +174,21 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     if (!normal.testZero())
       normal.normalize();
 
-    tempNormals[x + 0] += normal.x;
-    tempNormals[x + 1] += normal.y;
-    tempNormals[x + 2] += normal.z;
+    tmpNormals[x + 0] += normal.x;
+    tmpNormals[x + 1] += normal.y;
+    tmpNormals[x + 2] += normal.z;
 
-    tempNormals[y + 0] += normal.x;
-    tempNormals[y + 1] += normal.y;
-    tempNormals[y + 2] += normal.z;
+    tmpNormals[y + 0] += normal.x;
+    tmpNormals[y + 1] += normal.y;
+    tmpNormals[y + 2] += normal.z;
 
-    tempNormals[z + 0] += normal.x;
-    tempNormals[z + 1] += normal.y;
-    tempNormals[z + 2] += normal.z;
+    tmpNormals[z + 0] += normal.x;
+    tmpNormals[z + 1] += normal.y;
+    tmpNormals[z + 2] += normal.z;
 
-    ++tempAppearances[x / 3];
-    ++tempAppearances[y / 3];
-    ++tempAppearances[z / 3];
+    ++tmpAppearances[x / 3];
+    ++tmpAppearances[y / 3];
+    ++tmpAppearances[z / 3];
   }
 
   for (k = 0; k < vertices.length / 3; ++k) {
@@ -213,60 +196,56 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    normals.push(tempNormals[x] / tempAppearances[k]);
-    normals.push(tempNormals[y] / tempAppearances[k]);
-    normals.push(tempNormals[z] / tempAppearances[k]);
+    normals.push(tmpNormals[x] / tmpAppearances[k]);
+    normals.push(tmpNormals[y] / tmpAppearances[k]);
+    normals.push(tmpNormals[z] / tmpAppearances[k]);
   }
 
-  tempNormals = [];
-  tempAppearances = [];
+  tmpNormals = [];
+  tmpAppearances = [];
 
-  this.normals.data = normals;
+  this.normals.data = normals.slice();
 };
 
 EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
-  var tempT, tempB;
-  var vector0, vector1;
-  var tangents, bitangents;
-  var point0, point1, point2;
-  var textVector0, textVector1;
-  var indices, uvs, normals, vertices;
-  var textPoint0, textPoint1, textPoint2;
-  var normal, normalT, tangent, bitangent;
-  var vx, vy, vz, tx, ty, tz, k, r, handedness;
-
-  uvs = this.uvs.data;
-  indices = this.indices.data;
-  normals = this.normals.data;
-  vertices = this.vertices.data;
-
-  point0 = new EZ3.Vector3();
-  point1 = new EZ3.Vector3();
-  point2 = new EZ3.Vector3();
-
-  vector0 = new EZ3.Vector3();
-  vector1 = new EZ3.Vector3();
-
-  normal = new EZ3.Vector3();
-  normalT = new EZ3.Vector3();
-  tangent = new EZ3.Vector3();
-  bitangent = new EZ3.Vector3();
-
-  textPoint0 = new EZ3.Vector2();
-  textPoint1 = new EZ3.Vector2();
-  textPoint2 = new EZ3.Vector2();
-
-  textVector0 = new EZ3.Vector2();
-  textVector1 = new EZ3.Vector2();
-
-  tempT = [];
-  tempB = [];
-  tangents = [];
-  bitangents = [];
+  var tangents = [];
+  var bitangents = [];
+  var tmpTangents = [];
+  var tmpBitangents = [];
+  var point0 = new EZ3.Vector3();
+  var point1 = new EZ3.Vector3();
+  var point2 = new EZ3.Vector3();
+  var normal = new EZ3.Vector3();
+  var tangent = new EZ3.Vector3();
+  var vector0 = new EZ3.Vector3();
+  var vector1 = new EZ3.Vector3();
+  var uvs = this.uvs.data.slice();
+  var tmpNormal  = new EZ3.Vector3();
+  var bitangent  = new EZ3.Vector3();
+  var textPoint0 = new EZ3.Vector2();
+  var textPoint1 = new EZ3.Vector2();
+  var textPoint2 = new EZ3.Vector2();
+  var textVector0 = new EZ3.Vector2();
+  var textVector1 = new EZ3.Vector2();
+  var indices = this.indices.data.slice();
+  var normals = this.normals.data.slice();
+  var vertices = this.vertices.data.slice();
+  var handedness;
+  var x;
+  var y;
+  var z;
+  var vx;
+  var vy;
+  var vz;
+  var tx;
+  var ty;
+  var tz;
+  var r;
+  var k;
 
   for (k = 0; k < vertices.length; ++k) {
-    tempT.push(0);
-    tempB.push(0);
+    tmpTangents.push(0);
+    tmpBitangents.push(0);
   }
 
   for (k = 0; k < indices.length; k += 3) {
@@ -303,29 +282,29 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
     bitangent.y = (textVector0.x * vector1.y - textVector1.x * vector0.y) * r;
     bitangent.z = (textVector0.x * vector1.z - textVector1.x * vector0.z) * r;
 
-    tempT[vx + 0] += tangent.x;
-    tempT[vy + 0] += tangent.y;
-    tempT[vz + 0] += tangent.z;
+    tmpTangents[vx + 0] += tangent.x;
+    tmpTangents[vy + 0] += tangent.y;
+    tmpTangents[vz + 0] += tangent.z;
 
-    tempT[vx + 1] += tangent.x;
-    tempT[vy + 1] += tangent.y;
-    tempT[vz + 1] += tangent.z;
+    tmpTangents[vx + 1] += tangent.x;
+    tmpTangents[vy + 1] += tangent.y;
+    tmpTangents[vz + 1] += tangent.z;
 
-    tempT[vx + 2] += tangent.x;
-    tempT[vy + 2] += tangent.y;
-    tempT[vz + 2] += tangent.z;
+    tmpTangents[vx + 2] += tangent.x;
+    tmpTangents[vy + 2] += tangent.y;
+    tmpTangents[vz + 2] += tangent.z;
 
-    tempB[vx + 0] += bitangent.x;
-    tempB[vy + 0] += bitangent.y;
-    tempB[vz + 0] += bitangent.z;
+    tmpBitangents[vx + 0] += bitangent.x;
+    tmpBitangents[vy + 0] += bitangent.y;
+    tmpBitangents[vz + 0] += bitangent.z;
 
-    tempB[vx + 1] += bitangent.x;
-    tempB[vy + 1] += bitangent.y;
-    tempB[vz + 1] += bitangent.z;
+    tmpBitangents[vx + 1] += bitangent.x;
+    tmpBitangents[vy + 1] += bitangent.y;
+    tmpBitangents[vz + 1] += bitangent.z;
 
-    tempB[vx + 2] += bitangent.x;
-    tempB[vy + 2] += bitangent.y;
-    tempB[vz + 2] += bitangent.z;
+    tmpBitangents[vx + 2] += bitangent.x;
+    tmpBitangents[vy + 2] += bitangent.y;
+    tmpBitangents[vz + 2] += bitangent.z;
   }
 
   for (k = 0; k < vertices.length / 3; ++k) {
@@ -333,29 +312,25 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    tangent.set(tempT[x], tempT[y], tempT[z]);
-    bitangent.set(tempB[x], tempB[y], tempB[z]);
+    tangent.set(tmpTangents[x], tmpTangents[y], tmpTangents[z]);
+    bitangent.set(tmpBitangents[x], tmpBitangents[y], tmpBitangents[z]);
     normal.set(normals[x], normals[y], normals[z]);
 
-    normalT.copy(normal);
-    tangent.normalize(tangent.subEqual(normalT.scaleEqual(normalT.dot(tangent))));
+    tmpNormal.copy(normal);
+    tmpNormal.scaleEqual(tmpNormal.dot(tangent));
+    tangent.subEqual(tmpNormal);
+    tangent.normalize();
 
-    normalT.copy(normal);
-    handedness = (bitangent.dot(normalT.cross(tangent))) < 0 ? -1 : 1;
+    tmpNormal.copy(normal);
+    handedness = (bitangent.dot(tmpNormal.cross(tangent))) < 0 ? -1 : 1;
 
-    tangents.push(tangent.x);
-    tangents.push(tangent.y);
-    tangents.push(tangent.z);
-    tangents.push(handedness);
-
-    bitangents.push(bitangent.x);
-    bitangents.push(bitangent.y);
-    bitangents.push(bitangent.z);
+    bitangents.push(bitangent.x, bitangent.y, bitangent.z);
+    tangents.push(tangent.x, tangent.y, tangent.z, handedness);
   }
 
-  tempB = [];
-  tempT = [];
+  tmpTangents = [];
+  tmpBitangents = [];
 
-  this.tangents.data = tangents;
-  this.bitangents.data = bitangents;
+  this.tangents.data = tangents.slice();
+  this.bitangents.data = bitangents.slice();
 };
