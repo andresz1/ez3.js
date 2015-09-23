@@ -257,38 +257,54 @@ EZ3.Renderer.prototype.clear = function() {
 
 EZ3.Renderer.prototype.render = function(screen) {
   var gl = this.context;
+  var lights = [];
+  var meshes = [];
   var entities = [];
   var position = screen.position;
   var size = screen.size;
   var entity;
   var material;
   var program;
+  var k;
 
   gl.viewport(position.x, position.y, size.x, size.y);
 
-  screen.scene.update();
   entities.push(screen.scene);
 
-  while (entities.length) {
+  while(entities.length) {
     entity = entities.pop();
+    entity.update();
 
-    if (entity instanceof EZ3.Mesh) {
-      material = entity.material;
+    if(entity instanceof EZ3.Light)
+      lights.push(entity);
+    else if(entity instanceof EZ3.Mesh)
+      meshes.push(entity);
 
-      this._processMatrices(entity);
-      this._processProgram(material);
-
-      program = material.program;
-
-      program.enable(gl);
-
-      this._processUniforms(material);
-      this._processGeometry(entity);
-
-      program.disable(gl);
-    }
-
-    for (var k = entity.children.length - 1; k >= 0; --k)
+    for(k = entity.children.length - 1; k >= 0; k--) {
+      if(entity.dirty)
+        entity.children[k].dirty = true;
+        
       entities.push(entity.children[k]);
+    }
   }
+
+  for(k = 0; k < meshes.length; ++k) {
+    material = meshes[k].material;
+
+    this._processMatrices(meshes[k]);
+    this._processProgram(meshes[k].material);
+
+    program = meshes[k].material.program;
+
+    program.enable(gl);
+
+    this._processUniforms(material);
+    this._processGeometry(meshes[k]);
+
+    program.disable(gl);
+  }
+
+  lights.length = 0;
+  meshes.length = 0;
+  entities.length = 0;
 };
