@@ -45,8 +45,8 @@ EZ3.Torus.prototype.generate = function() {
       u = s / (this.resolution.x - 1);
       v = r / (this.resolution.y - 1);
 
-      rho = EZ3.DOUBLE_PI * u;
-      phi = EZ3.DOUBLE_PI * v;
+      rho = EZ3.Math.DOUBLE_PI * u;
+      phi = EZ3.Math.DOUBLE_PI * v;
 
       cosS = Math.cos(rho);
       cosR = Math.cos(phi);

@@ -43,9 +43,9 @@ EZ3.Cone.prototype.generate = function() {
 
       radius = Math.abs(this.height - actualHeight) * 0.5;
 
-      vertex.x = radius * Math.cos(EZ3.DOUBLE_PI * v);
+      vertex.x = radius * Math.cos(EZ3.Math.DOUBLE_PI * v);
       vertex.y = actualHeight;
-      vertex.z = radius * Math.sin(EZ3.DOUBLE_PI * v);
+      vertex.z = radius * Math.sin(EZ3.Math.DOUBLE_PI * v);
 
       vertices.push(vertex.x);
       vertices.push(vertex.y);

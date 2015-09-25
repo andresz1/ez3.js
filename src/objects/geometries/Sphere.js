@@ -37,11 +37,11 @@ EZ3.Sphere.prototype.generate = function() {
       u = s / (this.resolution.x - 1);
       v = t / (this.resolution.y - 1);
 
-      phi = EZ3.DOUBLE_PI * u;
-      rho = EZ3.PI * v;
+      phi = EZ3.Math.DOUBLE_PI * u;
+      rho = EZ3.Math.PI * v;
 
       vertex.x = (this.radius * Math.cos(phi) * Math.sin(rho));
-      vertex.y = (this.radius * Math.sin(rho - EZ3.HALF_PI));
+      vertex.y = (this.radius * Math.sin(rho - EZ3.Math.HALF_PI));
       vertex.z = (this.radius * Math.sin(phi) * Math.sin(rho));
 
       uvs.push(u);

@@ -45,8 +45,8 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
       u = s / (this.resolution.x - 1);
       v = t / (this.resolution.y - 1);
 
-      phi = EZ3.DOUBLE_PI * u - EZ3.PI;
-      rho = EZ3.PI * v - EZ3.HALF_PI;
+      phi = EZ3.Math.DOUBLE_PI * u - EZ3.Math.PI;
+      rho = EZ3.Math.PI * v - EZ3.Math.HALF_PI;
 
       cosS = Math.pow(Math.cos(phi), 3.0);
       cosT = Math.pow(Math.cos(rho), 3.0);
