@@ -26,11 +26,9 @@ EZ3.Matrix3.prototype.init = function(e00, e01, e02, e10, e11, e12, e20, e21, e2
 };
 
 EZ3.Matrix3.prototype.add = function(m1, m2) {
-  var e, em1, em2;
-
-  e = this.elements;
-  em1 = m1.elements;
-  em1 = m2.elements;
+  var e = this.elements;
+  var em1 = m1.elements;
+  var em2 = m2.elements;
 
   e[0] = em1[0] + em2[0];
   e[1] = em1[1] + em2[1];
@@ -66,11 +64,9 @@ EZ3.Matrix3.prototype.addEqual = function(m) {
 };
 
 EZ3.Matrix3.prototype.sub = function(m1, m2) {
-  var e, em1, em2;
-
-  e = this.elements;
-  em1 = m1.elements;
-  em1 = m2.elements;
+  var e = this.elements;
+  var em1 = m1.elements;
+  var em2 = m2.elements;
 
   e[0] = em1[0] - em2[0];
   e[1] = em1[1] - em2[1];
@@ -124,8 +120,6 @@ EZ3.Matrix3.prototype.scale = function(m, s) {
 };
 
 EZ3.Matrix3.prototype.scaleEqual = function(s) {
-  var em = m.elements;
-
   this.elements[0] *= s;
   this.elements[1] *= s;
   this.elements[2] *= s;
@@ -142,12 +136,27 @@ EZ3.Matrix3.prototype.scaleEqual = function(s) {
 };
 
 EZ3.Matrix3.prototype.mul = function(m1, m2) {
-  var e, em1, em2;
-  var a0, a1, a2, a3, a4, a5, a6, a7, a8;
-  var b0, b1, b2, b3, b4, b5, b6, b7, b8;
-
-  e = this.elements;
-  em1 = m1.elements;
+  var e = this.elements;
+  var em1 = m1.elements;
+  var em2;
+  var a0;
+  var a1;
+  var a2;
+  var a3;
+  var a4;
+  var a5;
+  var a6;
+  var a7;
+  var a8;
+  var b0;
+  var b1;
+  var b2;
+  var b3;
+  var b4;
+  var b5;
+  var b6;
+  var b7;
+  var b8;
 
   if (m2 !== undefined) {
     em2 = m2.elements;
@@ -209,14 +218,11 @@ EZ3.Matrix3.prototype.mul = function(m1, m2) {
 };
 
 EZ3.Matrix3.prototype.mulScale = function(m, sx, sy, sz, Prepend) {
-  var prepend;
-  var e, em;
+  var em = m.elements;
+  var e = this.elements;
+  var prepend = Prepend || false;
 
-  em = m.elements;
-  e = this.elements;
-  prepend = Prepend || false;
-
-  if (preprend) {
+  if (prepend) {
     e[0] = sx * em[0];
     e[1] = sx * em[1];
     e[2] = sx * em[2];
@@ -244,41 +250,29 @@ EZ3.Matrix3.prototype.mulScale = function(m, sx, sy, sz, Prepend) {
 };
 
 EZ3.Matrix3.prototype.mulRotate = function(m, rad, ax, ay, az, Prepend) {
-  var c1;
-  var tm;
-  var s, c;
-  var prepend;
-  var r00, r01, r02, r10, r11, r12, r20, r21, r22;
-  var a0, a1, a2, a3, a4, a5, a6, a7, a8;
-
-  s = Math.sin(rad);
-  c = Math.cos(rad);
-
-  c1 = 1 - c;
-
-  r00 = ax * ax * c1 + c;
-  r01 = ax * ay * c1 - az * s;
-  r02 = ax * az * c1 + ay * s;
-  r10 = ay * ax * c1 + az * s;
-  r11 = ay * ay * c1 + c;
-  r12 = ay * az * c1 - ax * s;
-  r20 = az * ax * c1 - ay * s;
-  r21 = az * ay * c1 + ax * s;
-  r22 = az * az * c1 + c;
-
-  tm = m.elements;
-
-  a0 = tm[0];
-  a3 = tm[3];
-  a6 = tm[6];
-  a1 = tm[1];
-  a4 = tm[4];
-  a7 = tm[7];
-  a2 = tm[2];
-  a5 = tm[5];
-  a8 = tm[8];
-
-  prepend = Prepend || false;
+  var tm = m.elements;
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  var c1 = 1 - c;
+  var r00 = ax * ax * c1 + c;
+  var r01 = ax * ay * c1 - az * s;
+  var r02 = ax * az * c1 + ay * s;
+  var r10 = ay * ax * c1 + az * s;
+  var r11 = ay * ay * c1 + c;
+  var r12 = ay * az * c1 - ax * s;
+  var r20 = az * ax * c1 - ay * s;
+  var r21 = az * ay * c1 + ax * s;
+  var r22 = az * az * c1 + c;
+  var a0 = tm[0];
+  var a3 = tm[3];
+  var a6 = tm[6];
+  var a1 = tm[1];
+  var a4 = tm[4];
+  var a7 = tm[7];
+  var a2 = tm[2];
+  var a5 = tm[5];
+  var a8 = tm[8];
+  var prepend = Prepend || false;
 
   if (prepend) {
     this.elements[0] = r00 * a0 + r01 * a3 + r02 * a6;
@@ -308,20 +302,16 @@ EZ3.Matrix3.prototype.mulRotate = function(m, rad, ax, ay, az, Prepend) {
 };
 
 EZ3.Matrix3.prototype.transpose = function(m) {
-  var e;
-  var a0, a1, a2, a3, a4, a5, a6, a7, a8;
-
-  e = (m !== undefined) ? m.elements : this.elements;
-
-  a0 = e[0];
-  a1 = e[1];
-  a2 = e[2];
-  a3 = e[3];
-  a4 = e[4];
-  a5 = e[5];
-  a6 = e[6];
-  a7 = e[7];
-  a8 = e[8];
+  var e = (m !== undefined) ? m.elements : this.elements;
+  var a0 = e[0];
+  var a1 = e[1];
+  var a2 = e[2];
+  var a3 = e[3];
+  var a4 = e[4];
+  var a5 = e[5];
+  var a6 = e[6];
+  var a7 = e[7];
+  var a8 = e[8];
 
   this.elements[0] = a0;
   this.elements[1] = a3;
@@ -339,24 +329,18 @@ EZ3.Matrix3.prototype.transpose = function(m) {
 };
 
 EZ3.Matrix3.prototype.setQuat = function(q) {
-  var x2, y2, z2;
-  var sx, sy, sz;
-  var xx, xy, xz, yy, yz, zz;
-
-  x2 = 2 * q.x;
-  y2 = 2 * q.y;
-  z2 = 2 * q.z;
-
-  xx = q.x * x2;
-  yy = q.y * y2;
-  zz = q.z * z2;
-  xy = q.x * y2;
-  yz = q.y * z2;
-  xz = q.x * z2;
-
-  sx = q.s * x2;
-  sy = q.s * y2;
-  sz = q.s * z2;
+  var x2 = 2 * q.x;
+  var y2 = 2 * q.y;
+  var z2 = 2 * q.z;
+  var xx = q.x * x2;
+  var yy = q.y * y2;
+  var zz = q.z * z2;
+  var xy = q.x * y2;
+  var yz = q.y * z2;
+  var xz = q.x * z2;
+  var sx = q.s * x2;
+  var sy = q.s * y2;
+  var sz = q.s * z2;
 
   this.elements[0] = 1 - yy - zz;
   this.elements[1] = xy - sz;
@@ -374,28 +358,20 @@ EZ3.Matrix3.prototype.setQuat = function(q) {
 };
 
 EZ3.Matrix3.prototype.invert = function(m) {
-  var e;
-  var dt;
-  var b01, b11, b21;
-  var a0, a1, a2, a3, a4, a5, a6, a7, a8;
-
-  e = (m !== undefined) ? m.elements : this.elements;
-
-  a0 = e[0];
-  a3 = e[3];
-  a6 = e[6];
-  a1 = e[1];
-  a4 = e[4];
-  a7 = e[7];
-  a2 = e[2];
-  a5 = e[5];
-  a8 = e[8];
-
-  b01 = a4 * a8 - a7 * a5;
-  b11 = a7 * a2 - a1 * a8;
-  b21 = a1 * a5 - a4 * a2;
-
-  dt = a0 * (b01) + a3 * (b11) + a6 * (b21);
+  var e = (m !== undefined) ? m.elements : this.elements;
+  var a0 = e[0];
+  var a3 = e[3];
+  var a6 = e[6];
+  var a1 = e[1];
+  var a4 = e[4];
+  var a7 = e[7];
+  var a2 = e[2];
+  var a5 = e[5];
+  var a8 = e[8];
+  var b01 = a4 * a8 - a7 * a5;
+  var b11 = a7 * a2 - a1 * a8;
+  var b21 = a1 * a5 - a4 * a2;
+  var dt = a0 * (b01) + a3 * (b11) + a6 * (b21);
 
   if (dt !== 0)
     dt = 1.0 / dt;
@@ -416,45 +392,37 @@ EZ3.Matrix3.prototype.invert = function(m) {
 };
 
 EZ3.Matrix3.prototype.normalFromMat4 = function(m) {
-  var em;
+  var em = m.elements;
+  var a00 = em[0];
+  var a01 = em[1];
+  var a02 = em[2];
+  var a03 = em[3];
+  var a10 = em[4];
+  var a11 = em[5];
+  var a12 = em[6];
+  var a13 = em[7];
+  var a20 = em[8];
+  var a21 = em[9];
+  var a22 = em[10];
+  var a23 = em[11];
+  var a30 = em[12];
+  var a31 = em[13];
+  var a32 = em[14];
+  var a33 = em[15];
+  var b00 = a00 * a11 - a01 * a10;
+  var b01 = a00 * a12 - a02 * a10;
+  var b02 = a00 * a13 - a03 * a10;
+  var b03 = a01 * a12 - a02 * a11;
+  var b04 = a01 * a13 - a03 * a11;
+  var b05 = a02 * a13 - a03 * a12;
+  var b06 = a20 * a31 - a21 * a30;
+  var b07 = a20 * a32 - a22 * a30;
+  var b08 = a20 * a33 - a23 * a30;
+  var b09 = a21 * a32 - a22 * a31;
+  var b10 = a21 * a33 - a23 * a31;
+  var b11 = a22 * a33 - a23 * a32;
+
   var det;
-  var a00, a01, a02, a03;
-  var a10, a11, a12, a13;
-  var a20, a21, a22, a23;
-  var a30, a31, a32, a33;
-  var b00, b01, b02, b03, b04, b05, b06, b07, b08, b09, b10, b11;
-
-  em = m.elements;
-
-  a00 = em[0];
-  a01 = em[1];
-  a02 = em[2];
-  a03 = em[3];
-  a10 = em[4];
-  a11 = em[5];
-  a12 = em[6];
-  a13 = em[7];
-  a20 = em[8];
-  a21 = em[9];
-  a22 = em[10];
-  a23 = em[11];
-  a30 = em[12];
-  a31 = em[13];
-  a32 = em[14];
-  a33 = em[15];
-
-  b00 = a00 * a11 - a01 * a10;
-  b01 = a00 * a12 - a02 * a10;
-  b02 = a00 * a13 - a03 * a10;
-  b03 = a01 * a12 - a02 * a11;
-  b04 = a01 * a13 - a03 * a11;
-  b05 = a02 * a13 - a03 * a12;
-  b06 = a20 * a31 - a21 * a30;
-  b07 = a20 * a32 - a22 * a30;
-  b08 = a20 * a33 - a23 * a30;
-  b09 = a21 * a32 - a22 * a31;
-  b10 = a21 * a33 - a23 * a31;
-  b11 = a22 * a33 - a23 * a32;
 
   det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 

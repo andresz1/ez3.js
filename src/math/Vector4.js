@@ -67,7 +67,7 @@ EZ3.Vector4.prototype.addScale = function(v, s) {
   return this;
 };
 
-EZ3.Vector4.prototype.scale = function(s) {
+EZ3.Vector4.prototype.scale = function(v, s) {
   this.x = v.x * s;
   this.y = v.y * s;
   this.z = v.z * s;
@@ -169,6 +169,7 @@ EZ3.Vector4.prototype.len = function() {
 
 EZ3.Vector4.prototype.mul = function(o, v, m) {
   var e = m.elements;
+
   this.x = o.x + v.x * e[0] + v.y * e[1] + v.z * e[2] + v.w * e[3];
   this.y = o.y + v.x * e[4] + v.y * e[5] + v.z * e[6] + v.w * e[7];
   this.z = o.z + v.x * e[8] + v.y * e[9] + v.z * e[10] + v.w * e[11];
@@ -269,29 +270,72 @@ EZ3.Vector4.prototype.toArray = function() {
 };
 
 EZ3.Vector4.prototype.testEqual = function(v) {
-  return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z) && (this.w === v.w));
+  var x = (this.x === v.x);
+  var y = (this.y === v.y);
+  var z = (this.z === v.z);
+  var w = (this.w === v.w);
+
+  return (x && y && z && w);
 };
 
 EZ3.Vector4.prototype.hasZero = function(v) {
-  if (v !== undefined)
-    return ((v.x === 0.0) || (v.y === 0.0) || (v.z === 0.0) || (v.w === 0.0));
-  else
-    return ((this.x === 0.0) || (this.y === 0.0) || (this.z === 0.0) || (v.w === 0.0));
+  var ex;
+  var ey;
+  var ez;
+  var ew;
+
+  if (v !== undefined) {
+    ex = (v.x === 0.0);
+    ey = (v.y === 0.0);
+    ez = (v.z === 0.0);
+    ew = (v.w === 0.0);
+  }else {
+    ex = (this.x === 0.0);
+    ey = (this.y === 0.0);
+    ez = (this.z === 0.0);
+    ew = (this.w === 0.0);
+  }
+
+  return (ex || ey || ez || ew);
 };
 
 EZ3.Vector4.prototype.testZero = function(v) {
-  if (v !== undefined)
-    return ((v.x === 0.0) && (v.y === 0.0) && (v.z === 0.0) && (v.w === 0.0));
-  else
-    return ((this.x === 0.0) && (this.y === 0.0) && (this.z === 0.0) && (this.w === 0.0));
+  var ex;
+  var ey;
+  var ez;
+  var ew;
+
+  if (v !== undefined) {
+    ex = (v.x === 0.0);
+    ey = (v.y === 0.0);
+    ez = (v.z === 0.0);
+    ew = (v.w === 0.0);
+  }else {
+    ex = (this.x === 0.0);
+    ey = (this.y === 0.0);
+    ez = (this.z === 0.0);
+    ew = (this.w === 0.0);
+  }
+
+  return (ex && ey && ez && ew);
 };
 
 EZ3.Vector4.prototype.testDiff = function(v) {
-  return ((this.x !== v.x) && (this.y !== v.y) && (this.z !== v.z) && (this.w !== v.w));
+  var dx = (this.x !== v.x);
+  var dy = (this.y !== v.y);
+  var dz = (this.z !== v.z);
+  var dw = (this.w !== v.w);
+
+  return (dx && dy && dz && dw);
 };
 
 EZ3.Vector4.prototype.toString = function() {
-  return 'Vector4[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ', ' + this.z.toFixed(4) + ', ' + this.w.toFixed(4) + ']';
+  var x = this.x.toFixed(4);
+  var y = this.y.toFixed(4);
+  var z = this.z.toFixed(4);
+  var w = this.w.toFixed(4);
+
+  return 'Vector4[' + x + ', ' + y + ', ' + z + ', ' + w + ']';
 };
 
 Object.defineProperty(EZ3.Vector4.prototype, 'x', {

@@ -17,6 +17,7 @@ EZ3.Quaternion.prototype.init = function(s, x, y, z) {
   this.x = x || 0;
   this.y = y || 0;
   this.z = z || 0;
+
   return this;
 };
 
@@ -32,13 +33,22 @@ EZ3.Quaternion.prototype.add = function(q1, q2) {
     this.y += q1.y;
     this.z += q1.z;
   }
+
   return this;
 };
 
 EZ3.Quaternion.prototype.addTime = function(v, t) {
-  var x, y, z;
-  var qs, qx, qy, qz;
-  var ns, nx, ny, nz;
+  var x;
+  var y;
+  var z;
+  var qs;
+  var qx;
+  var qy;
+  var qz;
+  var ns;
+  var nx;
+  var ny;
+  var nz;
   var s;
 
   x = v.x;
@@ -84,6 +94,9 @@ EZ3.Quaternion.prototype.sub = function(q1, q2) {
     this.y -= q1.y;
     this.z -= q1.z;
   }
+
+  this.dirty = true;
+
   return this;
 };
 
@@ -92,12 +105,19 @@ EZ3.Quaternion.prototype.scale = function(q, s) {
   this.x = q.x * s;
   this.y = q.y * s;
   this.z = q.z * s;
+
   return this;
 };
 
 EZ3.Quaternion.prototype.mul = function(q1, q2) {
-  var ax, ay, az, as;
-  var bx, by, bz, bs;
+  var ax;
+  var ay;
+  var az;
+  var as;
+  var bx;
+  var by;
+  var bz;
+  var bs;
 
   ax = q1.x;
   ay = q1.y;
@@ -125,9 +145,15 @@ EZ3.Quaternion.prototype.mul = function(q1, q2) {
 };
 
 EZ3.Quaternion.prototype.arc = function(v1, v2) {
-  var x1, y1, z1;
-  var x2, y2, z2;
-  var cx, cy, cz;
+  var x1;
+  var y1;
+  var z1;
+  var x2;
+  var y2;
+  var z2;
+  var cx;
+  var cy;
+  var cz;
   var d;
 
   x1 = v1.x;
@@ -170,6 +196,10 @@ EZ3.Quaternion.prototype.arc = function(v1, v2) {
 
 EZ3.Quaternion.prototype.normalize = function(q) {
   var len;
+  var s2;
+  var x2;
+  var y2;
+  var z2;
 
   if (q !== undefined) {
     len = Math.sqrt(q.s * q.s + q.x * q.x + q.y * q.y + q.z * q.z);
@@ -182,7 +212,13 @@ EZ3.Quaternion.prototype.normalize = function(q) {
     this.y = q.y * len;
     this.z = q.z * len;
   } else {
-    len = Math.sqrt(this.s * this.s + this.x * this.x + this.y * this.y + this.z * this.z);
+
+    s2 = this.s * this.s;
+    x2 = this.x * this.x;
+    y2 = this.y * this.y;
+    z2 = this.z * this.z;
+
+    len = Math.sqrt(s2 + x2 + y2 + z2);
 
     if (len > 0)
       len = 1.0 / len;
@@ -211,11 +247,21 @@ EZ3.Quaternion.prototype.invert = function(q) {
 };
 
 EZ3.Quaternion.prototype.length = function() {
-  return Math.sqrt(this.s * this.s + this.x * this.x + this.y * this.y + this.z * this.z);
+  var s2 = this.s * this.s;
+  var x2 = this.x * this.x;
+  var y2 = this.y * this.y;
+  var z2 = this.z * this.z;
+
+  return Math.sqrt(s2 + x2 + y2 + z2);
 };
 
 EZ3.Quaternion.prototype.testDiff = function(q) {
-  return (this.s !== q.s || this.x !== q.x || this.y !== q.y || this.z !== q.z) ? true : false;
+  var ds = (this.s !== q.s);
+  var dx = (this.x !== q.x);
+  var dy = (this.y !== q.y);
+  var dz = (this.z !== q.z);
+
+  return (ds || dx || dy || dz);
 };
 
 EZ3.Quaternion.prototype.copy = function(q) {
@@ -231,15 +277,12 @@ EZ3.Quaternion.prototype.clone = function() {
 };
 
 EZ3.Quaternion.prototype.toString = function() {
-  return 'Quaternion[' +
-    this.x.toFixed(4) +
-    ', ' +
-    this.y.toFixed(4) +
-    ', ' +
-    this.z.toFixed(4) +
-    ', ' +
-    this.s.toFixed(4) +
-    ' ]';
+  var x = this.x.toFixed(4);
+  var y = this.y.toFixed(4);
+  var z = this.z.toFixed(4);
+  var s = this.s.toFixed(4);
+
+  return 'Quaternion[' + s + ', ' + x + ', ' + y + ', ' + z + ' ]';
 };
 
 Object.defineProperty(EZ3.Quaternion.prototype, 's', {

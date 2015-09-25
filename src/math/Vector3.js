@@ -155,7 +155,9 @@ EZ3.Vector3.prototype.mul = function(o, v, m) {
 };
 
 EZ3.Vector3.prototype.cross = function(v1, v2) {
-  var x, y, z;
+  var x;
+  var y;
+  var z;
 
   if (v2 !== undefined) {
     x = v1.y * v2.z - v1.z * v2.y;
@@ -175,8 +177,10 @@ EZ3.Vector3.prototype.cross = function(v1, v2) {
 };
 
 EZ3.Vector3.prototype.mulMat = function(m, v) {
-  var x, y, z;
   var e = m.elements;
+  var x;
+  var y;
+  var z;
 
   if (v !== undefined) {
     x = v.x;
@@ -199,12 +203,10 @@ EZ3.Vector3.prototype.applyQuaternion = function(q) {
   var x = this.x;
   var y = this.y;
   var z = this.z;
-
   var qx = q.x;
   var qy = q.y;
   var qz = q.z;
   var qs = q.s;
-
   var ix = qs * x + qy * z - qz * y;
   var iy = qs * y + qz * x - qx * z;
   var iz = qs * z + qx * y - qy * x;
@@ -303,12 +305,16 @@ EZ3.Vector3.prototype.testDiff = function(v) {
 };
 
 EZ3.Vector3.prototype.toString = function() {
-  return 'Vector3[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ', ' + this.z.toFixed(4) + ']';
+  var x = this.x.toFixed(4);
+  var y = this.y.toFixed(4);
+  var z = this.z.toFixed(4);
+  
+  return 'Vector3[' + x + ', ' + y + ', ' + z + ']';
 };
 
 EZ3.Vector3.prototype.set = EZ3.Vector3.prototype.init;
 
-Object.defineProperty(EZ3.Vector3.prototype, "x", {
+Object.defineProperty(EZ3.Vector3.prototype, 'x', {
   get: function() {
     return this._x;
   },
@@ -318,7 +324,7 @@ Object.defineProperty(EZ3.Vector3.prototype, "x", {
   }
 });
 
-Object.defineProperty(EZ3.Vector3.prototype, "y", {
+Object.defineProperty(EZ3.Vector3.prototype, 'y', {
   get: function() {
     return this._y;
   },
@@ -328,7 +334,7 @@ Object.defineProperty(EZ3.Vector3.prototype, "y", {
   }
 });
 
-Object.defineProperty(EZ3.Vector3.prototype, "z", {
+Object.defineProperty(EZ3.Vector3.prototype, 'z', {
   get: function() {
     return this._z;
   },
