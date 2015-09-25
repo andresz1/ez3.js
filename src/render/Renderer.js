@@ -78,7 +78,7 @@ EZ3.Renderer.prototype._processUniforms = function(material) {
 
   if (this._viewMatrix.dirty) {
     name = 'uView';
-    data = this._this._viewMatrix.toArray();
+    data = this._viewMatrix.toArray();
     length = EZ3.GLSLProgram.UNIFORM_SIZE_4X4;
     program.loadUniformMatrix(gl, name, length, data);
     this._viewMatrix.dirty = false;
@@ -283,7 +283,7 @@ EZ3.Renderer.prototype.render = function(screen) {
     for(k = entity.children.length - 1; k >= 0; k--) {
       if(entity.dirty)
         entity.children[k].dirty = true;
-        
+
       entities.push(entity.children[k]);
     }
   }
