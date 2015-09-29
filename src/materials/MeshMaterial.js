@@ -2,40 +2,10 @@
  * @class MeshMaterial
  */
 
-EZ3.MeshMaterial = function(config) {
-  this.dirty = true;
-  this._program = null;
-  this._wireframeActivated = false;
-  this._fill = config.fill || EZ3.MeshMaterial.SOLID;
+EZ3.MeshMaterial = function() {
+  this.program = null;
+  this.fill = EZ3.MeshMaterial.WIREFRAME;
 };
-
-Object.defineProperty(EZ3.MeshMaterial.prototype, 'wireframeActivated', {
-  get: function() {
-    return this._wireframeActivated;
-  },
-  set: function(wireframeActivated) {
-    this._wireframeActivated = wireframeActivated;
-  }
-});
-
-Object.defineProperty(EZ3.MeshMaterial.prototype, 'program', {
-  get: function() {
-    return this._program;
-  },
-  set: function(program) {
-    this._program = program;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.MeshMaterial.prototype, 'fill', {
-  get: function() {
-    return this._fill;
-  },
-  set: function(fill) {
-    this._fill = fill;
-  }
-});
 
 EZ3.MeshMaterial.SOLID = 0;
 EZ3.MeshMaterial.POINTS = 1;
