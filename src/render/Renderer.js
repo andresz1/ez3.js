@@ -26,9 +26,8 @@ EZ3.Renderer.prototype._processContextRecovered = function() {
 EZ3.Renderer.prototype._processProgram = function(material) {
   var gl = this.context;
 
-  if (material.dirty) {
+  if (!material.program) {
     material.program = new EZ3.GLSLProgram(gl, material.config);
-    material.dirty = false;
   }
 };
 

@@ -20,7 +20,7 @@ EZ3.GLSLProgram.prototype._buildPrefix = function(config) {
 
 EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
   var vertex = [
-    'attribute vec3 vertex;',
+    'attribute vec3 position;',
     'uniform mat4 uModelView;',
     'uniform mat4 uModelViewProjection;',
     'uniform mat4 uView;',
@@ -29,7 +29,7 @@ EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
     'uniform mat4 uProjection;',
     'void main() {',
     ' gl_PointSize = 3.0;',
-    ' gl_Position = uModelViewProjection * vec4(vertex, 1.0);',
+    ' gl_Position = uModelViewProjection * vec4(position, 1.0);',
     '}'
   ].join('\n');
 
