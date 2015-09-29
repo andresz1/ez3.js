@@ -19,6 +19,8 @@ EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
     else
       this._resolution = new EZ3.Vector2(5,5);
   }
+
+  this.generate();
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
@@ -29,6 +31,7 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
   var indices= [];
   var vertices = [];
   var vertex = new EZ3.Vector3();
+  var buffer;
   var phi;
   var rho;
   var cosS;
@@ -78,14 +81,16 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
     }
   }
 
-  this.uvs.data = uvs;
-  this.uvs.dynamic = true;
+  buffer = new EZ3.IndexBuffer(indices, false);
+  this.buffers.add('triangle', buffer);
 
-  this.indices.data = indices;
-  this.indices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
 
-  this.vertices.data = vertices;
-  this.vertices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
 
   this.mergeVertices();
 };
