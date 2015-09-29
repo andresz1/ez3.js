@@ -89,8 +89,8 @@ EZ3.GLSLProgram.prototype._create = function(gl, config) {
 };
 
 EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
-  var uniformInfo;
   var totalUniforms = gl.getProgramParameter(this._program, gl.ACTIVE_UNIFORMS);
+  var uniformInfo;
 
   for (var k = 0; k < totalUniforms; ++k) {
     uniformInfo = gl.getActiveUniform(this._program, k);
@@ -99,36 +99,28 @@ EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
 };
 
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
-  var totalAttributes = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
+  var totalAttrib = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
   var attributeInfo;
 
-  for (var k = 0; k < totalAttributes; ++k) {
+  for (var k = 0; k < totalAttrib; ++k) {
     attributeInfo = gl.getActiveAttrib(this._program, k);
     this._addAttribute(gl, attributeInfo.name);
   }
 };
 
 EZ3.GLSLProgram.prototype._addUniform = function(gl, name) {
-  this.uniform[name] = gl.getUniformLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._getUniform = function(name) {
-  return this.uniform[name];
+  this.uniforms[name] = gl.getUniformLocation(this._program, name);
 };
 
 EZ3.GLSLProgram.prototype._addAttribute = function(gl, name) {
-  this.attribute[name] = gl.getAttribLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._getAttribute = function(name) {
-  return this.attribute[name];
+  this.attributes[name] = gl.getAttribLocation(this._program, name);
 };
 
 EZ3.GLSLProgram.prototype._addLineNumbers = function(code) {
   var codeLines = code.split('\n');
 
   for (var k = 0; k < codeLines.length; ++k)
-    codeLines[k] = (k + 1) + ": " + codeLines[k] + '\n\n';
+    codeLines[k] = (k + 1) + ': ' + codeLines[k] + '\n\n';
 
   return codeLines;
 };
@@ -145,16 +137,16 @@ EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {
   if (data) {
     switch (size) {
       case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-        gl.uniform1f(this._getUniform(name), data);
+        gl.uniform1f(this.uniforms[name], data);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2f(this._getUniform(name), data[0], data[1]);
+        gl.uniform2f(this.uniforms[name], data[0], data[1]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3f(this._getUniform(name), data[0], data[1], data[2]);
+        gl.uniform3f(this.uniforms[name], data[0], data[1], data[2]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4f(this._getUniform(name), data[0], data[1], data[2], data[3]);
+        gl.uniform4f(this.uniforms[name], data[0], data[1], data[2], data[3]);
         break;
     }
   }
@@ -164,16 +156,16 @@ EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
   if (data) {
     switch (size) {
       case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-        gl.uniform1i(this._getUniform(name), data);
+        gl.uniform1i(this.uniforms[name], data);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2i(this._getUniform(name), data[0], data[1]);
+        gl.uniform2i(this.uniforms[name], data[0], data[1]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3i(this._getUniform(name), data[0], data[1], data[2]);
+        gl.uniform3i(this.uniforms[name], data[0], data[1], data[2]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4i(this._getUniform(name), data[0], data[1], data[2], data[3]);
+        gl.uniform4i(this.uniforms[name], data[0], data[1], data[2], data[3]);
         break;
     }
   }
@@ -183,25 +175,25 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
   if (data !== undefined) {
     switch (size) {
       case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
-        gl.uniformMatrix2fv(this._getUniform(name), false, data);
+        gl.uniformMatrix2fv(this.uniforms[name], false, data);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
-        gl.uniformMatrix3fv(this._getUniform(name), false, data);
+        gl.uniformMatrix3fv(this.uniforms[name], false, data);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
-        gl.uniformMatrix4fv(this._getUniform(name), false, data);
+        gl.uniformMatrix4fv(this.uniforms[name], false, data);
         break;
     }
   }
 };
 
-Object.defineProperty(EZ3.GLSLProgram.prototype, "uniform", {
+Object.defineProperty(EZ3.GLSLProgram.prototype, 'uniforms', {
   get: function() {
     return this._uniform;
   }
 });
 
-Object.defineProperty(EZ3.GLSLProgram.prototype, "attribute", {
+Object.defineProperty(EZ3.GLSLProgram.prototype, 'attributes', {
   get: function() {
     return this._attribute;
   }
