@@ -3,14 +3,7 @@
  */
 
 EZ3.Geometry = function() {
-  this.indices = new EZ3.BufferAttribute();
-  this.uvs = new EZ3.BufferAttribute(EZ3.BufferAttribute.SIZE.UV);
-  this.colors = new EZ3.BufferAttribute(EZ3.BufferAttribute.SIZE.COLOR);
-  this.normals = new EZ3.BufferAttribute(EZ3.BufferAttribute.SIZE.NORMAL);
-  this.vertices = new EZ3.BufferAttribute(EZ3.BufferAttribute.SIZE.VERTEX);
-  this.tangents = new EZ3.BufferAttribute(EZ3.BufferAttribute.SIZE.TANGENT);
-  this.bitangents = new EZ3.BufferAttribute(EZ3.BufferAttribute.SIZE.BITANGENT);
-  this.triangulated = true;
+  this.buffers = new EZ3.ArrayBuffer();
 };
 
 EZ3.Geometry.prototype.linearize = function() {
@@ -18,8 +11,9 @@ EZ3.Geometry.prototype.linearize = function() {
   var triangles;
   var i;
 
-  if (this.indices.data.length) {
-    triangles = this.indices.data;
+  if (this.buffers.get('triangle')) {
+
+    triangles = this.buffers.get('triangle').data;
 
     for (i = 0; i < triangles.length; i += 3) {
       lines.push(triangles[i]);
@@ -30,41 +24,8 @@ EZ3.Geometry.prototype.linearize = function() {
       lines.push(triangles[i + 2]);
     }
 
-    this.indices.data = lines;
-  } else if (this.vertices.data.length) {
-    triangles = this.vertices.data;
-
-    for (i = 0; i < triangles.length; i += 9) {
-      lines.push(triangles[i]);
-      lines.push(triangles[i + 1]);
-      lines.push(triangles[i + 2]);
-
-      lines.push(triangles[i + 3]);
-      lines.push(triangles[i + 4]);
-      lines.push(triangles[i + 5]);
-
-      lines.push(triangles[i]);
-      lines.push(triangles[i + 1]);
-      lines.push(triangles[i + 2]);
-
-      lines.push(triangles[i + 6]);
-      lines.push(triangles[i + 7]);
-      lines.push(triangles[i + 8]);
-
-      lines.push(triangles[i + 3]);
-      lines.push(triangles[i + 4]);
-      lines.push(triangles[i + 5]);
-
-      lines.push(triangles[i + 6]);
-      lines.push(triangles[i + 7]);
-      lines.push(triangles[i + 8]);
-    }
-
-    this.vertices.data = lines;
-  } else
-    return;
-
-  this.triangulated = false;
+    this.buffers.add('line', new EZ3.IndexBuffer(lines, false));
+  }
 };
 
 EZ3.Geometry.prototype.triangulate = function() {
@@ -92,9 +53,9 @@ EZ3.Geometry.prototype.mergeVertices = function() {
   var uniqueVertices = [];
   var uv = new EZ3.Vector2();
   var vertex = new EZ3.Vector3();
-  var uvs = this.uvs.data;
-  var indices = this.indices.data;
-  var vertices = this.vertices.data;
+  var uvs = this.buffers.get('uv').data;
+  var indices = this.buffers.get('triangle').data;
+  var vertices = this.buffers.get('position').data;
   var uniqueVerticesCounter = 0;
   var precision = Math.pow(10, 4);
   var keyx;
@@ -128,9 +89,9 @@ EZ3.Geometry.prototype.mergeVertices = function() {
     uniqueIndices.push(appearanceMap[verticesMap[key]]);
   }
 
-  this.uvs.data = uniqueUvs;
-  this.indices.data = uniqueIndices;
-  this.vertices.data = uniqueVertices;
+  this.buffers.get('uv').data = uniqueUvs;
+  this.buffers.get('triangle').data = uniqueIndices;
+  this.buffers.get('position').data = uniqueVertices;
 };
 
 EZ3.Geometry.prototype.calculateNormals = function() {
