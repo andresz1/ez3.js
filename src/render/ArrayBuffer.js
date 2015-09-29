@@ -17,7 +17,7 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, programAttributes) {
   if (extension) {
     extension.bindVertexArrayOES(this._id);
   } else {
-    for (k = 0; k < this._vertex.length; k++)
+    for (k in this._vertex)
       this._vertex[k].bind(gl, programAttributes);
   }
 };
@@ -49,7 +49,7 @@ EZ3.ArrayBuffer.prototype.add = function(name, buffer) {
     this._vertex[name] = buffer;
 };
 
-EZ3.ArrayBuffer.prototype.update = function(gl) {
+EZ3.ArrayBuffer.prototype.update = function(gl, programAttributes) {
   var extension = gl.getExtension('OES_vertex_array_object');
   var k;
 
@@ -69,12 +69,14 @@ EZ3.ArrayBuffer.prototype.update = function(gl) {
     for(k in this._vertex)
       if(this._vertex[k].dirty) {
         this._vertex[k].update(gl);
+        this._vertex[k].bind(gl, programAttributes);
         this._vertex[k].dirty = false;
       }
 
     extension.bindVertexArrayOES(null);
 
   } else {
+
     for(k in this._index)
       if(this._index[k].dirty) {
         this._index[k].update(gl);

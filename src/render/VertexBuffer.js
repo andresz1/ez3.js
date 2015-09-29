@@ -39,7 +39,7 @@ EZ3.VertexBuffer.prototype.bind = function(gl, programAttributes) {
     offset = bufferAttributes[k].offset;
     normalized = bufferAttributes[k].normalized;
 
-    if (location >= 0) {
+    if (layout >= 0) {
       gl.enableVertexAttribArray(layout);
       gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
     }
@@ -49,6 +49,10 @@ EZ3.VertexBuffer.prototype.bind = function(gl, programAttributes) {
 EZ3.VertexBuffer.prototype.unbind = function(gl) {
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
 };
+
+/*EZ3.VertexBuffer.prototype.render = function(gl) {
+  //console.log('dicks');
+};*/
 
 EZ3.VertexBuffer.prototype.update = function(gl) {
   var bytes = 4;
