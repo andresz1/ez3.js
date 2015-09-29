@@ -334,16 +334,3 @@ EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
   this.tangents.data = tangents;
   this.bitangents.data = bitangents;
 };
-
-Object.defineProperty(EZ3.Geometry.prototype, 'mathematic', {
-  get: function() {
-    return this instanceof EZ3.AstroidalEllipsoid ||
-           this instanceof EZ3.Box ||
-           this instanceof EZ3.Cone ||
-           this instanceof EZ3.Cylinder ||
-           this instanceof EZ3.Ellipsoid ||
-           this instanceof EZ3.Grid ||
-           this instanceof EZ3.Sphere ||
-           this instanceof EZ3.Torus;
-  }
-});
