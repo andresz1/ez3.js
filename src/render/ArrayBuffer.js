@@ -39,6 +39,8 @@ EZ3.ArrayBuffer.prototype.render = function(gl, mode, name) {
     this._index[name].bind(gl);
     this._index[name].render(gl, mode);
     this._index[name].unbind(gl);
+  } else {
+    this._vertex[name].render(gl, mode);
   }
 };
 

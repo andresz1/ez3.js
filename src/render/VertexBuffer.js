@@ -50,9 +50,9 @@ EZ3.VertexBuffer.prototype.unbind = function(gl) {
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
 };
 
-/*EZ3.VertexBuffer.prototype.render = function(gl) {
-  //console.log('dicks');
-};*/
+EZ3.VertexBuffer.prototype.render = function(gl, mode) {
+  gl.drawArrays(mode, 0, this.data.length / 3);
+};
 
 EZ3.VertexBuffer.prototype.update = function(gl) {
   var bytes = 4;
