@@ -19,6 +19,7 @@ EZ3.Mesh.prototype.render = function(gl) {
   var program = material.program;
   var name;
   var mode;
+  var buffer;
 
   if(geometry) {
 
@@ -43,8 +44,18 @@ EZ3.Mesh.prototype.render = function(gl) {
     }
 
     this.geometry.buffers.update(gl, program.attributes);
-    this.geometry.buffers.bind(gl, program.attributes);
-    this.geometry.buffers.render(gl, mode, name);
+
+    this.geometry.buffers.bind(gl, program.attributes, name);
+
+    buffer = this.geometry.buffers.get(name);
+
+    if(buffer) {
+      if(buffer instanceof EZ3.IndexBuffer)
+        gl.drawElements(mode, buffer.data.length, buffer.getType(gl), 0);
+      else
+        gl.drawArrays(mode, 0, buffer.data.length / 3);
+    }
+
     this.geometry.buffers.unbind(gl);
   }
 };
