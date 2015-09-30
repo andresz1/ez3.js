@@ -46,14 +46,6 @@ EZ3.VertexBuffer.prototype.bind = function(gl, programAttributes) {
   }
 };
 
-EZ3.VertexBuffer.prototype.unbind = function(gl) {
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
-};
-
-EZ3.VertexBuffer.prototype.render = function(gl, mode) {
-  gl.drawArrays(mode, 0, this.data.length / 3);
-};
-
 EZ3.VertexBuffer.prototype.update = function(gl) {
   var bytes = 4;
   var usage;
@@ -92,4 +84,8 @@ EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
 
 EZ3.VertexBuffer.prototype.getAttribute = function(name) {
   return this._attributes[name];
+};
+
+EZ3.VertexBuffer.unbind = function(gl) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
 };

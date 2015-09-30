@@ -30,16 +30,9 @@ EZ3.IndexBuffer.prototype.bind = function(gl) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._id);
 };
 
-EZ3.IndexBuffer.prototype.unbind = function(gl) {
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-};
-
-EZ3.IndexBuffer.prototype.render = function(gl, mode) {
-  var length = this.data.length;
+EZ3.IndexBuffer.prototype.getType = function(gl) {
   var extension = gl.getExtension('OES_element_index_uint');
-  var type = (extension) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
-
-  gl.drawElements(mode, length, type, 0);
+  return (extension) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
 };
 
 EZ3.IndexBuffer.prototype.update = function(gl) {
@@ -79,4 +72,8 @@ EZ3.IndexBuffer.prototype.update = function(gl) {
   } else {
     this._create(gl);
   }
+};
+
+EZ3.IndexBuffer.unbind = function(gl) {
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 };
