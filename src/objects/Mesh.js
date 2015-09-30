@@ -17,26 +17,34 @@ EZ3.Mesh.prototype.render = function(gl) {
   var geometry = this.geometry;
   var material = this.material;
   var program = material.program;
-  var index;
+  var name;
   var mode;
 
   if(geometry) {
 
     if(material.fill === EZ3.MeshMaterial.WIREFRAME) {
-      mode = gl.LINES;
-      index = 'line';
 
-      if(!geometry.buffers.get(index))
+      if(!geometry.buffers.get(name))
         geometry.linearize();
 
+      mode = gl.LINES;
+      name = 'line';
+
+    } else if(material.fill === EZ3.MeshMaterial.POINTS) {
+
+      mode = gl.POINTS;
+      name = 'position';
+
     } else {
+
       mode = gl.TRIANGLES;
-      index = 'triangle';
+      name = 'triangle';
+
     }
 
     this.geometry.buffers.update(gl, program.attributes);
     this.geometry.buffers.bind(gl, program.attributes);
-    this.geometry.buffers.render(gl, mode, index);
+    this.geometry.buffers.render(gl, mode, name);
     this.geometry.buffers.unbind(gl);
   }
 };
