@@ -86,7 +86,7 @@ EZ3.ArrayBuffer.prototype.update = function(gl, programAttributes) {
 };
 
 EZ3.ArrayBuffer.prototype.get = function(name) {
-  if (this._index[name] !== undefined)
+  if (this._index[name])
     return this._index[name];
   else
     return this._vertex[name];
