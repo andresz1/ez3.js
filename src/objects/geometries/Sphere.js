@@ -25,6 +25,7 @@ EZ3.Sphere.prototype.generate = function() {
   var uvs = [];
   var indices = [];
   var vertices = [];
+  var buffer;
   var phi;
   var rho;
   var u;
@@ -65,14 +66,16 @@ EZ3.Sphere.prototype.generate = function() {
     }
   }
 
-  this.uvs.data = uvs;
-  this.uvs.dynamic = true;
+  buffer = new EZ3.IndexBuffer(indices, false);
+  this.buffers.add('triangle', buffer);
 
-  this.indices.data = indices;
-  this.indices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
 
-  this.vertices.data = vertices;
-  this.vertices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
 
   this.mergeVertices();
 };
@@ -97,12 +100,12 @@ Object.defineProperty(EZ3.Sphere.prototype, 'resolution', {
   }
 });
 
-Object.defineProperty(EZ3.Sphere.prototype, 'dirty', {
+Object.defineProperty(EZ3.Sphere.prototype, 'regenerate', {
   get: function() {
     return this.radius.dirty || this.resolution.dirty;
   },
-  set: function(dirty) {
-    this.radius.dirty = dirty;
-    this.resolution.dirty = dirty;
+  set: function(regenerate) {
+    this.radius.dirty = regenerate;
+    this.resolution.dirty = regenerate;
   }
 });

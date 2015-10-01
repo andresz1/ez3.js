@@ -33,6 +33,7 @@ EZ3.Cylinder.prototype.generate = function() {
   var vertex = new EZ3.Vector3();
   var actualHeight = this.height;
   var step = (this.height - this.base) / this.resolution.x;
+  var buffer;
   var u;
   var v;
   var s;
@@ -74,14 +75,16 @@ EZ3.Cylinder.prototype.generate = function() {
     }
   }
 
-  this.uvs.data = uvs;
-  this.uvs.dynamic = true;
+  buffer = new EZ3.IndexBuffer(indices, false);
+  this.buffers.add('triangle', buffer);
 
-  this.indices.data = indices;
-  this.indices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
 
-  this.vertices.data = vertices;
-  this.vertices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
 
   this.mergeVertices();
 };
@@ -126,17 +129,17 @@ Object.defineProperty(EZ3.Cylinder.prototype, 'resolution', {
   }
 });
 
-Object.defineProperty(EZ3.Cylinder.prototype, 'dirty', {
+Object.defineProperty(EZ3.Cylinder.prototype, 'regenerate', {
   get: function() {
     return this.base.dirty ||
            this.height.dirty ||
            this.radius.dirty ||
            this.resolution.dirty;
   },
-  set: function(dirty) {
-    this.base.dirty = dirty;
-    this.height.dirty = dirty;
-    this.radius.dirty = dirty;
-    this.resolution.dirty = dirty;
+  set: function(regenerate) {
+    this.base.dirty = regenerate;
+    this.height.dirty = regenerate;
+    this.radius.dirty = regenerate;
+    this.resolution.dirty = regenerate;
   }
 });

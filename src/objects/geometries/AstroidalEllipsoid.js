@@ -19,8 +19,6 @@ EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
     else
       this._resolution = new EZ3.Vector2(5,5);
   }
-
-  this.generate();
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
@@ -117,12 +115,12 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'resolution', {
   }
 });
 
-Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'dirty', {
+Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'regenerate', {
   get: function() {
     return this.radiuses.dirty || this.resolution.dirty;
   },
-  set: function(dirty) {
-    this.radiuses.dirty = dirty;
-    this.resolution.dirty = dirty;
+  set: function(regenerate) {
+    this.radiuses.dirty = regenerate;
+    this.resolution.dirty = regenerate;
   }
 });

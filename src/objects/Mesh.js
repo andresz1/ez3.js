@@ -23,6 +23,11 @@ EZ3.Mesh.prototype.render = function(gl) {
 
   if(geometry) {
 
+    if(geometry.regenerate) {
+      geometry.generate();
+      geometry.regenerate = false;
+    }
+
     if(material.fill === EZ3.MeshMaterial.WIREFRAME) {
 
       if(!geometry.buffers.get(name))

@@ -29,6 +29,7 @@ EZ3.Ellipsoid.prototype.generate = function() {
   var indices = [];
   var vertices = [];
   var vertex = new EZ3.Vector3();
+  var buffer;
   var phi;
   var rho;
   var u;
@@ -69,14 +70,16 @@ EZ3.Ellipsoid.prototype.generate = function() {
     }
   }
 
-  this.uvs.data = uvs;
-  this.uvs.dynamic = true;
+  buffer = new EZ3.IndexBuffer(indices, false);
+  this.buffers.add('triangle', buffer);
 
-  this.indices.data = indices;
-  this.indices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
 
-  this.vertices.data = vertices;
-  this.vertices.dynamic = true;
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
 
   this.mergeVertices();
 };
@@ -101,12 +104,12 @@ Object.defineProperty(EZ3.Ellipsoid.prototype, 'resolution', {
   }
 });
 
-Object.defineProperty(EZ3.Ellipsoid.prototype, 'dirty', {
+Object.defineProperty(EZ3.Ellipsoid.prototype, 'regenerate', {
   get: function() {
     return this.radiuses.dirty || this.resolution.dirty;
   },
-  set: function(dirty) {
-    this.radiuses.dirty = dirty;
-    this.resolution.dirty = dirty;
+  set: function(regenerate) {
+    this.radiuses.dirty = regenerate;
+    this.resolution.dirty = regenerate;
   }
 });
