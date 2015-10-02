@@ -9,12 +9,10 @@ EZ3.Sphere = function(radius, resolution) {
   this._radius = radius;
   this._radius.dirty = true;
 
-  if (resolution !== undefined) {
-    if(resolution instanceof EZ3.Vector2)
-      this._resolution = resolution;
-    else
-      this._resolution = new EZ3.Vector2(5,5);
-  }
+  if (resolution instanceof EZ3.Vector2)
+    this._resolution = resolution;
+  else
+    this._resolution = new EZ3.Vector2(5, 5);
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
@@ -25,9 +23,15 @@ EZ3.Sphere.prototype.generate = function() {
   var uvs = [];
   var indices = [];
   var vertices = [];
+  var need32Bits = false;
   var buffer;
+  var length;
   var phi;
   var rho;
+  var a;
+  var b;
+  var c;
+  var d;
   var u;
   var v;
   var s;
@@ -56,17 +60,25 @@ EZ3.Sphere.prototype.generate = function() {
 
   for (s = 0; s < this.resolution.x - 1; ++s) {
     for (t = 0; t < this.resolution.y - 1; ++t) {
-      indices.push((s + 0) * this.resolution.y + (t + 0));
-      indices.push((s + 0) * this.resolution.y + (t + 1));
-      indices.push((s + 1) * this.resolution.y + (t + 1));
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
 
-      indices.push((s + 0) * this.resolution.y + (t + 0));
-      indices.push((s + 1) * this.resolution.y + (t + 1));
-      indices.push((s + 1) * this.resolution.y + (t + 0));
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
     }
   }
 
-  buffer = new EZ3.IndexBuffer(indices, false);
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
   this.buffers.add('triangle', buffer);
 
   buffer = new EZ3.VertexBuffer(uvs, false);
@@ -91,11 +103,11 @@ Object.defineProperty(EZ3.Sphere.prototype, 'radius', {
 });
 
 Object.defineProperty(EZ3.Sphere.prototype, 'resolution', {
-  get: function(){
+  get: function() {
     return this._resolution;
   },
   set: function(resolution) {
-    if(resolution instanceof EZ3.Vector2)
+    if (resolution instanceof EZ3.Vector2)
       this._resolution.copy(resolution);
   }
 });

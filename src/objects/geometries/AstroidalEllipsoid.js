@@ -6,19 +6,16 @@
 EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
   EZ3.Geometry.call(this);
 
-  if (radiuses !== undefined) {
-    if(radiuses instanceof EZ3.Vector3)
-      this._radiuses = radiuses;
-    else
-      this._radiuses = new EZ3.Vector3(1,1,1);
-  }
+  if (radiuses instanceof EZ3.Vector3)
+    this._radiuses = radiuses;
+  else
+    this._radiuses = new EZ3.Vector3(1, 1, 1);
 
-  if (resolution !== undefined) {
-    if(resolution instanceof EZ3.Vector2)
-      this._resolution = resolution;
-    else
-      this._resolution = new EZ3.Vector2(5,5);
-  }
+  if (resolution instanceof EZ3.Vector2)
+    this._resolution = resolution;
+  else
+    this._resolution = new EZ3.Vector2(5, 5);
+
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
@@ -26,16 +23,22 @@ EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
 
 EZ3.AstroidalEllipsoid.prototype.generate = function() {
   var uvs = [];
-  var indices= [];
+  var indices = [];
   var vertices = [];
   var vertex = new EZ3.Vector3();
+  var need32Bits = false;
   var buffer;
+  var length;
   var phi;
   var rho;
   var cosS;
   var cosT;
   var sinS;
   var sinT;
+  var a;
+  var b;
+  var c;
+  var d;
   var u;
   var v;
   var s;
@@ -69,17 +72,25 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
 
   for (s = 0; s < this.resolution.x - 1; ++s) {
     for (t = 0; t < this.resolution.y - 1; ++t) {
-      indices.push((s + 0) * this.resolution.y + (t + 0));
-      indices.push((s + 0) * this.resolution.y + (t + 1));
-      indices.push((s + 1) * this.resolution.y + (t + 1));
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
 
-      indices.push((s + 0) * this.resolution.y + (t + 0));
-      indices.push((s + 1) * this.resolution.y + (t + 1));
-      indices.push((s + 1) * this.resolution.y + (t + 0));
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
     }
   }
 
-  buffer = new EZ3.IndexBuffer(indices, false);
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
   this.buffers.add('triangle', buffer);
 
   buffer = new EZ3.VertexBuffer(uvs, false);
@@ -98,7 +109,7 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'radiuses', {
     return this._radiuses;
   },
   set: function(radiuses) {
-    if(radiuses instanceof EZ3.Vector3){
+    if (radiuses instanceof EZ3.Vector3) {
       this._radiuses.copy(radiuses);
     }
   }
@@ -109,7 +120,7 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'resolution', {
     return this._resolution;
   },
   set: function(resolution) {
-    if(resolution instanceof EZ3.Vector2){
+    if (resolution instanceof EZ3.Vector2) {
       this._resolution.copy(resolution);
     }
   }

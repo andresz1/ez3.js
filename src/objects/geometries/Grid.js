@@ -7,10 +7,10 @@ EZ3.Grid = function(resolution) {
   EZ3.Geometry.call(this);
 
   if (resolution !== undefined) {
-    if(resolution instanceof EZ3.Vector2)
+    if (resolution instanceof EZ3.Vector2)
       this._resolution = resolution;
     else
-      this._resolution = new EZ3.Vector2(2,2);
+      this._resolution = new EZ3.Vector2(2, 2);
   }
 };
 
@@ -21,11 +21,13 @@ EZ3.Grid.prototype.generate = function() {
   var uvs = [];
   var indices = [];
   var vertices = [];
+  var need32Bits = false;
   var buffer;
-  var index0;
-  var index1;
-  var index2;
-  var index3;
+  var length;
+  var a;
+  var b;
+  var c;
+  var d;
   var x;
   var z;
 
@@ -42,22 +44,25 @@ EZ3.Grid.prototype.generate = function() {
 
   for (z = 0; z < this.resolution.x; ++z) {
     for (x = 0; x < this.resolution.y; ++x) {
-      index0 = z * (this.resolution.x + 1) + x;
-      index1 = index0 + 1;
-      index2 = index0 + (this.resolution.x + 1);
-      index3 = index2 + 1;
+      a = z * (this.resolution.x + 1) + x;
+      b = a + 1;
+      c = a + (this.resolution.x + 1);
+      d = c + 1;
 
-      indices.push(index0);
-      indices.push(index2);
-      indices.push(index1);
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
 
-      indices.push(index1);
-      indices.push(index2);
-      indices.push(index3);
+      indices.push(a, c, b, b, c, d);
     }
   }
 
-  buffer = new EZ3.IndexBuffer(indices, false);
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
   this.buffers.add('triangle', buffer);
 
   buffer = new EZ3.VertexBuffer(uvs, false);
@@ -76,7 +81,7 @@ Object.defineProperty(EZ3.Grid.prototype, 'resolution', {
     return this._resolution;
   },
   set: function(resolution) {
-    if(resolution instanceof EZ3.Vector2)
+    if (resolution instanceof EZ3.Vector2)
       this._resolution.copy(resolution);
   }
 });

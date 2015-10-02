@@ -6,21 +6,16 @@
 EZ3.Box = function(dimensions, resolution) {
   EZ3.Geometry.call(this);
 
-  if (dimensions !== undefined) {
-    if(dimensions instanceof EZ3.Vector3)
-      this._dimensions = dimensions;
-    else
-      this._dimensions = new EZ3.Vector3(1,1,1);
-  }
+  if (dimensions instanceof EZ3.Vector3)
+    this._dimensions = dimensions;
+  else
+    this._dimensions = new EZ3.Vector3(1, 1, 1);
 
-  if (resolution !== undefined) {
-    if(resolution instanceof EZ3.Vector3)
-      this._resolution = resolution;
-    else
-      this._resolution = new EZ3.Vector3(1,1,1);
-  }
 
-  this.generate();
+  if (resolution instanceof EZ3.Vector3)
+    this._resolution = resolution;
+  else
+    this._resolution = new EZ3.Vector3(1, 1, 1);
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
@@ -36,10 +31,12 @@ EZ3.Box.prototype.generate = function() {
   var widthHalf = width * 0.5;
   var depthHalf = depth * 0.5;
   var heightHalf = height * 0.5;
+  var need32Bits = false;
   var widthSegments;
   var heightSegments;
   var depthSegments;
   var buffer;
+  var length;
 
   if (this.resolution !== undefined) {
     widthSegments = this.resolution.x;
@@ -64,11 +61,11 @@ EZ3.Box.prototype.generate = function() {
     var vector = new EZ3.Vector3();
     var segmentWidth;
     var segmentHeight;
-    var w;
     var a;
     var b;
     var c;
     var d;
+    var w;
     var i;
     var j;
 
@@ -103,21 +100,30 @@ EZ3.Box.prototype.generate = function() {
 
     for (i = 0; i < gridY; ++i) {
       for (j = 0; j < gridX; ++j) {
-        a = (j + 0) + (gridX + 1) * (i + 0);
-        b = (j + 0) + (gridX + 1) * (i + 1);
-        c = (j + 1) + (gridX + 1) * (i + 1);
-        d = (j + 1) + (gridX + 1) * (i + 0);
 
-        uva.set((j + 0) / gridX, (i + 0) / gridY);
-        uvb.set((j + 0) / gridX, (i + 1) / gridY);
+        a = offset + (i * (gridX + 1) + j);
+        b = offset + (i * (gridX + 1) + (j + 1));
+        c = offset + ((i + 1) * (gridX + 1) + j);
+        d = offset + ((i + 1) * (gridX + 1) + (j + 1));
+
+        uva.set(j / gridX, i / gridY);
+        uvb.set(j / gridX, (i + 1) / gridY);
         uvc.set((j + 1) / gridX, (i + 1) / gridY);
-        uvd.set((j + 1) / gridX, (i + 0) / gridY);
+        uvd.set((j + 1) / gridX, i / gridY);
 
-        indices.push(a + offset, b + offset, d + offset);
-        indices.push(b + offset, c + offset, d + offset);
+        indices.push(a, c, b, c, d, b);
 
         uvs.push(uva.x, uva.y, uvb.x, uvb.y, uvd.x, uvd.y);
         uvs.push(uvb.x, uvb.y, uvc.x, uvc.y, uvd.x, uvd.y);
+
+        if (!need32Bits) {
+          length = indices.length;
+          need32Bits = need32Bits ||
+            (a > EZ3.Math.MAX_USHORT) ||
+            (b > EZ3.Math.MAX_USHORT) ||
+            (c > EZ3.Math.MAX_USHORT) ||
+            (d > EZ3.Math.MAX_USHORT);
+        }
       }
     }
   }
@@ -129,7 +135,7 @@ EZ3.Box.prototype.generate = function() {
   buildPlane('x', 'y', +1, -1, width, height, +depthHalf);
   buildPlane('x', 'y', -1, -1, width, height, -depthHalf);
 
-  buffer = new EZ3.IndexBuffer(indices, false);
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
   this.buffers.add('triangle', buffer);
 
   buffer = new EZ3.VertexBuffer(uvs, false);
