@@ -12,15 +12,6 @@ EZ3.VertexBuffer = function(data, dynamic) {
 EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
 EZ3.VertexBuffer.prototype.constructor = EZ3.VertexBuffer;
 
-EZ3.VertexBuffer.prototype._create = function(gl) {
-  var hint = (this._dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
-
-  this._id = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, this._id);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), hint);
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
-};
-
 EZ3.VertexBuffer.prototype.bind = function(gl, programAttributes) {
   var type = gl.FLOAT;
   var stride = this._stride;
@@ -30,6 +21,9 @@ EZ3.VertexBuffer.prototype.bind = function(gl, programAttributes) {
   var layout;
   var size;
   var k;
+
+  if(!(this._id && gl.isBuffer(this._id)))
+    this._id = gl.createBuffer();
 
   gl.bindBuffer(gl.ARRAY_BUFFER, this._id);
 
@@ -48,30 +42,30 @@ EZ3.VertexBuffer.prototype.bind = function(gl, programAttributes) {
 
 EZ3.VertexBuffer.prototype.update = function(gl) {
   var bytes = 4;
-  var usage;
-  var length;
+  var hint = (this._dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
+  var usage = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_USAGE);
+  var length = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_SIZE);
   var dispose;
+  var offset;
+  var array;
+  var k;
 
-  if (this._id && gl.isBuffer(this._id)) {
+  dispose = bytes * this.data.length !== length;
+  dispose = dispose || ((usage === gl.STATIC_DRAW) && this._dynamic);
+  dispose = dispose || ((usage === gl.DYNAMIC_DRAW) && !this._dynamic);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._id);
-    usage = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_USAGE);
-    length = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_SIZE);
-
-    dispose = bytes * this.data.length !== length;
-    dispose = dispose || ((usage === gl.STATIC_DRAW) && this._dynamic);
-    dispose = dispose || ((usage === gl.DYNAMIC_DRAW) && !this._dynamic);
-
-    if (dispose) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, null);
-      gl.deleteBuffer(this._id);
-      this._create(gl);
-    } else if (this._dynamic) {
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(this.data));
-    }
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  if (dispose) {
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), hint);
   } else {
-    this._create(gl);
+    if(this.ranges.length) {
+      for(k = 0; k < this.ranges.length; k++) {
+        offset = this.ranges[k].left * 4;
+        array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
+        gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(array));
+      }
+    } else {
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(array));
+    }
   }
 };
 
@@ -84,8 +78,4 @@ EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
 
 EZ3.VertexBuffer.prototype.getAttribute = function(name) {
   return this._attributes[name];
-};
-
-EZ3.VertexBuffer.unbind = function(gl) {
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
 };

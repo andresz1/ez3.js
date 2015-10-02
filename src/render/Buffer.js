@@ -4,9 +4,9 @@
 
 EZ3.Buffer = function(data, dynamic) {
   this._id = null;
+  this._ranges = [];
   this._data = data || [];
   this._dynamic = dynamic || false;
-
   this.dirty = true;
 };
 
@@ -19,6 +19,15 @@ Object.defineProperty(EZ3.Buffer.prototype, 'data', {
   set: function(data) {
     this._data = data;
     this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Buffer.prototype, 'ranges', {
+  get: function() {
+    return this._ranges;
+  },
+  set: function(ranges) {
+    this._ranges = ranges;
   }
 });
 
