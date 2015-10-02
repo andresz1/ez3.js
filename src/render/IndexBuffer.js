@@ -29,7 +29,6 @@ EZ3.IndexBuffer.prototype.update = function(gl) {
   var usage = gl.getBufferParameter(gl.ELEMENT_ARRAY_BUFFER, gl.BUFFER_USAGE);
   var length = gl.getBufferParameter(gl.ELEMENT_ARRAY_BUFFER, gl.BUFFER_SIZE);
   var UintArray;
-  var dispose;
   var offset;
   var array;
   var bytes;
@@ -48,11 +47,7 @@ EZ3.IndexBuffer.prototype.update = function(gl) {
     UintArray = Uint16Array;
   }
 
-  dispose = bytes * this.data.length !== length;
-  dispose = dispose || ((usage === gl.STATIC_DRAW) && this._dynamic);
-  dispose = dispose || ((usage === gl.DYNAMIC_DRAW) && !this._dynamic);
-
-  if(dispose) {
+  if((bytes * this.data.length !== length) || (usage !== hint)) {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new UintArray(this.data), hint);
   } else {
     if(this.ranges.length) {

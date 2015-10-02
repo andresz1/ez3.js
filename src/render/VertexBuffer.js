@@ -45,16 +45,11 @@ EZ3.VertexBuffer.prototype.update = function(gl) {
   var hint = (this._dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
   var usage = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_USAGE);
   var length = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_SIZE);
-  var dispose;
   var offset;
   var array;
   var k;
 
-  dispose = bytes * this.data.length !== length;
-  dispose = dispose || ((usage === gl.STATIC_DRAW) && this._dynamic);
-  dispose = dispose || ((usage === gl.DYNAMIC_DRAW) && !this._dynamic);
-
-  if (dispose) {
+  if ((bytes * this.data.length !== length) || (usage !== hint)) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), hint);
   } else {
     if(this.ranges.length) {
