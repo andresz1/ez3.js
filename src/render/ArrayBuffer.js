@@ -17,15 +17,24 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, programAttributes, name) {
   if (extension) {
     if (!this._id)
       this._id = extension.createVertexArrayOES();
+
     extension.bindVertexArrayOES(this._id);
-  }
 
-  for (k in this._vertex) {
-    this._vertex[k].bind(gl, programAttributes);
+    for (k in this._vertex) {
+      if(this._vertex[k].dirty) {
+        this._vertex[k].bind(gl, programAttributes);
+        this._vertex[k].update(gl);
+        this._vertex[k].dirty = false;
+      }
+    }
+  } else {
+    for (k in this._vertex) {
+      this._vertex[k].bind(gl, programAttributes);
 
-    if(this._vertex[k].dirty) {
-      this._vertex[k].update(gl);
-      this._vertex[k].dirty = false;
+      if(this._vertex[k].dirty) {
+        this._vertex[k].update(gl);
+        this._vertex[k].dirty = false;
+      }
     }
   }
 
