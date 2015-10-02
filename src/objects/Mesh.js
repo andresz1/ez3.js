@@ -48,8 +48,6 @@ EZ3.Mesh.prototype.render = function(gl) {
 
     }
 
-    this.geometry.buffers.update(gl, program.attributes);
-
     this.geometry.buffers.bind(gl, program.attributes, name);
 
     buffer = this.geometry.buffers.get(name);
@@ -60,8 +58,6 @@ EZ3.Mesh.prototype.render = function(gl) {
       else
         gl.drawArrays(mode, 0, buffer.data.length / 3);
     }
-
-    this.geometry.buffers.unbind(gl);
   }
 };
 
