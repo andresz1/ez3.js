@@ -54,12 +54,12 @@ EZ3.VertexBuffer.prototype.update = function(gl) {
   } else {
     if(this.ranges.length) {
       for(k = 0; k < this.ranges.length; k++) {
-        offset = this.ranges[k].left * 4;
+        offset = this.ranges[k].left * bytes;
         array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
         gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(array));
       }
     } else {
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(array));
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(this.data));
     }
   }
 };

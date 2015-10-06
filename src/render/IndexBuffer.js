@@ -57,7 +57,7 @@ EZ3.IndexBuffer.prototype.update = function(gl) {
         gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, new UintArray(array));
       }
     } else {
-      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, new UintArray(array));
+      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, new UintArray(this.data));
     }
   }
 };
