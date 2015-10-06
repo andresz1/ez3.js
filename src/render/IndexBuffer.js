@@ -56,6 +56,7 @@ EZ3.IndexBuffer.prototype.update = function(gl) {
         array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
         gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, new UintArray(array));
       }
+      this.ranges.length = 0;
     } else {
       gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, new UintArray(this.data));
     }
