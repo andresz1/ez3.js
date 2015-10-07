@@ -9,6 +9,8 @@ EZ3.Renderer = function(canvas, options) {
   this._modelMatrix = new EZ3.Matrix4();
   this._normalMatrix = new EZ3.Matrix3();
   this._projectionMatrix = new EZ3.Matrix4();
+  this._lights = [];
+  this._meshes = [];
 
   this.canvas = canvas;
   this.options = options;
@@ -92,6 +94,18 @@ EZ3.Renderer.prototype._processUniforms = function(material) {
   }
 };
 
+EZ3.Renderer.prototype._opaqueSort = function(a, b) {
+  if(a.position.z !== b.position.z) {
+    return a.position.z - b.position.z;
+  }
+};
+
+EZ3.Renderer.prototype._transparentSort = function(a, b) {
+  if(a.position.z !== b.position.z) {
+    return b.position.z - a.position.z;
+  }
+};
+
 EZ3.Renderer.prototype.initContext = function() {
   var that = this;
   var contextName;
@@ -147,15 +161,16 @@ EZ3.Renderer.prototype.clear = function() {
 
 EZ3.Renderer.prototype.render = function(screen) {
   var gl = this.context;
-  var lights = [];
-  var meshes = [];
   var entities = [];
   var position = screen.position;
   var size = screen.size;
-  var entity;
   var material;
   var program;
+  var entity;
   var k;
+
+  this._lights.length = 0;
+  this._meshes.length = 0;
 
   gl.viewport(position.x, position.y, size.x, size.y);
 
@@ -166,9 +181,9 @@ EZ3.Renderer.prototype.render = function(screen) {
     entity.update();
 
     if(entity instanceof EZ3.Light)
-      lights.push(entity);
+      this._lights.push(entity);
     else if(entity instanceof EZ3.Mesh)
-      meshes.push(entity);
+      this._meshes.push(entity);
 
     for(k = entity.children.length - 1; k >= 0; k--) {
       if(entity.dirty)
@@ -178,23 +193,21 @@ EZ3.Renderer.prototype.render = function(screen) {
     }
   }
 
-  for(k = 0; k < meshes.length; ++k) {
-    material = meshes[k].material;
+  this._meshes.sort(this._opaqueSort);
 
-    this._processMatrices(meshes[k]);
-    this._processProgram(meshes[k].material);
+  for(k = 0; k < this._meshes.length; ++k) {
+    material = this._meshes[k].material;
 
-    program = meshes[k].material.program;
+    this._processMatrices(this._meshes[k]);
+    this._processProgram(this._meshes[k].material);
+
+    program = this._meshes[k].material.program;
 
     program.enable(gl);
 
     this._processUniforms(material);
-    meshes[k].render(gl);
+    this._meshes[k].render(gl);
 
     program.disable(gl);
   }
-
-  lights.length = 0;
-  meshes.length = 0;
-  entities.length = 0;
 };
