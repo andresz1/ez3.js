@@ -3,10 +3,8 @@
  * @extends Light
  */
 
-EZ3.PointLight = function(config) {
-  EZ3.Light.call(this);
-
-  this._setup(config);
+EZ3.PointLight = function(color, attenuation) {
+  EZ3.Light.call(this, color, attenuation);
 };
 
 EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);
