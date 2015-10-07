@@ -28,6 +28,7 @@ Object.defineProperty(EZ3.Buffer.prototype, 'ranges', {
   },
   set: function(ranges) {
     this._ranges = ranges;
+    this.dirty = true;
   }
 });
 
