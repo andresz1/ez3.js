@@ -3,8 +3,6 @@
  */
 
 EZ3.Entity = function() {
-  this.dirty = true;
-
   this._parent = null;
   this._children = [];
 
@@ -12,9 +10,11 @@ EZ3.Entity = function() {
   this._worldMatrix = new EZ3.Matrix4();
   this._normalMatrix = new EZ3.Matrix3();
 
-  this._scale = new EZ3.Vector3(1, 1 ,1);
+  this._scale = new EZ3.Vector3(1, 1, 1);
   this._position = new EZ3.Vector3(0, 0, 0);
   this._rotation = new EZ3.Quaternion(1, 0, 0, 0);
+
+  this._dirty = true;
 };
 
 EZ3.Entity.prototype.add = function(child) {
@@ -23,7 +23,7 @@ EZ3.Entity.prototype.add = function(child) {
     if (child.parent)
       child.parent.remove(child);
 
-    this._dirty = true;
+    this.dirty = true;
     child.parent = this;
     this._children.push(child);
 
@@ -42,42 +42,47 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.update = function() {
-  var modelMatrix = this.modelMatrix;
-  var rotation = this.rotation;
-  var position = this.position;
   var scale = this.scale;
+  var position = this.position;
+  var rotation = this.rotation;
+  var modelMatrix = this.modelMatrix;
 
-  this.dirty = this.dirty || this.scale.dirty;
-  this.dirty = this.dirty || this.position.dirty;
-  this.dirty = this.dirty || this.rotation.dirty;
+  if (scale.dirty || position.dirty || rotation.dirty) {
 
-  if (this.dirty) {
+    if (scale.dirty)
+      scale.dirty = false;
 
-    if(this.scale.dirty || this.position.dirty || this.rotation.dirty) {
+    if (position.dirty)
+      position.dirty = false;
 
-      if (this.scale.dirty)
-        this.scale.dirty = false;
+    if (rotation.dirty)
+      rotation.dirty = false;
 
-      if (this.position.dirty)
-          this.position.dirty = false;
-
-      if (this.rotation.dirty)
-        this.rotation.dirty = false;
-
-      this.modelMatrix.fromRotationTranslation(modelMatrix, rotation, position);
-      this.modelMatrix.scale(this.modelMatrix, scale);
-    }
-
-    if(!this.parent)
-      this.worldMatrix.copy(this.modelMatrix);
-    else
-      this.worldMatrix.mul(this.modelMatrix, this.parent.worldMatrix);
-
-    this.normalMatrix.normalFromMat4(this.worldMatrix);
-
-    this.dirty = false;
+    this.modelMatrix.fromRotationTranslation(modelMatrix, rotation, position);
+    this.modelMatrix.scale(this.modelMatrix, scale);
   }
+
+  if (!this.parent)
+    this.worldMatrix.copy(this.modelMatrix);
+  else
+    this.worldMatrix.mul(this.modelMatrix, this.parent.worldMatrix);
+
+  this.normalMatrix.normalFromMat4(this.worldMatrix);
 };
+
+Object.defineProperty(EZ3.Entity.prototype, 'dirty', {
+  get: function() {
+    var dirty = this._dirty;
+    var scaleDirty = this.scale.dirty;
+    var positionDirty = this.position.dirty;
+    var rotationDirty = this.rotation.dirty;
+
+    return dirty || scaleDirty || positionDirty || rotationDirty;
+  },
+  set: function(dirty) {
+    this._dirty = dirty;
+  }
+});
 
 Object.defineProperty(EZ3.Entity.prototype, 'parent', {
   get: function() {
