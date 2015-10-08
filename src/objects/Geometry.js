@@ -11,7 +11,7 @@ EZ3.Geometry.prototype.linearize = function() {
   var triangles;
   var i;
 
-  if (this.buffers.get('triangle')) {
+  if (this.buffers.get('triangle') && !this.buffers.get('line')) {
 
     triangles = this.buffers.get('triangle').data;
 
