@@ -107,6 +107,40 @@ EZ3.Renderer.prototype._transparentSort = function(a, b) {
   }
 };
 
+EZ3.Renderer.prototype._processScene = function(scene) {
+  var entities = [];
+  var entity;
+  var dirty;
+  var k;
+
+  this._lights.length = 0;
+  this._meshes.length = 0;
+
+  entities.push(scene);
+
+  while(entities.length) {
+    entity = entities.pop();
+    dirty = entity.dirty;
+
+    if(entity instanceof EZ3.Light)
+      this._lights.push(entity);
+    else if(entity instanceof EZ3.Mesh)
+      this._meshes.push(entity);
+
+    for(k = entity.children.length - 1; k >= 0; k--) {
+      entity.children[k].dirty = dirty;
+      entities.push(entity.children[k]);
+    }
+
+    if(dirty) {
+      entity.update();
+      entity.dirty = false;
+    }
+  }
+
+  this._meshes.sort(this._opaqueSort);
+};
+
 EZ3.Renderer.prototype.initContext = function() {
   var that = this;
   var contextName;
@@ -162,39 +196,15 @@ EZ3.Renderer.prototype.clear = function() {
 
 EZ3.Renderer.prototype.render = function(screen) {
   var gl = this.context;
-  var entities = [];
   var position = screen.position;
   var size = screen.size;
   var material;
   var program;
-  var entity;
   var k;
-
-  this._lights.length = 0;
-  this._meshes.length = 0;
 
   gl.viewport(position.x, position.y, size.x, size.y);
 
-  entities.push(screen.scene);
-
-  while(entities.length) {
-    entity = entities.pop();
-    entity.update();
-
-    if(entity instanceof EZ3.Light)
-      this._lights.push(entity);
-    else if(entity instanceof EZ3.Mesh)
-      this._meshes.push(entity);
-
-    for(k = entity.children.length - 1; k >= 0; k--) {
-      if(entity.dirty)
-        entity.children[k].dirty = true;
-
-      entities.push(entity.children[k]);
-    }
-  }
-
-  this._meshes.sort(this._opaqueSort);
+  this._processScene(screen.scene);
 
   for(k = 0; k < this._meshes.length; ++k) {
     material = this._meshes[k].material;
