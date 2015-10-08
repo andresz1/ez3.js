@@ -106,10 +106,10 @@ EZ3.Box.prototype.generate = function() {
         c = offset + ((i + 1) * (gridX + 1) + j);
         d = offset + ((i + 1) * (gridX + 1) + (j + 1));
 
-        uva.set(i / gridY, j / gridX);
-        uvb.set(i / gridY, (j + 1) / gridX);
-        uvc.set((i + 1) / gridY, j / gridX);
-        uvd.set((i + 1) / gridY, (j + 1) / gridX);
+        uva.set(1.0 - i / gridY, j / gridX);
+        uvb.set(1.0 - i / gridY, (j + 1) / gridX);
+        uvc.set(1.0 - (i + 1) / gridY, j / gridX);
+        uvd.set(1.0 - (i + 1) / gridY, (j + 1) / gridX);
 
         indices.push(a, c, b, c, d, b);
 
