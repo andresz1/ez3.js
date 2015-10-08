@@ -11,6 +11,7 @@ EZ3.Renderer = function(canvas, options) {
   this._projectionMatrix = new EZ3.Matrix4();
   this._lights = [];
   this._meshes = [];
+  this._programs = {};
 
   this.canvas = canvas;
   this.options = options;
@@ -199,12 +200,13 @@ EZ3.Renderer.prototype.render = function(screen) {
     material = this._meshes[k].material;
 
     this._processMatrices(this._meshes[k]);
-    this._processProgram(this._meshes[k].material);
 
+    material.update(gl, this._programs);
     program = this._meshes[k].material.program;
 
     program.enable(gl);
 
+    material.bind(gl);
     this._processUniforms(material);
     this._meshes[k].render(gl);
 

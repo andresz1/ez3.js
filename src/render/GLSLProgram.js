@@ -2,48 +2,12 @@
  * @class GLSLProgram
  */
 
-EZ3.GLSLProgram = function(gl, config) {
+EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
   this._shaders = [];
   this._uniform = {};
   this._attribute = {};
   this._program = null;
-  this._create(gl, config);
-};
-
-EZ3.GLSLProgram.prototype._buildPrefix = function(config) {
-  var prefix = [
-    'precision highp float;'
-  ].join('\n');
-
-  return prefix;
-};
-
-EZ3.GLSLProgram.prototype._buildVertex = function(prefix) {
-  var vertex = [
-    'attribute vec3 position;',
-    'uniform mat4 uModelView;',
-    'uniform mat4 uModelViewProjection;',
-    'uniform mat4 uView;',
-    'uniform mat4 uModel;',
-    'uniform mat3 uNormal;',
-    'uniform mat4 uProjection;',
-    'void main() {',
-    ' gl_PointSize = 3.0;',
-    ' gl_Position = uModelViewProjection * vec4(position, 1.0);',
-    '}'
-  ].join('\n');
-
-  return prefix + vertex;
-};
-
-EZ3.GLSLProgram.prototype._buildFragment = function(prefix) {
-  var fragment = [
-    'void main() {',
-    ' gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);',
-    '}'
-  ].join('\n');
-
-  return prefix + fragment;
+  this._create(gl, vertex, fragment, prefix);
 };
 
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
@@ -62,12 +26,13 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
   }
 };
 
-EZ3.GLSLProgram.prototype._create = function(gl, config) {
+EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
   var infoLog;
-  var prefix = this._buildPrefix(config);
 
-  this._compile(gl, gl.VERTEX_SHADER, this._buildVertex(prefix));
-  this._compile(gl, gl.FRAGMENT_SHADER, this._buildFragment(prefix));
+  prefix = (prefix)? prefix: '';
+
+  this._compile(gl, gl.VERTEX_SHADER, prefix + vertex);
+  this._compile(gl, gl.FRAGMENT_SHADER, prefix + fragment);
 
   this._program = gl.createProgram();
 
