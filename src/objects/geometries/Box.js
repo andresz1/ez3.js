@@ -113,8 +113,8 @@ EZ3.Box.prototype.generate = function() {
 
         indices.push(a, c, b, c, d, b);
 
-        uvs.push(uva.x, uva.y, uvb.x, uvb.y, uvd.x, uvd.y);
-        uvs.push(uvb.x, uvb.y, uvc.x, uvc.y, uvd.x, uvd.y);
+        uvs.push(uva.x, uva.y, uvc.x, uvc.y, uvb.x, uvb.y);
+        uvs.push(uvc.x, uvc.y, uvd.x, uvd.y, uvb.x, uvb.y);
 
         if (!need32Bits) {
           length = indices.length;
