@@ -27,9 +27,9 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
     console.log(message + infoLog + lineNumbers + '\n');
   } else {
     if (type === gl.VERTEX_SHADER)
-      this._shaders[EZ3.GLSLProgram.VERTEX_POSITION] = shader;
+      this._shaders[EZ3.GLSLProgram.VERTEX] = shader;
     else if (type === gl.FRAGMENT_SHADER)
-      this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION] = shader;
+      this._shaders[EZ3.GLSLProgram.FRAGMENT] = shader;
   }
 };
 

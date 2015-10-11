@@ -214,12 +214,10 @@ EZ3.Renderer.prototype.render = function(screen) {
     material.update(gl, this._programs);
     program = this._meshes[k].material.program;
 
-    program.enable(gl);
+    program.bind(gl);
 
     material.bind(gl);
     this._processUniforms(material);
     this._meshes[k].render(gl);
-
-    program.disable(gl);
   }
 };
