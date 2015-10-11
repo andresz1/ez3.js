@@ -9,7 +9,7 @@ EZ3.DepthFramebuffer = function(resolution) {
 
 EZ3.DepthFramebuffer.bind = function(gl) {
   if(!this._id) {
-
+ 
   }
 
   if(!this.texture) {

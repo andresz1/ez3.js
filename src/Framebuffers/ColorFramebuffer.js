@@ -9,7 +9,7 @@ EZ3.ColorFramebuffer = function(resolution) {
 
 EZ3.ColorFramebuffer.bind = function(gl) {
   if(!this._id) {
-
+ 
   }
 
   if(!this.texture) {
