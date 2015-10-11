@@ -46,52 +46,7 @@ EZ3.Geometry.prototype.triangulate = function() {
 };
 
 EZ3.Geometry.prototype.mergeVertices = function() {
-  var uniqueUvs = [];
-  var verticesMap = {};
-  var appearanceMap = {};
-  var uniqueIndices = [];
-  var uniqueVertices = [];
-  var uv = new EZ3.Vector2();
-  var vertex = new EZ3.Vector3();
-  var uvs = this.buffers.get('uv').data;
-  var indices = this.buffers.get('triangle').data;
-  var vertices = this.buffers.get('position').data;
-  var uniqueVerticesCounter = 0;
-  var precision = Math.pow(10, 4);
-  var keyx;
-  var keyy;
-  var keyz;
-  var key;
-  var k;
-
-  for (k = 0; k < indices.length; k++) {
-    vertex.x = vertices[3 * indices[k] + 0];
-    vertex.y = vertices[3 * indices[k] + 1];
-    vertex.z = vertices[3 * indices[k] + 2];
-
-    keyx = Math.round(vertex.x * precision);
-    keyy = Math.round(vertex.y * precision);
-    keyz = Math.round(vertex.z * precision);
-
-    key = keyx + '_' + keyy + '_' + keyz;
-
-    if (verticesMap[key] === undefined) {
-      verticesMap[key] = k;
-      appearanceMap[verticesMap[key]] = uniqueVerticesCounter++;
-
-      uv.x = uvs[2 * indices[k] + 0];
-      uv.y = uvs[2 * indices[k] + 1];
-
-      uniqueUvs.push(uv.x, uv.y);
-      uniqueVertices.push(vertex.x, vertex.y, vertex.z);
-    }
-
-    uniqueIndices.push(appearanceMap[verticesMap[key]]);
-  }
-
-  this.buffers.get('uv').data = uniqueUvs;
-  this.buffers.get('triangle').data = uniqueIndices;
-  this.buffers.get('position').data = uniqueVertices;
+  // TODO
 };
 
 EZ3.Geometry.prototype.calculateNormals = function() {
