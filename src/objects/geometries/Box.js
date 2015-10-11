@@ -54,10 +54,6 @@ EZ3.Box.prototype.generate = function() {
     var widthHalf = width * 0.5;
     var heightHalf = height * 0.5;
     var offset = vertices.length / 3;
-    var uva = new EZ3.Vector2();
-    var uvb = new EZ3.Vector2();
-    var uvc = new EZ3.Vector2();
-    var uvd = new EZ3.Vector2();
     var vector = new EZ3.Vector3();
     var segmentWidth;
     var segmentHeight;
@@ -94,27 +90,20 @@ EZ3.Box.prototype.generate = function() {
         vector[v] = (i * segmentHeight - heightHalf) * vdir;
         vector[w] = depth;
 
+        uvs.push(j / gridX, i / gridY);
         vertices.push(vector.x, vector.y, vector.z);
       }
     }
 
-    for (i = 0; i < gridY; i++) {
-      for (j = 0; j < gridX; j++) {
+    for (i = 0; i < gridY; ++i) {
+      for (j = 0; j < gridX; ++j) {
 
         a = offset + (i * (gridX + 1) + j);
         b = offset + (i * (gridX + 1) + (j + 1));
         c = offset + ((i + 1) * (gridX + 1) + j);
         d = offset + ((i + 1) * (gridX + 1) + (j + 1));
 
-        uva.set(1.0 - i / gridY, j / gridX);
-        uvb.set(1.0 - i / gridY, (j + 1) / gridX);
-        uvc.set(1.0 - (i + 1) / gridY, j / gridX);
-        uvd.set(1.0 - (i + 1) / gridY, (j + 1) / gridX);
-
-        indices.push(a, c, b, c, d, b);
-
-        uvs.push(uva.x, uva.y, uvc.x, uvc.y, uvb.x, uvb.y);
-        uvs.push(uvc.x, uvc.y, uvd.x, uvd.y, uvb.x, uvb.y);
+        indices.push(a, d, b, a, c, d);
 
         if (!need32Bits) {
           length = indices.length;
