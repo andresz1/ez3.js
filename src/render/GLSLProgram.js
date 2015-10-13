@@ -90,12 +90,8 @@ EZ3.GLSLProgram.prototype._addLineNumbers = function(code) {
   return codeLines;
 };
 
-EZ3.GLSLProgram.prototype.enable = function(gl) {
+EZ3.GLSLProgram.prototype.bind = function(gl) {
   gl.useProgram(this._program);
-};
-
-EZ3.GLSLProgram.prototype.disable = function(gl) {
-  gl.useProgram(null);
 };
 
 EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {

@@ -6,77 +6,51 @@
 EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
-  this._geometry = (geometry instanceof EZ3.Geometry) ? geometry : null;
-  this._material = (material instanceof EZ3.MeshMaterial) ? material : null;
+  this.geometry = geometry;
+  this.material = material;
+  this.mode = null;
+  this.index = null;
 };
 
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 
-EZ3.Mesh.prototype.render = function(gl) {
-  var geometry = this.geometry;
-  var material = this.material;
-  var program = material.program;
-  var name;
-  var mode;
-  var buffer;
+EZ3.Mesh.prototype.prepare = function(gl, programs, lights) {
+  if (this.material.fill === EZ3.Material.WIREFRAME) {
+    this.mode = gl.LINES;
+    this.index = 'line';
 
-  if(geometry) {
+    if (!this.geometry.buffers.get('line'))
+      this.geometry.calculateLinearIndeces();
 
-    if(geometry.regenerate) {
-      geometry.generate();
-      geometry.regenerate = false;
-    }
+  } else if (this.material.fill === EZ3.Material.POINTS) {
+    this.mode = gl.POINTS;
+    this.index = 'position';
+  } else {
+    this.mode = gl.TRIANGLES;
+    this.index = 'triangle';
+  }
 
-    if(material.fill === EZ3.MeshMaterial.WIREFRAME) {
+  if (lights.length) {
+    if (!this.geometry.buffers.get('normal'))
+      this.geometry.calculateNormals();
 
-      if(!geometry.buffers.get(name))
-        geometry.linearize();
+    if (this.material.bumpMap instanceof EZ3.Texture &&
+      !!this.geometry.buffers.get('tangent'))
+      this.geometry.calculateTangentsAndBitangents();
+  }
 
-      mode = gl.LINES;
-      name = 'line';
-
-    } else if(material.fill === EZ3.MeshMaterial.POINTS) {
-
-      mode = gl.POINTS;
-      name = 'position';
-
-    } else {
-
-      mode = gl.TRIANGLES;
-      name = 'triangle';
-
-    }
-
-    this.geometry.buffers.bind(gl, program.attributes, name);
-
-    buffer = this.geometry.buffers.get(name);
-
-    if(buffer) {
-      if(buffer instanceof EZ3.IndexBuffer)
-        gl.drawElements(mode, buffer.data.length, buffer.getType(gl), 0);
-      else
-        gl.drawArrays(mode, 0, buffer.data.length / 3);
-    }
+  if (this.material.dirty) {
+    this.material.update(gl, programs, lights);
+    this.material.dirty = false;
   }
 };
 
-Object.defineProperty(EZ3.Mesh.prototype, 'material', {
-  get: function() {
-    return this._material;
-  },
-  set: function(material) {
-    if (material instanceof EZ3.MeshMaterial)
-      this._material = material;
-  }
-});
+EZ3.Mesh.prototype.render = function(gl) {
+  var buffer = this.geometry.buffers.get(this.index);
 
-Object.defineProperty(EZ3.Mesh.prototype, 'geometry', {
-  get: function() {
-    return this._geometry;
-  },
-  set: function(geometry) {
-    if (geometry instanceof EZ3.Geometry)
-      this._geometry = geometry;
-  }
-});
+  if (buffer instanceof EZ3.IndexBuffer)
+    gl.drawElements(this.mode, buffer.data.length, buffer.getType(gl), 0);
+  else if (buffer instanceof EZ3.VertexBuffer)
+    gl.drawArrays(this._mode, 0, buffer.data.length / 3);
+};

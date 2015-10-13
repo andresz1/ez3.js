@@ -13,6 +13,8 @@ EZ3.Sphere = function(radius, resolution) {
     this._resolution = resolution;
   else
     this._resolution = new EZ3.Vector2(5, 5);
+
+  this.generate();
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
@@ -89,7 +91,7 @@ EZ3.Sphere.prototype.generate = function() {
   buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
   this.buffers.add('position', buffer);
 
-  this.mergeVertices();
+//  this.mergeVertices();
 };
 
 Object.defineProperty(EZ3.Sphere.prototype, 'radius', {
