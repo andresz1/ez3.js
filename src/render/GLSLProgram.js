@@ -3,6 +3,7 @@
  */
 
 EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
+  this.used = 1;
   this._shaders = [];
   this._uniform = {};
   this._attribute = {};
@@ -11,23 +12,30 @@ EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
 };
 
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
+  var infoLog;
+  var message;
+  var lineNumbers;
   var shader = gl.createShader(type);
+
   gl.shaderSource(shader, code);
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    var infoLog = gl.getShaderInfoLog(shader);
-    console.log('EZ3.GLSLProgram shader info log: ', infoLog, this._addLineNumbers(code) + '\n');
+    infoLog = gl.getShaderInfoLog(shader);
+    lineNumbers = this._addLineNumbers(code);
+    message = 'EZ3.GLSLProgram shader info log: ';
+    console.log(message + infoLog + lineNumbers + '\n');
   } else {
     if (type === gl.VERTEX_SHADER)
-      this._shaders[EZ3.GLSLProgram.VERTEX_POSITION] = shader;
+      this._shaders[EZ3.GLSLProgram.VERTEX] = shader;
     else if (type === gl.FRAGMENT_SHADER)
-      this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION] = shader;
+      this._shaders[EZ3.GLSLProgram.FRAGMENT] = shader;
   }
 };
 
 EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
   var infoLog;
+  var message;
 
   prefix = (prefix)? prefix: '';
 
@@ -36,20 +44,21 @@ EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
 
   this._program = gl.createProgram();
 
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);
+  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX]);
+  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT]);
 
   gl.linkProgram(this._program);
 
   if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
-    var infolog = gl.getProgramInfoLog(this._program, gl.LINK_STATUS);
-    console.log('EZ3.GLSLProgram linking program error info log: ' + infoLog + '\n');
+    infoLog = gl.getProgramInfoLog(this._program, gl.LINK_STATUS);
+    message = 'EZ3.GLSLProgram linking program error info log: ';
+    console.log(message + infoLog + '\n');
   } else {
     this._loadUniforms(gl);
     this._loadAttributes(gl);
 
-    gl.deleteShader(this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
-    gl.deleteShader(this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);
+    gl.deleteShader(this._shaders[EZ3.GLSLProgram.VERTEX]);
+    gl.deleteShader(this._shaders[EZ3.GLSLProgram.FRAGMENT]);
   }
 };
 
@@ -168,5 +177,5 @@ EZ3.GLSLProgram.UNIFORM_SIZE_2X2 = 2;
 EZ3.GLSLProgram.UNIFORM_SIZE_3X3 = 3;
 EZ3.GLSLProgram.UNIFORM_SIZE_4X4 = 4;
 
-EZ3.GLSLProgram.VERTEX_POSITION = 0;
-EZ3.GLSLProgram.FRAGMENT_POSITION = 1;
+EZ3.GLSLProgram.VERTEX = 0;
+EZ3.GLSLProgram.FRAGMENT = 1;

@@ -27,6 +27,23 @@ EZ3.Geometry.prototype.calculateLinearIndeces = function() {
   }
 };
 
+EZ3.Geometry.prototype.triangulate = function() {
+  var indices, triangularIndices;
+  var k;
+
+  indices = this.indices.data;
+  triangularIndices = [];
+
+  for (k = 0; k < indices.length; k += 6) {
+    triangularIndices.push(indices[k + 0]);
+    triangularIndices.push(indices[k + 1]);
+    triangularIndices.push(indices[k + 3]);
+  }
+
+  this.triangulated = true;
+  this.indices.data = triangularIndices;
+};
+
 EZ3.Geometry.prototype.calculateNormals = function() {
   var normals = [];
   var tmpNormals = [];

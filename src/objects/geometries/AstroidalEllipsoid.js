@@ -15,7 +15,7 @@ EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
     this._resolution = resolution;
   else
     this._resolution = new EZ3.Vector2(5, 5);
-
+    
   this.generate();
 };
 
