@@ -6,12 +6,12 @@ EZ3.Geometry = function() {
   this.buffers = new EZ3.ArrayBuffer();
 };
 
-EZ3.Geometry.prototype.calculateLinearIndeces = function() {
+EZ3.Geometry.prototype.processLinearIndices = function() {
   var lines = [];
   var triangles;
   var i;
 
-  if (this.buffers.get('triangle') && !this.buffers.get('line')) {
+  if (this.buffers.get('triangle')) {
     triangles = this.buffers.get('triangle').data;
 
     for (i = 0; i < triangles.length; i += 3) {
@@ -27,24 +27,7 @@ EZ3.Geometry.prototype.calculateLinearIndeces = function() {
   }
 };
 
-EZ3.Geometry.prototype.triangulate = function() {
-  var indices, triangularIndices;
-  var k;
-
-  indices = this.indices.data;
-  triangularIndices = [];
-
-  for (k = 0; k < indices.length; k += 6) {
-    triangularIndices.push(indices[k + 0]);
-    triangularIndices.push(indices[k + 1]);
-    triangularIndices.push(indices[k + 3]);
-  }
-
-  this.triangulated = true;
-  this.indices.data = triangularIndices;
-};
-
-EZ3.Geometry.prototype.calculateNormals = function() {
+EZ3.Geometry.prototype.processNormals = function() {
   var normals = [];
   var tmpNormals = [];
   var tmpAppearances = [];
@@ -81,7 +64,7 @@ EZ3.Geometry.prototype.calculateNormals = function() {
     vector0.sub(point1, point0);
     vector1.sub(point2, point0);
 
-    normal = vector0.cross(vector1);
+    normal = vector1.cross(vector0);
 
     if (!normal.testZero())
       normal.normalize();
@@ -115,13 +98,13 @@ EZ3.Geometry.prototype.calculateNormals = function() {
 
   tmpNormals = [];
   tmpAppearances = [];
-
+  
   buffer = new EZ3.VertexBuffer(normals, false);
   buffer.addAttribute('normal', new EZ3.VertexBufferAttribute(3));
   this.buffers.add('normal', buffer);
 };
 
-EZ3.Geometry.prototype.calculateTangentsAndBitangents = function() {
+EZ3.Geometry.prototype.processTangentsAndBitangents = function() {
   var tangents = [];
   var bitangents = [];
   var tmpTangents = [];

@@ -7,6 +7,7 @@ EZ3.Screen = function(id, position, size) {
   this.position = position;
   this.size = size;
   this.scene = new EZ3.Scene();
+  this.camera = new EZ3.Camera();
 };
 
 EZ3.Screen.prototype.onKeyPress = function() {

@@ -3,14 +3,15 @@ precision highp float;
 struct PointLight
 {
 	vec3 position;
+	vec3 diffuse;
+	vec3 specular;
 };
-
-uniform vec3 uEmissiveColor;
 
 #if MAX_POINT_LIGHTS > 0
   uniform PointLight uPointLights[MAX_POINT_LIGHTS];
 #endif
 
+uniform vec3 uEmissiveColor;
 #ifdef EMISSIVE
 uniform sampler2D uEmissiveSampler;
 #endif
@@ -31,7 +32,7 @@ void main() {
   {
     vec3 s = normalize(uPointLights[i].position - vPosition);
 
-    color += vec3(1.0, 1.0, 1.0) * max(dot(s, vNormal), 0.0);
+    color += uPointLights[i].diffuse * max(dot(s, vNormal), 0.0);
   }
 #endif
 

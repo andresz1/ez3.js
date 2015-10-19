@@ -10,8 +10,9 @@ EZ3.ArrayBuffer = function() {
 
 EZ3.ArrayBuffer.prototype.constructor = EZ3.ArrayBuffer;
 
-EZ3.ArrayBuffer.prototype.bind = function(gl, programAttributes, name) {
+EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, index) {
   var extension = gl.getExtension('OES_vertex_array_object');
+  var buffer;
   var k;
 
   if (extension) {
@@ -21,29 +22,35 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, programAttributes, name) {
     extension.bindVertexArrayOES(this._id);
 
     for (k in this._vertex) {
-      if(this._vertex[k].dirty) {
-        this._vertex[k].bind(gl, programAttributes);
-        this._vertex[k].update(gl);
-        this._vertex[k].dirty = false;
+      buffer = this._vertex[k];
+
+      if (buffer.isValid(gl, attributes) && buffer.dirty) {
+        buffer.bind(gl, attributes);
+        buffer.update(gl);
+        buffer.dirty = false;
       }
     }
   } else {
     for (k in this._vertex) {
-      this._vertex[k].bind(gl, programAttributes);
+      buffer = this._vertex[k];
 
-      if(this._vertex[k].dirty) {
-        this._vertex[k].update(gl);
-        this._vertex[k].dirty = false;
+      if (buffer.isValid(gl, attributes)) {
+        buffer.bind(gl, attributes);
+
+        if (buffer.dirty) {
+          buffer.update(gl);
+          buffer.dirty = false;
+        }
       }
     }
   }
 
-  if (name && this._index[name]) {
-    this._index[name].bind(gl);
+  if (index) {
+    index.bind(gl);
 
-    if(this._index[name].dirty) {
-      this._index[name].update(gl);
-      this._index[name].dirty = false;
+    if (index.dirty) {
+      index.update(gl);
+      index.dirty = false;
     }
   }
 };

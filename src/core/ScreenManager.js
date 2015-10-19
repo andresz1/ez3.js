@@ -119,12 +119,16 @@ EZ3.ScreenManager.prototype.remove = function(id) {
 };
 
 EZ3.ScreenManager.prototype.update = function() {
+  var screen;
   var i;
 
   this._renderer.clear();
 
   for (i = 0; i < this._screens.length; i++) {
-    this._renderer.render(this._screens[i]);
+    screen = this._screens[i];
+
+    this._renderer.viewport(screen.position, screen.size);
+    this._renderer.render(screen.scene, screen.camera);
     this._screens[i].update();
   }
 };

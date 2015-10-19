@@ -4,42 +4,32 @@
  */
 
 EZ3.MeshMaterial = function() {
-  EZ3.Material.call(this);
+  EZ3.Material.call(this, 'mesh');
 
-  this.emissiveColor = new EZ3.Vector3(0.0, 1.0, 1.0);
+  this.emissiveColor = new EZ3.Vector3(1.0, 1.0, 1.0);
   this.emissiveMap = null;
+  this.dirty = true;
 };
 
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
-EZ3.MeshMaterial.prototype.update = function(gl, programs, lights) {
+EZ3.MeshMaterial.prototype.updateProgram = function(gl, programs, lights) {
+  var id = this._name;
   var defines = [];
-  var pointLights = 0;
-  var prefix;
-  var id;
+  var prefix = '#define ';
   var vertex;
   var fragment;
-  var i;
 
-  for (i = 0; i < lights.length; i++) {
-    if (lights[i] instanceof EZ3.PointLight)
-      pointLights++;
-  }
-
-  defines.push('MAX_POINT_LIGHTS ' + pointLights);
+  defines.push('MAX_POINT_LIGHTS ' + lights.point.length);
+  defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
+  defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
 
   if (this.emissiveMap)
     defines.push('EMISSIVE');
 
-  id = 'mesh@';
-
-  if (defines.length) {
-    prefix = '#define ';
-
-    id += defines.join('.');
-    prefix += defines.join('\n ' + prefix) + '\n';
-  }
+  id += defines.join('.');
+  prefix += defines.join('\n ' + prefix) + '\n';
 
   if (!programs[id]) {
     vertex = EZ3.ShaderLibrary.mesh.vertex;
@@ -51,7 +41,7 @@ EZ3.MeshMaterial.prototype.update = function(gl, programs, lights) {
     this.program = programs[id];
 };
 
-EZ3.MeshMaterial.prototype.loadUniforms = function(gl) {
+EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
   this.program.loadUniformf(gl, 'uEmissiveColor', 3, this.emissiveColor.toArray());
 
   if (this.emissiveMap instanceof EZ3.Texture) {

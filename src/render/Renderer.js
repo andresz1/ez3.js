@@ -3,14 +3,6 @@
  */
 
 EZ3.Renderer = function(canvas, options) {
-  this._mvMatrix = new EZ3.Matrix4();
-  this._mvpMatrix = new EZ3.Matrix4();
-  this._viewMatrix = new EZ3.Matrix4();
-  this._modelMatrix = new EZ3.Matrix4();
-  this._normalMatrix = new EZ3.Matrix3();
-  this._projectionMatrix = new EZ3.Matrix4();
-  this._lights = [];
-  this._meshes = [];
   this._programs = {};
 
   this.canvas = canvas;
@@ -26,56 +18,54 @@ EZ3.Renderer.prototype._processContextRecovered = function() {
   this.initContext();
 };
 
-EZ3.Renderer.prototype._loadUniforms = function(mesh) {
+EZ3.Renderer.prototype._updateCommonUniforms = function(mesh, camera, lights) {
   var gl = this.context;
   var program = mesh.material.program;
-  var data;
-  var k;
+  var modelView = new EZ3.Matrix4();
 
-  if (this._viewMatrix.dirty) {
-    var up = new EZ3.Vector3(0, 1, 0);
-    var target = new EZ3.Vector3(0, 0, 0);
-    var position = new EZ3.Vector3(45, 45, 45);
-    this._viewMatrix.lookAt(position, target, up);
-  }
+  modelView.mul(mesh.world, camera.view);
 
-  if (this._projectionMatrix.dirty)
-    this._projectionMatrix.perspective(70, 800 / 600, 1, 1000);
+  program.loadUniformMatrix(gl, 'uModel', 4, mesh.world.toArray());
+  program.loadUniformMatrix(gl, 'uModelView', 4, modelView.toArray());
+  program.loadUniformMatrix(gl, 'uProjection', 4, camera.projection.toArray());
 
-  this._modelMatrix.copy(mesh.worldMatrix);
-  this._normalMatrix.copy(mesh.normalMatrix);
-  this._mvMatrix.mul(this._modelMatrix, this._viewMatrix);
-  this._mvpMatrix.mul(this._mvMatrix, this._projectionMatrix);
+  if (lights)
+    program.loadUniformMatrix(gl, 'uNormal', 3, mesh.normal.toArray());
+};
 
-  data = this._mvMatrix.toArray();
-  program.loadUniformMatrix(gl, 'uModelView', 4, data);
+EZ3.Renderer.prototype._prepareMesh = function(mesh, lights) {
+  var gl = this.context;
 
-  data = this._mvpMatrix.toArray();
-  program.loadUniformMatrix(gl, 'uModelViewProjection', 4, data);
+  if (lights.point.length || lights.directional.length || lights.spot.length)
+    mesh.updateIllumination();
 
-  data = this._modelMatrix.toArray();
-  program.loadUniformMatrix(gl, 'uModel', 4, data);
+  mesh.updateFill();
+  mesh.material.updateProgram(gl, this._programs, lights);
+};
 
-  data = this._normalMatrix.toArray();
-  program.loadUniformMatrix(gl, 'uNormal', 3, data);
+EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
+  var gl = this.context;
+  var lighting = lights.point.length ||
+    lights.directional.length ||
+    lights.spot.length;
+  var i;
 
-  if (this._viewMatrix.dirty) {
-    data = this._viewMatrix.toArray();
-    program.loadUniformMatrix(gl, 'uView', 4, data);
-    this._viewMatrix.dirty = false;
-  }
+  mesh.material.program.bind(gl);
+  mesh.material.updateStates(gl);
+  mesh.material.updateUniforms(gl);
 
-  if (this._projectionMatrix.dirty) {
-    data = this._projectionMatrix.toArray();
-    program.loadUniformMatrix(gl, 'uProjection', 4, data);
-    this._projectionMatrix.dirty = false;
-  }
+  this._updateCommonUniforms(mesh, camera, lighting);
 
-  mesh.material.loadUniforms(gl);
+  for (i = 0; i < lights.point.length; i++)
+    lights.point[i].updateUniforms(gl, mesh.material.program, i);
 
-  for (k = 0; k < this._lights.length; k++) {
-    this._lights[k].loadUniforms(gl, program, k);
-  }
+  for (i = 0; i < lights.directional.length; i++)
+    lights.directional[i].updateUniforms(gl, mesh.material.program, i);
+
+  for (i = 0; i < lights.spot.length; i++)
+    lights.spot[i].updateUniforms(gl, mesh.material.program, i);
+
+  mesh.render(gl, mesh.material.program.attributes);
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -123,63 +113,47 @@ EZ3.Renderer.prototype.clear = function() {
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
-
-  gl.enable(this.context.DEPTH_TEST);
-  gl.depthFunc(this.context.LEQUAL);
-
-  gl.enable(this.context.CULL_FACE);
-  gl.cullFace(this.context.BACK);
 };
 
-EZ3.Renderer.prototype.render = function(screen) {
+EZ3.Renderer.prototype.viewport = function(position, size) {
   var gl = this.context;
-  var position = screen.position;
-  var size = screen.size;
-  var entities = [];
-  var entity;
-  var dirty;
-  var mesh;
-  var program;
-  var buffers;
-  var k;
 
   gl.viewport(position.x, position.y, size.x, size.y);
+};
 
-  this._lights.length = 0;
-  this._meshes.length = 0;
+EZ3.Renderer.prototype.render = function(scene, camera) {
+  var entities = [];
+  var meshes = [];
+  var lights = {
+    point: [],
+    directional: [],
+    spot: []
+  };
+  var entity;
+  var k;
 
-  entities.push(screen.scene);
+  entities.push(scene);
 
   while (entities.length) {
     entity = entities.pop();
-    dirty = entity.dirty;
 
-    if (entity instanceof EZ3.Light)
-      this._lights.push(entity);
+    if (entity instanceof EZ3.PointLight)
+      lights.point.push(entity);
+    else if (entity instanceof EZ3.DirectionalLight)
+      lights.directional.push(entity);
+    else if (entity instanceof EZ3.SpotLight)
+      lights.spot.push(entity);
     else if (entity instanceof EZ3.Mesh)
-      this._meshes.push(entity);
+      meshes.push(entity);
 
-    for (k = entity.children.length - 1; k >= 0; k--) {
-      entity.children[k].dirty = dirty;
+    for (k = entity.children.length - 1; k >= 0; k--)
       entities.push(entity.children[k]);
-    }
 
-    if (dirty) {
-      entity.update();
-      entity.dirty = false;
-    }
+    entity.updateWorld();
   }
 
-  for (k = 0; k < this._meshes.length; k++) {
-    mesh = this._meshes[k];
-    mesh.prepare(gl, this._programs, this._lights);
-
-    program = mesh.material.program;
-    buffers = mesh.geometry.buffers;
-
-    program.bind(gl);
-    buffers.bind(gl, program.attributes, mesh.index);
-    this._loadUniforms(mesh);
-    mesh.render(gl);
+  for (k = 0; k < meshes.length; k++) {
+    this._prepareMesh(meshes[k], lights);
+    this._renderMesh(meshes[k], camera, lights);
   }
 };

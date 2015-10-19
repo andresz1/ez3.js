@@ -5,7 +5,7 @@
 
 EZ3.IndexBuffer = function(data, dynamic, need32Bits) {
   EZ3.Buffer.call(this, data, dynamic);
-  this._need32Bits = need32Bits || false;
+  this.need32Bits = need32Bits || false;
 };
 
 EZ3.IndexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
@@ -18,14 +18,9 @@ EZ3.IndexBuffer.prototype.bind = function(gl) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._id);
 };
 
-EZ3.IndexBuffer.prototype.getType = function(gl) {
-  var extension = gl.getExtension('OES_element_index_uint');
-  return (extension && this._need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
-};
-
 EZ3.IndexBuffer.prototype.update = function(gl) {
   var extension = gl.getExtension('OES_element_index_uint');
-  var hint = (this._dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
+  var hint = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
   var usage = gl.getBufferParameter(gl.ELEMENT_ARRAY_BUFFER, gl.BUFFER_USAGE);
   var length = gl.getBufferParameter(gl.ELEMENT_ARRAY_BUFFER, gl.BUFFER_SIZE);
   var UintArray;
@@ -34,14 +29,12 @@ EZ3.IndexBuffer.prototype.update = function(gl) {
   var bytes;
   var k;
 
-  if(this._need32Bits) {
+  if(this.need32Bits) {
     if(extension) {
       bytes = 4;
       UintArray = Uint32Array;
-    } else {
-      // Error
+    } else
       return;
-    }
   } else {
     bytes = 2;
     UintArray = Uint16Array;
@@ -62,12 +55,8 @@ EZ3.IndexBuffer.prototype.update = function(gl) {
   }
 };
 
-Object.defineProperty(EZ3.IndexBuffer.prototype, 'need32Bits', {
-  get: function() {
-    return this._need32Bits;
-  },
-  set: function(need32Bits) {
-    this._need32Bits = need32Bits;
-    this._dirty = true;
-  }
-});
+EZ3.IndexBuffer.prototype.getType = function(gl) {
+  var extension = gl.getExtension('OES_element_index_uint');
+
+  return (extension && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+};
