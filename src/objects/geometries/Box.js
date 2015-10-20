@@ -7,15 +7,16 @@ EZ3.Box = function(dimensions, resolution) {
   EZ3.Geometry.call(this);
 
   if (dimensions instanceof EZ3.Vector3)
-    this._dimensions = dimensions;
+    this.dimensions = dimensions;
   else
-    this._dimensions = new EZ3.Vector3(1, 1, 1);
-
+    this.dimensions = new EZ3.Vector3(1, 1, 1);
 
   if (resolution instanceof EZ3.Vector3)
-    this._resolution = resolution;
+    this.resolution = resolution;
   else
-    this._resolution = new EZ3.Vector3(1, 1, 1);
+    this.resolution = new EZ3.Vector3(1, 1, 1);
+
+  this.dirty = true;
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
@@ -134,38 +135,4 @@ EZ3.Box.prototype.generate = function() {
   buffer = new EZ3.VertexBuffer(vertices, false);
   buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
   this.buffers.add('position', buffer);
-
-  this.mergeVertices();
 };
-
-Object.defineProperty(EZ3.Box.prototype, 'dimensions', {
-  get: function() {
-    return this._dimensions;
-  },
-  set: function(dimensions) {
-    if (dimensions instanceof EZ3.Vector3) {
-      this._dimensions = dimensions;
-    }
-  }
-});
-
-Object.defineProperty(EZ3.Box.prototype, 'resolution', {
-  get: function() {
-    return this._resolution;
-  },
-  set: function(resolution) {
-    if (resolution instanceof EZ3.Vector3) {
-      this._resolution.copy(resolution);
-    }
-  }
-});
-
-Object.defineProperty(EZ3.Box.prototype, 'regenerate', {
-  get: function() {
-    return this.dimensions.dirty || this.resolution.dirty;
-  },
-  set: function(regenerate) {
-    this.dimensions.dirty = regenerate;
-    this.resolution.dirty = regenerate;
-  }
-});

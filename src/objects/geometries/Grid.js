@@ -8,12 +8,12 @@ EZ3.Grid = function(resolution) {
 
   if (resolution !== undefined) {
     if (resolution instanceof EZ3.Vector2)
-      this._resolution = resolution;
+      this.resolution = resolution;
     else
-      this._resolution = new EZ3.Vector2(2, 2);
+      this.resolution = new EZ3.Vector2(2, 2);
   }
 
-  this.generate();
+  this.dirty = true;
 };
 
 EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
@@ -74,25 +74,4 @@ EZ3.Grid.prototype.generate = function() {
   buffer = new EZ3.VertexBuffer(vertices, false);
   buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
   this.buffers.add('position', buffer);
-
-  //this.mergeVertices();
 };
-
-Object.defineProperty(EZ3.Grid.prototype, 'resolution', {
-  get: function() {
-    return this._resolution;
-  },
-  set: function(resolution) {
-    if (resolution instanceof EZ3.Vector2)
-      this._resolution.copy(resolution);
-  }
-});
-
-Object.defineProperty(EZ3.Grid.prototype, 'regenerate', {
-  get: function() {
-    return this.resolution.dirty;
-  },
-  set: function(regenerate) {
-    this.resolution.dirty = regenerate;
-  }
-});

@@ -31,7 +31,7 @@ EZ3.Touch.prototype._processTouchPress = function(event) {
 
     for (var j = 0; j < EZ3.Touch.MAX_NUM_OF_POINTERS; j++) {
       if (!this._pointers[j]) {
-        this._pointers[j] = new EZ3.TouchPointer(j, event.changedTouches[i].identifier);
+        this._pointers[j] = new EZ3.TouchPointer(this._domElement, j, event.changedTouches[i].identifier);
         found = true;
         break;
       } else if (this._pointers[j].isUp()) {
@@ -124,7 +124,7 @@ EZ3.Touch.prototype.disable = function() {
 
 EZ3.Touch.prototype.getPointer = function(code) {
   if (!this._pointers[code])
-    this._pointers[code] = new EZ3.TouchPointer(code);
+    this._pointers[code] = new EZ3.TouchPointer(this._domElement, code);
 
   return this._pointers[code];
 };

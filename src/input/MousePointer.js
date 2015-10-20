@@ -3,8 +3,8 @@
  * @extends Pointer
  */
 
-EZ3.MousePointer = function() {
-  EZ3.Pointer.call(this);
+EZ3.MousePointer = function(domElement) {
+  EZ3.Pointer.call(this, domElement);
 
   this._buttons = [];
 

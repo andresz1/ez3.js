@@ -24,7 +24,7 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, index) {
     for (k in this._vertex) {
       buffer = this._vertex[k];
 
-      if (buffer.isValid(gl, attributes) && buffer.dirty) {
+      if (buffer.validate(gl, attributes) && buffer.dirty) {
         buffer.bind(gl, attributes);
         buffer.update(gl);
         buffer.dirty = false;
@@ -34,7 +34,7 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, index) {
     for (k in this._vertex) {
       buffer = this._vertex[k];
 
-      if (buffer.isValid(gl, attributes)) {
+      if (buffer.validate(gl, attributes)) {
         buffer.bind(gl, attributes);
 
         if (buffer.dirty) {

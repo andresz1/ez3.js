@@ -5,12 +5,23 @@
 
 EZ3.VertexBuffer = function(data, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
+  
   this._stride = 0;
   this._attributes = {};
 };
 
 EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
 EZ3.VertexBuffer.prototype.constructor = EZ3.VertexBuffer;
+
+EZ3.VertexBuffer.prototype.validate = function(gl, attributes) {
+  var k;
+
+  for (k in this._attributes)
+    if (attributes[k] >= 0)
+      return true;
+
+  return false;
+};
 
 EZ3.VertexBuffer.prototype.bind = function(gl, attributes) {
   var type = gl.FLOAT;
@@ -60,16 +71,6 @@ EZ3.VertexBuffer.prototype.update = function(gl) {
     } else
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(this.data));
   }
-};
-
-EZ3.VertexBuffer.prototype.isValid = function(gl, attributes) {
-  var k;
-
-  for (k in this._attributes)
-    if (attributes[k] >= 0)
-      return true;
-
-  return false;
 };
 
 EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
