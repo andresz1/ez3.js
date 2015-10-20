@@ -22,7 +22,7 @@ EZ3.Renderer.prototype._updateCommonUniforms = function(mesh, camera, lights) {
   var gl = this.context;
   var program = mesh.material.program;
   var modelView = new EZ3.Matrix4();
-
+  
   modelView.mul(mesh.world, camera.view);
 
   program.loadUniformMatrix(gl, 'uModel', 4, mesh.world.toArray());
