@@ -65,7 +65,7 @@ uniform sampler2D uNormalSampler;
 
 vec3 pertubNormal(vec3 v) {
 	vec3 q0 = dFdx(v);
-	vec3 q1 = dFdx(v);
+	vec3 q1 = dFdy(v);
 
 	vec2 st0 = dFdx(vUv);
 	vec2 st1 = dFdy(vUv);
