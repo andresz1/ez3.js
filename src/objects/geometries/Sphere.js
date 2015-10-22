@@ -6,15 +6,14 @@
 EZ3.Sphere = function(radius, resolution) {
   EZ3.Geometry.call(this);
 
-  this._radius = radius;
-  this._radius.dirty = true;
+  this.radius = radius;
 
   if (resolution instanceof EZ3.Vector2)
-    this._resolution = resolution;
+    this.resolution = resolution;
   else
-    this._resolution = new EZ3.Vector2(5, 5);
+    this.resolution = new EZ3.Vector2(5, 5);
 
-  this.generate();
+  this.dirty = true;
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
@@ -90,36 +89,4 @@ EZ3.Sphere.prototype.generate = function() {
   buffer = new EZ3.VertexBuffer(vertices, false);
   buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
   this.buffers.add('position', buffer);
-
-//  this.mergeVertices();
 };
-
-Object.defineProperty(EZ3.Sphere.prototype, 'radius', {
-  get: function() {
-    return this._radius;
-  },
-  set: function(radius) {
-    this._radius = radius;
-    this._radius.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Sphere.prototype, 'resolution', {
-  get: function() {
-    return this._resolution;
-  },
-  set: function(resolution) {
-    if (resolution instanceof EZ3.Vector2)
-      this._resolution.copy(resolution);
-  }
-});
-
-Object.defineProperty(EZ3.Sphere.prototype, 'regenerate', {
-  get: function() {
-    return this.radius.dirty || this.resolution.dirty;
-  },
-  set: function(regenerate) {
-    this.radius.dirty = regenerate;
-    this.resolution.dirty = regenerate;
-  }
-});

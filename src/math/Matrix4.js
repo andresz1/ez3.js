@@ -582,6 +582,37 @@ EZ3.Matrix4.prototype.identity = function() {
   return this;
 };
 
+EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
+  var yawRadians = EZ3.Math.toRadians(yaw);
+  var pitchRadians = EZ3.Math.toRadians(pitch);
+  var rollRadians = EZ3.Math.toRadians(roll);
+  var cosYaw = Math.cos(yawRadians);
+  var sinYaw = Math.sin(yawRadians);
+  var cosPitch = Math.cos(pitchRadians);
+  var sinPitch = Math.sin(pitchRadians);
+  var cosRoll = Math.cos(rollRadians);
+  var sinRoll = Math.sin(rollRadians);
+
+  this.elements[0] = cosYaw * cosRoll + sinYaw * sinPitch * sinRoll;
+	this.elements[1] = sinRoll * cosPitch;
+	this.elements[2] = -sinYaw * cosRoll + cosYaw * sinPitch * sinRoll;
+	this.elements[3] = 0.0;
+	this.elements[4] = -cosYaw * sinRoll + sinYaw * sinPitch * cosRoll;
+	this.elements[5] = cosRoll * cosPitch;
+	this.elements[6] = sinRoll * sinYaw + cosYaw * sinPitch * cosRoll;
+	this.elements[7] = 0.0;
+	this.elements[8] = sinYaw * cosPitch;
+	this.elements[9] = -sinPitch;
+	this.elements[10] = cosYaw * cosPitch;
+	this.elements[11] = 0.0;
+	this.elements[12] = 0.0;
+	this.elements[13] = 0.0;
+	this.elements[14] = 0.0;
+	this.elements[15] = 1.0;
+
+  return this;
+};
+
 EZ3.Matrix4.prototype.clone = function() {
   return new EZ3.Matrix4(
     this.elements[0], this.elements[1], this.elements[2], this.elements[3],

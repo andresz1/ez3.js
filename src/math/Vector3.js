@@ -308,8 +308,18 @@ EZ3.Vector3.prototype.toString = function() {
   var x = this.x.toFixed(4);
   var y = this.y.toFixed(4);
   var z = this.z.toFixed(4);
-  
+
   return 'Vector3[' + x + ', ' + y + ', ' + z + ']';
+};
+
+EZ3.Vector3.prototype.setPositionFromMatrix = function(m) {
+  if (m instanceof EZ3.Matrix4) {
+    this.x = m.elements[12];
+    this.y = m.elements[13];
+    this.z = m.elements[14];
+  }
+
+  return this;
 };
 
 EZ3.Vector3.prototype.set = EZ3.Vector3.prototype.init;

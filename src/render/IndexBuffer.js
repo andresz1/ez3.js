@@ -5,6 +5,7 @@
 
 EZ3.IndexBuffer = function(data, dynamic, need32Bits) {
   EZ3.Buffer.call(this, data, dynamic);
+  
   this.need32Bits = need32Bits || false;
 };
 

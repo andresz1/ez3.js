@@ -11,3 +11,11 @@ EZ3.Math = function() {
 };
 
 EZ3.Math = new EZ3.Math();
+
+EZ3.Math.toRadians = function(x) {
+  return x * EZ3.Math.PI / 180.0;
+};
+
+EZ3.Math.toDegrees = function(x) {
+  return x * 180.0 / EZ3.Math.PI;
+};

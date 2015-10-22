@@ -8,6 +8,7 @@ EZ3.MeshMaterial = function() {
 
   this.emissiveColor = new EZ3.Vector3(1.0, 1.0, 1.0);
   this.emissiveMap = null;
+  this.normalMap = null;
   this.dirty = true;
 };
 
@@ -25,8 +26,11 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, programs, lights) {
   defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
   defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
 
-  if (this.emissiveMap)
+  if (this.emissiveMap instanceof EZ3.Texture)
     defines.push('EMISSIVE');
+
+  if (this.normalMap instanceof EZ3.Texture)
+    defines.push('NORMAL');
 
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
@@ -53,5 +57,16 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
     }
 
     this.program.loadUniformi(gl, 'uEmissiveSampler', 1, 0);
+  }
+
+  if (this.normalMap instanceof EZ3.Texture) {
+    this.normalMap.bind(gl, 1);
+
+    if (this.normalMap.dirty) {
+      this.normalMap.update(gl);
+      this.normalMap.dirty = false;
+    }
+
+    this.program.loadUniformi(gl, 'uNormalSampler', 1, 1);
   }
 };

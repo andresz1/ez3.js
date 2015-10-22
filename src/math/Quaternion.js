@@ -264,6 +264,65 @@ EZ3.Quaternion.prototype.testDiff = function(q) {
   return (ds || dx || dy || dz);
 };
 
+EZ3.Quaternion.prototype.fromAxisAngle = function(axis, angle) {
+  var sin2 = Math.sin(0.5 * angle);
+  this.x = sin2 * axis.x;
+  this.y = sin2 * axis.y;
+  this.z = sin2 * axis.z;
+  this.s = Math.cos(0.5 * angle);
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
+  var matrix = new EZ3.Matrix3();
+  var yy2;
+  var xy2;
+  var xz2;
+  var yz2;
+  var zz2;
+  var wz2;
+  var wy2;
+  var wx2;
+  var xx2;
+
+  if(q) {
+    yy2 = 2.0 * q.y * q.y;
+    xy2 = 2.0 * q.x * q.y;
+    xz2 = 2.0 * q.x * q.z;
+    yz2 = 2.0 * q.y * q.z;
+    zz2 = 2.0 * q.z * q.z;
+    wz2 = 2.0 * q.s * q.z;
+    wy2 = 2.0 * q.s * q.y;
+    wx2 = 2.0 * q.s * q.x;
+    xx2 = 2.0 * q.x * q.x;
+  } else {
+    yy2 = 2.0 * this.y * this.y;
+    xy2 = 2.0 * this.x * this.y;
+    xz2 = 2.0 * this.x * this.z;
+    yz2 = 2.0 * this.y * this.z;
+    zz2 = 2.0 * this.z * this.z;
+    wz2 = 2.0 * this.s * this.z;
+    wy2 = 2.0 * this.s * this.y;
+    wx2 = 2.0 * this.s * this.x;
+    xx2 = 2.0 * this.x * this.x;
+  }
+
+  matrix.elements[0] = - yy2 - zz2 + 1.0;
+  matrix.elements[1] = xy2 - mode * wz2;
+  matrix.elements[2] = xz2 + mode * wy2;
+
+  matrix.elements[3] = xy2 + mode * wz2;
+  matrix.elements[4] = - xx2 - zz2 + 1.0;
+  matrix.elements[5] = yz2 - mode * wx2;
+
+  matrix.elements[6] = xz2 - mode * wy2;
+  matrix.elements[7] = yz2 + mode * wx2;
+  matrix.elements[8] = - xx2 - yy2 + 1.0;
+
+  return matrix;
+};
+
 EZ3.Quaternion.prototype.copy = function(q) {
   this.s = q.s;
   this.x = q.x;
@@ -324,3 +383,6 @@ Object.defineProperty(EZ3.Quaternion.prototype, 'z', {
     this.dirty = true;
   }
 });
+
+EZ3.Quaternion.NORMAL = 1.0;
+EZ3.Quaternion.INVERSE = -1.0;

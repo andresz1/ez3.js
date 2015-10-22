@@ -6,17 +6,15 @@
 EZ3.Cone = function(base, height, resolution) {
   EZ3.Geometry.call(this);
 
-  this._base = base;
-  this._base.dirty = true;
-
-  this._height = height;
-  this._height.dirty = true;
-
+  this.base = base;
+  this.height = height;
 
   if (resolution instanceof EZ3.Vector2)
-    this._resolution = resolution;
+    this.resolution = resolution;
   else
-    this._resolution = new EZ3.Vector2(5, 5);
+    this.resolution = new EZ3.Vector2(5, 5);
+
+  this.dirty = true;
 };
 
 EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);
@@ -97,47 +95,4 @@ EZ3.Cone.prototype.generate = function() {
   buffer = new EZ3.VertexBuffer(vertices, false);
   buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
   this.buffers.add('position', buffer);
-
-  this.mergeVertices();
 };
-
-Object.defineProperty(EZ3.Cone.prototype, 'base', {
-  get: function() {
-    return this._base;
-  },
-  set: function(base) {
-    this._base = base;
-    this._base.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Cone.prototype, 'height', {
-  get: function() {
-    return this._height;
-  },
-  set: function(height) {
-    this._height = height;
-    this._height.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Cone.prototype, 'resolution', {
-  get: function() {
-    return this._resolution;
-  },
-  set: function(resolution) {
-    if (resolution instanceof EZ3.Vector2)
-      this._resolution.copy(resolution);
-  }
-});
-
-Object.defineProperty(EZ3.Cone.prototype, 'regenerate', {
-  get: function() {
-    return this.base.dirty || this.height.dirty || this.resolution.dirty;
-  },
-  set: function(regenerate) {
-    this.base.dirty = regenerate;
-    this.height.dirty = regenerate;
-    this.resolution.dirty = regenerate;
-  }
-});

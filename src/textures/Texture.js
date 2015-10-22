@@ -15,7 +15,7 @@ EZ3.Texture.prototype.update = function(gl) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
   gl.generateMipmap(gl.TEXTURE_2D);
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+  //gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
 };
 
 EZ3.Texture.prototype.bind = function(gl, unit) {

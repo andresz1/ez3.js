@@ -7,14 +7,16 @@ EZ3.Ellipsoid = function(radiuses, resolution) {
   EZ3.Geometry.call(this);
 
   if (radiuses instanceof EZ3.Vector3)
-    this._radiuses = radiuses;
+    this.radiuses = radiuses;
   else
-    this._radiuses = new EZ3.Vector3(3, 1, 3);
+    this.radiuses = new EZ3.Vector3(3, 1, 3);
 
   if (resolution instanceof EZ3.Vector2)
-    this._resolution = resolution;
+    this.resolution = resolution;
   else
-    this._resolution = new EZ3.Vector2(5, 5);
+    this.resolution = new EZ3.Vector2(5, 5);
+
+  this.dirty = true;
 };
 
 EZ3.Ellipsoid.prototype = Object.create(EZ3.Geometry.prototype);
@@ -90,36 +92,4 @@ EZ3.Ellipsoid.prototype.generate = function() {
   buffer = new EZ3.VertexBuffer(vertices, false);
   buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
   this.buffers.add('position', buffer);
-
-  this.mergeVertices();
 };
-
-Object.defineProperty(EZ3.Ellipsoid.prototype, 'radiuses', {
-  get: function() {
-    return this._radiuses;
-  },
-  set: function(radiuses) {
-    if (radiuses instanceof EZ3.Vector3)
-      this._radiuses.copy(radiuses);
-  }
-});
-
-Object.defineProperty(EZ3.Ellipsoid.prototype, 'resolution', {
-  get: function() {
-    return this._resolution;
-  },
-  set: function(resolution) {
-    if (resolution instanceof EZ3.Vector2)
-      this._resolution.copy(resolution);
-  }
-});
-
-Object.defineProperty(EZ3.Ellipsoid.prototype, 'regenerate', {
-  get: function() {
-    return this.radiuses.dirty || this.resolution.dirty;
-  },
-  set: function(regenerate) {
-    this.radiuses.dirty = regenerate;
-    this.resolution.dirty = regenerate;
-  }
-});
