@@ -18,11 +18,17 @@ struct SpotLight
 {
 	vec3 position;
 	vec3 direction;
-	float exponent;
 	float cutoff;
 	vec3 diffuse;
 	vec3 specular;
 };
+
+uniform vec3 uEmissive;
+uniform vec3 uDiffuse;
+uniform vec3 uSpecular;
+uniform float uShininess;
+
+uniform vec3 uEyePosition;
 
 #if MAX_POINT_LIGHTS > 0
   uniform PointLight uPointLights[MAX_POINT_LIGHTS];
@@ -36,77 +42,69 @@ struct SpotLight
   uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];
 #endif
 
-uniform vec3 uEmissiveColor;
-#ifdef EMISSIVE
+#ifdef EMISSIVE_MAP
 uniform sampler2D uEmissiveSampler;
 #endif
 
-uniform vec3 uEyePosition;
+#ifdef DIFFUSE_MAP
+uniform sampler2D uDiffuseSampler;
+#endif
+
+#ifdef SPECULAR_MAP
+uniform sampler2D uSpecularSampler;
+#endif
 
 varying vec3 vPosition;
 varying vec3 vNormal;
 varying vec2 vUv;
 
-#ifdef NORMAL
+#ifdef NORMAL_MAP
 #extension GL_OES_standard_derivatives : enable
 
 uniform sampler2D uNormalSampler;
 
-mat3 cotangent_frame(vec3 normal, vec3 p, vec2 uv)
-{
-	// get edge vectors of the pixel triangle
-	vec3 dp1 = dFdx(p);
-	vec3 dp2 = dFdy(p);
-	vec2 duv1 = dFdx(uv);
-	vec2 duv2 = dFdy(uv);
+vec3 pertubNormal(vec3 v) {
+	vec3 q0 = dFdx(v);
+	vec3 q1 = dFdx(v);
 
-	// solve the linear system
-	vec3 dp2perp = cross(dp2, normal);
-	vec3 dp1perp = cross(normal, dp1);
-	vec3 tangent = dp2perp * duv1.x + dp1perp * duv2.x;
-	vec3 binormal = dp2perp * duv1.y + dp1perp * duv2.y;
+	vec2 st0 = dFdx(vUv);
+	vec2 st1 = dFdy(vUv);
 
-	// construct a scale-invariant frame
-	float invmax = inversesqrt(max(dot(tangent, tangent), dot(binormal, binormal)));
-	return mat3(tangent * invmax, binormal * invmax, normal);
+	vec3 s = normalize(q0 * st1.t - q1 * st0.t);
+	vec3 t = normalize(-q0 * st1.s + q1 * st0.s);
+	vec3 n = normalize(vNormal);
+
+	vec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;
+
+	return normalize(mat3(s, t, n) * d);
 }
-
-vec3 perturbNormal(vec3 viewDir)
-{
-	vec3 map = texture2D(uNormalSampler, vUv).xyz;
-	map = map * 255. / 127. - 128. / 127.;
-	mat3 TBN = cotangent_frame(vNormal, -viewDir, vUv);
-	return normalize(TBN * map);
-}
-
 #endif
 
 void main() {
-  vec3 color = uEmissiveColor;
+	vec3 emissive = uEmissive;
+	vec3 diffuse = vec3(0.0, 0.0, 0.0);
+	vec3 specular = vec3(0.0, 0.0, 0.0);
 
-#ifdef EMISSIVE
-  color = vec3(texture2D(uEmissiveSampler, vUv));
-#endif
+	vec3 v = normalize(uEyePosition - vPosition);
 
-vec3 v = normalize(uEyePosition - vPosition);
-
-#ifdef NORMAL
-	vec3 n = perturbNormal(-v);
+#ifdef NORMAL_MAP
+	vec3 n = pertubNormal(-v);
 #else
 	vec3 n = vNormal;
 #endif
-
 
 #if MAX_POINT_LIGHTS > 0
   for(int i = 0; i < MAX_POINT_LIGHTS; i++)
   {
     vec3 s = normalize(uPointLights[i].position - vPosition);
-		vec3 r = reflect(-s, n);
-		float diffuse = max(dot(s, n), 0.0);
+		float q = max(dot(s, n), 0.0);
 
-		if (diffuse > 0.0) {
-    	color += uPointLights[i].diffuse * uEmissiveColor * diffuse;
-			color += uPointLights[i].specular * pow(max(dot(r, v), 0.0), 130.0);
+		if (q > 0.0) {
+			vec3 r = reflect(-s, n);
+			float w = pow(max(dot(r, v), 0.0), uShininess);
+
+    	diffuse += uPointLights[i].diffuse * uDiffuse * q;
+			specular += uPointLights[i].specular * uSpecular * w;
 		}
   }
 #endif
@@ -114,12 +112,14 @@ vec3 v = normalize(uEyePosition - vPosition);
 #if MAX_DIRECTIONAL_LIGHTS > 0
   for(int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)
   {
-		vec3 r = reflect(-uDirectionalLights[i].direction, n);
-		float diffuse = max(dot(uDirectionalLights[i].direction, n), 0.0);
+		float q = max(dot(uDirectionalLights[i].direction, n), 0.0);
 
-		if (diffuse > 0.0) {
-    	color += uDirectionalLights[i].diffuse * uEmissiveColor * diffuse;
-			color += uDirectionalLights[i].specular * pow(max(dot(r, v), 0.0), 130.0);
+		if (q > 0.0) {
+			vec3 r = reflect(-uDirectionalLights[i].direction, n);
+			float w = pow(max(dot(r, v), 0.0), uShininess);
+
+    	diffuse += uDirectionalLights[i].diffuse * uDiffuse * q;
+			specular += uDirectionalLights[i].specular * uSpecular * w;
 		}
   }
 #endif
@@ -128,20 +128,33 @@ vec3 v = normalize(uEyePosition - vPosition);
   for(int i = 0; i < MAX_SPOT_LIGHTS; i++)
   {
 		vec3 s = normalize(uSpotLights[i].position - vPosition);
-		vec3 r = reflect(-s, n);
-
 		float angle = max(dot(s, uSpotLights[i].direction), 0.0);
 
 		if(angle > uSpotLights[i].cutoff) {
-			float diffuse = max(dot(uSpotLights[i].direction, n), 0.0);
+			float q = max(dot(uSpotLights[i].direction, n), 0.0);
 
-			if (diffuse > 0.0) {
-				color += uSpotLights[i].diffuse * uEmissiveColor * diffuse;
-				color += uSpotLights[i].specular * pow(max(dot(r, v), 0.0), 130.0);
+			if (q > 0.0) {
+				vec3 r = reflect(-s, n);
+				float w = pow(max(dot(r, v), 0.0), uShininess);
+
+				diffuse += uSpotLights[i].diffuse * uDiffuse * q;
+				specular += uSpotLights[i].specular * uSpecular * w;
 			}
 		}
   }
 #endif
 
-  gl_FragColor = vec4(color, 1.0);
+#ifdef EMISSIVE_MAP
+  emissive *= vec3(texture2D(uEmissiveSampler, vUv));
+#endif
+
+#ifdef DIFFUSE_MAP
+	diffuse *= vec3(texture2D(uDiffuseSampler, vUv));
+#endif
+
+#ifdef SPECULAR_MAP
+	specular *= vec3(texture2D(uSpecularSampler, vUv))
+#endif
+
+  gl_FragColor = vec4(emissive + diffuse + specular, 1.0);
 }

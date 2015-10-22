@@ -6,9 +6,14 @@
 EZ3.MeshMaterial = function() {
   EZ3.Material.call(this, 'mesh');
 
-  this.emissiveColor = new EZ3.Vector3(1.0, 1.0, 1.0);
+  this.emissive = new EZ3.Vector3();
   this.emissiveMap = null;
+  this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
+  this.diffuseMap = null;
+  this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
+  this.specularMap = null;
   this.normalMap = null;
+  this.shininess = 180.0;
   this.dirty = true;
 };
 
@@ -27,10 +32,13 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, programs, lights) {
   defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
 
   if (this.emissiveMap instanceof EZ3.Texture)
-    defines.push('EMISSIVE');
+    defines.push('EMISSIVE_MAP');
+
+  if (this.diffuseMap instanceof EZ3.Texture)
+    defines.push('DIFFUSE_MAP');
 
   if (this.normalMap instanceof EZ3.Texture)
-    defines.push('NORMAL');
+    defines.push('NORMAL_MAP');
 
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
@@ -46,7 +54,10 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, programs, lights) {
 };
 
 EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
-  this.program.loadUniformf(gl, 'uEmissiveColor', 3, this.emissiveColor.toArray());
+  this.program.loadUniformf(gl, 'uEmissive', 3, this.emissive.toArray());
+  this.program.loadUniformf(gl, 'uDiffuse', 3, this.diffuse.toArray());
+  this.program.loadUniformf(gl, 'uSpecular', 3, this.specular.toArray());
+  this.program.loadUniformf(gl, 'uShininess', 1, this.shininess);
 
   if (this.emissiveMap instanceof EZ3.Texture) {
     this.emissiveMap.bind(gl, 0);
@@ -59,14 +70,25 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
     this.program.loadUniformi(gl, 'uEmissiveSampler', 1, 0);
   }
 
+  if (this.diffuseMap instanceof EZ3.Texture) {
+    this.diffuseMap.bind(gl, 1);
+
+    if (this.diffuseMap.dirty) {
+      this.diffuseMap.update(gl);
+      this.diffuseMap.dirty = false;
+    }
+
+    this.program.loadUniformi(gl, 'uDiffuseSampler', 1, 1);
+  }
+
   if (this.normalMap instanceof EZ3.Texture) {
-    this.normalMap.bind(gl, 1);
+    this.normalMap.bind(gl, 2);
 
     if (this.normalMap.dirty) {
       this.normalMap.update(gl);
       this.normalMap.dirty = false;
     }
 
-    this.program.loadUniformi(gl, 'uNormalSampler', 1, 1);
+    this.program.loadUniformi(gl, 'uNormalSampler', 1, 2);
   }
 };
