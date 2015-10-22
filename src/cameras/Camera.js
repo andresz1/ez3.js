@@ -13,17 +13,6 @@ EZ3.Camera = function() {
 
 EZ3.Camera.prototype.constructor = EZ3.Camera;
 
-EZ3.Camera.prototype.setPointOfView = function(position, target, up) {
-  if(position instanceof EZ3.Vector3)
-    this.position.copy(position);
-
-  if(target instanceof EZ3.Vector3)
-    this._target.copy(target);
-
-  if(up instanceof EZ3.Vector3)
-    this._up.copy(up);
-};
-
 Object.defineProperty(EZ3.Camera.prototype, 'view', {
   get: function() {
     return new EZ3.Matrix4().lookAt(this.position, this._target, this._up);
