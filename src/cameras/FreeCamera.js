@@ -13,7 +13,7 @@ EZ3.FreeCamera.prototype.constructor = EZ3.FreeCamera;
 EZ3.FreeCamera.prototype._update = function() {
   var rx = EZ3.Math.toRadians(this._rotationAngles.x);
   var ry = EZ3.Math.toRadians(this._rotationAngles.y);
-  var matrix = new EZ3.Matrix4().yawPitchRoll(-rx, ry, 0);
+  var matrix = new EZ3.Matrix4().yawPitchRoll(rx, ry, 0);
 
   this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat(matrix).toVec3();
   this.look = new EZ3.Vector4(0, 0, 1, 0).mulMat(matrix).toVec3();
