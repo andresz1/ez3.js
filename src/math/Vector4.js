@@ -193,10 +193,10 @@ EZ3.Vector4.prototype.mulMat = function(m, v) {
     w = this.w;
   }
 
-  this.x = x * e[0] + y * e[1] + z * e[2] + w * e[3];
-  this.y = x * e[4] + y * e[5] + z * e[6] + w * e[7];
-  this.z = x * e[8] + y * e[9] + z * e[10] + w * e[11];
-  this.w = x * e[12] + y * e[13] + z * e[14] + w * e[15];
+  this.x = x * e[0] + y * e[4] + z * e[8] + w * e[12];
+  this.y = x * e[1] + y * e[5] + z * e[9] + w * e[13];
+  this.z = x * e[2] + y * e[6] + z * e[10] + w * e[14];
+  this.w = x * e[3] + y * e[7] + z * e[11] + w * e[15];
 
   return this;
 };
@@ -336,6 +336,14 @@ EZ3.Vector4.prototype.toString = function() {
   var w = this.w.toFixed(4);
 
   return 'Vector4[' + x + ', ' + y + ', ' + z + ', ' + w + ']';
+};
+
+EZ3.Vector4.prototype.toVec2 = function() {
+  return new EZ3.Vector2(this.x, this.y);
+};
+
+EZ3.Vector4.prototype.toVec3 = function() {
+  return new EZ3.Vector3(this.x, this.y, this.z);
 };
 
 Object.defineProperty(EZ3.Vector4.prototype, 'x', {
