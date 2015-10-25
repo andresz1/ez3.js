@@ -15,33 +15,39 @@ EZ3.TargetCamera.prototype.constructor = EZ3.TargetCamera;
 EZ3.TargetCamera.prototype._update = function() {
   var rx = EZ3.Math.toRadians(this._rotationAngles.x);
   var ry = EZ3.Math.toRadians(this._rotationAngles.y);
-  var matrix = new EZ3.Matrix4().yawPitchRoll(-rx, -ry, 0);
-  var dVector = new EZ3.Vector4(0, 0, this.distance, 0).mulMat(matrix).toVec3();
+  var matrix = new EZ3.Matrix4().yawPitchRoll(rx, ry, 0);
+  var vector = new EZ3.Vector4(0, 0, -1, 0).mulMat(matrix).toVec3();
 
-  this.position = new EZ3.Vector3().add(this.target, dVector);
-  this.look = new EZ3.Vector3().sub(this.target, this.position).normalize();
+  this.distance = new EZ3.Vector3().sub(this.position, this.target).length();
+  this.distance = Math.max(1, this.distance);
+
+  vector.scaleEqual(this.distance);
+
+  this.position = new EZ3.Vector3().add(this.target, vector);
+  this.look = new EZ3.Vector3().sub(this.target, this.position);
   this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat(matrix).toVec3();
-  this.right = new EZ3.Vector3().cross(this.look, this.up);
+  this.right = new EZ3.Vector3().cross(this.look.normalize(), this.up);
 };
 
 EZ3.TargetCamera.prototype.pan = function(dx, dy) {
+  var rx;
+  var ry;
   var up;
   var right;
-  var sumVector;
+  var vector;
 
-  this._rotationAngles.x += dx * EZ3.Camera.MOVE_SPEED;
-  this._rotationAngles.y += dy * EZ3.Camera.MOVE_SPEED;
+  rx = dx * EZ3.Camera.MOVE_SPEED;
+  ry = -dy * EZ3.Camera.MOVE_SPEED;
 
-  right = new EZ3.Vector3().copy(this.right).scaleEqual(this._rotationAngles.x);
-  up = new EZ3.Vector3().copy(this.up).scaleEqual(this._rotationAngles.y);
-  sumVector = new EZ3.Vector3().add(right, up);
+  right = new EZ3.Vector3().copy(this.right).scaleEqual(rx);
+  up = new EZ3.Vector3().copy(this.up).scaleEqual(ry);
+  vector = new EZ3.Vector3().add(right, up);
 
-  this.position.addEqual(sumVector);
-  this.target.addEqual(sumVector);
+  this.position.addEqual(vector);
+  this.target.addEqual(vector);
 };
 
 EZ3.TargetCamera.prototype.zoom = function(speed) {
-  this.position.addEqual(new EZ3.Vector3().copy(this.look).scaleEqual(speed));
-  this.distance = new EZ3.Vector3().sub(this.position, this.target).length();
-  this.distance = Math.max(1, this.distance);
+  var look = new EZ3.Vector3().copy(this.look).scaleEqual(speed);
+  this.position.addEqual(look);
 };

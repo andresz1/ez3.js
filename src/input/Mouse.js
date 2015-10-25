@@ -75,7 +75,7 @@ EZ3.Mouse.prototype.disable = function() {
 };
 
 EZ3.Mouse.LEFT_BUTTON = 0;
-EZ3.Mouse.RIGHT_BUTTON = 1;
-EZ3.Mouse.MIDDLE_BUTTON = 2;
+EZ3.Mouse.MIDDLE_BUTTON = 1;
+EZ3.Mouse.RIGHT_BUTTON = 2;
 EZ3.Mouse.BACK_BUTTON = 3;
 EZ3.Mouse.FORWARD_BUTTON = 4;

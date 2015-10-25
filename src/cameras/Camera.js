@@ -41,11 +41,10 @@ EZ3.Camera.prototype.constructor = EZ3.Camera;
 EZ3.Camera.prototype._setupRotationAngles = function() {
   var yaw;
   var pitch;
-  var halfPi = EZ3.Math.HALF_PI;
 
   this.look = new EZ3.Vector3().sub(this.position, this.target).normalize();
 
-  yaw = EZ3.Math.toDegrees(Math.atan2(this.look.z, this.look.x) + halfPi);
+  yaw = EZ3.Math.toDegrees(Math.atan2(this.look.z, this.look.x) + EZ3.Math.PI);
   pitch = EZ3.Math.toDegrees(Math.asin(this.look.y));
 
   this._rotationAngles.x = yaw;
@@ -83,7 +82,7 @@ EZ3.Camera.prototype.rotate = function(dx, dy) {
   var rx;
   var ry;
 
-  this._rotationAngles.x += dx * EZ3.Camera.ROTATION_SPEED;
+  this._rotationAngles.x -= dx * EZ3.Camera.ROTATION_SPEED;
   this._rotationAngles.y += dy * EZ3.Camera.ROTATION_SPEED;
 
   if (this._filter) {
@@ -123,7 +122,7 @@ Object.defineProperty(EZ3.Camera.prototype, 'projection', {
 
 EZ3.Camera.PERSPECTIVE = 0;
 EZ3.Camera.ORTHOGRAPHIC = 1;
-EZ3.Camera.MOVE_SPEED = 5.0;
+EZ3.Camera.MOVE_SPEED = 50;
 EZ3.Camera.ROTATION_SPEED = 300;
 EZ3.Camera.FILTER_WEIGHT = 0.75;
 EZ3.Camera.FILTER_BUFFER_SIZE = 10;
