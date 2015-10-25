@@ -27,6 +27,7 @@ EZ3.MousePointer.prototype.processPress = function(event, onPress, onMove) {
 
 EZ3.MousePointer.prototype.processMove = function(event, onMove) {
   EZ3.Pointer.prototype.processMove.call(this, event);
+
   onMove.dispatch(this);
 };
 
