@@ -7,16 +7,7 @@ EZ3.Screen = function(id, position, size) {
   this.position = position;
   this.size = size;
   this.scene = new EZ3.Scene();
-  this.camera = new EZ3.TargetCamera(
-    new EZ3.Vector3(30, 30, 30),
-    new EZ3.Vector3(0, 0, 0),
-    new EZ3.Vector3(0, 1, 0)
-  );
-  this.camera.aspectRatio = 800 / 600;
-  this.date = new Date();
-  this.deltaTime = 0;
-  this.previousTime = 0;
-  this.pressed = false;
+  this.camera = null;
 };
 
 EZ3.Screen.prototype.onKeyPress = function() {};
