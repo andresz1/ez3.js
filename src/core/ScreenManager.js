@@ -2,7 +2,8 @@
  * @class ScreenManager
  */
 
-EZ3.ScreenManager = function(renderer, time, input) {
+EZ3.ScreenManager = function(domElement, renderer, time, input) {
+  this._domElement = domElement;
   this._renderer = renderer;
   this._time = time;
   this._input = input;
@@ -22,7 +23,8 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
     mouse: {
       onPress: 'onMousePress',
       onMove: 'onMouseMove',
-      onUp: 'onMouseUp'
+      onUp: 'onMouseUp',
+      onWheel: 'onMouseWheel'
     },
     touch: {
       onPress: 'onTouchPress',
@@ -39,6 +41,18 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
         screen.input[i][j].add(screen[events[j]], screen);
     }
   }
+
+  var that = this;
+
+  window.addEventListener('resize', function() {
+    that._domElement.width = window.innerWidth;
+    that._domElement.height = window.innerHeight;
+
+    screen.size.x = window.innerWidth;
+    screen.size.y = window.innerHeight;
+    screen.camera.aspectRatio = window.innerWidth / window.innerHeight;
+
+  }, true);
 };
 
 EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
@@ -131,4 +145,42 @@ EZ3.ScreenManager.prototype.update = function() {
     this._renderer.render(screen.scene, screen.camera);
     this._screens[i].update();
   }
+};
+
+EZ3.ScreenManager.prototype.fullScreen = function() {
+  var fullScreen = false;
+  var requestFullScreen;
+
+  var fs = [
+    'requestFullscreen',
+    'requestFullScreen',
+    'webkitRequestFullscreen',
+    'webkitRequestFullScreen',
+    'msRequestFullscreen',
+    'msRequestFullScreen',
+    'mozRequestFullScreen',
+    'mozRequestFullscreen'
+  ];
+
+  var element = document.createElement('div');
+
+  for (var i = 0; i < fs.length; i++) {
+    if (element[fs[i]]) {
+      fullScreen = true;
+      requestFullScreen = fs[i];
+      break;
+    }
+  }
+
+  this._domElement[requestFullScreen]();
+};
+
+EZ3.ScreenManager.prototype.pointerlock = function() {
+  var canvas = this._domElement;
+
+  canvas.requestPointerLock = canvas.requestPointerLock ||
+                            canvas.mozRequestPointerLock ||
+                            canvas.webkitRequestPointerLock;
+
+  canvas.requestPointerLock();
 };

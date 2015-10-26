@@ -27,7 +27,6 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   modelView.mul(mesh.world, camera.view);
 
   program.loadUniformf(gl, 'uEyePosition', 3, camera.position.toArray());
-
   program.loadUniformMatrix(gl, 'uModel', 4, mesh.world.toArray());
   program.loadUniformMatrix(gl, 'uModelView', 4, modelView.toArray());
   program.loadUniformMatrix(gl, 'uProjection', 4, camera.projection.toArray());

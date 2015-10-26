@@ -23,7 +23,7 @@ EZ3.Engine.prototype._init = function(canvas, options) {
 
   this.time = new EZ3.Time();
   this.input = new EZ3.InputManager(canvas);
-  this.screens = new EZ3.ScreenManager(this._renderer, this.time, this.input);
+  this.screens = new EZ3.ScreenManager(canvas, this._renderer, this.time, this.input);
 
   this._renderer.initContext();
   this.time.start();
