@@ -18,5 +18,5 @@ EZ3.DirectionalLight.prototype.updateUniforms = function(gl, program, i) {
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
 
-  program.loadUniformf(gl, prefix + 'direction', 3, direction.toArray());
+  program.loadUniformf(gl, prefix + 'direction', 3, direction);
 };
