@@ -4,6 +4,7 @@
 
 EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
   this.used = 1;
+  this._cache = {};
   this._shaders = [];
   this._uniform = {};
   this._attribute = {};
@@ -37,7 +38,7 @@ EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
   var infoLog;
   var message;
 
-  prefix = (prefix)? prefix: '';
+  prefix = (prefix) ? prefix : '';
 
   this._compile(gl, gl.VERTEX_SHADER, prefix + vertex);
   this._compile(gl, gl.FRAGMENT_SHADER, prefix + fragment);
@@ -99,59 +100,104 @@ EZ3.GLSLProgram.prototype._addLineNumbers = function(code) {
   return codeLines;
 };
 
+EZ3.GLSLProgram.prototype._isCached = function(name, data) {
+  var cached = this._cache[name];
+
+  if (cached) {
+    if (cached instanceof EZ3.Matrix3 || cached instanceof EZ3.Matrix4 ||
+      cached instanceof EZ3.Vector2 || cached instanceof EZ3.Vector3 ||
+      cached instanceof EZ3.Vector4)
+      return cached.testEqual(data);
+    else if (cached === data)
+      return true;
+    else
+      return false;
+  } else
+    return false;
+};
+
+EZ3.GLSLProgram.prototype._caching = function(name, data) {
+  if (data instanceof EZ3.Matrix3 || data instanceof EZ3.Matrix4 ||
+    data instanceof EZ3.Vector2 || data instanceof EZ3.Vector3 ||
+    data instanceof EZ3.Vector4)
+    this._cache[name] = data.clone();
+  else
+    this._cache[name] = data;
+};
+
 EZ3.GLSLProgram.prototype.bind = function(gl) {
   gl.useProgram(this._program);
 };
 
 EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {
-  if (data) {
+  var v;
+
+  if (!this._isCached(name, data)) {
+    this._caching(name, data);
+
+    if (size > 1)
+      v = data.toArray();
+
     switch (size) {
       case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
         gl.uniform1f(this.uniforms[name], data);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2f(this.uniforms[name], data[0], data[1]);
+        gl.uniform2f(this.uniforms[name], v[0], v[1]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3f(this.uniforms[name], data[0], data[1], data[2]);
+        gl.uniform3f(this.uniforms[name], v[0], v[1], v[2]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4f(this.uniforms[name], data[0], data[1], data[2], data[3]);
+        gl.uniform4f(this.uniforms[name], v[0], v[1], v[2], v[3]);
         break;
     }
   }
 };
 
 EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
-  if (data) {
+  var v;
+
+  if (!this._isCached(name, data)) {
+    this._caching(name, data);
+
+    if (size > 1)
+      v = data.toArray();
+
     switch (size) {
       case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
         gl.uniform1i(this.uniforms[name], data);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2i(this.uniforms[name], data[0], data[1]);
+        gl.uniform2i(this.uniforms[name], v[0], v[1]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3i(this.uniforms[name], data[0], data[1], data[2]);
+        gl.uniform3i(this.uniforms[name], v[0], v[1], v[2]);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4i(this.uniforms[name], data[0], data[1], data[2], data[3]);
+        gl.uniform4i(this.uniforms[name], v[0], v[1], v[2], v[3]);
         break;
     }
   }
 };
 
 EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
-  if (data !== undefined) {
+  var v;
+
+  if (!this._isCached(name, data)) {
+    this._caching(name, data);
+
+    v = data.toArray();
+
     switch (size) {
       case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
-        gl.uniformMatrix2fv(this.uniforms[name], false, data);
+        gl.uniformMatrix2fv(this.uniforms[name], false, v);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
-        gl.uniformMatrix3fv(this.uniforms[name], false, data);
+        gl.uniformMatrix3fv(this.uniforms[name], false, v);
         break;
       case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
-        gl.uniformMatrix4fv(this.uniforms[name], false, data);
+        gl.uniformMatrix4fv(this.uniforms[name], false, v);
         break;
     }
   }
