@@ -54,9 +54,9 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, programs, lights) {
 };
 
 EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
-  this.program.loadUniformf(gl, 'uEmissive', 3, this.emissive.toArray());
-  this.program.loadUniformf(gl, 'uDiffuse', 3, this.diffuse.toArray());
-  this.program.loadUniformf(gl, 'uSpecular', 3, this.specular.toArray());
+  this.program.loadUniformf(gl, 'uEmissive', 3, this.emissive);
+  this.program.loadUniformf(gl, 'uDiffuse', 3, this.diffuse);
+  this.program.loadUniformf(gl, 'uSpecular', 3, this.specular);
   this.program.loadUniformf(gl, 'uShininess', 1, this.shininess);
 
   if (this.emissiveMap instanceof EZ3.Texture) {
