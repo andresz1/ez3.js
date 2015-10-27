@@ -26,13 +26,13 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
 
   modelView.mul(mesh.world, camera.view);
 
-  program.loadUniformf(gl, 'uEyePosition', 3, camera.position.toArray());
-  program.loadUniformMatrix(gl, 'uModel', 4, mesh.world.toArray());
-  program.loadUniformMatrix(gl, 'uModelView', 4, modelView.toArray());
-  program.loadUniformMatrix(gl, 'uProjection', 4, camera.projection.toArray());
+  program.loadUniformf(gl, 'uEyePosition', 3, camera.position);
+  program.loadUniformMatrix(gl, 'uModel', 4, mesh.world);
+  program.loadUniformMatrix(gl, 'uModelView', 4, modelView);
+  program.loadUniformMatrix(gl, 'uProjection', 4, camera.projection);
 
   if (!lights.empty)
-    program.loadUniformMatrix(gl, 'uNormal', 3, mesh.normal.toArray());
+    program.loadUniformMatrix(gl, 'uNormal', 3, mesh.normal);
 
   for (i = 0; i < lights.point.length; i++)
     lights.point[i].updateUniforms(gl, program, i);
