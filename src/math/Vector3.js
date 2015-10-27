@@ -283,7 +283,10 @@ EZ3.Vector3.prototype.toArray = function() {
 };
 
 EZ3.Vector3.prototype.testEqual = function(v) {
-  return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
+  if(v instanceof EZ3.Vector3)
+    return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
+  else
+    return false;
 };
 
 EZ3.Vector3.prototype.hasZero = function(v) {

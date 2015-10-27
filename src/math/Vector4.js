@@ -270,12 +270,20 @@ EZ3.Vector4.prototype.toArray = function() {
 };
 
 EZ3.Vector4.prototype.testEqual = function(v) {
-  var x = (this.x === v.x);
-  var y = (this.y === v.y);
-  var z = (this.z === v.z);
-  var w = (this.w === v.w);
+  var x;
+  var y;
+  var z;
+  var w;
 
-  return (x && y && z && w);
+  if(v instanceof EZ3.Vector4) {
+    x = (this.x === v.x);
+    y = (this.y === v.y);
+    z = (this.z === v.z);
+    w = (this.w === v.w);
+
+    return (x && y && z && w);
+  } else
+    return false;
 };
 
 EZ3.Vector4.prototype.hasZero = function(v) {

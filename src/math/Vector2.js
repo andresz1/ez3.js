@@ -170,7 +170,10 @@ EZ3.Vector2.prototype.toArray = function() {
 };
 
 EZ3.Vector2.prototype.testEqual = function(v) {
-  return ((this.x === v.x) && (this.y === v.y));
+  if(v instanceof EZ3.Vector2)
+    return ((this.x === v.x) && (this.y === v.y));
+  else
+    return false;
 };
 
 EZ3.Vector2.prototype.hasZero = function(v) {
