@@ -5,9 +5,10 @@
 EZ3.Renderer = function(canvas, options) {
   this._programs = {};
 
+  this.context = null;
   this.canvas = canvas;
   this.options = options;
-  this.context = null;
+  this.state = new EZ3.RendererState();
 };
 
 EZ3.Renderer.prototype._processContextLost = function(event) {
@@ -21,7 +22,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   var i;
 
   program.bind(gl);
-  mesh.material.updateStates(gl);
+  mesh.material.updateStates(gl, this.state);
   mesh.material.updateUniforms(gl);
 
   modelView.mul(mesh.world, camera.view);
