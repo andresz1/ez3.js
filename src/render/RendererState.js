@@ -4,9 +4,11 @@
 
 EZ3.RendererState = function(gl) {
   this.program = {};
+  this.texture = {};
   this.extension = {};
   this.attribute = {};
   this.capability = {};
+  this.currentTextureSlot = null;
 
   this._initCapabilities();
   this._initExtensions(gl);
