@@ -20,7 +20,7 @@ EZ3.MeshMaterial = function() {
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
-EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
+EZ3.MeshMaterial.prototype.updateProgram = function(gl, lights, state) {
   var id = this._name;
   var defines = [];
   var prefix = '#define ';
@@ -53,17 +53,17 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
     this.program = state.program[id];
 };
 
-EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
+EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
   this.program.loadUniformf(gl, 'uEmissive', 3, this.emissive);
   this.program.loadUniformf(gl, 'uDiffuse', 3, this.diffuse);
   this.program.loadUniformf(gl, 'uSpecular', 3, this.specular);
   this.program.loadUniformf(gl, 'uShininess', 1, this.shininess);
 
   if (this.emissiveMap instanceof EZ3.Texture) {
-    this.emissiveMap.bind(gl, 0);
+    this.emissiveMap.bind(gl, gl.TEXTURE_2D, 0, state);
 
     if (this.emissiveMap.dirty) {
-      this.emissiveMap.update(gl);
+      this.emissiveMap.update(gl, gl.TEXTURE_2D);
       this.emissiveMap.dirty = false;
     }
 
@@ -71,10 +71,10 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
   }
 
   if (this.diffuseMap instanceof EZ3.Texture) {
-    this.diffuseMap.bind(gl, 1);
+    this.diffuseMap.bind(gl, gl.TEXTURE_2D, 1, state);
 
     if (this.diffuseMap.dirty) {
-      this.diffuseMap.update(gl);
+      this.diffuseMap.update(gl, gl.TEXTURE_2D);
       this.diffuseMap.dirty = false;
     }
 
@@ -82,10 +82,10 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {
   }
 
   if (this.normalMap instanceof EZ3.Texture) {
-    this.normalMap.bind(gl, 2);
+    this.normalMap.bind(gl, gl.TEXTURE_2D, 2, state);
 
     if (this.normalMap.dirty) {
-      this.normalMap.update(gl);
+      this.normalMap.update(gl, gl.TEXTURE_2D);
       this.normalMap.dirty = false;
     }
 
