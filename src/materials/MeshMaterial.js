@@ -20,7 +20,7 @@ EZ3.MeshMaterial = function() {
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
-EZ3.MeshMaterial.prototype.updateProgram = function(gl, programs, lights) {
+EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
   var id = this._name;
   var defines = [];
   var prefix = '#define ';
@@ -43,14 +43,14 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, programs, lights) {
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
 
-  if (!programs[id]) {
+  if (!state.program[id]) {
     vertex = EZ3.ShaderLibrary.mesh.vertex;
     fragment = EZ3.ShaderLibrary.mesh.fragment;
 
     this.program = new EZ3.GLSLProgram(gl, vertex, fragment, prefix);
-    programs[id] = this.program;
+    state.program[id] = this.program;
   } else
-    this.program = programs[id];
+    this.program = state.program[id];
 };
 
 EZ3.MeshMaterial.prototype.updateUniforms = function(gl) {

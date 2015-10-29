@@ -16,43 +16,43 @@ EZ3.Material = function(name) {
 
 EZ3.Material.prototype.updateStates = function(gl, state) {
   if (this.depthTest) {
-    if (!state.enabled[EZ3.RendererState.DEPTH_TEST]) {
+    if (!state.capability[EZ3.RendererState.DEPTH_TEST].enabled) {
       gl.enable(gl.DEPTH_TEST);
-      state.enabled[EZ3.RendererState.DEPTH_TEST] = true;
+      state.capability[EZ3.RendererState.DEPTH_TEST].enabled = true;
     }
-    if (state.enabledValue[EZ3.RendererState.DEPTH_TEST] !== gl.LEQUAL) {
+    if (state.capability[EZ3.RendererState.DEPTH_TEST].value !== gl.LEQUAL) {
       gl.depthFunc(gl.LEQUAL);
-      state.enabledValue[EZ3.RendererState.DEPTH_TEST] = gl.LEQUAL;
+      state.capability[EZ3.RendererState.DEPTH_TEST].value = gl.LEQUAL;
     }
   } else {
-    if (state.enabled[EZ3.RendererState.DEPTH_TEST]) {
+    if (state.capability[EZ3.RendererState.DEPTH_TEST].enabled) {
       gl.disable(gl.DEPTH_TEST);
-      state.enabled[EZ3.RendererState.DEPTH_TEST] = false;
-      state.enabledValue[EZ3.RendererState.DEPTH_TEST] = null;
+      state.capability[EZ3.RendererState.DEPTH_TEST].enabled = false;
+      state.capability[EZ3.RendererState.DEPTH_TEST].value = null;
     }
   }
 
   if (this.faceCulling) {
-    if (!state.enabled[EZ3.RendererState.CULL_FACE]) {
+    if (!state.capability[EZ3.RendererState.CULL_FACE].enabled) {
       gl.enable(gl.CULL_FACE);
-      state.enabled[EZ3.RendererState.CULL_FACE] = true;
+      state.capability[EZ3.RendererState.CULL_FACE].enabled = true;
     }
     if (this.backFaceCulling) {
-      if(state.enabledValue[EZ3.RendererState.CULL_FACE] !== gl.BACK) {
+      if(state.capability[EZ3.RendererState.CULL_FACE].value !== gl.BACK) {
         gl.cullFace(gl.BACK);
-        state.enabledValue[EZ3.RendererState.CULL_FACE] = gl.BACK;
+        state.capability[EZ3.RendererState.CULL_FACE].value = gl.BACK;
       }
     } else if(this.frontFaceCulling) {
-      if(state.enabledValue[EZ3.RendererState.CULL_FACE] !== gl.FRONT) {
+      if(state.capability[EZ3.RendererState.CULL_FACE].value !== gl.FRONT) {
         gl.cullFace(gl.FRONT);
-        state.enabledValue[EZ3.RendererState.CULL_FACE] = gl.FRONT;
+        state.capability[EZ3.RendererState.CULL_FACE].value = gl.FRONT;
       }
     }
   } else {
-    if (state.enabled[EZ3.RendererState.CULL_FACE]) {
+    if (state.capability[EZ3.RendererState.CULL_FACE].enabled) {
       gl.disable(gl.CULL_FACE);
-      state.enabled[EZ3.RendererState.CULL_FACE] = false;
-      state.enabledValue[EZ3.RendererState.CULL_FACE] = null;
+      state.capability[EZ3.RendererState.CULL_FACE].enabled = false;
+      state.capability[EZ3.RendererState.CULL_FACE].value = null;
     }
   }
 };
