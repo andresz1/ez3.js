@@ -3,12 +3,10 @@
  */
 
 EZ3.Renderer = function(canvas, options) {
-  this._programs = {};
-
   this.context = null;
   this.canvas = canvas;
   this.options = options;
-  this.state = new EZ3.RendererState();
+  this.state = null;
 };
 
 EZ3.Renderer.prototype._processContextLost = function(event) {
@@ -44,7 +42,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   for (i = 0; i < lights.spot.length; i++)
     lights.spot[i].updateUniforms(gl, program, i);
 
-  mesh.render(gl, program.attributes);
+  mesh.render(gl, program.attributes, this.state);
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -62,8 +60,10 @@ EZ3.Renderer.prototype.initContext = function() {
       this.context = this.canvas.getContext(names[i], this.options);
     } catch (e) {}
 
-    if (this.context)
+    if (this.context) {
+      this.state = new EZ3.RendererState(this.context);
       break;
+    }
   }
 
   if (!this.context)
@@ -72,8 +72,6 @@ EZ3.Renderer.prototype.initContext = function() {
   this._onContextLost = function(event) {
     that._processContextLost(event);
   };
-
-  this.context.getExtension('OES_standard_derivatives');
 
   this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
 };
@@ -142,7 +140,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
       mesh.updateNormal();
     }
 
-    mesh.material.updateProgram(gl, this._programs, lights);
+    mesh.material.updateProgram(gl, this.state, lights);
 
     if (mesh.material.transparent)
       meshes.transparent.push(mesh);
