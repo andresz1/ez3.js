@@ -6,7 +6,6 @@
 EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
-  this.normal = new EZ3.Matrix3();
   this.geometry = geometry;
   this.material = material;
 };
@@ -33,7 +32,10 @@ EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
-  this.normal.normalFromMat4(this.world);
+  if(this.normal.dirty) {
+    this.normal.normalFromMat4(this.world);
+    this.normal.dirty = false;
+  }
 };
 
 EZ3.Mesh.prototype.render = function(gl, attributes, state) {
