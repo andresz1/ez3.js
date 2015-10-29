@@ -21,7 +21,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
 
   program.bind(gl);
   mesh.material.updateStates(gl, this.state);
-  mesh.material.updateUniforms(gl);
+  mesh.material.updateUniforms(gl, this.state);
 
   modelView.mul(mesh.world, camera.view);
 
@@ -140,7 +140,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
       mesh.updateNormal();
     }
 
-    mesh.material.updateProgram(gl, this.state, lights);
+    mesh.material.updateProgram(gl, lights, this.state);
 
     if (mesh.material.transparent)
       meshes.transparent.push(mesh);
