@@ -20,8 +20,7 @@ EZ3.Mesh.prototype.updateEssentialBuffers = function() {
     this.geometry.dirty = false;
   }
 
-  if (this.material.fill === EZ3.Material.WIREFRAME &&
-    !this.geometry.buffers.get('line'))
+  if (this.material.fill === EZ3.Material.WIREFRAME && !this.geometry.buffers.get('line'))
     this.geometry.processLinearIndices();
 };
 
@@ -29,8 +28,7 @@ EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
   if (!this.geometry.buffers.get('normal'))
     this.geometry.processNormals();
 
-  if (this.material.bumpMap instanceof EZ3.Texture &&
-    !this.geometry.buffers.get('tangent'))
+  if (this.material.bumpMap instanceof EZ3.Texture && !this.geometry.buffers.get('tangent'))
     this.geometry.processTangentsAndBitangents();
 };
 
@@ -38,7 +36,7 @@ EZ3.Mesh.prototype.updateNormal = function() {
   this.normal.normalFromMat4(this.world);
 };
 
-EZ3.Mesh.prototype.render = function(gl, attributes) {
+EZ3.Mesh.prototype.render = function(gl, attributes, state) {
   var mode;
   var buffer;
 
@@ -54,10 +52,10 @@ EZ3.Mesh.prototype.render = function(gl, attributes) {
   }
 
   if (buffer instanceof EZ3.IndexBuffer) {
-    this.geometry.buffers.bind(gl, attributes, buffer);
-    gl.drawElements(mode, buffer.data.length, buffer.getType(gl), 0);
+    this.geometry.buffers.bind(gl, attributes, state, buffer);
+    gl.drawElements(mode, buffer.data.length, buffer.getType(gl, state), 0);
   } else if (buffer instanceof EZ3.VertexBuffer) {
-    this.geometry.buffers.bind(gl, attributes);
+    this.geometry.buffers.bind(gl, attributes, state);
     gl.drawArrays(mode, 0, buffer.data.length / 3);
   }
 };
