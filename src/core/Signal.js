@@ -59,7 +59,8 @@ EZ3.Signal.prototype._indexOfListener = function(listener, context) {
 
   while (n--) {
     cur = this._bindings[n];
-    if (cur._listener === listener && cur.context === context)
+
+    if (cur.listener === listener && cur.context === context)
       return n;
   }
 

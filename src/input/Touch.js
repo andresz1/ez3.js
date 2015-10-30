@@ -67,7 +67,7 @@ EZ3.Touch.prototype._processTouchUp = function(event) {
 };
 
 EZ3.Touch.prototype.enable = function() {
-  if (this._device.touch) {
+  if (this._device.touchDown) {
     var that = this;
 
     this.enabled = true;
@@ -84,41 +84,23 @@ EZ3.Touch.prototype.enable = function() {
       that._processTouchUp(event);
     };
 
-    if (this._device.touch === EZ3.Device.TOUCH.STANDARD) {
-      this._press = 'touchstart';
-      this._move = 'touchmove';
-      this._up = 'touchend';
-    } else if (this._device.touch === EZ3.Device.TOUCH.POINTER) {
-      this._press = 'pointerdown';
-      this._move = 'pointermove';
-      this._up = 'pointerup';
-    } else {
-      this._press = 'MSPointerDown';
-      this._move = 'MSPointerMove';
-      this._up = 'MSPointerUp';
-    }
-
-    this._domElement.addEventListener(this._press, this._onTouchPress, false);
-    this._domElement.addEventListener(this._move, this._onTouchMove, false);
-    this._domElement.addEventListener(this._up, this._onTouchUp, false);
+    this._domElement.addEventListener(this._device.touchDown, this._onTouchPress, false);
+    this._domElement.addEventListener(this._device.touchMove, this._onTouchMove, false);
+    this._domElement.addEventListener(this._device.touchUp, this._onTouchUp, false);
   }
 };
 
 EZ3.Touch.prototype.disable = function() {
-  if (this._device.touch) {
+  if (this._device.touchDown) {
     this.enabled = false;
 
-    this._domElement.removeEventListener(this._press, this._onTouchPress, false);
-    this._domElement.removeEventListener(this._move, this._onTouchMove, false);
-    this._domElement.removeEventListener(this._up, this._onTouchUp, false);
+    this._domElement.removeEventListener(this._device.touchDown, this._onTouchPress, false);
+    this._domElement.removeEventListener(this._device.touchMove, this._onTouchMove, false);
+    this._domElement.removeEventListener(this._device.touchUp, this._onTouchUp, false);
 
     delete this._onTouchPress;
     delete this._onTouchMove;
     delete this._onTouchUp;
-
-    delete this._press;
-    delete this._move;
-    delete this._up;
   }
 };
 
