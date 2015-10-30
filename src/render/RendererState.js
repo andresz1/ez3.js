@@ -3,63 +3,44 @@
  */
 
 EZ3.RendererState = function(gl) {
-  this.gl = gl;
   this.program = {};
+  this.texture = {};
   this.extension = {};
-  this.capability = {};
   this.attribute = {};
+  this.capability = {};
+  this.currentTextureSlot = null;
 
-  this._init();
+  this._initCapabilities();
+  this._initExtensions(gl);
 };
 
 EZ3.RendererState.prototype.constructor = EZ3.RendererState;
 
-EZ3.RendererState.prototype._init = function() {
-  this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  this.gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+EZ3.RendererState.prototype._initCapabilities = function() {
+  this.capability[EZ3.RendererState.DEPTH_TEST] = {
+    enabled: false,
+    value: null
+  };
+  this.capability[EZ3.RendererState.CULL_FACE] = {
+    enabled: false,
+    value: null
+  };
+  this.capability[EZ3.RendererState.BLENDING] = {
+    enabled: false,
+    blendEquation: null,
+    blendFunc: {
+      sfactor: null,
+      dfactor: null
+    }
+  };
 };
 
-EZ3.RendererState.prototype.enable = function(id) {
-  if(!this.capability[name]) {
-    this.capability[name] = true;
-    this.gl.enable(id);
-  }
+EZ3.RendererState.prototype._initExtensions = function(gl) {
+  this.extension['OES_standard_derivatives'] = gl.getExtension('OES_standard_derivatives');
+  this.extension['OES_vertex_array_object'] = gl.getExtension('OES_vertex_array_object');
+  this.extension['OES_element_index_uint'] = gl.getExtension('OES_element_index_uint');
 };
 
-EZ3.RendererState.prototype.disable = function(id) {
-  if(this.capability[name]) {
-    this.capability[name] = false;
-    this.gl.disable(id);
-  }
-};
-
-EZ3.RendererState.prototype.enableAttribute = function(attribute) {
-  if(!this.attribute[attribute]) {
-    this.attribute[attribute] = true;
-    this.gl.enableVertexAttribArray(attribute);
-  }
-};
-
-EZ3.RendererState.prototype.disableAttribute = function(attribute) {
-  if(this.attribute[attribute]) {
-    this.attribute[attribute] = false;
-    this.gl.disableVertexAttribArray(attribute);
-  }
-};
-
-EZ3.RendererState.prototype.activeTexture = function(unit) {
-
-};
-
-EZ3.RendererState.prototype.bindTexture = function(target, id) {
-
-};
-
-EZ3.RendererState.prototype.setBlending = function(mode) {
-
-};
-
-EZ3.NO_BLENDING = 0;
-EZ3.ADDITIVE_BLENDING = 1;
-EZ3.SUBSTRACTIVE_BLENDING = 2;
-EZ3
+EZ3.RendererState.CULL_FACE = 0;
+EZ3.RendererState.BLENDING = 1;
+EZ3.RendererState.DEPTH_TEST = 2;
