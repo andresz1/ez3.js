@@ -3,13 +3,11 @@
  */
 
 EZ3.AnimationFrame = function(timeOut) {
-  var device;
+  var device = EZ3.Device;
 
   this._id = 0;
 
-  device = EZ3.Device;
-
-  if (device.animationFrame === device.ANIMATION_FRAME.TIME_OUT || timeOut) {
+  if (!device.requestAnimationFrame || timeOut) {
     this._onRequestAnimationFrame = function(callback) {
       return window.setTimeout(callback, 1000 / 60);
     };
@@ -19,11 +17,11 @@ EZ3.AnimationFrame = function(timeOut) {
     };
   } else {
     this._onRequestAnimationFrame = function(callback) {
-      return window.requestAnimationFrame(callback);
+      return window[device.requestAnimationFrame](callback);
     };
 
     this._onCancelAnimationFrame = function(id) {
-      window.cancelAnimationFrame(id);
+      window[device.cancelAnimationFrame](id);
     };
   }
 };

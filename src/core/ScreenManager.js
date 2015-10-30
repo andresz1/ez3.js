@@ -4,10 +4,12 @@
 
 EZ3.ScreenManager = function(domElement, renderer, time, input) {
   this._domElement = domElement;
+  this._bound = domElement.getBoundingClientRect();
   this._renderer = renderer;
   this._time = time;
   this._input = input;
   this._screens = [];
+  this._device = EZ3.Device;
 };
 
 EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
@@ -42,17 +44,8 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
     }
   }
 
-  var that = this;
-
-  window.addEventListener('resize', function() {
-    that._domElement.width = window.innerWidth;
-    that._domElement.height = window.innerHeight;
-
-    screen.size.x = window.innerWidth;
-    screen.size.y = window.innerHeight;
-    screen.camera.aspectRatio = window.innerWidth / window.innerHeight;
-
-  }, true);
+  if (screen.onResize)
+    this._device.onResize.add(screen.onResize, screen);
 };
 
 EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
@@ -81,31 +74,28 @@ EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
     events = inputs[i];
 
     for (j = 0; j < events.length; j++)
-      screen.input[i][events[j]].removeAll(screen);
+      screen.input[i][events[j]].remove(screen[events[j]], screen);
   }
 };
 
 EZ3.ScreenManager.prototype.add = function(screen) {
   if (screen instanceof EZ3.Screen && !this.get(screen.id)) {
     screen.manager = this;
-    screen.device = EZ3.Device;
-    screen.cache = EZ3.Cache;
     screen.time = this._time;
     screen.input = this._input;
-    screen.load = new EZ3.LoadManager();
-
-    this._addEventListeners(screen);
 
     if (screen.preload) {
       screen.preload();
       screen.load.onComplete.add(screen.create, screen);
       screen.load.onComplete.add(function() {
+        this._addEventListeners(screen);
         this._screens.unshift(screen);
       }, this);
 
       screen.load.start();
     } else {
       screen.create();
+      this._addEventListeners(screen);
       this._screens.unshift(screen);
     }
 
@@ -148,39 +138,11 @@ EZ3.ScreenManager.prototype.update = function() {
 };
 
 EZ3.ScreenManager.prototype.fullScreen = function() {
-  var fullScreen = false;
-  var requestFullScreen;
-
-  var fs = [
-    'requestFullscreen',
-    'requestFullScreen',
-    'webkitRequestFullscreen',
-    'webkitRequestFullScreen',
-    'msRequestFullscreen',
-    'msRequestFullScreen',
-    'mozRequestFullScreen',
-    'mozRequestFullscreen'
-  ];
-
-  var element = document.createElement('div');
-
-  for (var i = 0; i < fs.length; i++) {
-    if (element[fs[i]]) {
-      fullScreen = true;
-      requestFullScreen = fs[i];
-      break;
-    }
-  }
-
-  this._domElement[requestFullScreen]();
+  if (this._device.requestFullScreen)
+    this._domElement[this._device.requestFullScreen]();
 };
 
-EZ3.ScreenManager.prototype.pointerlock = function() {
-  var canvas = this._domElement;
-
-  canvas.requestPointerLock = canvas.requestPointerLock ||
-                            canvas.mozRequestPointerLock ||
-                            canvas.webkitRequestPointerLock;
-
-  canvas.requestPointerLock();
+EZ3.ScreenManager.prototype.windowed = function() {
+  if (this._device.cancelFullScreen)
+    this._domElement[this._device.cancelFullScreen]();
 };

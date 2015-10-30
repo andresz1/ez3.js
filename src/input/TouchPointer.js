@@ -27,3 +27,8 @@ EZ3.TouchPointer.prototype.processMove = function(event, onMove) {
   EZ3.Pointer.prototype.processMove.call(this, event);
   onMove.dispatch(this);
 };
+
+EZ3.TouchPointer.prototype.processUp = function(onUp) {
+  EZ3.Switch.prototype.processUp.call(this);
+  onUp.dispatch(this);
+};

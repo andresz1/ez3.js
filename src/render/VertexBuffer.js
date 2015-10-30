@@ -5,7 +5,7 @@
 
 EZ3.VertexBuffer = function(data, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
-  
+
   this._stride = 0;
   this._attributes = {};
 };
@@ -23,7 +23,7 @@ EZ3.VertexBuffer.prototype.validate = function(gl, attributes) {
   return false;
 };
 
-EZ3.VertexBuffer.prototype.bind = function(gl, attributes) {
+EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
   var type = gl.FLOAT;
   var stride = this._stride;
   var normalized;
@@ -32,7 +32,7 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes) {
   var size;
   var k;
 
-  if (!(this._id && gl.isBuffer(this._id)))
+  if (!this._id)
     this._id = gl.createBuffer();
 
   gl.bindBuffer(gl.ARRAY_BUFFER, this._id);
@@ -44,27 +44,36 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes) {
     normalized = this._attributes[k].normalized;
 
     if (layout >= 0) {
-      gl.enableVertexAttribArray(layout);
-      gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+      if(state) {
+        if(!state.attribute[layout]) {
+          gl.enableVertexAttribArray(layout);
+          state.attribute[layout] = true;
+        }
+        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+      } else {
+        gl.enableVertexAttribArray(layout);
+        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+      }
     }
   }
 };
 
 EZ3.VertexBuffer.prototype.update = function(gl) {
   var bytes = 4;
-  var hint = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
-  var usage = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_USAGE);
-  var length = gl.getBufferParameter(gl.ARRAY_BUFFER, gl.BUFFER_SIZE);
+  var length = bytes * this.data.length;
+  var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
   var offset;
   var array;
   var k;
 
-  if ((bytes * this.data.length !== length) || (usage !== hint))
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), hint);
-  else {
+  if ((length !== this.length) || (usage !== this.usage)) {
+    this.usage = usage;
+    this.length = length;
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), usage);
+  } else {
     if (this.ranges.length) {
       for (k = 0; k < this.ranges.length; k++) {
-        offset = this.ranges[k].left * bytes;
+        offset = bytes * this.ranges[k].left;
         array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
         gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(array));
       }
