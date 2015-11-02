@@ -5,7 +5,6 @@
 EZ3.Pointer = function(domElement) {
   this._domElement = domElement;
   this._bound = domElement.getBoundingClientRect();
-  console.log(this._bound);
 
   this.page = new EZ3.Vector2();
   this.client = new EZ3.Vector2();
