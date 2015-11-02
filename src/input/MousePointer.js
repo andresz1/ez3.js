@@ -31,8 +31,8 @@ EZ3.MousePointer.prototype.processMove = function(event, onMove) {
   if (!this.locked)
     EZ3.Pointer.prototype.processMove.call(this, event);
   else {
-    this.movement.x = event.movementX || event.webkitMovementX || event.mozMovementX || 0;
-    this.movement.y = event.movementY || event.webkitMovementY || event.mozMovementY || 0;
+    this.movement.x = event.movementX || event.mozMovementX || 0;
+    this.movement.y = event.movementY || event.mozMovementY || 0;
   }
 
   onMove.dispatch(this);

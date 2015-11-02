@@ -2,21 +2,20 @@
  * @class ScreenManager
  */
 
-EZ3.ScreenManager = function(domElement, renderer, time, input) {
-  this._domElement = domElement;
-  this._bound = domElement.getBoundingClientRect();
-  this._renderer = renderer;
-  this._time = time;
-  this._input = input;
+EZ3.ScreenManager = function(canvas, renderer, time, input) {
   this._screens = [];
-  this._device = EZ3.Device;
+
+  this.canvas = canvas;
+  this.bounds = canvas.getBoundingClientRect();
+  this.renderer = renderer;
+  this.time = time;
+  this.input = input;
+
+  this.fullScreeneded = false;
 };
 
 EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
-  var inputs, events;
-  var i, j;
-
-  inputs = {
+  var inputs = {
     keyboard: {
       onKeyPress: 'onKeyPress',
       onKeyDown: 'onKeyDown',
@@ -34,6 +33,10 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
       onUp: 'onTouchUp'
     }
   };
+  var device = EZ3.Device;
+  var events;
+  var i;
+  var j;
 
   for (i in inputs) {
     events = inputs[i];
@@ -45,7 +48,7 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
   }
 
   if (screen.onResize)
-    this._device.onResize.add(screen.onResize, screen);
+    device.onResize.add(screen.onResize, screen);
 };
 
 EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
@@ -78,11 +81,19 @@ EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
   }
 };
 
+EZ3.ScreenManager.prototype._processFullScreenChange = function() {
+  this.fullScreened = !this.fullScreened;
+
+  if (!this.fullScreened) {
+    this.canvas.removeEventListener(this._device.fullScreenChange, this._onFullScreenChange, true);
+    delete this._onFullScreenChange;
+  }
+};
+
 EZ3.ScreenManager.prototype.add = function(screen) {
   if (screen instanceof EZ3.Screen && !this.get(screen.id)) {
     screen.manager = this;
-    screen.time = this._time;
-    screen.input = this._input;
+    screen.input = this.input;
 
     if (screen.preload) {
       screen.preload();
@@ -126,23 +137,33 @@ EZ3.ScreenManager.prototype.update = function() {
   var screen;
   var i;
 
-  this._renderer.clear();
+  this.renderer.clear();
 
   for (i = 0; i < this._screens.length; i++) {
     screen = this._screens[i];
 
-    this._renderer.viewport(screen.position, screen.size);
-    this._renderer.render(screen.scene, screen.camera);
+    this.renderer.viewport(screen.position, screen.size);
+    this.renderer.render(screen.scene, screen.camera);
     this._screens[i].update();
   }
 };
 
 EZ3.ScreenManager.prototype.fullScreen = function() {
-  if (this._device.requestFullScreen)
-    this._domElement[this._device.requestFullScreen]();
+  var that;
+
+  if (this._device.requestFullScreen && !this.fullScreened) {
+    that = this;
+
+    this._onFullScreenChange = function(event) {
+      that._processFullScreenChange(event);
+    };
+
+    this.canvas.addEventListener(this._device.fullScreenChange, this._onFullScreenChange, true);
+    this.canvas[this._device.requestFullScreen]();
+  }
 };
 
 EZ3.ScreenManager.prototype.windowed = function() {
-  if (this._device.cancelFullScreen)
-    this._domElement[this._device.cancelFullScreen]();
+  if (this._device.cancelFullScreen && this.fullScreened)
+    this.canvas[this._device.cancelFullScreen]();
 };
