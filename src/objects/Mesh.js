@@ -6,6 +6,9 @@
 EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
+  this.updateNormalMatrix = false;
+  this.normal = new EZ3.Matrix3();
+
   this.geometry = geometry;
   this.material = material;
 };
@@ -32,13 +35,13 @@ EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
-  if(this.normal.dirty) {
+  if(this.updateNormalMatrix) {
     this.normal.normalFromMat4(this.world);
-    this.normal.dirty = false;
+    this.updateNormalMatrix = false;
   }
 };
 
-EZ3.Mesh.prototype.render = function(gl, attributes, state) {
+EZ3.Mesh.prototype.render = function(gl, attributes, state, extension) {
   var mode;
   var buffer;
 
@@ -54,10 +57,10 @@ EZ3.Mesh.prototype.render = function(gl, attributes, state) {
   }
 
   if (buffer instanceof EZ3.IndexBuffer) {
-    this.geometry.buffers.bind(gl, attributes, state, buffer);
-    gl.drawElements(mode, buffer.data.length, buffer.getType(gl, state), 0);
+    this.geometry.buffers.bind(gl, attributes, state, extension, buffer);
+    gl.drawElements(mode, buffer.data.length, buffer.getType(gl, extension), 0);
   } else if (buffer instanceof EZ3.VertexBuffer) {
-    this.geometry.buffers.bind(gl, attributes, state);
+    this.geometry.buffers.bind(gl, attributes, state, extension);
     gl.drawArrays(mode, 0, buffer.data.length / 3);
   }
 };
