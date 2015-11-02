@@ -721,7 +721,6 @@ EZ3.Matrix4.prototype.testDiff = function(m) {
     return false;
 };
 
-
 EZ3.Matrix4.prototype.set = EZ3.Matrix4.prototype.init;
 
 Object.defineProperty(EZ3.Matrix4.prototype, 'elements', {

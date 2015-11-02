@@ -19,7 +19,7 @@ EZ3.IndexBuffer.prototype.bind = function(gl) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._id);
 };
 
-EZ3.IndexBuffer.prototype.update = function(gl, state) {
+EZ3.IndexBuffer.prototype.update = function(gl, extension) {
   var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
   var length;
   var UintArray;
@@ -29,7 +29,7 @@ EZ3.IndexBuffer.prototype.update = function(gl, state) {
   var k;
 
   if(this.need32Bits) {
-    if(state.extension['OES_element_index_uint']) {
+    if(extension.elementIndexUInt) {
       bytes = 4;
       UintArray = Uint32Array;
     } else
@@ -58,6 +58,6 @@ EZ3.IndexBuffer.prototype.update = function(gl, state) {
   }
 };
 
-EZ3.IndexBuffer.prototype.getType = function(gl, state) {
-  return (state.extension['OES_element_index_uint'] && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+EZ3.IndexBuffer.prototype.getType = function(gl, extension) {
+  return (extension.elementIndexUInt && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
 };
