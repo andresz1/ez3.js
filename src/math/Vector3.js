@@ -304,7 +304,7 @@ EZ3.Vector3.prototype.testZero = function(v) {
 };
 
 EZ3.Vector3.prototype.testDiff = function(v) {
-  return ((this.x !== v.x) && (this.y !== v.y) && (this.z !== v.z));
+  return ((this.x !== v.x) || (this.y !== v.y) || (this.z !== v.z));
 };
 
 EZ3.Vector3.prototype.toString = function() {
