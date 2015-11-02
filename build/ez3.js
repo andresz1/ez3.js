@@ -1,156 +1,297 @@
-!function(a,b){if("object"==typeof exports&&"object"==typeof module)module.exports=b();else if("function"==typeof define&&define.amd)define(b);else{var c=b();for(var d in c)("object"==typeof exports?exports:a)[d]=c[d]}}(this,function(){return function(a){function b(d){if(c[d])return c[d].exports;var e=c[d]={exports:{},id:d,loaded:!1};return a[d].call(e.exports,e,e.exports,b),e.loaded=!0,e.exports}var c={};return b.m=a,b.c=c,b.p="",b(0)}([function(a,b,c){b.glMatrix=c(1),b.mat2=c(2),b.mat2d=c(3),b.mat3=c(4),b.mat4=c(5),b.quat=c(6),b.vec2=c(9),b.vec3=c(7),b.vec4=c(8)},function(a,b){var c={};c.EPSILON=1e-6,c.ARRAY_TYPE="undefined"!=typeof Float32Array?Float32Array:Array,c.RANDOM=Math.random,c.setMatrixArrayType=function(a){GLMAT_ARRAY_TYPE=a};var d=Math.PI/180;c.toRadian=function(a){return a*d},a.exports=c},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(4);return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a},e.clone=function(a){var b=new d.ARRAY_TYPE(4);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a},e.transpose=function(a,b){if(a===b){var c=b[1];a[1]=b[2],a[2]=c}else a[0]=b[0],a[1]=b[2],a[2]=b[1],a[3]=b[3];return a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c*f-e*d;return g?(g=1/g,a[0]=f*g,a[1]=-d*g,a[2]=-e*g,a[3]=c*g,a):null},e.adjoint=function(a,b){var c=b[0];return a[0]=b[3],a[1]=-b[1],a[2]=-b[2],a[3]=c,a},e.determinant=function(a){return a[0]*a[3]-a[2]*a[1]},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=c[0],i=c[1],j=c[2],k=c[3];return a[0]=d*h+f*i,a[1]=e*h+g*i,a[2]=d*j+f*k,a[3]=e*j+g*k,a},e.mul=e.multiply,e.rotate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i+f*h,a[1]=e*i+g*h,a[2]=d*-h+f*i,a[3]=e*-h+g*i,a},e.scale=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=c[0],i=c[1];return a[0]=d*h,a[1]=e*h,a[2]=f*i,a[3]=g*i,a},e.fromRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=-c,a[3]=d,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=b[1],a},e.str=function(a){return"mat2("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2))},e.LDU=function(a,b,c,d){return a[2]=d[2]/d[0],c[0]=d[0],c[1]=d[1],c[3]=d[3]-a[2]*c[1],[a,b,c]},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(6);return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a[4]=0,a[5]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(6);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b[4]=a[4],b[5]=a[5],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[4]=b[4],a[5]=b[5],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a[4]=0,a[5]=0,a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=c*f-d*e;return i?(i=1/i,a[0]=f*i,a[1]=-d*i,a[2]=-e*i,a[3]=c*i,a[4]=(e*h-f*g)*i,a[5]=(d*g-c*h)*i,a):null},e.determinant=function(a){return a[0]*a[3]-a[1]*a[2]},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=c[0],k=c[1],l=c[2],m=c[3],n=c[4],o=c[5];return a[0]=d*j+f*k,a[1]=e*j+g*k,a[2]=d*l+f*m,a[3]=e*l+g*m,a[4]=d*n+f*o+h,a[5]=e*n+g*o+i,a},e.mul=e.multiply,e.rotate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=Math.sin(c),k=Math.cos(c);return a[0]=d*k+f*j,a[1]=e*k+g*j,a[2]=d*-j+f*k,a[3]=e*-j+g*k,a[4]=h,a[5]=i,a},e.scale=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=c[0],k=c[1];return a[0]=d*j,a[1]=e*j,a[2]=f*k,a[3]=g*k,a[4]=h,a[5]=i,a},e.translate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=c[0],k=c[1];return a[0]=d,a[1]=e,a[2]=f,a[3]=g,a[4]=d*j+f*k+h,a[5]=e*j+g*k+i,a},e.fromRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=-c,a[3]=d,a[4]=0,a[5]=0,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=b[1],a[4]=0,a[5]=0,a},e.fromTranslation=function(a,b){return a[0]=1,a[1]=0,a[2]=0,a[3]=1,a[4]=b[0],a[5]=b[1],a},e.str=function(a){return"mat2d("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+", "+a[4]+", "+a[5]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2)+Math.pow(a[4],2)+Math.pow(a[5],2)+1)},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(9);return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=1,a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.fromMat4=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[4],a[4]=b[5],a[5]=b[6],a[6]=b[8],a[7]=b[9],a[8]=b[10],a},e.clone=function(a){var b=new d.ARRAY_TYPE(9);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b[4]=a[4],b[5]=a[5],b[6]=a[6],b[7]=a[7],b[8]=a[8],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[4]=b[4],a[5]=b[5],a[6]=b[6],a[7]=b[7],a[8]=b[8],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=1,a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.transpose=function(a,b){if(a===b){var c=b[1],d=b[2],e=b[5];a[1]=b[3],a[2]=b[6],a[3]=c,a[5]=b[7],a[6]=d,a[7]=e}else a[0]=b[0],a[1]=b[3],a[2]=b[6],a[3]=b[1],a[4]=b[4],a[5]=b[7],a[6]=b[2],a[7]=b[5],a[8]=b[8];return a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=k*g-h*j,m=-k*f+h*i,n=j*f-g*i,o=c*l+d*m+e*n;return o?(o=1/o,a[0]=l*o,a[1]=(-k*d+e*j)*o,a[2]=(h*d-e*g)*o,a[3]=m*o,a[4]=(k*c-e*i)*o,a[5]=(-h*c+e*f)*o,a[6]=n*o,a[7]=(-j*c+d*i)*o,a[8]=(g*c-d*f)*o,a):null},e.adjoint=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8];return a[0]=g*k-h*j,a[1]=e*j-d*k,a[2]=d*h-e*g,a[3]=h*i-f*k,a[4]=c*k-e*i,a[5]=e*f-c*h,a[6]=f*j-g*i,a[7]=d*i-c*j,a[8]=c*g-d*f,a},e.determinant=function(a){var b=a[0],c=a[1],d=a[2],e=a[3],f=a[4],g=a[5],h=a[6],i=a[7],j=a[8];return b*(j*f-g*i)+c*(-j*e+g*h)+d*(i*e-f*h)},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=c[0],n=c[1],o=c[2],p=c[3],q=c[4],r=c[5],s=c[6],t=c[7],u=c[8];return a[0]=m*d+n*g+o*j,a[1]=m*e+n*h+o*k,a[2]=m*f+n*i+o*l,a[3]=p*d+q*g+r*j,a[4]=p*e+q*h+r*k,a[5]=p*f+q*i+r*l,a[6]=s*d+t*g+u*j,a[7]=s*e+t*h+u*k,a[8]=s*f+t*i+u*l,a},e.mul=e.multiply,e.translate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=c[0],n=c[1];return a[0]=d,a[1]=e,a[2]=f,a[3]=g,a[4]=h,a[5]=i,a[6]=m*d+n*g+j,a[7]=m*e+n*h+k,a[8]=m*f+n*i+l,a},e.rotate=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=Math.sin(c),n=Math.cos(c);return a[0]=n*d+m*g,a[1]=n*e+m*h,a[2]=n*f+m*i,a[3]=n*g-m*d,a[4]=n*h-m*e,a[5]=n*i-m*f,a[6]=j,a[7]=k,a[8]=l,a},e.scale=function(a,b,c){var d=c[0],e=c[1];return a[0]=d*b[0],a[1]=d*b[1],a[2]=d*b[2],a[3]=e*b[3],a[4]=e*b[4],a[5]=e*b[5],a[6]=b[6],a[7]=b[7],a[8]=b[8],a},e.fromTranslation=function(a,b){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=1,a[5]=0,a[6]=b[0],a[7]=b[1],a[8]=1,a},e.fromRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=0,a[3]=-c,a[4]=d,a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=0,a[4]=b[1],a[5]=0,a[6]=0,a[7]=0,a[8]=1,a},e.fromMat2d=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=0,a[3]=b[2],a[4]=b[3],a[5]=0,a[6]=b[4],a[7]=b[5],a[8]=1,a},e.fromQuat=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c+c,h=d+d,i=e+e,j=c*g,k=d*g,l=d*h,m=e*g,n=e*h,o=e*i,p=f*g,q=f*h,r=f*i;return a[0]=1-l-o,a[3]=k-r,a[6]=m+q,a[1]=k+r,a[4]=1-j-o,a[7]=n-p,a[2]=m-q,a[5]=n+p,a[8]=1-j-l,a},e.normalFromMat4=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=b[9],m=b[10],n=b[11],o=b[12],p=b[13],q=b[14],r=b[15],s=c*h-d*g,t=c*i-e*g,u=c*j-f*g,v=d*i-e*h,w=d*j-f*h,x=e*j-f*i,y=k*p-l*o,z=k*q-m*o,A=k*r-n*o,B=l*q-m*p,C=l*r-n*p,D=m*r-n*q,E=s*D-t*C+u*B+v*A-w*z+x*y;return E?(E=1/E,a[0]=(h*D-i*C+j*B)*E,a[1]=(i*A-g*D-j*z)*E,a[2]=(g*C-h*A+j*y)*E,a[3]=(e*C-d*D-f*B)*E,a[4]=(c*D-e*A+f*z)*E,a[5]=(d*A-c*C-f*y)*E,a[6]=(p*x-q*w+r*v)*E,a[7]=(q*u-o*x-r*t)*E,a[8]=(o*w-p*u+r*s)*E,a):null},e.str=function(a){return"mat3("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+", "+a[4]+", "+a[5]+", "+a[6]+", "+a[7]+", "+a[8]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2)+Math.pow(a[4],2)+Math.pow(a[5],2)+Math.pow(a[6],2)+Math.pow(a[7],2)+Math.pow(a[8],2))},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(16);return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.clone=function(a){var b=new d.ARRAY_TYPE(16);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b[4]=a[4],b[5]=a[5],b[6]=a[6],b[7]=a[7],b[8]=a[8],b[9]=a[9],b[10]=a[10],b[11]=a[11],b[12]=a[12],b[13]=a[13],b[14]=a[14],b[15]=a[15],b},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[4]=b[4],a[5]=b[5],a[6]=b[6],a[7]=b[7],a[8]=b[8],a[9]=b[9],a[10]=b[10],a[11]=b[11],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15],a},e.identity=function(a){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.transpose=function(a,b){if(a===b){var c=b[1],d=b[2],e=b[3],f=b[6],g=b[7],h=b[11];a[1]=b[4],a[2]=b[8],a[3]=b[12],a[4]=c,a[6]=b[9],a[7]=b[13],a[8]=d,a[9]=f,a[11]=b[14],a[12]=e,a[13]=g,a[14]=h}else a[0]=b[0],a[1]=b[4],a[2]=b[8],a[3]=b[12],a[4]=b[1],a[5]=b[5],a[6]=b[9],a[7]=b[13],a[8]=b[2],a[9]=b[6],a[10]=b[10],a[11]=b[14],a[12]=b[3],a[13]=b[7],a[14]=b[11],a[15]=b[15];return a},e.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=b[9],m=b[10],n=b[11],o=b[12],p=b[13],q=b[14],r=b[15],s=c*h-d*g,t=c*i-e*g,u=c*j-f*g,v=d*i-e*h,w=d*j-f*h,x=e*j-f*i,y=k*p-l*o,z=k*q-m*o,A=k*r-n*o,B=l*q-m*p,C=l*r-n*p,D=m*r-n*q,E=s*D-t*C+u*B+v*A-w*z+x*y;return E?(E=1/E,a[0]=(h*D-i*C+j*B)*E,a[1]=(e*C-d*D-f*B)*E,a[2]=(p*x-q*w+r*v)*E,a[3]=(m*w-l*x-n*v)*E,a[4]=(i*A-g*D-j*z)*E,a[5]=(c*D-e*A+f*z)*E,a[6]=(q*u-o*x-r*t)*E,a[7]=(k*x-m*u+n*t)*E,a[8]=(g*C-h*A+j*y)*E,a[9]=(d*A-c*C-f*y)*E,a[10]=(o*w-p*u+r*s)*E,a[11]=(l*u-k*w-n*s)*E,a[12]=(h*z-g*B-i*y)*E,a[13]=(c*B-d*z+e*y)*E,a[14]=(p*t-o*v-q*s)*E,a[15]=(k*v-l*t+m*s)*E,a):null},e.adjoint=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],i=b[6],j=b[7],k=b[8],l=b[9],m=b[10],n=b[11],o=b[12],p=b[13],q=b[14],r=b[15];return a[0]=h*(m*r-n*q)-l*(i*r-j*q)+p*(i*n-j*m),a[1]=-(d*(m*r-n*q)-l*(e*r-f*q)+p*(e*n-f*m)),a[2]=d*(i*r-j*q)-h*(e*r-f*q)+p*(e*j-f*i),a[3]=-(d*(i*n-j*m)-h*(e*n-f*m)+l*(e*j-f*i)),a[4]=-(g*(m*r-n*q)-k*(i*r-j*q)+o*(i*n-j*m)),a[5]=c*(m*r-n*q)-k*(e*r-f*q)+o*(e*n-f*m),a[6]=-(c*(i*r-j*q)-g*(e*r-f*q)+o*(e*j-f*i)),a[7]=c*(i*n-j*m)-g*(e*n-f*m)+k*(e*j-f*i),a[8]=g*(l*r-n*p)-k*(h*r-j*p)+o*(h*n-j*l),a[9]=-(c*(l*r-n*p)-k*(d*r-f*p)+o*(d*n-f*l)),a[10]=c*(h*r-j*p)-g*(d*r-f*p)+o*(d*j-f*h),a[11]=-(c*(h*n-j*l)-g*(d*n-f*l)+k*(d*j-f*h)),a[12]=-(g*(l*q-m*p)-k*(h*q-i*p)+o*(h*m-i*l)),a[13]=c*(l*q-m*p)-k*(d*q-e*p)+o*(d*m-e*l),a[14]=-(c*(h*q-i*p)-g*(d*q-e*p)+o*(d*i-e*h)),a[15]=c*(h*m-i*l)-g*(d*m-e*l)+k*(d*i-e*h),a},e.determinant=function(a){var b=a[0],c=a[1],d=a[2],e=a[3],f=a[4],g=a[5],h=a[6],i=a[7],j=a[8],k=a[9],l=a[10],m=a[11],n=a[12],o=a[13],p=a[14],q=a[15],r=b*g-c*f,s=b*h-d*f,t=b*i-e*f,u=c*h-d*g,v=c*i-e*g,w=d*i-e*h,x=j*o-k*n,y=j*p-l*n,z=j*q-m*n,A=k*p-l*o,B=k*q-m*o,C=l*q-m*p;return r*C-s*B+t*A+u*z-v*y+w*x},e.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=b[9],n=b[10],o=b[11],p=b[12],q=b[13],r=b[14],s=b[15],t=c[0],u=c[1],v=c[2],w=c[3];return a[0]=t*d+u*h+v*l+w*p,a[1]=t*e+u*i+v*m+w*q,a[2]=t*f+u*j+v*n+w*r,a[3]=t*g+u*k+v*o+w*s,t=c[4],u=c[5],v=c[6],w=c[7],a[4]=t*d+u*h+v*l+w*p,a[5]=t*e+u*i+v*m+w*q,a[6]=t*f+u*j+v*n+w*r,a[7]=t*g+u*k+v*o+w*s,t=c[8],u=c[9],v=c[10],w=c[11],a[8]=t*d+u*h+v*l+w*p,a[9]=t*e+u*i+v*m+w*q,a[10]=t*f+u*j+v*n+w*r,a[11]=t*g+u*k+v*o+w*s,t=c[12],u=c[13],v=c[14],w=c[15],a[12]=t*d+u*h+v*l+w*p,a[13]=t*e+u*i+v*m+w*q,a[14]=t*f+u*j+v*n+w*r,a[15]=t*g+u*k+v*o+w*s,a},e.mul=e.multiply,e.translate=function(a,b,c){var d,e,f,g,h,i,j,k,l,m,n,o,p=c[0],q=c[1],r=c[2];return b===a?(a[12]=b[0]*p+b[4]*q+b[8]*r+b[12],a[13]=b[1]*p+b[5]*q+b[9]*r+b[13],a[14]=b[2]*p+b[6]*q+b[10]*r+b[14],a[15]=b[3]*p+b[7]*q+b[11]*r+b[15]):(d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],i=b[5],j=b[6],k=b[7],l=b[8],m=b[9],n=b[10],o=b[11],a[0]=d,a[1]=e,a[2]=f,a[3]=g,a[4]=h,a[5]=i,a[6]=j,a[7]=k,a[8]=l,a[9]=m,a[10]=n,a[11]=o,a[12]=d*p+h*q+l*r+b[12],a[13]=e*p+i*q+m*r+b[13],a[14]=f*p+j*q+n*r+b[14],a[15]=g*p+k*q+o*r+b[15]),a},e.scale=function(a,b,c){var d=c[0],e=c[1],f=c[2];return a[0]=b[0]*d,a[1]=b[1]*d,a[2]=b[2]*d,a[3]=b[3]*d,a[4]=b[4]*e,a[5]=b[5]*e,a[6]=b[6]*e,a[7]=b[7]*e,a[8]=b[8]*f,a[9]=b[9]*f,a[10]=b[10]*f,a[11]=b[11]*f,a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15],a},e.rotate=function(a,b,c,e){var f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D=e[0],E=e[1],F=e[2],G=Math.sqrt(D*D+E*E+F*F);return Math.abs(G)<d.EPSILON?null:(G=1/G,D*=G,E*=G,F*=G,f=Math.sin(c),g=Math.cos(c),h=1-g,i=b[0],j=b[1],k=b[2],l=b[3],m=b[4],n=b[5],o=b[6],p=b[7],q=b[8],r=b[9],s=b[10],t=b[11],u=D*D*h+g,v=E*D*h+F*f,w=F*D*h-E*f,x=D*E*h-F*f,y=E*E*h+g,z=F*E*h+D*f,A=D*F*h+E*f,B=E*F*h-D*f,C=F*F*h+g,a[0]=i*u+m*v+q*w,a[1]=j*u+n*v+r*w,a[2]=k*u+o*v+s*w,a[3]=l*u+p*v+t*w,a[4]=i*x+m*y+q*z,a[5]=j*x+n*y+r*z,a[6]=k*x+o*y+s*z,a[7]=l*x+p*y+t*z,a[8]=i*A+m*B+q*C,a[9]=j*A+n*B+r*C,a[10]=k*A+o*B+s*C,a[11]=l*A+p*B+t*C,b!==a&&(a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a)},e.rotateX=function(a,b,c){var d=Math.sin(c),e=Math.cos(c),f=b[4],g=b[5],h=b[6],i=b[7],j=b[8],k=b[9],l=b[10],m=b[11];return b!==a&&(a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a[4]=f*e+j*d,a[5]=g*e+k*d,a[6]=h*e+l*d,a[7]=i*e+m*d,a[8]=j*e-f*d,a[9]=k*e-g*d,a[10]=l*e-h*d,a[11]=m*e-i*d,a},e.rotateY=function(a,b,c){var d=Math.sin(c),e=Math.cos(c),f=b[0],g=b[1],h=b[2],i=b[3],j=b[8],k=b[9],l=b[10],m=b[11];return b!==a&&(a[4]=b[4],a[5]=b[5],a[6]=b[6],a[7]=b[7],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a[0]=f*e-j*d,a[1]=g*e-k*d,a[2]=h*e-l*d,a[3]=i*e-m*d,a[8]=f*d+j*e,a[9]=g*d+k*e,a[10]=h*d+l*e,a[11]=i*d+m*e,a},e.rotateZ=function(a,b,c){var d=Math.sin(c),e=Math.cos(c),f=b[0],g=b[1],h=b[2],i=b[3],j=b[4],k=b[5],l=b[6],m=b[7];return b!==a&&(a[8]=b[8],a[9]=b[9],a[10]=b[10],a[11]=b[11],a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]),a[0]=f*e+j*d,a[1]=g*e+k*d,a[2]=h*e+l*d,a[3]=i*e+m*d,a[4]=j*e-f*d,a[5]=k*e-g*d,a[6]=l*e-h*d,a[7]=m*e-i*d,a},e.fromTranslation=function(a,b){return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=b[0],a[13]=b[1],a[14]=b[2],a[15]=1,a},e.fromScaling=function(a,b){return a[0]=b[0],a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=b[1],a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=b[2],a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromRotation=function(a,b,c){var e,f,g,h=c[0],i=c[1],j=c[2],k=Math.sqrt(h*h+i*i+j*j);return Math.abs(k)<d.EPSILON?null:(k=1/k,h*=k,i*=k,j*=k,e=Math.sin(b),f=Math.cos(b),g=1-f,a[0]=h*h*g+f,a[1]=i*h*g+j*e,a[2]=j*h*g-i*e,a[3]=0,a[4]=h*i*g-j*e,a[5]=i*i*g+f,a[6]=j*i*g+h*e,a[7]=0,a[8]=h*j*g+i*e,a[9]=i*j*g-h*e,a[10]=j*j*g+f,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a)},e.fromXRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=1,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=d,a[6]=c,a[7]=0,a[8]=0,a[9]=-c,a[10]=d,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromYRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=0,a[2]=-c,a[3]=0,a[4]=0,a[5]=1,a[6]=0,a[7]=0,a[8]=c,a[9]=0,a[10]=d,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromZRotation=function(a,b){var c=Math.sin(b),d=Math.cos(b);return a[0]=d,a[1]=c,a[2]=0,a[3]=0,a[4]=-c,a[5]=d,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.fromRotationTranslation=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=d+d,i=e+e,j=f+f,k=d*h,l=d*i,m=d*j,n=e*i,o=e*j,p=f*j,q=g*h,r=g*i,s=g*j;return a[0]=1-(n+p),a[1]=l+s,a[2]=m-r,a[3]=0,a[4]=l-s,a[5]=1-(k+p),a[6]=o+q,a[7]=0,a[8]=m+r,a[9]=o-q,a[10]=1-(k+n),a[11]=0,a[12]=c[0],a[13]=c[1],a[14]=c[2],a[15]=1,a},e.fromRotationTranslationScale=function(a,b,c,d){var e=b[0],f=b[1],g=b[2],h=b[3],i=e+e,j=f+f,k=g+g,l=e*i,m=e*j,n=e*k,o=f*j,p=f*k,q=g*k,r=h*i,s=h*j,t=h*k,u=d[0],v=d[1],w=d[2];return a[0]=(1-(o+q))*u,a[1]=(m+t)*u,a[2]=(n-s)*u,a[3]=0,a[4]=(m-t)*v,a[5]=(1-(l+q))*v,a[6]=(p+r)*v,a[7]=0,a[8]=(n+s)*w,a[9]=(p-r)*w,a[10]=(1-(l+o))*w,a[11]=0,a[12]=c[0],a[13]=c[1],a[14]=c[2],a[15]=1,a},e.fromRotationTranslationScaleOrigin=function(a,b,c,d,e){var f=b[0],g=b[1],h=b[2],i=b[3],j=f+f,k=g+g,l=h+h,m=f*j,n=f*k,o=f*l,p=g*k,q=g*l,r=h*l,s=i*j,t=i*k,u=i*l,v=d[0],w=d[1],x=d[2],y=e[0],z=e[1],A=e[2];return a[0]=(1-(p+r))*v,a[1]=(n+u)*v,a[2]=(o-t)*v,a[3]=0,a[4]=(n-u)*w,a[5]=(1-(m+r))*w,a[6]=(q+s)*w,a[7]=0,a[8]=(o+t)*x,a[9]=(q-s)*x,a[10]=(1-(m+p))*x,a[11]=0,a[12]=c[0]+y-(a[0]*y+a[4]*z+a[8]*A),a[13]=c[1]+z-(a[1]*y+a[5]*z+a[9]*A),a[14]=c[2]+A-(a[2]*y+a[6]*z+a[10]*A),a[15]=1,a},e.fromQuat=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c+c,h=d+d,i=e+e,j=c*g,k=d*g,l=d*h,m=e*g,n=e*h,o=e*i,p=f*g,q=f*h,r=f*i;return a[0]=1-l-o,a[1]=k+r,a[2]=m-q,a[3]=0,a[4]=k-r,a[5]=1-j-o,a[6]=n+p,a[7]=0,a[8]=m+q,a[9]=n-p,a[10]=1-j-l,a[11]=0,a[12]=0,a[13]=0,a[14]=0,a[15]=1,a},e.frustum=function(a,b,c,d,e,f,g){var h=1/(c-b),i=1/(e-d),j=1/(f-g);return a[0]=2*f*h,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2*f*i,a[6]=0,a[7]=0,a[8]=(c+b)*h,a[9]=(e+d)*i,a[10]=(g+f)*j,a[11]=-1,a[12]=0,a[13]=0,a[14]=g*f*2*j,a[15]=0,a},e.perspective=function(a,b,c,d,e){var f=1/Math.tan(b/2),g=1/(d-e);return a[0]=f/c,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=f,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=(e+d)*g,a[11]=-1,a[12]=0,a[13]=0,a[14]=2*e*d*g,a[15]=0,a},e.perspectiveFromFieldOfView=function(a,b,c,d){var e=Math.tan(b.upDegrees*Math.PI/180),f=Math.tan(b.downDegrees*Math.PI/180),g=Math.tan(b.leftDegrees*Math.PI/180),h=Math.tan(b.rightDegrees*Math.PI/180),i=2/(g+h),j=2/(e+f);return a[0]=i,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=j,a[6]=0,a[7]=0,a[8]=-((g-h)*i*.5),a[9]=(e-f)*j*.5,a[10]=d/(c-d),a[11]=-1,a[12]=0,a[13]=0,a[14]=d*c/(c-d),a[15]=0,a},e.ortho=function(a,b,c,d,e,f,g){var h=1/(b-c),i=1/(d-e),j=1/(f-g);return a[0]=-2*h,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=-2*i,a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=2*j,a[11]=0,a[12]=(b+c)*h,a[13]=(e+d)*i,a[14]=(g+f)*j,a[15]=1,a},e.lookAt=function(a,b,c,f){var g,h,i,j,k,l,m,n,o,p,q=b[0],r=b[1],s=b[2],t=f[0],u=f[1],v=f[2],w=c[0],x=c[1],y=c[2];return Math.abs(q-w)<d.EPSILON&&Math.abs(r-x)<d.EPSILON&&Math.abs(s-y)<d.EPSILON?e.identity(a):(m=q-w,n=r-x,o=s-y,p=1/Math.sqrt(m*m+n*n+o*o),m*=p,n*=p,o*=p,g=u*o-v*n,h=v*m-t*o,i=t*n-u*m,p=Math.sqrt(g*g+h*h+i*i),p?(p=1/p,g*=p,h*=p,i*=p):(g=0,h=0,i=0),j=n*i-o*h,k=o*g-m*i,l=m*h-n*g,p=Math.sqrt(j*j+k*k+l*l),p?(p=1/p,j*=p,k*=p,l*=p):(j=0,k=0,l=0),a[0]=g,a[1]=j,a[2]=m,a[3]=0,a[4]=h,a[5]=k,a[6]=n,a[7]=0,a[8]=i,a[9]=l,a[10]=o,a[11]=0,a[12]=-(g*q+h*r+i*s),a[13]=-(j*q+k*r+l*s),a[14]=-(m*q+n*r+o*s),a[15]=1,a)},e.str=function(a){return"mat4("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+", "+a[4]+", "+a[5]+", "+a[6]+", "+a[7]+", "+a[8]+", "+a[9]+", "+a[10]+", "+a[11]+", "+a[12]+", "+a[13]+", "+a[14]+", "+a[15]+")"},e.frob=function(a){return Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)+Math.pow(a[2],2)+Math.pow(a[3],2)+Math.pow(a[4],2)+Math.pow(a[5],2)+Math.pow(a[6],2)+Math.pow(a[7],2)+Math.pow(a[8],2)+Math.pow(a[9],2)+Math.pow(a[10],2)+Math.pow(a[11],2)+Math.pow(a[12],2)+Math.pow(a[13],2)+Math.pow(a[14],2)+Math.pow(a[15],2))},a.exports=e},function(a,b,c){var d=c(1),e=c(4),f=c(7),g=c(8),h={};h.create=function(){var a=new d.ARRAY_TYPE(4);return a[0]=0,a[1]=0,a[2]=0,a[3]=1,a},h.rotationTo=function(){var a=f.create(),b=f.fromValues(1,0,0),c=f.fromValues(0,1,0);return function(d,e,g){var i=f.dot(e,g);return-.999999>i?(f.cross(a,b,e),f.length(a)<1e-6&&f.cross(a,c,e),f.normalize(a,a),h.setAxisAngle(d,a,Math.PI),d):i>.999999?(d[0]=0,d[1]=0,d[2]=0,d[3]=1,d):(f.cross(a,e,g),d[0]=a[0],d[1]=a[1],d[2]=a[2],d[3]=1+i,h.normalize(d,d))}}(),h.setAxes=function(){var a=e.create();return function(b,c,d,e){return a[0]=d[0],a[3]=d[1],a[6]=d[2],a[1]=e[0],a[4]=e[1],a[7]=e[2],a[2]=-c[0],a[5]=-c[1],a[8]=-c[2],h.normalize(b,h.fromMat3(b,a))}}(),h.clone=g.clone,h.fromValues=g.fromValues,h.copy=g.copy,h.set=g.set,h.identity=function(a){return a[0]=0,a[1]=0,a[2]=0,a[3]=1,a},h.setAxisAngle=function(a,b,c){c=.5*c;var d=Math.sin(c);return a[0]=d*b[0],a[1]=d*b[1],a[2]=d*b[2],a[3]=Math.cos(c),a},h.add=g.add,h.multiply=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=c[0],i=c[1],j=c[2],k=c[3];return a[0]=d*k+g*h+e*j-f*i,a[1]=e*k+g*i+f*h-d*j,a[2]=f*k+g*j+d*i-e*h,a[3]=g*k-d*h-e*i-f*j,a},h.mul=h.multiply,h.scale=g.scale,h.rotateX=function(a,b,c){c*=.5;var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i+g*h,a[1]=e*i+f*h,a[2]=f*i-e*h,a[3]=g*i-d*h,a},h.rotateY=function(a,b,c){c*=.5;var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i-f*h,a[1]=e*i+g*h,a[2]=f*i+d*h,a[3]=g*i-e*h,a},h.rotateZ=function(a,b,c){c*=.5;var d=b[0],e=b[1],f=b[2],g=b[3],h=Math.sin(c),i=Math.cos(c);return a[0]=d*i+e*h,a[1]=e*i-d*h,a[2]=f*i+g*h,a[3]=g*i-f*h,a},h.calculateW=function(a,b){var c=b[0],d=b[1],e=b[2];return a[0]=c,a[1]=d,a[2]=e,a[3]=Math.sqrt(Math.abs(1-c*c-d*d-e*e)),a},h.dot=g.dot,h.lerp=g.lerp,h.slerp=function(a,b,c,d){var e,f,g,h,i,j=b[0],k=b[1],l=b[2],m=b[3],n=c[0],o=c[1],p=c[2],q=c[3];return f=j*n+k*o+l*p+m*q,0>f&&(f=-f,n=-n,o=-o,p=-p,q=-q),1-f>1e-6?(e=Math.acos(f),g=Math.sin(e),h=Math.sin((1-d)*e)/g,i=Math.sin(d*e)/g):(h=1-d,i=d),a[0]=h*j+i*n,a[1]=h*k+i*o,a[2]=h*l+i*p,a[3]=h*m+i*q,a},h.sqlerp=function(){var a=h.create(),b=h.create();return function(c,d,e,f,g,i){return h.slerp(a,d,g,i),h.slerp(b,e,f,i),h.slerp(c,a,b,2*i*(1-i)),c}}(),h.invert=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c*c+d*d+e*e+f*f,h=g?1/g:0;return a[0]=-c*h,a[1]=-d*h,a[2]=-e*h,a[3]=f*h,a},h.conjugate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a[2]=-b[2],a[3]=b[3],a},h.length=g.length,h.len=h.length,h.squaredLength=g.squaredLength,h.sqrLen=h.squaredLength,h.normalize=g.normalize,h.fromMat3=function(a,b){var c,d=b[0]+b[4]+b[8];if(d>0)c=Math.sqrt(d+1),a[3]=.5*c,c=.5/c,a[0]=(b[5]-b[7])*c,a[1]=(b[6]-b[2])*c,a[2]=(b[1]-b[3])*c;else{var e=0;b[4]>b[0]&&(e=1),b[8]>b[3*e+e]&&(e=2);var f=(e+1)%3,g=(e+2)%3;c=Math.sqrt(b[3*e+e]-b[3*f+f]-b[3*g+g]+1),a[e]=.5*c,c=.5/c,a[3]=(b[3*f+g]-b[3*g+f])*c,a[f]=(b[3*f+e]+b[3*e+f])*c,a[g]=(b[3*g+e]+b[3*e+g])*c}return a},h.str=function(a){return"quat("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+")"},a.exports=h},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(3);return a[0]=0,a[1]=0,a[2]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(3);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b},e.fromValues=function(a,b,c){var e=new d.ARRAY_TYPE(3);return e[0]=a,e[1]=b,e[2]=c,e},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a},e.set=function(a,b,c,d){return a[0]=b,a[1]=c,a[2]=d,a},e.add=function(a,b,c){return a[0]=b[0]+c[0],a[1]=b[1]+c[1],a[2]=b[2]+c[2],a},e.subtract=function(a,b,c){return a[0]=b[0]-c[0],a[1]=b[1]-c[1],a[2]=b[2]-c[2],a},e.sub=e.subtract,e.multiply=function(a,b,c){return a[0]=b[0]*c[0],a[1]=b[1]*c[1],a[2]=b[2]*c[2],a},e.mul=e.multiply,e.divide=function(a,b,c){return a[0]=b[0]/c[0],a[1]=b[1]/c[1],a[2]=b[2]/c[2],a},e.div=e.divide,e.min=function(a,b,c){return a[0]=Math.min(b[0],c[0]),a[1]=Math.min(b[1],c[1]),a[2]=Math.min(b[2],c[2]),a},e.max=function(a,b,c){return a[0]=Math.max(b[0],c[0]),a[1]=Math.max(b[1],c[1]),a[2]=Math.max(b[2],c[2]),a},e.scale=function(a,b,c){return a[0]=b[0]*c,a[1]=b[1]*c,a[2]=b[2]*c,a},e.scaleAndAdd=function(a,b,c,d){return a[0]=b[0]+c[0]*d,a[1]=b[1]+c[1]*d,a[2]=b[2]+c[2]*d,a},e.distance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2];return Math.sqrt(c*c+d*d+e*e)},e.dist=e.distance,e.squaredDistance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2];return c*c+d*d+e*e},e.sqrDist=e.squaredDistance,e.length=function(a){var b=a[0],c=a[1],d=a[2];return Math.sqrt(b*b+c*c+d*d)},e.len=e.length,e.squaredLength=function(a){var b=a[0],c=a[1],d=a[2];return b*b+c*c+d*d},e.sqrLen=e.squaredLength,e.negate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a[2]=-b[2],a},e.inverse=function(a,b){return a[0]=1/b[0],a[1]=1/b[1],a[2]=1/b[2],a},e.normalize=function(a,b){var c=b[0],d=b[1],e=b[2],f=c*c+d*d+e*e;return f>0&&(f=1/Math.sqrt(f),a[0]=b[0]*f,a[1]=b[1]*f,a[2]=b[2]*f),a},e.dot=function(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]},e.cross=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[0],h=c[1],i=c[2];return a[0]=e*i-f*h,a[1]=f*g-d*i,a[2]=d*h-e*g,a},e.lerp=function(a,b,c,d){var e=b[0],f=b[1],g=b[2];return a[0]=e+d*(c[0]-e),a[1]=f+d*(c[1]-f),a[2]=g+d*(c[2]-g),a},e.hermite=function(a,b,c,d,e,f){var g=f*f,h=g*(2*f-3)+1,i=g*(f-2)+f,j=g*(f-1),k=g*(3-2*f);return a[0]=b[0]*h+c[0]*i+d[0]*j+e[0]*k,a[1]=b[1]*h+c[1]*i+d[1]*j+e[1]*k,a[2]=b[2]*h+c[2]*i+d[2]*j+e[2]*k,a},e.bezier=function(a,b,c,d,e,f){var g=1-f,h=g*g,i=f*f,j=h*g,k=3*f*h,l=3*i*g,m=i*f;return a[0]=b[0]*j+c[0]*k+d[0]*l+e[0]*m,a[1]=b[1]*j+c[1]*k+d[1]*l+e[1]*m,a[2]=b[2]*j+c[2]*k+d[2]*l+e[2]*m,a},e.random=function(a,b){b=b||1;var c=2*d.RANDOM()*Math.PI,e=2*d.RANDOM()-1,f=Math.sqrt(1-e*e)*b;return a[0]=Math.cos(c)*f,a[1]=Math.sin(c)*f,a[2]=e*b,a},e.transformMat4=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[3]*d+c[7]*e+c[11]*f+c[15];return g=g||1,a[0]=(c[0]*d+c[4]*e+c[8]*f+c[12])/g,a[1]=(c[1]*d+c[5]*e+c[9]*f+c[13])/g,a[2]=(c[2]*d+c[6]*e+c[10]*f+c[14])/g,a},e.transformMat3=function(a,b,c){var d=b[0],e=b[1],f=b[2];return a[0]=d*c[0]+e*c[3]+f*c[6],a[1]=d*c[1]+e*c[4]+f*c[7],a[2]=d*c[2]+e*c[5]+f*c[8],a},e.transformQuat=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[0],h=c[1],i=c[2],j=c[3],k=j*d+h*f-i*e,l=j*e+i*d-g*f,m=j*f+g*e-h*d,n=-g*d-h*e-i*f;return a[0]=k*j+n*-g+l*-i-m*-h,a[1]=l*j+n*-h+m*-g-k*-i,a[2]=m*j+n*-i+k*-h-l*-g,a},e.rotateX=function(a,b,c,d){var e=[],f=[];return e[0]=b[0]-c[0],e[1]=b[1]-c[1],e[2]=b[2]-c[2],f[0]=e[0],f[1]=e[1]*Math.cos(d)-e[2]*Math.sin(d),f[2]=e[1]*Math.sin(d)+e[2]*Math.cos(d),a[0]=f[0]+c[0],a[1]=f[1]+c[1],a[2]=f[2]+c[2],a},e.rotateY=function(a,b,c,d){var e=[],f=[];return e[0]=b[0]-c[0],e[1]=b[1]-c[1],e[2]=b[2]-c[2],f[0]=e[2]*Math.sin(d)+e[0]*Math.cos(d),f[1]=e[1],f[2]=e[2]*Math.cos(d)-e[0]*Math.sin(d),a[0]=f[0]+c[0],a[1]=f[1]+c[1],a[2]=f[2]+c[2],a},e.rotateZ=function(a,b,c,d){var e=[],f=[];return e[0]=b[0]-c[0],e[1]=b[1]-c[1],e[2]=b[2]-c[2],f[0]=e[0]*Math.cos(d)-e[1]*Math.sin(d),f[1]=e[0]*Math.sin(d)+e[1]*Math.cos(d),f[2]=e[2],a[0]=f[0]+c[0],a[1]=f[1]+c[1],a[2]=f[2]+c[2],a},e.forEach=function(){var a=e.create();return function(b,c,d,e,f,g){var h,i;for(c||(c=3),d||(d=0),i=e?Math.min(e*c+d,b.length):b.length,h=d;i>h;h+=c)a[0]=b[h],a[1]=b[h+1],a[2]=b[h+2],f(a,a,g),b[h]=a[0],b[h+1]=a[1],b[h+2]=a[2];return b}}(),e.angle=function(a,b){var c=e.fromValues(a[0],a[1],a[2]),d=e.fromValues(b[0],b[1],b[2]);e.normalize(c,c),e.normalize(d,d);var f=e.dot(c,d);return f>1?0:Math.acos(f)},e.str=function(a){return"vec3("+a[0]+", "+a[1]+", "+a[2]+")"},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(4);return a[0]=0,a[1]=0,a[2]=0,a[3]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(4);return b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3],b},e.fromValues=function(a,b,c,e){var f=new d.ARRAY_TYPE(4);return f[0]=a,f[1]=b,f[2]=c,f[3]=e,f},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a[2]=b[2],a[3]=b[3],a},e.set=function(a,b,c,d,e){return a[0]=b,a[1]=c,a[2]=d,a[3]=e,a},e.add=function(a,b,c){return a[0]=b[0]+c[0],a[1]=b[1]+c[1],a[2]=b[2]+c[2],a[3]=b[3]+c[3],a},e.subtract=function(a,b,c){return a[0]=b[0]-c[0],a[1]=b[1]-c[1],a[2]=b[2]-c[2],a[3]=b[3]-c[3],a},e.sub=e.subtract,e.multiply=function(a,b,c){return a[0]=b[0]*c[0],a[1]=b[1]*c[1],a[2]=b[2]*c[2],a[3]=b[3]*c[3],a},e.mul=e.multiply,e.divide=function(a,b,c){return a[0]=b[0]/c[0],a[1]=b[1]/c[1],a[2]=b[2]/c[2],a[3]=b[3]/c[3],a},e.div=e.divide,e.min=function(a,b,c){return a[0]=Math.min(b[0],c[0]),a[1]=Math.min(b[1],c[1]),a[2]=Math.min(b[2],c[2]),a[3]=Math.min(b[3],c[3]),a},e.max=function(a,b,c){return a[0]=Math.max(b[0],c[0]),a[1]=Math.max(b[1],c[1]),a[2]=Math.max(b[2],c[2]),a[3]=Math.max(b[3],c[3]),a},e.scale=function(a,b,c){return a[0]=b[0]*c,a[1]=b[1]*c,a[2]=b[2]*c,a[3]=b[3]*c,a},e.scaleAndAdd=function(a,b,c,d){return a[0]=b[0]+c[0]*d,a[1]=b[1]+c[1]*d,a[2]=b[2]+c[2]*d,a[3]=b[3]+c[3]*d,a},e.distance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2],f=b[3]-a[3];return Math.sqrt(c*c+d*d+e*e+f*f)},e.dist=e.distance,e.squaredDistance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1],e=b[2]-a[2],f=b[3]-a[3];return c*c+d*d+e*e+f*f},e.sqrDist=e.squaredDistance,e.length=function(a){var b=a[0],c=a[1],d=a[2],e=a[3];return Math.sqrt(b*b+c*c+d*d+e*e)},e.len=e.length,e.squaredLength=function(a){var b=a[0],c=a[1],d=a[2],e=a[3];return b*b+c*c+d*d+e*e},e.sqrLen=e.squaredLength,e.negate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a[2]=-b[2],a[3]=-b[3],a},e.inverse=function(a,b){return a[0]=1/b[0],a[1]=1/b[1],a[2]=1/b[2],a[3]=1/b[3],a},e.normalize=function(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=c*c+d*d+e*e+f*f;return g>0&&(g=1/Math.sqrt(g),a[0]=c*g,a[1]=d*g,a[2]=e*g,a[3]=f*g),a},e.dot=function(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3]},e.lerp=function(a,b,c,d){var e=b[0],f=b[1],g=b[2],h=b[3];return a[0]=e+d*(c[0]-e),a[1]=f+d*(c[1]-f),a[2]=g+d*(c[2]-g),a[3]=h+d*(c[3]-h),a},e.random=function(a,b){return b=b||1,a[0]=d.RANDOM(),a[1]=d.RANDOM(),a[2]=d.RANDOM(),a[3]=d.RANDOM(),e.normalize(a,a),e.scale(a,a,b),a},e.transformMat4=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3];return a[0]=c[0]*d+c[4]*e+c[8]*f+c[12]*g,a[1]=c[1]*d+c[5]*e+c[9]*f+c[13]*g,a[2]=c[2]*d+c[6]*e+c[10]*f+c[14]*g,a[3]=c[3]*d+c[7]*e+c[11]*f+c[15]*g,a},e.transformQuat=function(a,b,c){var d=b[0],e=b[1],f=b[2],g=c[0],h=c[1],i=c[2],j=c[3],k=j*d+h*f-i*e,l=j*e+i*d-g*f,m=j*f+g*e-h*d,n=-g*d-h*e-i*f;return a[0]=k*j+n*-g+l*-i-m*-h,a[1]=l*j+n*-h+m*-g-k*-i,a[2]=m*j+n*-i+k*-h-l*-g,a[3]=b[3],a},e.forEach=function(){var a=e.create();return function(b,c,d,e,f,g){var h,i;for(c||(c=4),d||(d=0),i=e?Math.min(e*c+d,b.length):b.length,h=d;i>h;h+=c)a[0]=b[h],a[1]=b[h+1],a[2]=b[h+2],a[3]=b[h+3],f(a,a,g),b[h]=a[0],b[h+1]=a[1],b[h+2]=a[2],b[h+3]=a[3];return b}}(),e.str=function(a){return"vec4("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+")"},a.exports=e},function(a,b,c){var d=c(1),e={};e.create=function(){var a=new d.ARRAY_TYPE(2);return a[0]=0,a[1]=0,a},e.clone=function(a){var b=new d.ARRAY_TYPE(2);return b[0]=a[0],b[1]=a[1],b},e.fromValues=function(a,b){var c=new d.ARRAY_TYPE(2);return c[0]=a,c[1]=b,c},e.copy=function(a,b){return a[0]=b[0],a[1]=b[1],a},e.set=function(a,b,c){return a[0]=b,a[1]=c,a},e.add=function(a,b,c){return a[0]=b[0]+c[0],a[1]=b[1]+c[1],a},e.subtract=function(a,b,c){return a[0]=b[0]-c[0],a[1]=b[1]-c[1],a},e.sub=e.subtract,e.multiply=function(a,b,c){return a[0]=b[0]*c[0],a[1]=b[1]*c[1],a},e.mul=e.multiply,e.divide=function(a,b,c){return a[0]=b[0]/c[0],a[1]=b[1]/c[1],a},e.div=e.divide,e.min=function(a,b,c){return a[0]=Math.min(b[0],c[0]),a[1]=Math.min(b[1],c[1]),a},e.max=function(a,b,c){return a[0]=Math.max(b[0],c[0]),a[1]=Math.max(b[1],c[1]),a},e.scale=function(a,b,c){return a[0]=b[0]*c,a[1]=b[1]*c,a},e.scaleAndAdd=function(a,b,c,d){return a[0]=b[0]+c[0]*d,a[1]=b[1]+c[1]*d,a},e.distance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1];return Math.sqrt(c*c+d*d)},e.dist=e.distance,e.squaredDistance=function(a,b){var c=b[0]-a[0],d=b[1]-a[1];return c*c+d*d},e.sqrDist=e.squaredDistance,e.length=function(a){var b=a[0],c=a[1];return Math.sqrt(b*b+c*c)},e.len=e.length,e.squaredLength=function(a){var b=a[0],c=a[1];return b*b+c*c},e.sqrLen=e.squaredLength,e.negate=function(a,b){return a[0]=-b[0],a[1]=-b[1],a},e.inverse=function(a,b){return a[0]=1/b[0],a[1]=1/b[1],a},e.normalize=function(a,b){var c=b[0],d=b[1],e=c*c+d*d;return e>0&&(e=1/Math.sqrt(e),a[0]=b[0]*e,a[1]=b[1]*e),a},e.dot=function(a,b){return a[0]*b[0]+a[1]*b[1]},e.cross=function(a,b,c){var d=b[0]*c[1]-b[1]*c[0];return a[0]=a[1]=0,a[2]=d,a},e.lerp=function(a,b,c,d){var e=b[0],f=b[1];return a[0]=e+d*(c[0]-e),a[1]=f+d*(c[1]-f),a},e.random=function(a,b){b=b||1;var c=2*d.RANDOM()*Math.PI;return a[0]=Math.cos(c)*b,a[1]=Math.sin(c)*b,a},e.transformMat2=function(a,b,c){var d=b[0],e=b[1];return a[0]=c[0]*d+c[2]*e,a[1]=c[1]*d+c[3]*e,a},e.transformMat2d=function(a,b,c){var d=b[0],e=b[1];return a[0]=c[0]*d+c[2]*e+c[4],a[1]=c[1]*d+c[3]*e+c[5],a},e.transformMat3=function(a,b,c){
-var d=b[0],e=b[1];return a[0]=c[0]*d+c[3]*e+c[6],a[1]=c[1]*d+c[4]*e+c[7],a},e.transformMat4=function(a,b,c){var d=b[0],e=b[1];return a[0]=c[0]*d+c[4]*e+c[12],a[1]=c[1]*d+c[5]*e+c[13],a},e.forEach=function(){var a=e.create();return function(b,c,d,e,f,g){var h,i;for(c||(c=2),d||(d=0),i=e?Math.min(e*c+d,b.length):b.length,h=d;i>h;h+=c)a[0]=b[h],a[1]=b[h+1],f(a,a,g),b[h]=a[0],b[h+1]=a[1];return b}}(),e.str=function(a){return"vec2("+a[0]+", "+a[1]+")"},a.exports=e}])}),function(a){function b(a,b,c,d,e){this._listener=b,this._isOnce=c,this.context=d,this._signal=a,this._priority=e||0}function c(a,b){if("function"!=typeof a)throw Error("listener is a required param of {fn}() and should be a Function.".replace("{fn}",b))}function d(){this._bindings=[],this._prevParams=null;var a=this;this.dispatch=function(){d.prototype.dispatch.apply(a,arguments)}}b.prototype={active:!0,params:null,execute:function(a){var b;return this.active&&this._listener&&(a=this.params?this.params.concat(a):a,b=this._listener.apply(this.context,a),this._isOnce&&this.detach()),b},detach:function(){return this.isBound()?this._signal.remove(this._listener,this.context):null},isBound:function(){return!!this._signal&&!!this._listener},isOnce:function(){return this._isOnce},getListener:function(){return this._listener},getSignal:function(){return this._signal},_destroy:function(){delete this._signal,delete this._listener,delete this.context},toString:function(){return"[SignalBinding isOnce:"+this._isOnce+", isBound:"+this.isBound()+", active:"+this.active+"]"}},d.prototype={VERSION:"1.0.0",memorize:!1,_shouldPropagate:!0,active:!0,_registerListener:function(a,c,d,e){var f=this._indexOfListener(a,d);if(-1!==f){if(a=this._bindings[f],a.isOnce()!==c)throw Error("You cannot add"+(c?"":"Once")+"() then add"+(c?"Once":"")+"() the same listener without removing the relationship first.")}else a=new b(this,a,c,d,e),this._addBinding(a);return this.memorize&&this._prevParams&&a.execute(this._prevParams),a},_addBinding:function(a){var b=this._bindings.length;do--b;while(this._bindings[b]&&a._priority<=this._bindings[b]._priority);this._bindings.splice(b+1,0,a)},_indexOfListener:function(a,b){for(var c,d=this._bindings.length;d--;)if(c=this._bindings[d],c._listener===a&&c.context===b)return d;return-1},has:function(a,b){return-1!==this._indexOfListener(a,b)},add:function(a,b,d){return c(a,"add"),this._registerListener(a,!1,b,d)},addOnce:function(a,b,d){return c(a,"addOnce"),this._registerListener(a,!0,b,d)},remove:function(a,b){c(a,"remove");var d=this._indexOfListener(a,b);return-1!==d&&(this._bindings[d]._destroy(),this._bindings.splice(d,1)),a},removeAll:function(){for(var a=this._bindings.length;a--;)this._bindings[a]._destroy();this._bindings.length=0},getNumListeners:function(){return this._bindings.length},halt:function(){this._shouldPropagate=!1},dispatch:function(a){if(this.active){var b,c=Array.prototype.slice.call(arguments),d=this._bindings.length;if(this.memorize&&(this._prevParams=c),d){b=this._bindings.slice(),this._shouldPropagate=!0;do d--;while(b[d]&&this._shouldPropagate&&b[d].execute(c)!==!1)}}},forget:function(){this._prevParams=null},dispose:function(){this.removeAll(),delete this._bindings,delete this._prevParams},toString:function(){return"[Signal active:"+this.active+" numListeners:"+this.getNumListeners()+"]"}};var e=d;e.Signal=d,"function"==typeof define&&define.amd?define(function(){return e}):"undefined"!=typeof module&&module.exports?module.exports=e:a.signals=e}(this),!function(a){var b=function(a,b){for(var c in b)b.hasOwnProperty(c)&&(a[c]=b[c])};"function"==typeof define&&define.amd?define(function(){return b}):"undefined"!=typeof module&&module.exports?module.exports=b:a.mixin=b}(this);
 var EZ3 = {
-  VERSION: '1.0.0',
-  Vec2: vec2,
-  Vec3: vec3,
-  Vec4: vec4,
-  Mat2: mat2,
-  Mat3: mat3,
-  Mat4: mat4,
-  Signal: signals.Signal
+  VERSION: '1.0.0'
 };
 
-EZ3.PI = Math.PI;
-EZ3.HALF_PI = 0.5 * EZ3.PI;
-EZ3.DOUBLE_PI = 2.0 * EZ3.PI;
+EZ3.extends = function(destination, source) {
+  var k;
 
-EZ3.ELEMENTS_DRAW = 0;
-EZ3.ARRAYS_DRAW = 1;
+  for (k in source)
+    if (source.hasOwnProperty(k))
+      destination[k] = source[k];
+};
+
+/**
+ * @class Camera
+ */
+
+EZ3.Camera = function(position, target, up, mode, filter) {
+  EZ3.Entity.call(this);
+
+  this._filterBuffer = [];
+  this._filter = filter || true;
+  this._rotationAngles = new EZ3.Vector2();
+  this._mode = mode || EZ3.Camera.PERSPECTIVE;
+
+  this.fov = 70.0;
+  this.aspectRatio = 1.0;
+  this.planes = {};
+  this.planes.near = 0.1;
+  this.planes.far = 1000.0;
+  this.look = new EZ3.Vector3(0, 0, -1);
+  this.right = new EZ3.Vector3(1, 0, 0);
+
+  if (position instanceof EZ3.Vector3)
+    this.position = position;
+  else
+    this.position = new EZ3.Vector3(5, 5, 5);
+
+  if (target instanceof EZ3.Vector3)
+    this.target = target;
+  else
+    this.target = new EZ3.Vector3();
+
+  if (up instanceof EZ3.Vector3)
+    this.up = up;
+  else
+    this.up = new EZ3.Vector3(0, 1, 0);
+
+  this._setupRotationAngles();
+};
+
+EZ3.Camera.prototype.constructor = EZ3.Camera;
+
+EZ3.Camera.prototype._setupRotationAngles = function() {
+  var yaw;
+  var pitch;
+
+  this.look = new EZ3.Vector3().sub(this.position, this.target).normalize();
+
+  yaw = EZ3.Math.toDegrees(Math.atan2(this.look.z, this.look.x) + EZ3.Math.PI);
+  pitch = EZ3.Math.toDegrees(Math.asin(this.look.y));
+
+  this._rotationAngles.x = yaw;
+  this._rotationAngles.y = pitch;
+};
+
+EZ3.Camera.prototype._filterMoves = function(dx, dy) {
+  var averageX = 0;
+  var averageY = 0;
+  var averageTotal = 0;
+  var currentWeight = 1.0;
+  var k;
+
+  if (!this._filterBuffer.length)
+    for (k = 0; k < EZ3.Camera.FILTER_BUFFER_SIZE; ++k)
+      this._filterBuffer.push(new EZ3.Vector2(dx, dy));
+
+  for (k = EZ3.Camera.FILTER_BUFFER_SIZE - 1; k > 0; k--)
+    this._filterBuffer[k] = this._filterBuffer[k - 1];
+
+  this._filterBuffer[0] = new EZ3.Vector2(dx, dy);
+
+  for (k = 0; k < EZ3.Camera.FILTER_BUFFER_SIZE; k++) {
+    averageX += this._filterBuffer[k].x * currentWeight;
+    averageY += this._filterBuffer[k].y * currentWeight;
+    averageTotal += currentWeight;
+
+    currentWeight *= EZ3.Camera.FILTER_WEIGHT;
+  }
+
+  return new EZ3.Vector2(averageX, averageY).scaleEqual(1.0 / averageTotal);
+};
+
+EZ3.Camera.prototype.rotate = function(dx, dy) {
+  var rx;
+  var ry;
+
+  this._rotationAngles.x -= dx * EZ3.Camera.ROTATION_SPEED;
+  this._rotationAngles.y += dy * EZ3.Camera.ROTATION_SPEED;
+
+  if (this._filter) {
+    rx = this._rotationAngles.x;
+    ry = this._rotationAngles.y;
+    this._rotationAngles = this._filterMoves(rx, ry);
+  }
+};
+
+Object.defineProperty(EZ3.Camera.prototype, 'view', {
+  get: function() {
+    this._update();
+    return new EZ3.Matrix4().lookAt(this.position, this.target, this.up);
+  }
+});
+
+Object.defineProperty(EZ3.Camera.prototype, 'projection', {
+  get: function() {
+    if (this._mode === EZ3.Camera.PERSPECTIVE)
+      return new EZ3.Matrix4().perspective(
+        this.fov,
+        this.aspectRatio,
+        this.planes.near,
+        this.planes.far
+      );
+    else
+      return new EZ3.Matrix4().ortho(
+        this.planes.left,
+        this.planes.right,
+        this.planes.bottom,
+        this.planes.top,
+        this.planes.near,
+        this.planes.far
+      );
+  }
+});
+
+EZ3.Camera.PERSPECTIVE = 0;
+EZ3.Camera.ORTHOGRAPHIC = 1;
+EZ3.Camera.MOVE_SPEED = 50;
+EZ3.Camera.ROTATION_SPEED = 300;
+EZ3.Camera.FILTER_WEIGHT = 0.75;
+EZ3.Camera.FILTER_BUFFER_SIZE = 10;
 
 /**
  * @class Cache
  */
 
 EZ3.Cache = function() {
-  this._content = [];
-  this._content[EZ3.Cache.IMAGE] = {};
-  this._content[EZ3.Cache.DATA] = {};
+  this.ASSET = {};
+  this.ASSET.IMAGE = 0;
+  this.ASSET.DATA = 1;
+  this.ASSET.ENTITY = 2;
+
+  this._assets = [];
+  this._assets[this.ASSET.IMAGE] = {};
+  this._assets[this.ASSET.DATA] = {};
+  this._assets[this.ASSET.ENTITY] = {};
 };
 
-EZ3.Cache.prototype.get = function(type, id) {
-  if (!this._content[type])
-    return undefined;
-  return this._content[type][id];
+EZ3.Cache = new EZ3.Cache();
+
+EZ3.Cache.add = function(url, asset) {
+  if (asset instanceof Image)
+    this._assets[this.ASSET.IMAGE][url] = asset;
+  else if (asset instanceof XMLHttpRequest)
+    this._assets[this.ASSET.DATA][url] = asset;
+  else if (asset instanceof EZ3.Entity)
+    this._assets[this.ASSET.ENTITY][url] = asset;
 };
 
-EZ3.Cache.prototype.set = function(id, content) {
-  if (content instanceof Image)
-    this._content[EZ3.Cache.IMAGE][id] = content;
-  else if (content instanceof XMLHttpRequest)
-    this._content[EZ3.Cache.DATA][id] = content;
+EZ3.Cache.image = function(url) {
+  return this._assets[this.ASSET.IMAGE][url];
 };
 
-EZ3.Cache.IMAGE = 0;
-EZ3.Cache.DATA = 1;
+EZ3.Cache.data = function(url) {
+  return this._assets[this.ASSET.DATA][url];
+};
+
+EZ3.Cache.entity = function(url) {
+  return this._assets[this.ASSET.ENTITY][url];
+};
 
 /**
  * @class Engine
  */
 
 EZ3.Engine = function(canvas, options) {
+  this._animationFrame = null;
+  this._renderer = null;
+
   this.device = EZ3.Device;
+  this.time = null;
   this.input = null;
   this.screens = null;
 
-  this._animationFrame = null;
-  this._time = null;
-  this._renderer = null;
-  this._cache = null;
-
-  this.device.onReady(this._init, this, [canvas, options]);
+  this.device.onReady(this._init, this, [
+    canvas,
+    options
+  ]);
 };
 
 EZ3.Engine.prototype._init = function(canvas, options) {
-  this._animationFrame = new EZ3.AnimationFrame(this.device, false);
-  this._time = new EZ3.Time();
+  this._animationFrame = new EZ3.AnimationFrame(false);
   this._renderer = new EZ3.Renderer(canvas, options);
-  this._cache = new EZ3.Cache();
-  this.input = new EZ3.InputManager(this.device, canvas);
-  this.screens = new EZ3.ScreenManager(this._device, this._time, this._renderer, this.input, this._cache);
 
+  this.time = new EZ3.Time();
+  this.input = new EZ3.InputManager(canvas);
+  this.screens = new EZ3.ScreenManager(canvas, this._renderer, this.time, this.input);
 
   this._renderer.initContext();
-  this._time.start();
+  this.time.start();
   this._update();
 };
 
 EZ3.Engine.prototype._update = function() {
   this.screens.update();
-  this._time.update();
+  this.time.update();
   this._animationFrame.request(this._update.bind(this));
 };
 
+/**
+ * @class Entity
+ */
+
 EZ3.Entity = function() {
+  this._cache = {};
   this.parent = null;
   this.children = [];
-  this.scale = vec3.create();
-  this.position = vec3.create();
-  this.rotation = quat.create();
-  this.modelMatrix = mat4.create();
-  this.worldMatrix = mat4.create();
-  this.normalMatrix = mat3.create();
 
-  vec3.set(this.scale, 1, 1 ,1);
-  vec3.set(this.position, 0, 0 ,0);
-  quat.set(this.rotation, 0, 0, 0, 0);
+  this.model = new EZ3.Matrix4();
+  this.world = new EZ3.Matrix4();
 
-  mat4.identity(this.modelMatrix);
-  mat4.identity(this.worldMatrix);
-  mat3.identity(this.normalMatrix);
+  if(this instanceof EZ3.Mesh)
+    this.normal = new EZ3.Matrix3();
 
-  this.dirty = true;
-  this.scale.dirty = false;
-  this.position.dirty = false;
-  this.rotation.dirty = false;
+  this.scale = new EZ3.Vector3(1, 1, 1);
+  this.position = new EZ3.Vector3(0, 0, 0);
+  this.rotation = new EZ3.Quaternion(1, 0, 0, 0);
 };
 
 EZ3.Entity.prototype.add = function(child) {
-  if(child instanceof EZ3.Mesh){
-
-    if(child.parent)
+  if (child instanceof EZ3.Entity) {
+    if (child.parent)
       child.parent.remove(child);
 
-    this.dirty = true;
     child.parent = this;
     this.children.push(child);
-
-  }else{
-    throw('Child object must have a prototype of Entity');
   }
 };
 
 EZ3.Entity.prototype.remove = function(child) {
   var position = this.children.indexOf(child);
 
-  if(~position){
-    this.children.splice(position,1);
-    this.dirty = true;
-  }
+  if (~position)
+    this.children.splice(position, 1);
 };
 
-EZ3.Entity.prototype.update = function(parentIsDirty, parentWorldMatrix) {
-  this.dirty = this.dirty || parentIsDirty || this.scale.dirty || this.position.dirty || this.rotation.dirty;
+EZ3.Entity.prototype.updateWorld = function() {
+  var k;
 
-  if(this.dirty){
+  if(this.position.dirty || this.rotation.dirty || this.scale.dirty) {
+    this.model.fromRotationTranslation(this.model, this.rotation, this.position);
+    this.model.scale(this.model, this.scale);
 
-    mat4.fromRotationTranslation(this.modelMatrix, this.rotation, this.position);
-    mat4.scale(this.modelMatrix, this.modelMatrix, this.scale);
-
-    if(!parentWorldMatrix)
-        mat4.copy(this.worldMatrix, this.modelMatrix);
-    else
-        mat4.multiply(this.worldMatrix, parentWorldMatrix, this.modelMatrix);
-
-    mat3.normalFromMat4(this.normalMatrix, this.worldMatrix);
-
-    for(var k = this.children.length - 1; k >= 0; --k)
-      this.children[k].update(this.worldMatrix, this.dirty);
-
-    this.dirty = false;
     this.scale.dirty = false;
     this.position.dirty = false;
     this.rotation.dirty = false;
+  }
+
+  if (!this.parent) {
+    if(this.model.dirty) {
+
+      this.world.copy(this.model);
+
+      for(k = 0; k < this.children.length; k++)
+        this.children[k].world.dirty = true;
+
+      this.model.dirty = false;
+
+      if(this instanceof EZ3.Mesh)
+        this.normal.dirty = true;
+    }
+  } else {
+    if(this.world.dirty || this.model.dirty) {
+
+      this.world.mul(this.model, this.parent.world);
+
+      for(k = 0; k < this.children.length; k++)
+        this.children[k].world.dirty = true;
+
+      this.model.dirty = false;
+      this.world.dirty = false;
+
+      if(this instanceof EZ3.Mesh)
+        this.normal.dirty = true;
+    }
   }
 };
 
@@ -170,102 +311,141 @@ EZ3.Screen = function(id, position, size) {
   this.position = position;
   this.size = size;
   this.scene = new EZ3.Scene();
+  this.camera = null;
 };
 
-EZ3.Screen.prototype.onKeyPress = function() {
-};
+EZ3.Screen.prototype.onKeyPress = function() {};
 
-EZ3.Screen.prototype.onKeyDown = function() {
-};
+EZ3.Screen.prototype.onKeyDown = function() {};
 
-EZ3.Screen.prototype.onKeyUp = function() {
-};
+EZ3.Screen.prototype.onKeyUp = function() {};
 
-EZ3.Screen.prototype.onMousePress = function() {
-};
+EZ3.Screen.prototype.onMousePress = function() {};
 
-EZ3.Screen.prototype.onMouseMove = function() {
-};
+EZ3.Screen.prototype.onMouseMove = function() {};
 
-EZ3.Screen.prototype.onMouseUp = function() {
-};
+EZ3.Screen.prototype.onMouseUp = function() {};
 
-EZ3.Screen.prototype.onTouchPress = function() {
-};
+EZ3.Screen.prototype.onTouchPress = function() {};
 
-EZ3.Screen.prototype.onTouchMove = function() {
-};
+EZ3.Screen.prototype.onTouchMove = function() {};
 
-EZ3.Screen.prototype.onTouchUp = function() {
-};
+EZ3.Screen.prototype.onTouchUp = function() {};
 
-EZ3.Screen.prototype.create = function() {
-};
+EZ3.Screen.prototype.create = function() {};
 
-EZ3.Screen.prototype.update = function() {
-};
+EZ3.Screen.prototype.update = function() {};
 
 /**
  * @class ScreenManager
  */
 
-EZ3.ScreenManager = function(device, time, renderer, input, cache) {
-  this._device = device;
-  this._time = time;
+EZ3.ScreenManager = function(domElement, renderer, time, input) {
+  this._domElement = domElement;
   this._renderer = renderer;
+  this._time = time;
   this._input = input;
-  this._cache = cache;
   this._screens = [];
 };
 
-EZ3.ScreenManager.prototype.add = function(screen) {
+EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
   var inputs, events;
   var i, j;
 
-  if (screen instanceof EZ3.Screen) {
-    screen.manager = this;
-    screen.device = this._device;
-    screen.time = this._time;
-    screen.renderer = this._renderer;
-    screen.input = this._input;
-    screen.cache = this._cache;
-    screen.loader = new EZ3.Loader(this._cache);
-
-    inputs = {
-      keyboard: [
-        'onKeyPress',
-        'onKeyDown',
-        'onKeyUp'
-      ],
-      mouse: [
-        'onMousePress',
-        'onMouseMove',
-        'onMouseUp'
-      ],
-      touch: [
-        'onTouchPress',
-        'onTouchMove',
-        'onTouchUp'
-      ]
-    };
-
-    for (i in inputs) {
-      events = inputs[i];
-
-      for (j = 0; j < events.length; j++) {
-        if (screen.input[i][events[j]] !== EZ3.Screen.prototype[i])
-          screen.input[i][events[j]].add(screen[events[j]], screen);
-      }
+  inputs = {
+    keyboard: {
+      onKeyPress: 'onKeyPress',
+      onKeyDown: 'onKeyDown',
+      onKeyUp: 'onKeyUp'
+    },
+    mouse: {
+      onPress: 'onMousePress',
+      onMove: 'onMouseMove',
+      onUp: 'onMouseUp',
+      onWheel: 'onMouseWheel'
+    },
+    touch: {
+      onPress: 'onTouchPress',
+      onMove: 'onTouchMove',
+      onUp: 'onTouchUp'
     }
+  };
 
-    if (screen.load) {
-      screen.load();
-      screen.loader.onComplete.add(screen.create, screen);
-      screen.loader.start();
-    } else
+  for (i in inputs) {
+    events = inputs[i];
+
+    for (j in events) {
+      if (screen[events[j]] !== EZ3.Screen.prototype[events[j]])
+        screen.input[i][j].add(screen[events[j]], screen);
+    }
+  }
+
+  var that = this;
+
+  window.addEventListener('resize', function() {
+    that._domElement.width = window.innerWidth;
+    that._domElement.height = window.innerHeight;
+
+    screen.size.x = window.innerWidth;
+    screen.size.y = window.innerHeight;
+    screen.camera.aspectRatio = window.innerWidth / window.innerHeight;
+
+  }, true);
+};
+
+EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
+  var inputs, events;
+  var i, j;
+
+  inputs = {
+    keyboard: [
+      'onKeyPress',
+      'onKeyDown',
+      'onKeyUp'
+    ],
+    mouse: [
+      'onPress',
+      'onMove',
+      'onUp'
+    ],
+    touch: [
+      'onPress',
+      'onMove',
+      'onUp'
+    ]
+  };
+
+  for (i in inputs) {
+    events = inputs[i];
+
+    for (j = 0; j < events.length; j++)
+      screen.input[i][events[j]].removeAll(screen);
+  }
+};
+
+EZ3.ScreenManager.prototype.add = function(screen) {
+  if (screen instanceof EZ3.Screen && !this.get(screen.id)) {
+    screen.manager = this;
+    screen.device = EZ3.Device;
+    screen.cache = EZ3.Cache;
+    screen.time = this._time;
+    screen.input = this._input;
+    screen.load = new EZ3.LoadManager();
+
+    this._addEventListeners(screen);
+
+    if (screen.preload) {
+      screen.preload();
+      screen.load.onComplete.add(screen.create, screen);
+      screen.load.onComplete.add(function() {
+        this._screens.unshift(screen);
+      }, this);
+
+      screen.load.start();
+    } else {
       screen.create();
-
-    this._screens.unshift(screen);
+      this._screens.unshift(screen);
+    }
 
     return screen;
   }
@@ -282,28 +462,272 @@ EZ3.ScreenManager.prototype.get = function(id) {
 EZ3.ScreenManager.prototype.remove = function(id) {
   var i;
 
-  for (i = 0; i < this._screens.length; i++)
-    if (this._screens[i].id === id)
+  for (i = 0; i < this._screens.length; i++) {
+    if (this._screens[i].id === id) {
+      this._removeEventListeners(this._screens[i]);
       return this._screens.splice(i, 1);
+    }
+  }
 };
 
 EZ3.ScreenManager.prototype.update = function() {
+  var screen;
   var i;
 
+  this._renderer.clear();
+
   for (i = 0; i < this._screens.length; i++) {
-    this._renderer.render(this._screens[i]);
+    screen = this._screens[i];
+
+    this._renderer.viewport(screen.position, screen.size);
+    this._renderer.render(screen.scene, screen.camera);
     this._screens[i].update();
   }
+};
+
+EZ3.ScreenManager.prototype.fullScreen = function() {
+  var fullScreen = false;
+  var requestFullScreen;
+
+  var fs = [
+    'requestFullscreen',
+    'requestFullScreen',
+    'webkitRequestFullscreen',
+    'webkitRequestFullScreen',
+    'msRequestFullscreen',
+    'msRequestFullScreen',
+    'mozRequestFullScreen',
+    'mozRequestFullscreen'
+  ];
+
+  var element = document.createElement('div');
+
+  for (var i = 0; i < fs.length; i++) {
+    if (element[fs[i]]) {
+      fullScreen = true;
+      requestFullScreen = fs[i];
+      break;
+    }
+  }
+
+  this._domElement[requestFullScreen]();
+};
+
+EZ3.ScreenManager.prototype.pointerlock = function() {
+  var canvas = this._domElement;
+
+  canvas.requestPointerLock = canvas.requestPointerLock ||
+                            canvas.mozRequestPointerLock ||
+                            canvas.webkitRequestPointerLock;
+
+  canvas.requestPointerLock();
+};
+
+/**
+ * @class Signal
+ */
+
+EZ3.Signal = function() {
+  var that;
+
+  this._bindings = [];
+  this._prevParams = null;
+
+  that = this;
+
+  this.dispatch = function() {
+    EZ3.Signal.prototype.dispatch.apply(that, arguments);
+  };
+};
+
+EZ3.Signal.prototype._shouldPropagate = true;
+EZ3.Signal.prototype.memorize = false;
+EZ3.Signal.prototype.active = true;
+
+EZ3.Signal.prototype._registerListener = function(listener, isOnce, listenerContext, priority) {
+  var prevIndex, binding;
+
+  prevIndex = this._indexOfListener(listener, listenerContext);
+
+  if (prevIndex !== -1) {
+    binding = this._bindings[prevIndex];
+
+    if (binding.isOnce !== isOnce)
+      throw new Error('You cannot add' + (isOnce ? '' : 'Once') + '() then add' + (!isOnce ? '' : 'Once') + '() the same listener without removing the relationship first.');
+  } else {
+    binding = new EZ3.SignalBinding(this, listener, isOnce, listenerContext, priority);
+    this._addBinding(binding);
+  }
+
+  if (this.memorize && this._prevParams)
+    binding.execute(this._prevParams);
+
+  return binding;
+};
+
+EZ3.Signal.prototype._addBinding = function(binding) {
+  var n;
+
+  n = this._bindings.length;
+
+  do {
+    --n;
+  } while (this._bindings[n] && binding._priority <= this._bindings[n]._priority);
+
+  this._bindings.splice(n + 1, 0, binding);
+};
+
+EZ3.Signal.prototype._indexOfListener = function(listener, context) {
+  var n, cur;
+
+  n = this._bindings.length;
+
+  while (n--) {
+    cur = this._bindings[n];
+    if (cur._listener === listener && cur.context === context)
+      return n;
+  }
+
+  return -1;
+};
+
+EZ3.Signal.prototype.has = function(listener, context) {
+  return this._indexOfListener(listener, context) !== -1;
+};
+
+EZ3.Signal.prototype.add = function(listener, listenerContext, priority) {
+  return this._registerListener(listener, false, listenerContext, priority);
+};
+
+EZ3.Signal.prototype.addOnce = function(listener, listenerContext, priority) {
+  return this._registerListener(listener, true, listenerContext, priority);
+};
+
+EZ3.Signal.prototype.remove = function(listener, context) {
+  var i;
+
+  i = this._indexOfListener(listener, context);
+
+  if (i !== -1) {
+    this._bindings[i]._destroy();
+    this._bindings.splice(i, 1);
+  }
+
+  return listener;
+};
+
+EZ3.Signal.prototype.removeAll = function(context) {
+  var n;
+
+  n = this._bindings.length;
+
+  if (context) {
+    while (n--) {
+      if (this._bindings[n].context === context) {
+        this._bindings[n]._destroy();
+        this._bindings.splice(n, 1);
+      }
+    }
+  } else {
+    while (n--)
+      this._bindings[n]._destroy();
+
+    this._bindings.length = 0;
+  }
+};
+
+EZ3.Signal.prototype.getNumListeners = function() {
+  return this._bindings.length;
+};
+
+EZ3.Signal.prototype.halt = function() {
+  this._shouldPropagate = false;
+};
+
+EZ3.Signal.prototype.dispatch = function(params) {
+  var paramsArr, n, bindings;
+
+  if (!this.active)
+    return;
+
+  paramsArr = Array.prototype.slice.call(arguments);
+  n = this._bindings.length;
+
+  if (this.memorize)
+    this._prevParams = paramsArr;
+
+  if (!n)
+    return;
+
+  bindings = this._bindings.slice();
+  this._shouldPropagate = true;
+
+  do {
+    n--;
+  } while (bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
+};
+
+EZ3.Signal.prototype.forget = function() {
+  this._prevParams = null;
+};
+
+EZ3.Signal.prototype.dispose = function() {
+  this.removeAll();
+  delete this._bindings;
+  delete this._prevParams;
+};
+
+/**
+ * @class SignalBinding
+ */
+
+EZ3.SignalBinding = function(signal, listener, isOnce, listenerContext, priority) {
+  this._signal = signal;
+  this._priority = priority || 0;
+
+  this.listener = listener;
+  this.isOnce = isOnce;
+  this.context = listenerContext;
+};
+
+EZ3.SignalBinding.prototype.active = true;
+EZ3.SignalBinding.prototype.params = null;
+
+EZ3.SignalBinding.prototype._destroy = function() {
+  delete this._signal;
+  delete this.listener;
+  delete this.context;
+};
+
+EZ3.SignalBinding.prototype.execute = function(paramsArr) {
+  var handlerReturn, params;
+
+  if (this.active && !!this.listener) {
+    params = this.params ? this.params.concat(paramsArr) : paramsArr;
+    handlerReturn = this.listener.apply(this.context, params);
+    if (this.isOnce) {
+      this.detach();
+    }
+  }
+  return handlerReturn;
+};
+
+EZ3.SignalBinding.prototype.detach = function() {
+  return this.isBound() ? this._signal.remove(this.listener, this.context) : null;
+};
+
+EZ3.SignalBinding.prototype.isBound = function() {
+  return (!!this._signal && !!this.listener);
 };
 
 /**
  * @class InputManager
  */
 
-EZ3.InputManager = function(device, canvas) {
+EZ3.InputManager = function(canvas) {
   this.keyboard = new EZ3.Keyboard();
   this.mouse = new EZ3.Mouse(canvas);
-  this.touch = new EZ3.Touch(device, canvas);
+  this.touch = new EZ3.Touch(canvas);
 };
 
 /**
@@ -483,7 +907,7 @@ EZ3.Mouse = function(domElement) {
   this._domElement = domElement;
 
   this.enabled = false;
-  this.pointer = new EZ3.MousePointer();
+  this.pointer = new EZ3.MousePointer(domElement);
   this.onPress = new EZ3.Signal();
   this.onMove = new EZ3.Signal();
   this.onUp = new EZ3.Signal();
@@ -552,8 +976,8 @@ EZ3.Mouse.prototype.disable = function() {
 };
 
 EZ3.Mouse.LEFT_BUTTON = 0;
-EZ3.Mouse.RIGHT_BUTTON = 1;
-EZ3.Mouse.MIDDLE_BUTTON = 2;
+EZ3.Mouse.MIDDLE_BUTTON = 1;
+EZ3.Mouse.RIGHT_BUTTON = 2;
 EZ3.Mouse.BACK_BUTTON = 3;
 EZ3.Mouse.FORWARD_BUTTON = 4;
 
@@ -561,14 +985,14 @@ EZ3.Mouse.FORWARD_BUTTON = 4;
  * @class Pointer
  */
 
-EZ3.Pointer = function() {
-  this.client = EZ3.Vec2.create();
-  this.page = EZ3.Vec2.create();
-  this.screen = EZ3.Vec2.create();
+EZ3.Pointer = function(domElement) {
+  this._bound = domElement.getBoundingClientRect();
 
-  EZ3.Vec2.set(this.client, 0, 0);
-  EZ3.Vec2.set(this.page, 0, 0);
-  EZ3.Vec2.set(this.screen, 0, 0);
+  this.page = new EZ3.Vector2();
+  this.client = new EZ3.Vector2();
+  this.screen = new EZ3.Vector2();
+  this.position = new EZ3.Vector2();
+  this.lol = new EZ3.Vector2();
 };
 
 EZ3.Pointer.prototype.constructor = EZ3.Pointer;
@@ -578,9 +1002,12 @@ EZ3.Pointer.prototype.processPress = function(event) {
 };
 
 EZ3.Pointer.prototype.processMove = function(event) {
-  EZ3.Vec2.set(this.client, event.clientX, event.clientY);
-  EZ3.Vec2.set(this.page, event.pageX, event.pageY);
-  EZ3.Vec2.set(this.screen, event.screenX, event.screenY);
+  this.page.set(event.pageX, event.pageY);
+  this.client.set(event.clientX, event.clientY);
+  this.screen.set(event.screenX, event.screenY);
+  this.position.set(event.clientX - this._bound.left, event.clientY - this._bound.top);
+  this.lol.set((event.movementX || 0)- this._bound.left, (event.movementY || 0) - this._bound.top);
+
 };
 
 /**
@@ -623,9 +1050,9 @@ EZ3.Switch.prototype.isUp = function() {
  * @class Touch
  */
 
-EZ3.Touch = function(device, domElement) {
+EZ3.Touch = function(domElement) {
+  this._device = EZ3.Device;
   this._domElement = domElement;
-  this._device = device;
   this._pointers = [];
 
   this.enabled = false;
@@ -652,7 +1079,7 @@ EZ3.Touch.prototype._processTouchPress = function(event) {
 
     for (var j = 0; j < EZ3.Touch.MAX_NUM_OF_POINTERS; j++) {
       if (!this._pointers[j]) {
-        this._pointers[j] = new EZ3.TouchPointer(j, event.changedTouches[i].identifier);
+        this._pointers[j] = new EZ3.TouchPointer(this._domElement, j, event.changedTouches[i].identifier);
         found = true;
         break;
       } else if (this._pointers[j].isUp()) {
@@ -745,7 +1172,7 @@ EZ3.Touch.prototype.disable = function() {
 
 EZ3.Touch.prototype.getPointer = function(code) {
   if (!this._pointers[code])
-    this._pointers[code] = new EZ3.TouchPointer(code);
+    this._pointers[code] = new EZ3.TouchPointer(this._domElement, code);
 
   return this._pointers[code];
 };
@@ -763,1316 +1190,3827 @@ EZ3.Touch.POINTER_10 = 9;
 EZ3.Touch.MAX_NUM_OF_POINTERS = 10;
 
 /**
- * @class Data
+ * @class Light
  */
 
-EZ3.Data = function(url, crossOrigin) {
-  this.content = new XMLHttpRequest();
-  this.url = url;
-  this.crossOrigin = crossOrigin;
+EZ3.Light = function() {
+  EZ3.Entity.call(this);
+
+  this.diffuse = new EZ3.Vector3(1.0, 1.0, 1.0);
+  this.specular = new EZ3.Vector3(1.0, 1.0, 1.0);
 };
 
-EZ3.Data.prototype._processLoad = function(onLoad) {
-  this._end();
+EZ3.Light.prototype = Object.create(EZ3.Entity.prototype);
+EZ3.Light.prototype.constructor = EZ3.Light;
 
-  onLoad(this);
-};
-
-EZ3.Data.prototype._processError = function(onError) {
-  this._end();
-
-  onError(this);
-};
-
-EZ3.Data.prototype._end = function() {
-  this.content.removeEventListener('load', this._onLoad);
-  this.content.removeEventListener('error', this._onError);
-
-  delete this._onLoad;
-  delete this._onError;
-};
-
-EZ3.Data.prototype.load = function(onLoad, onError) {
-  var that = this;
-
-  this._onLoad = function() {
-    that._processLoad(onLoad);
-  };
-
-  this._onError = function() {
-    that._processError(onError);
-  };
-
-  this.content.addEventListener('load', this._onLoad);
-  this.content.addEventListener('error', this._onError);
-
-  this.content.open('GET', this.url, true);
-
-  if(this.crossOrigin)
-    this.content.crossOrigin = this.crossOrigin;
-
-  this.content.send(null);
+EZ3.Light.prototype.updateUniforms = function(gl, program, prefix) {
+  program.loadUniformf(gl, prefix + 'diffuse', 3, this.diffuse);
+  program.loadUniformf(gl, prefix + 'specular', 3, this.specular);
 };
 
 /**
  * @class Data
  */
 
-EZ3.Image = function(url, crossOrigin) {
-  this.content = new Image();
+EZ3.Data = function(url, crossOrigin, responseType) {
   this.url = url;
   this.crossOrigin = crossOrigin;
+  this.responseType = responseType;
+  this.content = new XMLHttpRequest();
 };
 
-EZ3.Image.prototype._processLoad = function(onLoad) {
-  this._end();
-
-  onLoad(this);
+EZ3.Data.prototype._processLoad = function(request, onLoad) {
+  this._removeEventHandlers();
+  onLoad(this.url, request);
 };
 
-EZ3.Image.prototype._processReadyStateChange = function(onLoad) {
-  if (this.content.readyState === 'complete') {
-    this._end();
-
-    onLoad(this);
-  }
+EZ3.Data.prototype._processError = function(event, onError) {
+  this._removeEventHandlers();
+  onError(this.url, event);
 };
 
-EZ3.Image.prototype._processError = function(onError) {
-  this._end();
+EZ3.Data.prototype.load = function(onLoad, onError) {
+  var that;
 
-  onError(this);
+  that = this;
+
+  this._onLoad = function() {
+    that._processLoad(this, onLoad);
+  };
+
+  this._onError = function(event) {
+    that._processError(event, onLoad);
+  };
+
+  this.content.open('GET', this.url, true);
+
+  this.content.addEventListener('load', this._onLoad, false);
+  this.content.addEventListener('error', this._onError, false);
+
+  if (this.crossOrigin)
+    this.content.crossOrigin = this.crossOrigin;
+
+  if (this.responseType)
+    this.content.responseType = this.responseType;
+
+  this.content.send(null);
 };
 
-EZ3.Image.prototype._end = function() {
-  this.content.removeEventListener('load', this._onLoad);
-  this.content.removeEventListener('readystatechange', this._onReadyStateChange);
-  this.content.removeEventListener('error', this._onError);
+EZ3.Data.prototype._removeEventHandlers = function() {
+  this.content.addEventListener('load', this._onLoad, false);
+  this.content.addEventListener('error', this._onError, false);
 
   delete this._onLoad;
-  delete this._onReadyStateChange;
   delete this._onError;
 };
 
+/**
+ * @class Image
+ */
+
+EZ3.Image = function(url, crossOrigin) {
+  this.url = url;
+  this.crossOrigin = crossOrigin;
+  this.content = new Image();
+};
+
+EZ3.Image.prototype._processLoad = function(image, onLoad) {
+  this._removeEventHandlers();
+  onLoad(this.url, image);
+};
+
+EZ3.Image.prototype._processError = function(event, onError) {
+  this._removeEventHandlers();
+  onError(this.url, event);
+};
+
 EZ3.Image.prototype.load = function(onLoad, onError) {
-  var that = this;
+  var that;
+
+  that = this;
 
   this._onLoad = function() {
-    that._processLoad(onLoad);
+    that._processLoad(this, onLoad);
   };
 
-  this._onReadyStateChange = function() {
-    that._processReadyStateChange(onLoad);
+  this._onError = function(event) {
+    that._processError(event, onLoad);
   };
 
-  this._onError = function() {
-    that._processError(onError);
-  };
+  this.content.addEventListener('load', this._onLoad, false);
+  this.content.addEventListener('error', this._onError, false);
 
-  this.content.addEventListener('load', this._onLoad);
-  this.content.addEventListener('readystatechange', this._onReadyStateChange);
-  this.content.addEventListener('error', this._onError);
-
-  if (this.crossOrigin)
+  if (!this.crossOrigin)
     this.content.crossOrigin = this.crossOrigin;
 
   this.content.src = this.url;
 };
 
+EZ3.Image.prototype._removeEventHandlers = function() {
+  this.content.addEventListener('load', this._onLoad, false);
+  this.content.addEventListener('error', this._onError, false);
+
+  delete this._onLoad;
+  delete this._onError;
+};
+
 /**
- * @class Loader
+ * @class LoadManager
  */
 
-EZ3.Loader = function(cache) {
-  this._cache = cache;
+EZ3.LoadManager = function() {
+  this._cache = EZ3.Cache;
   this._files = {};
-  this._numOfFilesLoaded = 0;
-  this._numOfFilesErrors = 0;
 
   this.started = false;
-  this.onProgress = new EZ3.Signal();
+  this.filesToLoad = 0;
+  this.loadedFiles = 0;
+  this.failedFiles = 0;
   this.onComplete = new EZ3.Signal();
+  this.onProgress = new EZ3.Signal();
 };
 
-EZ3.Loader.prototype._processFileLoad = function(file) {
-  this._numOfFilesLoaded++;
-  this._cache.set(file.id, file.content);
+EZ3.LoadManager.prototype._processLoad = function(url, data) {
+  this.loadedFiles++;
 
-  this._processProgress(file, EZ3.Loader.FILE.LOADED);
+  this._cache.add(url, data);
+  this._processProgress(url);
 };
 
-EZ3.Loader.prototype._processFileError = function(file) {
-  this._numOfFilesErrors++;
+EZ3.LoadManager.prototype._processError = function(url, data) {
+  this.failedFiles++;
 
-  this._processProgress(file, EZ3.Loader.FILE.ERROR);
+  this._processProgress(url, data);
 };
 
-EZ3.Loader.prototype._processProgress = function(file, status) {
-  var numOfFiles, numOfFilesLoaded, numOfFilesErrors;
+EZ3.LoadManager.prototype._processProgress = function(url, error) {
+  var loadedFiles, failedFiles;
 
-  numOfFiles = Object.keys(this._files).length;
+  this.onProgress.dispatch(url, error, this.loadedFiles, this.failedFiles, this.filesToLoad);
 
-  this.onProgress.dispatch(file, status, this._numOfFilesLoaded, this._numOfFilesErrors, numOfFiles);
+  if(this.filesToLoad === this.loadedFiles + this.failedFiles) {
+    loadedFiles = this.loadedFiles;
+    failedFiles = this.failedFiles;
 
-  if (numOfFiles === this._numOfFilesLoaded + this._numOfFilesErrors) {
-    numOfFilesLoaded = this._numOfFilesLoaded;
-    numOfFilesErrors = this._numOfFilesErrors;
-
-    this.started = false;
     this._files = {};
-    this._numOfFilesLoaded = 0;
-    this._numOfFilesErrors = 0;
+    this.filesToLoad = 0;
+    this.loadedFiles = 0;
+    this.failedFiles = 0;
+    this.started = false;
 
-    this.onComplete.dispatch(numOfFilesLoaded, numOfFilesErrors);
+    this.onComplete.dispatch(failedFiles, loadedFiles);
   }
 };
 
-EZ3.Loader.prototype.start = function() {
+EZ3.LoadManager.prototype.data = function(url, crossOrigin, responseType) {
+  var cached;
+
+  cached = this._cache.data(url);
+
+  if(cached)
+    return cached;
+
+  this._files[url] = new EZ3.Data(url, crossOrigin, responseType);
+  this.filesToLoad++;
+
+  return this._files[url].content;
+};
+
+EZ3.LoadManager.prototype.image = function(url, crossOrigin) {
+  var cached;
+
+  cached = this._cache.image(url);
+
+  if(cached)
+    return cached;
+
+  this._files[url] = new EZ3.Image(url, crossOrigin);
+  this.filesToLoad++;
+
+  return this._files[url].content;
+};
+
+EZ3.LoadManager.prototype.obj = function(url, crossOrigin) {
+  var cached;
+
+  cached = this._cache.entity(url);
+
+  if(cached)
+    return cached;
+
+  this._files[url] = new EZ3.Obj(url, crossOrigin);
+  this.filesToLoad++;
+
+  return this._files[url].content;
+};
+
+EZ3.LoadManager.prototype.start = function() {
+  var i;
+
+  if (!this.filesToLoad)
+    this.onComplete.dispatch(0, 0);
+
   this.started = true;
 
-  for (var url in this._files)
-    this._files[url].load(this._processFileLoad.bind(this), this._processFileError.bind(this));
+  for (i in this._files)
+    this._files[i].load(this._processLoad.bind(this), this._processError.bind(this));
 };
 
-EZ3.Loader.prototype.add = function(id, file) {
-  var type;
+/**
+ * @class Obj
+ */
 
-  if (file instanceof EZ3.Image)
-    type = EZ3.Cache.IMAGE;
-  else if (file instanceof EZ3.Data)
-    type = EZ3.Cache.DATA;
-  else
-    return;
+EZ3.Obj = function(url, crossOrigin) {
+  this.url = url;
+  this.crossOrigin = crossOrigin;
+  this.content = new EZ3.Entity();
+};
 
-  if (!this.started && !this._cache.get(type, id) && !this._files[file.url]) {
-    file.id = id;
-    this._files[file.url] = file;
+EZ3.Obj.prototype._parseMaterial = function() {
+
+};
+
+EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
+  var that, patterns, lines, line, result;
+  var mtllibs, materials, material, geometry, mesh, indices, normals, uvs;
+
+  function triangulate(face) {
+    var data, i;
+
+    data = [];
+    face = face.split(' ');
+
+    for (i = 1; i < face.length - 1; i++)
+      data.push(face[0], face[i], face[i + 1]);
+
+    return data;
+  }
+
+  function processVertex(vertex) {
+    var i;
+
+    for (i = 1; i < 4; i++)
+      vertices.push(parseFloat(vertex[i]));
+  }
+
+  function processNormal(normal) {
+    var i;
+
+    for (i = 1; i < 4; i++)
+      normals.push(parseFloat(normal[i]));
+  }
+
+  function processUv(uv) {
+    var i;
+
+    for (i = 1; i < 3; i++)
+      uvs.push(parseFloat(uv[i]));
+  }
+
+  function processFace1(face) {
+    var i;
+
+    for (i = 0; i < face.length; i++)
+      indices.vertex.push(parseInt(face[i]) - 1);
+  }
+
+  function processFace2(face) {
+    var point, i;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('/');
+
+      indices.vertex.push(parseInt(point[0]) - 1);
+      indices.uv.push(parseInt(point[1]) - 1);
+    }
+  }
+
+  function processFace3(face) {
+    var point, i;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('/');
+
+      indices.vertex.push(parseInt(point[0]) - 1);
+      indices.uv.push(parseInt(point[1]) - 1);
+      indices.normal.push(parseInt(point[2]) - 1);
+    }
+  }
+
+  function processFace4(face) {
+    var point, i;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('//');
+
+      indices.vertex.push(parseInt(point[0]) - 1);
+      indices.normal.push(parseInt(point[1]) - 1);
+    }
+  }
+
+  function computeNormals() {
+    var indicesCount;
+    var i, j, k;
+
+    indicesCount = [];
+
+    geometry.normals = new EZ3.GeometryArray({});
+
+    for (i = 0; i < vertices.length / 3; i++) {
+      indicesCount.push(0);
+
+      for (j = 0; j < 3; j++)
+        geometry.normals.data.push(0);
+    }
+
+    for (i = 0; i < indices.vertex.length; i++) {
+      indicesCount[indices.vertex[i]]++;
+
+      for (j = 0; j < 3; j++)
+        geometry.normals.data[3 * indices.vertex[i] + j] += normals[3 * indices.normal[i] + j];
+    }
+
+    for (i = 0, j = 0; i < vertices.length; i += 3, j++)
+      for (k = 0; k < 3; k++)
+        geometry.normals.data[i + k] /= indicesCount[j];
+  }
+
+  function computeUvs() {
+    geometry.uvs = new EZ3.GeometryArray({});
+
+    for (i = 0; i < indices.vertex.length; i++)
+      for (j = 0; j < 2; j++)
+        geometry.uvs.data[2 * indices.vertex[i] + j] = uvs[2 * indices.uv[i] + j];
+  }
+
+  function processMesh() {
+    if (indices.vertex.length && vertices.length) {
+      geometry.indices = new EZ3.GeometryArray({
+        data: indices.vertex
+      });
+
+      geometry.vertices = new EZ3.GeometryArray({
+        data: vertices
+      });
+
+      if (indices.normal.length && normals.length)
+        computeNormals();
+
+      if (indices.uv.length && uvs.length)
+        computeUvs();
+
+      that.content.add(mesh);
+
+      material = new EZ3.MeshMaterial({
+        fill: EZ3.MeshMaterial.WIREFRAME
+      });
+      geometry = new EZ3.Geometry();
+      mesh = new EZ3.Mesh(geometry, material);
+
+      indices.vertex = [];
+      indices.normal = [];
+      indices.uv = [];
+    }
+  }
+
+  function processMaterials() {
+    var load, data, tokens, baseUrl;
+    var i;
+
+    load = new EZ3.LoadManager();
+    data = [];
+
+    tokens = that.url.split('/');
+    baseUrl = that.url.substr(0, that.url.length - tokens[tokens.length - 1].length);
+
+    for (i = 0; i < mtllibs.length; i++)
+      data.push(load.data(baseUrl + mtllibs[i]));
+
+    load.onComplete.add(function() {
+      var i;
+
+      for (i = 0; i < data.length; i++)
+        processMaterial(baseUrl, data[i].response);
+
+      load.onComplete.removeAll();
+      load.onComplete.add(function() {
+        onLoad(that.url, that.content);
+      });
+
+      load.start();
+    });
+
+    load.start();
+  }
+
+  function processMaterial(baseUrl, data) {
+    var lines, line, key, value, material;
+    var i, j;
+
+    lines = data.split('\n');
+
+    for (i = 0; i < lines.length; i++) {
+      line = lines[i].trim();
+
+      j = line.indexOf(' ');
+
+      key = (j >= 0) ? line.substring(0, j) : line;
+      key = key.toLowerCase();
+
+      value = (j >= 0) ? line.substring(j + 1) : '';
+      value = value.trim();
+
+      if (key === "newmtl") {
+        material = materials[value];
+      } else if (key === "kd") {
+
+      } else if (key === "ka") {
+
+      } else if (key === "ks") {
+
+      } else if (key === "ns") {
+
+      } else if (key === "d") {
+
+      } else if (key === "map_ka") {
+
+      } else if (key === "map_kd") {
+
+      } else if (key === "map_ks") {
+
+      } else if (key === "map_ns") {
+
+      } else if (key === "map_bump") {
+
+      } else if (key === "map_d") {
+
+      }
+    }
+  }
+
+  that = this;
+  patterns = {
+    obj: /^o/,
+    group: /^g/,
+    mtllib: /^mtllib/,
+    usemtl: /^usemtl/,
+    smooth: /^s/,
+    vertex: /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
+    normal: /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
+    uv: /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
+    face1: /f\s(([\d]{1,}[\s]?){3,})+/,
+    face2: /f\s((([\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
+    face3: /f\s((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
+    face4: /f\s((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
+  };
+  mtllibs = [];
+  materials = {};
+  material = new EZ3.MeshMaterial({
+    fill: EZ3.MeshMaterial.WIREFRAME
+  });
+  geometry = new EZ3.Geometry();
+  mesh = new EZ3.Mesh(geometry, material);
+  indices = {
+    vertex: [],
+    normal: [],
+    uv: []
+  };
+  vertices = [];
+  normals = [];
+  uvs = [];
+  lines = data.split('\n');
+
+  for (i = 0; i < lines.length; i++) {
+    line = lines[i].trim().replace(/ +(?= )/g, '');
+
+    if (line.length === 0 || line.charAt(0) === '#') {
+      continue;
+    } else if ((result = patterns.vertex.exec(line))) {
+      processVertex(result);
+    } else if ((result = patterns.normal.exec(line))) {
+      processNormal(result);
+    } else if ((result = patterns.uv.exec(line))) {
+      processUv(result);
+    } else if ((result = patterns.face1.exec(line))) {
+      processFace1(triangulate(result[1]));
+    } else if ((result = patterns.face2.exec(line))) {
+      processFace2(triangulate(result[1]));
+    } else if ((result = patterns.face3.exec(line))) {
+      processFace3(triangulate(result[1]));
+    } else if ((result = patterns.face4.exec(line))) {
+      processFace4(triangulate(result[1]));
+    } else if (patterns.obj.test(line) || patterns.group.test(line)) {
+      processMesh();
+      mesh.name = line.substring(2).trim();
+    } else if (patterns.mtllib.test(line)) {
+      mtllibs.push(line.substring(7).trim());
+    } else if (patterns.usemtl.test(line)) {
+      processMesh();
+      material.name = line.substring(7).trim();
+      materials[material.name] = material;
+    } else if (patterns.smooth.test(line)) {
+
+    }
+  }
+
+  processMesh();
+  processMaterials();
+};
+
+EZ3.Obj.prototype.load = function(onLoad, onError) {
+  var that, load, data;
+
+  that = this;
+  load = new EZ3.LoadManager();
+
+  data = load.data(this.url);
+  load.onComplete.add(function() {
+    that._parse(data.response, onLoad, onError);
+  });
+
+  load.start();
+
+  return this.content;
+};
+
+/**
+ * @class Material
+ */
+
+EZ3.Material = function(name) {
+  this._name = name;
+
+  this.program = null;
+  this.fill = EZ3.MeshMaterial.WIREFRAME;
+  this.transparent = false;
+  this.faceCulling = true;
+  this.backFaceCulling = true;
+  this.frontFaceCulling = false;
+  this.depthTest = true;
+};
+
+EZ3.Material.prototype.updateStates = function(gl, state) {
+  if (this.depthTest) {
+    if (!state.capability[EZ3.RendererState.DEPTH_TEST].enabled) {
+      gl.enable(gl.DEPTH_TEST);
+      state.capability[EZ3.RendererState.DEPTH_TEST].enabled = true;
+    }
+    if (state.capability[EZ3.RendererState.DEPTH_TEST].value !== gl.LEQUAL) {
+      gl.depthFunc(gl.LEQUAL);
+      state.capability[EZ3.RendererState.DEPTH_TEST].value = gl.LEQUAL;
+    }
+  } else {
+    if (state.capability[EZ3.RendererState.DEPTH_TEST].enabled) {
+      gl.disable(gl.DEPTH_TEST);
+      state.capability[EZ3.RendererState.DEPTH_TEST].enabled = false;
+      state.capability[EZ3.RendererState.DEPTH_TEST].value = null;
+    }
+  }
+
+  if (this.faceCulling) {
+    if (!state.capability[EZ3.RendererState.CULL_FACE].enabled) {
+      gl.enable(gl.CULL_FACE);
+      state.capability[EZ3.RendererState.CULL_FACE].enabled = true;
+    }
+    if (this.backFaceCulling) {
+      if(state.capability[EZ3.RendererState.CULL_FACE].value !== gl.BACK) {
+        gl.cullFace(gl.BACK);
+        state.capability[EZ3.RendererState.CULL_FACE].value = gl.BACK;
+      }
+    } else if(this.frontFaceCulling) {
+      if(state.capability[EZ3.RendererState.CULL_FACE].value !== gl.FRONT) {
+        gl.cullFace(gl.FRONT);
+        state.capability[EZ3.RendererState.CULL_FACE].value = gl.FRONT;
+      }
+    }
+  } else {
+    if (state.capability[EZ3.RendererState.CULL_FACE].enabled) {
+      gl.disable(gl.CULL_FACE);
+      state.capability[EZ3.RendererState.CULL_FACE].enabled = false;
+      state.capability[EZ3.RendererState.CULL_FACE].value = null;
+    }
   }
 };
 
-EZ3.Loader.FILE = {};
-EZ3.Loader.FILE.ERROR = 0;
-EZ3.Loader.FILE.LOADED = 1;
+EZ3.Material.SOLID = 0;
+EZ3.Material.POINTS = 1;
+EZ3.Material.WIREFRAME = 2;
 
-EZ3.Material = function(){
-  this.dirty = true;
-  this.name = 'material';
-  this.vertex = null;
-  this.program = null;
-  this.fragment = null;
+/**
+ * @class BoundingBox
+ */
+
+EZ3.BoundingBox = function(maxPoint, minPoint) {
+
 };
 
-EZ3.Material.prototype.constructor = EZ3.Material;
+/**
+ * @class BoundingSphere
+ */
+
+EZ3.BoundingSphere = function(center, radius) {
+
+};
+
+/**
+ * @class Frustum
+ */
+
+/**
+ * @class Math
+ */
+
+EZ3.Math = function() {
+  this.PI = Math.PI;
+  this.HALF_PI = this.PI * 0.5;
+  this.DOUBLE_PI = 2.0 * this.PI;
+  this.MAX_UINT = Math.pow(2, 32) - 1;
+  this.MAX_USHORT = Math.pow(2, 16) - 1;
+};
+
+EZ3.Math = new EZ3.Math();
+
+EZ3.Math.toRadians = function(x) {
+  return x * EZ3.Math.PI / 180.0;
+};
+
+EZ3.Math.toDegrees = function(x) {
+  return x * 180.0 / EZ3.Math.PI;
+};
+
+/**
+ * @class Matrix3
+ */
+
+EZ3.Matrix3 = function(e00, e01, e02, e10, e11, e12, e20, e21, e22) {
+  this.dirty = true;
+  this._elements = [];
+
+  this.init(
+    e00 || 1, e01 || 0, e02 || 0,
+    e10 || 0, e11 || 1, e12 || 0,
+    e20 || 0, e21 || 0, e22 || 1
+  );
+};
+
+EZ3.Matrix3.prototype.constructor = EZ3.Matrix3;
+
+EZ3.Matrix3.prototype.init = function(e00, e01, e02, e10, e11, e12, e20, e21, e22) {
+  this.elements = [
+    e00, e01, e02,
+    e10, e11, e12,
+    e20, e21, e22
+  ];
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.add = function(m1, m2) {
+  var e = this.elements;
+  var em1 = m1.elements;
+  var em2 = m2.elements;
+
+  e[0] = em1[0] + em2[0];
+  e[1] = em1[1] + em2[1];
+  e[2] = em1[2] + em2[2];
+  e[3] = em1[3] + em2[3];
+  e[4] = em1[4] + em2[4];
+  e[5] = em1[5] + em2[5];
+  e[6] = em1[6] + em2[6];
+  e[7] = em1[7] + em2[7];
+  e[8] = em1[8] + em2[8];
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.addEqual = function(m) {
+  var em = m.elements;
+
+  this.elements[0] += em[0];
+  this.elements[1] += em[1];
+  this.elements[2] += em[2];
+  this.elements[3] += em[3];
+  this.elements[4] += em[4];
+  this.elements[5] += em[5];
+  this.elements[6] += em[6];
+  this.elements[7] += em[7];
+  this.elements[8] += em[8];
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.sub = function(m1, m2) {
+  var e = this.elements;
+  var em1 = m1.elements;
+  var em2 = m2.elements;
+
+  e[0] = em1[0] - em2[0];
+  e[1] = em1[1] - em2[1];
+  e[2] = em1[2] - em2[2];
+  e[3] = em1[3] - em2[3];
+  e[4] = em1[4] - em2[4];
+  e[5] = em1[5] - em2[5];
+  e[6] = em1[6] - em2[6];
+  e[7] = em1[7] - em2[7];
+  e[8] = em1[8] - em2[8];
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.subEqual = function(m) {
+  var em = m.elements;
+
+  this.elements[0] -= em[0];
+  this.elements[1] -= em[1];
+  this.elements[2] -= em[2];
+  this.elements[3] -= em[3];
+  this.elements[4] -= em[4];
+  this.elements[5] -= em[5];
+  this.elements[6] -= em[6];
+  this.elements[7] -= em[7];
+  this.elements[8] -= em[8];
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.scale = function(m, s) {
+  var em = m.elements;
+
+  this.elements[0] = em[0] * s;
+  this.elements[1] = em[1] * s;
+  this.elements[2] = em[2] * s;
+  this.elements[3] = em[3] * s;
+  this.elements[4] = em[4] * s;
+  this.elements[5] = em[5] * s;
+  this.elements[6] = em[6] * s;
+  this.elements[7] = em[7] * s;
+  this.elements[8] = em[8] * s;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.scaleEqual = function(s) {
+  this.elements[0] *= s;
+  this.elements[1] *= s;
+  this.elements[2] *= s;
+  this.elements[3] *= s;
+  this.elements[4] *= s;
+  this.elements[5] *= s;
+  this.elements[6] *= s;
+  this.elements[7] *= s;
+  this.elements[8] *= s;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.mul = function(m1, m2) {
+  var e = this.elements;
+  var em1 = m1.elements;
+  var em2;
+  var a0;
+  var a1;
+  var a2;
+  var a3;
+  var a4;
+  var a5;
+  var a6;
+  var a7;
+  var a8;
+  var b0;
+  var b1;
+  var b2;
+  var b3;
+  var b4;
+  var b5;
+  var b6;
+  var b7;
+  var b8;
+
+  if (m2 !== undefined) {
+    em2 = m2.elements;
+
+    a0 = em1[0];
+    a1 = em1[1];
+    a2 = em1[2];
+    a3 = em1[3];
+    a4 = em1[4];
+    a5 = em1[5];
+    a6 = em1[6];
+    a7 = em1[7];
+    a8 = em1[8];
+
+    b0 = em2[0];
+    b1 = em2[1];
+    b2 = em2[2];
+    b3 = em2[3];
+    b4 = em2[4];
+    b5 = em2[5];
+    b6 = em2[6];
+    b7 = em2[7];
+    b8 = em2[8];
+  } else {
+    a0 = e[0];
+    a1 = e[1];
+    a2 = e[2];
+    a3 = e[3];
+    a4 = e[4];
+    a5 = e[5];
+    a6 = e[6];
+    a7 = e[7];
+    a8 = e[8];
+
+    b0 = em1[0];
+    b1 = em1[1];
+    b2 = em1[2];
+    b3 = em1[3];
+    b4 = em1[4];
+    b5 = em1[5];
+    b6 = em1[6];
+    b7 = em1[7];
+    b8 = em1[8];
+  }
+
+  this.elements[0] = a0 * b0 + a1 * b3 + a2 * b6;
+  this.elements[1] = a0 * b1 + a1 * b4 + a2 * b7;
+  this.elements[2] = a0 * b2 + a1 * b5 + a2 * b8;
+  this.elements[3] = a3 * b0 + a4 * b3 + a5 * b6;
+  this.elements[4] = a3 * b1 + a4 * b4 + a5 * b7;
+  this.elements[5] = a3 * b2 + a4 * b5 + a5 * b8;
+  this.elements[6] = a6 * b0 + a7 * b3 + a8 * b6;
+  this.elements[7] = a6 * b1 + a7 * b4 + a8 * b7;
+  this.elements[8] = a6 * b2 + a7 * b5 + a8 * b8;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.mulScale = function(m, sx, sy, sz, Prepend) {
+  var em = m.elements;
+  var e = this.elements;
+  var prepend = Prepend || false;
+
+  if (prepend) {
+    e[0] = sx * em[0];
+    e[1] = sx * em[1];
+    e[2] = sx * em[2];
+    e[3] = sy * em[3];
+    e[4] = sy * em[4];
+    e[5] = sy * em[5];
+    e[6] = sz * em[6];
+    e[7] = sz * em[7];
+    e[8] = sz * em[8];
+  } else {
+    e[0] = em[0] * sx;
+    e[1] = em[1] * sy;
+    e[2] = em[2] * sz;
+    e[3] = em[3] * sx;
+    e[4] = em[4] * sy;
+    e[5] = em[5] * sz;
+    e[6] = em[6] * sx;
+    e[7] = em[7] * sy;
+    e[8] = em[8] * sz;
+  }
+
+  this.elements = e;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.mulRotate = function(m, rad, ax, ay, az, Prepend) {
+  var tm = m.elements;
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  var c1 = 1 - c;
+  var r00 = ax * ax * c1 + c;
+  var r01 = ax * ay * c1 - az * s;
+  var r02 = ax * az * c1 + ay * s;
+  var r10 = ay * ax * c1 + az * s;
+  var r11 = ay * ay * c1 + c;
+  var r12 = ay * az * c1 - ax * s;
+  var r20 = az * ax * c1 - ay * s;
+  var r21 = az * ay * c1 + ax * s;
+  var r22 = az * az * c1 + c;
+  var a0 = tm[0];
+  var a3 = tm[3];
+  var a6 = tm[6];
+  var a1 = tm[1];
+  var a4 = tm[4];
+  var a7 = tm[7];
+  var a2 = tm[2];
+  var a5 = tm[5];
+  var a8 = tm[8];
+  var prepend = Prepend || false;
+
+  if (prepend) {
+    this.elements[0] = r00 * a0 + r01 * a3 + r02 * a6;
+    this.elements[1] = r00 * a1 + r01 * a4 + r02 * a7;
+    this.elements[2] = r00 * a2 + r01 * a5 + r02 * a8;
+    this.elements[3] = r10 * a0 + r11 * a3 + r12 * a6;
+    this.elements[4] = r10 * a1 + r11 * a4 + r12 * a7;
+    this.elements[5] = r10 * a2 + r11 * a5 + r12 * a8;
+    this.elements[6] = r20 * a0 + r21 * a3 + r22 * a6;
+    this.elements[7] = r20 * a1 + r21 * a4 + r22 * a7;
+    this.elements[8] = r20 * a2 + r21 * a5 + r22 * a8;
+  } else {
+    this.elements[0] = a0 * r00 + a1 * r10 + a2 * r20;
+    this.elements[1] = a0 * r01 + a1 * r11 + a2 * r21;
+    this.elements[2] = a0 * r02 + a1 * r12 + a2 * r22;
+    this.elements[3] = a3 * r00 + a4 * r10 + a5 * r20;
+    this.elements[4] = a3 * r01 + a4 * r11 + a5 * r21;
+    this.elements[5] = a3 * r02 + a4 * r12 + a5 * r22;
+    this.elements[6] = a6 * r00 + a7 * r10 + a8 * r20;
+    this.elements[7] = a6 * r01 + a7 * r11 + a8 * r21;
+    this.elements[8] = a6 * r02 + a7 * r12 + a8 * r22;
+  }
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.transpose = function(m) {
+  var e = (m !== undefined) ? m.elements : this.elements;
+  var a0 = e[0];
+  var a1 = e[1];
+  var a2 = e[2];
+  var a3 = e[3];
+  var a4 = e[4];
+  var a5 = e[5];
+  var a6 = e[6];
+  var a7 = e[7];
+  var a8 = e[8];
+
+  this.elements[0] = a0;
+  this.elements[1] = a3;
+  this.elements[2] = a6;
+  this.elements[3] = a1;
+  this.elements[4] = a4;
+  this.elements[5] = a7;
+  this.elements[6] = a2;
+  this.elements[7] = a5;
+  this.elements[8] = a8;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.setQuat = function(q) {
+  var x2 = 2 * q.x;
+  var y2 = 2 * q.y;
+  var z2 = 2 * q.z;
+  var xx = q.x * x2;
+  var yy = q.y * y2;
+  var zz = q.z * z2;
+  var xy = q.x * y2;
+  var yz = q.y * z2;
+  var xz = q.x * z2;
+  var sx = q.s * x2;
+  var sy = q.s * y2;
+  var sz = q.s * z2;
+
+  this.elements[0] = 1 - yy - zz;
+  this.elements[1] = xy - sz;
+  this.elements[2] = xz + sy;
+  this.elements[3] = xy + sz;
+  this.elements[4] = 1 - xx - zz;
+  this.elements[5] = yz - sx;
+  this.elements[6] = xz - sy;
+  this.elements[7] = yz + sx;
+  this.elements[8] = 1 - xx - yy;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.invert = function(m) {
+  var e = (m !== undefined) ? m.elements : this.elements;
+  var a0 = e[0];
+  var a3 = e[3];
+  var a6 = e[6];
+  var a1 = e[1];
+  var a4 = e[4];
+  var a7 = e[7];
+  var a2 = e[2];
+  var a5 = e[5];
+  var a8 = e[8];
+  var b01 = a4 * a8 - a7 * a5;
+  var b11 = a7 * a2 - a1 * a8;
+  var b21 = a1 * a5 - a4 * a2;
+  var dt = a0 * (b01) + a3 * (b11) + a6 * (b21);
+
+  if (dt !== 0)
+    dt = 1.0 / dt;
+
+  this.elements[0] = dt * b01;
+  this.elements[1] = dt * b11;
+  this.elements[2] = dt * b21;
+  this.elements[3] = dt * (a5 * a6 - a3 * a8);
+  this.elements[4] = dt * (a0 * a8 - a2 * a6);
+  this.elements[5] = dt * (a2 * a3 - a0 * a5);
+  this.elements[6] = dt * (a3 * a7 - a4 * a6);
+  this.elements[7] = dt * (a1 * a6 - a0 * a7);
+  this.elements[8] = dt * (a0 * a4 - a1 * a3);
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.normalFromMat4 = function(m) {
+  var em = m.elements;
+  var a00 = em[0];
+  var a01 = em[1];
+  var a02 = em[2];
+  var a03 = em[3];
+  var a10 = em[4];
+  var a11 = em[5];
+  var a12 = em[6];
+  var a13 = em[7];
+  var a20 = em[8];
+  var a21 = em[9];
+  var a22 = em[10];
+  var a23 = em[11];
+  var a30 = em[12];
+  var a31 = em[13];
+  var a32 = em[14];
+  var a33 = em[15];
+  var b00 = a00 * a11 - a01 * a10;
+  var b01 = a00 * a12 - a02 * a10;
+  var b02 = a00 * a13 - a03 * a10;
+  var b03 = a01 * a12 - a02 * a11;
+  var b04 = a01 * a13 - a03 * a11;
+  var b05 = a02 * a13 - a03 * a12;
+  var b06 = a20 * a31 - a21 * a30;
+  var b07 = a20 * a32 - a22 * a30;
+  var b08 = a20 * a33 - a23 * a30;
+  var b09 = a21 * a32 - a22 * a31;
+  var b10 = a21 * a33 - a23 * a31;
+  var b11 = a22 * a33 - a23 * a32;
+
+  var det;
+
+  det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+  if (!det)
+    return null;
+
+  det = 1.0 / det;
+
+  this.elements[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+  this.elements[1] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+  this.elements[2] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+
+  this.elements[3] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+  this.elements[4] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+  this.elements[5] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+
+  this.elements[6] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+  this.elements[7] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+  this.elements[8] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.identity = function() {
+  this.elements = [
+    1.0, 0.0, 0.0,
+    1.0, 1.0, 0.0,
+    1.0, 0.0, 1.0
+  ];
+
+  return this;
+};
+
+EZ3.Matrix3.prototype.clone = function() {
+  return new EZ3.Matrix3(
+    this.elements[0],
+    this.elements[1],
+    this.elements[2],
+    this.elements[3],
+    this.elements[4],
+    this.elements[5],
+    this.elements[6],
+    this.elements[7],
+    this.elements[8]
+  );
+};
+
+EZ3.Matrix3.prototype.copy = function(m) {
+  this.elements = m.elements;
+  return this;
+};
+
+EZ3.Matrix3.prototype.toArray = function() {
+  return this.elements;
+};
+
+EZ3.Matrix3.prototype.toString = function() {
+  return 'Matrix3[' + '\n' +
+    this.elements[0].toFixed(4) + ', ' +
+    this.elements[1].toFixed(4) + ', ' +
+    this.elements[2].toFixed(4) + '\n' +
+    this.elements[3].toFixed(4) + ', ' +
+    this.elements[4].toFixed(4) + ', ' +
+    this.elements[5].toFixed(4) + '\n' +
+    this.elements[6].toFixed(4) + ', ' +
+    this.elements[7].toFixed(4) + ', ' +
+    this.elements[8].toFixed(4) + '\n]';
+};
+
+EZ3.Matrix3.prototype.testEqual = function(m) {
+  if(m instanceof EZ3.Matrix3) {
+    return m.elements[0] === this.elements[0] &&
+           m.elements[1] === this.elements[1] &&
+           m.elements[2] === this.elements[2] &&
+           m.elements[3] === this.elements[3] &&
+           m.elements[4] === this.elements[4] &&
+           m.elements[5] === this.elements[5] &&
+           m.elements[6] === this.elements[6] &&
+           m.elements[7] === this.elements[7] &&
+           m.elements[8] === this.elements[8];
+  } else
+    return false;
+};
+
+EZ3.Matrix3.prototype.set = EZ3.Matrix3.prototype.init;
+
+Object.defineProperty(EZ3.Matrix3.prototype, 'elements', {
+  get: function() {
+    return this._elements;
+  },
+  set: function(e) {
+    this._elements = e;
+    this.dirty = true;
+  }
+});
+
+/**
+ * @class Matrix4
+ */
+
+EZ3.Matrix4 = function(e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, e30, e31, e32, e33) {
+  this._elements = [];
+  this.dirty = true;
+
+  this.init(
+    e00 || 1, e01 || 0, e02 || 0, e03 || 0,
+    e10 || 0, e11 || 1, e12 || 0, e13 || 0,
+    e20 || 0, e21 || 0, e22 || 1, e23 || 0,
+    e30 || 0, e31 || 0, e32 || 0, e33 || 1
+  );
+};
+
+EZ3.Matrix4.prototype.constructor = EZ3.Matrix4;
+
+EZ3.Matrix4.prototype.init = function(e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, e30, e31, e32, e33) {
+  this.elements = [
+    e00, e01, e02, e03,
+    e10, e11, e12, e13,
+    e20, e21, e22, e23,
+    e30, e31, e32, e33
+  ];
+  return this;
+};
+
+EZ3.Matrix4.prototype.transpose = function(m) {
+  var e01;
+  var e02;
+  var e03;
+  var e12;
+  var e13;
+  var e23;
+  var em;
+
+  if (m !== undefined) {
+    em = m.elements;
+
+    e01 = em[1];
+    e02 = em[2];
+    e03 = em[3];
+    e12 = em[6];
+    e13 = em[7];
+    e23 = em[11];
+
+    this.elements[1] = em[4];
+    this.elements[2] = em[8];
+    this.elements[3] = em[12];
+    this.elements[4] = e01;
+    this.elements[6] = em[9];
+    this.elements[7] = em[13];
+    this.elements[8] = e02;
+    this.elements[9] = e12;
+    this.elements[11] = em[14];
+    this.elements[12] = e03;
+    this.elements[13] = e13;
+    this.elements[14] = e23;
+  } else {
+    em = this.elements;
+
+    this.elements[0] = em[0];
+    this.elements[1] = em[4];
+    this.elements[2] = em[8];
+    this.elements[3] = em[12];
+    this.elements[4] = em[1];
+    this.elements[5] = em[5];
+    this.elements[6] = em[9];
+    this.elements[7] = em[13];
+    this.elements[8] = em[2];
+    this.elements[9] = em[6];
+    this.elements[10] = em[10];
+    this.elements[11] = em[14];
+    this.elements[12] = em[3];
+    this.elements[13] = em[7];
+    this.elements[14] = em[11];
+    this.elements[15] = em[15];
+  }
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.invert = function(m) {
+  var a = m.elements;
+  var a00 = a[0];
+  var a01 = a[1];
+  var a02 = a[2];
+  var a03 = a[3];
+  var a10 = a[4];
+  var a11 = a[5];
+  var a12 = a[6];
+  var a13 = a[7];
+  var a20 = a[8];
+  var a21 = a[9];
+  var a22 = a[10];
+  var a23 = a[11];
+  var a30 = a[12];
+  var a31 = a[13];
+  var a32 = a[14];
+  var a33 = a[15];
+  var b00 = a00 * a11 - a01 * a10;
+  var b01 = a00 * a12 - a02 * a10;
+  var b02 = a00 * a13 - a03 * a10;
+  var b03 = a01 * a12 - a02 * a11;
+  var b04 = a01 * a13 - a03 * a11;
+  var b05 = a02 * a13 - a03 * a12;
+  var b06 = a20 * a31 - a21 * a30;
+  var b07 = a20 * a32 - a22 * a30;
+  var b08 = a20 * a33 - a23 * a30;
+  var b09 = a21 * a32 - a22 * a31;
+  var b10 = a21 * a33 - a23 * a31;
+  var b11 = a22 * a33 - a23 * a32;
+  var det;
+
+  det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+  if (!det)
+    return null;
+
+  det = 1.0 / det;
+
+  this.elements[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+  this.elements[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+  this.elements[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+  this.elements[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
+  this.elements[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+  this.elements[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+  this.elements[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+  this.elements[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
+  this.elements[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+  this.elements[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+  this.elements[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+  this.elements[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
+  this.elements[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
+  this.elements[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
+  this.elements[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
+  this.elements[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.mul = function(m1, m2) {
+  var em1;
+  var em2;
+  var a00;
+  var a01;
+  var a02;
+  var a03;
+  var a10;
+  var a11;
+  var a12;
+  var a13;
+  var a20;
+  var a21;
+  var a22;
+  var a23;
+  var a30;
+  var a31;
+  var a32;
+  var a33;
+  var b00;
+  var b01;
+  var b02;
+  var b03;
+  var b10;
+  var b11;
+  var b12;
+  var b13;
+  var b20;
+  var b21;
+  var b22;
+  var b23;
+  var b30;
+  var b31;
+  var b32;
+  var b33;
+
+  if (m2 !== undefined) {
+    em1 = m1.elements;
+    em2 = m2.elements;
+  } else {
+    em1 = this.elements;
+    em2 = m1.elements;
+  }
+
+  a00 = em1[0];
+  a01 = em1[1];
+  a02 = em1[2];
+  a03 = em1[3];
+  a10 = em1[4];
+  a11 = em1[5];
+  a12 = em1[6];
+  a13 = em1[7];
+  a20 = em1[8];
+  a21 = em1[9];
+  a22 = em1[10];
+  a23 = em1[11];
+  a30 = em1[12];
+  a31 = em1[13];
+  a32 = em1[14];
+  a33 = em1[15];
+
+  b00 = em2[0];
+  b01 = em2[1];
+  b02 = em2[2];
+  b03 = em2[3];
+  b10 = em2[4];
+  b11 = em2[5];
+  b12 = em2[6];
+  b13 = em2[7];
+  b20 = em2[8];
+  b21 = em2[9];
+  b22 = em2[10];
+  b23 = em2[11];
+  b30 = em2[12];
+  b31 = em2[13];
+  b32 = em2[14];
+  b33 = em2[15];
+
+  this.elements[0] = a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30;
+  this.elements[1] = a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31;
+  this.elements[2] = a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32;
+  this.elements[3] = a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33;
+
+  this.elements[4] = a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30;
+  this.elements[5] = a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31;
+  this.elements[6] = a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32;
+  this.elements[7] = a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33;
+
+  this.elements[8] = a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30;
+  this.elements[9] = a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31;
+  this.elements[10] = a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32;
+  this.elements[11] = a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33;
+
+  this.elements[12] = a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30;
+  this.elements[13] = a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31;
+  this.elements[14] = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32;
+  this.elements[15] = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.translate = function(m, v) {
+  var em = m.elements;
+  var x = v.x;
+  var y = v.y;
+  var z = v.z;
+  var a00 = em[0];
+  var a01 = em[1];
+  var a02 = em[2];
+  var a03 = em[3];
+  var a10 = em[0];
+  var a11 = em[1];
+  var a12 = em[2];
+  var a13 = em[3];
+  var a20 = em[0];
+  var a21 = em[1];
+  var a22 = em[2];
+  var a23 = em[3];
+
+  this.elements[0] = a00;
+  this.elements[1] = a01;
+  this.elements[2] = a02;
+  this.elements[3] = a03;
+  this.elements[4] = a10;
+  this.elements[5] = a11;
+  this.elements[6] = a12;
+  this.elements[7] = a13;
+  this.elements[8] = a20;
+  this.elements[9] = a21;
+  this.elements[10] = a22;
+  this.elements[11] = a23;
+  this.elements[12] = a00 * x + a10 * y + a20 * z + this.elements[12];
+  this.elements[13] = a01 * x + a11 * y + a21 * z + this.elements[13];
+  this.elements[14] = a02 * x + a12 * y + a22 * z + this.elements[14];
+  this.elements[15] = a03 * x + a13 * y + a23 * z + this.elements[15];
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.scale = function(m, s) {
+  var x = s.x;
+  var y = s.y;
+  var z = s.z;
+  var em = m.elements;
+
+  this.elements[0] = em[0] * x;
+  this.elements[1] = em[1] * x;
+  this.elements[2] = em[2] * x;
+  this.elements[3] = em[3] * x;
+  this.elements[4] = em[4] * y;
+  this.elements[5] = em[5] * y;
+  this.elements[6] = em[6] * y;
+  this.elements[7] = em[7] * y;
+  this.elements[8] = em[8] * z;
+  this.elements[9] = em[9] * z;
+  this.elements[10] = em[10] * z;
+  this.elements[11] = em[11] * z;
+  this.elements[12] = em[12];
+  this.elements[13] = em[13];
+  this.elements[14] = em[14];
+  this.elements[15] = em[15];
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.setQuat = function(q) {
+  var x2 = 2 * q.x;
+  var y2 = 2 * q.y;
+  var z2 = 2 * q.z;
+  var xx = q.x * x2;
+  var yy = q.y * y2;
+  var zz = q.z * z2;
+  var xy = q.x * y2;
+  var yz = q.y * z2;
+  var xz = q.x * z2;
+  var sx = q.s * x2;
+  var sy = q.s * y2;
+  var sz = q.s * z2;
+
+  this.elements[0] = 1 - yy - zz;
+  this.elements[1] = xy - sz;
+  this.elements[2] = xz + sy;
+  this.elements[3] = 0;
+  this.elements[4] = xy + sz;
+  this.elements[5] = 1 - xx - zz;
+  this.elements[6] = yz - sx;
+  this.elements[7] = 0;
+  this.elements[8] = xz - sy;
+  this.elements[9] = yz + sx;
+  this.elements[10] = 1 - xx - yy;
+  this.elements[11] = 0;
+  this.elements[12] = 0;
+  this.elements[13] = 0;
+  this.elements[14] = 0;
+  this.elements[15] = 1;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.fromRotationTranslation = function(m, q, v) {
+  var x2 = 2 * q.x;
+  var y2 = 2 * q.y;
+  var z2 = 2 * q.z;
+  var xx = q.x * x2;
+  var yy = q.y * y2;
+  var zz = q.z * z2;
+  var xy = q.x * y2;
+  var yz = q.y * z2;
+  var xz = q.x * z2;
+  var sx = q.s * x2;
+  var sy = q.s * y2;
+  var sz = q.s * z2;
+
+  this.elements[0] = 1 - yy - zz;
+  this.elements[1] = xy - sz;
+  this.elements[2] = xz + sy;
+  this.elements[3] = 0;
+  this.elements[4] = xy + sz;
+  this.elements[5] = 1 - xx - zz;
+  this.elements[6] = yz - sx;
+  this.elements[7] = 0;
+  this.elements[8] = xz - sy;
+  this.elements[9] = yz + sx;
+  this.elements[10] = 1 - xx - yy;
+  this.elements[11] = 0;
+  this.elements[12] = v.x;
+  this.elements[13] = v.y;
+  this.elements[14] = v.z;
+  this.elements[15] = 1;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
+  var f = 1.0 / Math.tan(fovy / 2.0);
+  var nf = 1.0 / (near - far);
+
+  this.elements[0] = f / aspect;
+  this.elements[1] = 0;
+  this.elements[2] = 0;
+  this.elements[3] = 0;
+  this.elements[4] = 0;
+  this.elements[5] = f;
+  this.elements[6] = 0;
+  this.elements[7] = 0;
+  this.elements[8] = 0;
+  this.elements[9] = 0;
+  this.elements[10] = (far + near) * nf;
+  this.elements[11] = -1;
+  this.elements[12] = 0;
+  this.elements[13] = 0;
+  this.elements[14] = (2 * far * near) * nf;
+  this.elements[15] = 0;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
+  var rl = 1 / (right - left);
+  var tb = 1 / (top - bottom);
+  var nf = 1 / (near - far);
+
+  this.elements[0] = (near * 2) * rl;
+  this.elements[1] = 0;
+  this.elements[2] = 0;
+  this.elements[3] = 0;
+  this.elements[4] = 0;
+  this.elements[5] = (near * 2) * tb;
+  this.elements[6] = 0;
+  this.elements[7] = 0;
+  this.elements[8] = (right + left) * rl;
+  this.elements[9] = (top + bottom) * tb;
+  this.elements[10] = (far + near) * nf;
+  this.elements[11] = -1;
+  this.elements[12] = 0;
+  this.elements[13] = 0;
+  this.elements[14] = (far * near * 2) * nf;
+  this.elements[15] = 0;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.ortho = function(left, right, bottom, top, near, far) {
+  var lr = 1 / (left - right);
+  var bt = 1 / (bottom - top);
+  var nf = 1 / (near - far);
+
+  this.elements[0] = -2 * lr;
+  this.elements[1] = 0;
+  this.elements[2] = 0;
+  this.elements[3] = 0;
+  this.elements[4] = 0;
+  this.elements[5] = -2 * bt;
+  this.elements[6] = 0;
+  this.elements[7] = 0;
+  this.elements[8] = 0;
+  this.elements[9] = 0;
+  this.elements[10] = 2 * nf;
+  this.elements[11] = 0;
+  this.elements[12] = (left + right) * lr;
+  this.elements[13] = (top + bottom) * bt;
+  this.elements[14] = (far + near) * nf;
+  this.elements[15] = 1;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
+  var len;
+  var x0;
+  var x1;
+  var x2;
+  var y0;
+  var y1;
+  var y2;
+  var z0;
+  var z1;
+  var z2;
+  var upx;
+  var upy;
+  var upz;
+  var eyex;
+  var eyey;
+  var eyez;
+  var centerx;
+  var centery;
+  var centerz;
+
+  upx = up.x;
+  upy = up.y;
+  upz = up.z;
+
+  eyex = eye.x;
+  eyey = eye.y;
+  eyez = eye.z;
+
+  centerx = center.x;
+  centery = center.y;
+  centerz = center.z;
+
+  if (Math.abs(eyex - centerx) < 0.000001 &&
+    Math.abs(eyey - centery) < 0.000001 &&
+    Math.abs(eyez - centerz) < 0.000001) {
+    return this.identity();
+  }
+
+  z0 = eyex - centerx;
+  z1 = eyey - centery;
+  z2 = eyez - centerz;
+
+  len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+
+  z0 *= len;
+  z1 *= len;
+  z2 *= len;
+
+  x0 = upy * z2 - upz * z1;
+  x1 = upz * z0 - upx * z2;
+  x2 = upx * z1 - upy * z0;
+
+  len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+
+  if (!len) {
+    x0 = 0;
+    x1 = 0;
+    x2 = 0;
+  } else {
+    len = 1 / len;
+    x0 *= len;
+    x1 *= len;
+    x2 *= len;
+  }
+
+  y0 = z1 * x2 - z2 * x1;
+  y1 = z2 * x0 - z0 * x2;
+  y2 = z0 * x1 - z1 * x0;
+
+  len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+
+  if (!len) {
+    y0 = 0;
+    y1 = 0;
+    y2 = 0;
+  } else {
+    len = 1 / len;
+    y0 *= len;
+    y1 *= len;
+    y2 *= len;
+  }
+
+  this.elements[0] = x0;
+  this.elements[1] = y0;
+  this.elements[2] = z0;
+  this.elements[3] = 0;
+  this.elements[4] = x1;
+  this.elements[5] = y1;
+  this.elements[6] = z1;
+  this.elements[7] = 0;
+  this.elements[8] = x2;
+  this.elements[9] = y2;
+  this.elements[10] = z2;
+  this.elements[11] = 0;
+  this.elements[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
+  this.elements[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
+  this.elements[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
+  this.elements[15] = 1;
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.identity = function() {
+  this.elements = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ];
+  return this;
+};
+
+EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
+  var cosYaw = Math.cos(yaw);
+  var sinYaw = Math.sin(yaw);
+  var cosPitch = Math.cos(pitch);
+  var sinPitch = Math.sin(pitch);
+  var cosRoll = Math.cos(roll);
+  var sinRoll = Math.sin(roll);
+
+  this.elements[0] = cosYaw * cosRoll + sinYaw * sinPitch * sinRoll;
+	this.elements[1] = sinRoll * cosPitch;
+	this.elements[2] = -sinYaw * cosRoll + cosYaw * sinPitch * sinRoll;
+	this.elements[3] = 0.0;
+	this.elements[4] = -cosYaw * sinRoll + sinYaw * sinPitch * cosRoll;
+	this.elements[5] = cosRoll * cosPitch;
+	this.elements[6] = sinRoll * sinYaw + cosYaw * sinPitch * cosRoll;
+	this.elements[7] = 0.0;
+	this.elements[8] = sinYaw * cosPitch;
+	this.elements[9] = -sinPitch;
+	this.elements[10] = cosYaw * cosPitch;
+	this.elements[11] = 0.0;
+	this.elements[12] = 0.0;
+	this.elements[13] = 0.0;
+	this.elements[14] = 0.0;
+	this.elements[15] = 1.0;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.clone = function() {
+  return new EZ3.Matrix4(
+    this.elements[0],
+    this.elements[1],
+    this.elements[2],
+    this.elements[3],
+    this.elements[4],
+    this.elements[5],
+    this.elements[6],
+    this.elements[7],
+    this.elements[8],
+    this.elements[9],
+    this.elements[10],
+    this.elements[11],
+    this.elements[12],
+    this.elements[13],
+    this.elements[14],
+    this.elements[15]
+  );
+};
+
+EZ3.Matrix4.prototype.copy = function(m) {
+  this.elements[0] = m.elements[0];
+  this.elements[1] = m.elements[1];
+  this.elements[2] = m.elements[2];
+  this.elements[3] = m.elements[3];
+  this.elements[4] = m.elements[4];
+  this.elements[5] = m.elements[5];
+  this.elements[6] = m.elements[6];
+  this.elements[7] = m.elements[7];
+  this.elements[8] = m.elements[8];
+  this.elements[9] = m.elements[9];
+  this.elements[10] = m.elements[10];
+  this.elements[11] = m.elements[11];
+  this.elements[12] = m.elements[12];
+  this.elements[13] = m.elements[13];
+  this.elements[14] = m.elements[14];
+  this.elements[15] = m.elements[15];
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.toArray = function() {
+  return this.elements;
+};
+
+EZ3.Matrix4.prototype.toString = function() {
+  return 'Matrix4[' + '\n' +
+    this.elements[0].toFixed(4) + ', ' +
+    this.elements[1].toFixed(4) + ', ' +
+    this.elements[2].toFixed(4) + ', ' +
+    this.elements[3].toFixed(4) + '\n' +
+    this.elements[4].toFixed(4) + ', ' +
+    this.elements[5].toFixed(4) + ', ' +
+    this.elements[6].toFixed(4) + ', ' +
+    this.elements[7].toFixed(4) + '\n' +
+    this.elements[8].toFixed(4) + ', ' +
+    this.elements[9].toFixed(4) + ', ' +
+    this.elements[10].toFixed(4) + ', ' +
+    this.elements[11].toFixed(4) + '\n' +
+    this.elements[12].toFixed(4) + ', ' +
+    this.elements[13].toFixed(4) + ', ' +
+    this.elements[14].toFixed(4) + ', ' +
+    this.elements[15].toFixed(4) + '\n]';
+};
+
+EZ3.Matrix4.prototype.testEqual = function(m) {
+  if(m instanceof EZ3.Matrix4) {
+    return m.elements[0] === this.elements[0] &&
+           m.elements[1] === this.elements[1] &&
+           m.elements[2] === this.elements[2] &&
+           m.elements[3] === this.elements[3] &&
+           m.elements[4] === this.elements[4] &&
+           m.elements[5] === this.elements[5] &&
+           m.elements[6] === this.elements[6] &&
+           m.elements[7] === this.elements[7] &&
+           m.elements[8] === this.elements[8] &&
+           m.elements[9] === this.elements[9] &&
+           m.elements[10] === this.elements[10] &&
+           m.elements[11] === this.elements[11] &&
+           m.elements[12] === this.elements[12] &&
+           m.elements[13] === this.elements[13] &&
+           m.elements[14] === this.elements[14] &&
+           m.elements[15] === this.elements[15];
+  } else
+    return false;
+};
+
+EZ3.Matrix4.prototype.testDiff = function(m) {
+  if(m instanceof EZ3.Matrix4) {
+    return m.elements[0] !== this.elements[0] ||
+           m.elements[1] !== this.elements[1] ||
+           m.elements[2] !== this.elements[2] ||
+           m.elements[3] !== this.elements[3] ||
+           m.elements[4] !== this.elements[4] ||
+           m.elements[5] !== this.elements[5] ||
+           m.elements[6] !== this.elements[6] ||
+           m.elements[7] !== this.elements[7] ||
+           m.elements[8] !== this.elements[8] ||
+           m.elements[9] !== this.elements[9] ||
+           m.elements[10] !== this.elements[10] ||
+           m.elements[11] !== this.elements[11] ||
+           m.elements[12] !== this.elements[12] ||
+           m.elements[13] !== this.elements[13] ||
+           m.elements[14] !== this.elements[14] ||
+           m.elements[15] !== this.elements[15];
+  } else
+    return false;
+};
+
+
+EZ3.Matrix4.prototype.set = EZ3.Matrix4.prototype.init;
+
+Object.defineProperty(EZ3.Matrix4.prototype, 'elements', {
+  get: function() {
+    return this._elements;
+  },
+  set: function(e) {
+    this._elements = e;
+    this.dirty = true;
+  }
+});
+
+/**
+ * @class Plane
+ */
+
+/**
+ * @class Quaternion
+ */
+
+EZ3.Quaternion = function(s, x, y, z) {
+  this.s = (s !== undefined) ? s : 1;
+  this.x = x || 0;
+  this.y = y || 0;
+  this.z = z || 0;
+  this.dirty = true;
+};
+
+EZ3.Quaternion.prototype.constructor = EZ3.Quaternion;
+
+EZ3.Quaternion.prototype.init = function(s, x, y, z) {
+  this.s = (s !== undefined) ? s : 1;
+  this.x = x || 0;
+  this.y = y || 0;
+  this.z = z || 0;
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.add = function(q1, q2) {
+  if (q2 !== undefined) {
+    this.s = q1.s + q2.s;
+    this.x = q1.x + q2.x;
+    this.y = q1.y + q2.y;
+    this.z = q1.z + q2.z;
+  } else {
+    this.s += q1.s;
+    this.x += q1.x;
+    this.y += q1.y;
+    this.z += q1.z;
+  }
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.addTime = function(v, t) {
+  var x;
+  var y;
+  var z;
+  var qs;
+  var qx;
+  var qy;
+  var qz;
+  var ns;
+  var nx;
+  var ny;
+  var nz;
+  var s;
+
+  x = v.x;
+  y = v.y;
+  z = v.z;
+
+  qs = this.s;
+  qx = this.x;
+  qy = this.y;
+  qz = this.z;
+
+  t *= 0.5;
+
+  ns = (-x * qx - y * qy - z * qz) * t;
+  nx = (x * qs + y * qz - z * qy) * t;
+  ny = (-x * qz + y * qs + z * qx) * t;
+  nz = (x * qy - y * qx + z * qs) * t;
+
+  qs += ns;
+  qx += nx;
+  qy += ny;
+  qz += nz;
+
+  s = 1 / Math.sqrt(qs * qs + qx * qx + qy * qy + qz * qz);
+
+  this.s = qs * s;
+  this.x = qx * s;
+  this.y = qy * s;
+  this.z = qz * s;
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.sub = function(q1, q2) {
+  if (q2 !== undefined) {
+    this.s = q1.s - q2.s;
+    this.x = q1.x - q2.x;
+    this.y = q1.y - q2.y;
+    this.z = q1.z - q2.z;
+  } else {
+    this.s -= q1.s;
+    this.x -= q1.x;
+    this.y -= q1.y;
+    this.z -= q1.z;
+  }
+
+  this.dirty = true;
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.scale = function(q, s) {
+  this.s = q.s * s;
+  this.x = q.x * s;
+  this.y = q.y * s;
+  this.z = q.z * s;
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.mul = function(q1, q2) {
+  var ax;
+  var ay;
+  var az;
+  var as;
+  var bx;
+  var by;
+  var bz;
+  var bs;
+
+  ax = q1.x;
+  ay = q1.y;
+  az = q1.z;
+  as = q1.s;
+
+  if (q2 !== undefined) {
+    bx = q2.x;
+    by = q2.y;
+    bz = q2.z;
+    bs = q2.s;
+  } else {
+    bx = this.x;
+    by = this.y;
+    bz = this.z;
+    bs = this.s;
+  }
+
+  this.s = as * bs - ax * bx - ay * by - az * bz;
+  this.x = ax * bs + as * bx + ay * bz - az * by;
+  this.y = ay * bs + as * by + az * bx - ax * bz;
+  this.z = az * bs + as * bz + ax * by - ay * bx;
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.arc = function(v1, v2) {
+  var x1;
+  var y1;
+  var z1;
+  var x2;
+  var y2;
+  var z2;
+  var cx;
+  var cy;
+  var cz;
+  var d;
+
+  x1 = v1.x;
+  y1 = v1.y;
+  z1 = v1.z;
+
+  x2 = v2.x;
+  y2 = v2.y;
+  z2 = v2.z;
+
+  d = x1 * x2 + y1 * y2 + z1 * z2;
+
+  if (d === -1) {
+    x2 = y1 * x1 - z1 * z1;
+    y2 = -z1 * y1 - x1 * x1;
+    z2 = x1 * z1 + y1 * y1;
+
+    d = 1 / Math.sqrt(x2 * x2 + y2 * y2 + z2 * z2);
+
+    this.s = 0;
+    this.x = x2 * d;
+    this.y = y2 * d;
+    this.z = z2 * d;
+  } else {
+    cx = y1 * z2 - z1 * y2;
+    cy = z1 * x2 - x1 * z2;
+    cz = x1 * y2 - y1 * x2;
+
+    this.s = Math.sqrt((1 + d) * 0.5);
+
+    d = 0.5 / this.s;
+
+    this.x = cx * d;
+    this.y = cy * d;
+    this.z = cz * d;
+  }
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.normalize = function(q) {
+  var len;
+  var s2;
+  var x2;
+  var y2;
+  var z2;
+
+  if (q !== undefined) {
+    len = Math.sqrt(q.s * q.s + q.x * q.x + q.y * q.y + q.z * q.z);
+
+    if (len > 0)
+      len = 1.0 / len;
+
+    this.s = q.s * len;
+    this.x = q.x * len;
+    this.y = q.y * len;
+    this.z = q.z * len;
+  } else {
+
+    s2 = this.s * this.s;
+    x2 = this.x * this.x;
+    y2 = this.y * this.y;
+    z2 = this.z * this.z;
+
+    len = Math.sqrt(s2 + x2 + y2 + z2);
+
+    if (len > 0)
+      len = 1.0 / len;
+
+    this.s = this.s * len;
+    this.x = this.x * len;
+    this.y = this.y * len;
+    this.z = this.z * len;
+  }
+  return this;
+};
+
+EZ3.Quaternion.prototype.invert = function(q) {
+  if(q !== undefined) {
+    this.s = q.s;
+    this.x = -q.x;
+    this.y = -q.y;
+    this.z = -q.z;
+  } else {
+    this.s = +this.s;
+    this.x = -this.x;
+    this.y = -this.y;
+    this.z = -this.z;
+  }
+  return this;
+};
+
+EZ3.Quaternion.prototype.length = function() {
+  var s2 = this.s * this.s;
+  var x2 = this.x * this.x;
+  var y2 = this.y * this.y;
+  var z2 = this.z * this.z;
+
+  return Math.sqrt(s2 + x2 + y2 + z2);
+};
+
+EZ3.Quaternion.prototype.testDiff = function(q) {
+  var ds = (this.s !== q.s);
+  var dx = (this.x !== q.x);
+  var dy = (this.y !== q.y);
+  var dz = (this.z !== q.z);
+
+  return (ds || dx || dy || dz);
+};
+
+EZ3.Quaternion.prototype.fromAxisAngle = function(axis, angle) {
+  var sin2 = Math.sin(0.5 * angle);
+  this.x = sin2 * axis.x;
+  this.y = sin2 * axis.y;
+  this.z = sin2 * axis.z;
+  this.s = Math.cos(0.5 * angle);
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
+  var matrix = new EZ3.Matrix3();
+  var yy2;
+  var xy2;
+  var xz2;
+  var yz2;
+  var zz2;
+  var wz2;
+  var wy2;
+  var wx2;
+  var xx2;
+
+  if(q) {
+    yy2 = 2.0 * q.y * q.y;
+    xy2 = 2.0 * q.x * q.y;
+    xz2 = 2.0 * q.x * q.z;
+    yz2 = 2.0 * q.y * q.z;
+    zz2 = 2.0 * q.z * q.z;
+    wz2 = 2.0 * q.s * q.z;
+    wy2 = 2.0 * q.s * q.y;
+    wx2 = 2.0 * q.s * q.x;
+    xx2 = 2.0 * q.x * q.x;
+  } else {
+    yy2 = 2.0 * this.y * this.y;
+    xy2 = 2.0 * this.x * this.y;
+    xz2 = 2.0 * this.x * this.z;
+    yz2 = 2.0 * this.y * this.z;
+    zz2 = 2.0 * this.z * this.z;
+    wz2 = 2.0 * this.s * this.z;
+    wy2 = 2.0 * this.s * this.y;
+    wx2 = 2.0 * this.s * this.x;
+    xx2 = 2.0 * this.x * this.x;
+  }
+
+  matrix.elements[0] = - yy2 - zz2 + 1.0;
+  matrix.elements[1] = xy2 - mode * wz2;
+  matrix.elements[2] = xz2 + mode * wy2;
+
+  matrix.elements[3] = xy2 + mode * wz2;
+  matrix.elements[4] = - xx2 - zz2 + 1.0;
+  matrix.elements[5] = yz2 - mode * wx2;
+
+  matrix.elements[6] = xz2 - mode * wy2;
+  matrix.elements[7] = yz2 + mode * wx2;
+  matrix.elements[8] = - xx2 - yy2 + 1.0;
+
+  return matrix;
+};
+
+EZ3.Quaternion.prototype.copy = function(q) {
+  this.s = q.s;
+  this.x = q.x;
+  this.y = q.y;
+  this.z = q.z;
+  return this;
+};
+
+EZ3.Quaternion.prototype.clone = function() {
+  return new EZ3.Quaternion(this.s, this.x, this.y, this.z);
+};
+
+EZ3.Quaternion.prototype.toString = function() {
+  var x = this.x.toFixed(4);
+  var y = this.y.toFixed(4);
+  var z = this.z.toFixed(4);
+  var s = this.s.toFixed(4);
+
+  return 'Quaternion[' + s + ', ' + x + ', ' + y + ', ' + z + ' ]';
+};
+
+Object.defineProperty(EZ3.Quaternion.prototype, 's', {
+  get: function() {
+    return this._s;
+  },
+  set: function(s) {
+    this._s = s;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Quaternion.prototype, 'x', {
+  get: function() {
+    return this._x;
+  },
+  set: function(x) {
+    this._x = x;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Quaternion.prototype, 'y', {
+  get: function() {
+    return this._y;
+  },
+  set: function(y) {
+    this._y = y;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Quaternion.prototype, 'z', {
+  get: function() {
+    return this._z;
+  },
+  set: function(z) {
+    this._z = z;
+    this.dirty = true;
+  }
+});
+
+EZ3.Quaternion.NORMAL = 1.0;
+EZ3.Quaternion.INVERSE = -1.0;
+
+/**
+ * @class Vector2
+ */
+
+EZ3.Vector2 = function(x, y) {
+  this._x = x || 0;
+  this._y = y || 0;
+  this.dirty = true;
+};
+
+EZ3.Vector2.prototype.init = function(x, y) {
+  this.x = x || 0;
+  this.y = y || 0;
+  return this;
+};
+
+EZ3.Vector2.prototype.set = function(x, y) {
+  this.x = x;
+  this.y = y;
+  return this;
+};
+
+EZ3.Vector2.prototype.add = function(v1, v2) {
+  this.x = v1.x + v2.x;
+  this.y = v1.y + v2.y;
+  return this;
+};
+
+EZ3.Vector2.prototype.addEqual = function(v) {
+  this.x += v.x;
+  this.y += v.y;
+  return this;
+};
+
+EZ3.Vector2.prototype.sub = function(v1, v2) {
+  this.x = v1.x - v2.x;
+  this.y = v1.y - v2.y;
+  return this;
+};
+
+EZ3.Vector2.prototype.subEqual = function(v) {
+  this.x -= v.x;
+  this.y -= v.y;
+  return this;
+};
+
+EZ3.Vector2.prototype.addScale = function(v, s) {
+  this.x += v.x * s;
+  this.y += v.y * s;
+  return this;
+};
+
+EZ3.Vector2.prototype.scale = function(v, s) {
+  this.x = v.x * s;
+  this.y = v.y * s;
+  return this;
+};
+
+EZ3.Vector2.prototype.scaleEqual = function(s) {
+  this.x *= s;
+  this.y *= s;
+  return this;
+};
+
+EZ3.Vector2.prototype.div = function(v1, v2) {
+  if (!v2.hasZero()) {
+    this.x = v1.x / v2.x;
+    this.y = v1.y / v2.y;
+  }
+  return this;
+};
+
+EZ3.Vector2.prototype.divEqual = function(v) {
+  if (!v.hasZero()) {
+    this.x /= v.x;
+    this.y /= v.y;
+    this.z /= v.z;
+  }
+  return this;
+};
+
+EZ3.Vector2.prototype.dot = function(v1, v2) {
+  if (v2 !== undefined)
+    return v1.x * v2.x + v1.y * v2.y;
+  else
+    return this.x * v1.x + this.y * v1.y;
+};
+
+EZ3.Vector2.prototype.max = function(v1, v2) {
+  if (v2 !== undefined) {
+    this.x = (v1.x > v2.x) ? v1.x : v2.x;
+    this.y = (v1.y > v2.y) ? v1.y : v2.y;
+  } else {
+    if (this.x < v1.x)
+      this.x = v1.x;
+
+    if (this.y < v1.y)
+      this.y = v1.y;
+  }
+  return this;
+};
+
+EZ3.Vector2.prototype.min = function(v1, v2) {
+  if (v2 !== undefined) {
+    this.x = (v1.x < v2.x) ? v1.x : v2.x;
+    this.y = (v1.y < v2.y) ? v1.y : v2.y;
+  } else {
+    if (this.x > v1.x)
+      this.x = v1.x;
+
+    if (this.y > v1.y)
+      this.y = v1.y;
+  }
+  return this;
+};
+
+EZ3.Vector2.prototype.length = function(v) {
+  if (v !== undefined)
+    return Math.sqrt(v.dot(v));
+  else
+    return Math.sqrt(this.dot(this));
+};
+
+EZ3.Vector2.prototype.normalize = function(v) {
+  var l;
+
+  if (v !== undefined) {
+    l = v.length();
+
+    if (l > 0) {
+      l = 1.0 / l;
+      this.x = v.x * l;
+      this.y = v.y * l;
+    }
+  } else {
+    l = this.length();
+
+    if (l > 0) {
+      l = 1.0 / l;
+      this.x *= l;
+      this.y *= l;
+    }
+  }
+  return this;
+};
+
+EZ3.Vector2.prototype.invert = function(v) {
+  if (v !== undefined) {
+    this.x = -v.x;
+    this.y = -v.y;
+  } else {
+    this.x = -this.x;
+    this.y = -this.y;
+  }
+  return this;
+};
+
+EZ3.Vector2.prototype.copy = function(v) {
+  this.x = v.x;
+  this.y = v.y;
+  return this;
+};
+
+EZ3.Vector2.prototype.clone = function() {
+  return new EZ3.Vector2(this.x, this.y);
+};
+
+EZ3.Vector2.prototype.toArray = function() {
+  return [this.x, this.y];
+};
+
+EZ3.Vector2.prototype.testEqual = function(v) {
+  if(v instanceof EZ3.Vector2)
+    return ((this.x === v.x) && (this.y === v.y));
+  else
+    return false;
+};
+
+EZ3.Vector2.prototype.hasZero = function(v) {
+  if (v !== undefined)
+    return ((v.x === 0.0) || (v.y === 0.0));
+  else
+    return ((this.x === 0.0) || (this.y === 0.0));
+};
+
+EZ3.Vector2.prototype.testZero = function(v) {
+  if (v !== undefined)
+    return ((v.x === 0.0) && (v.y === 0.0));
+  else
+    return ((this.x === 0.0) && (this.y === 0.0));
+};
+
+EZ3.Vector2.prototype.testDiff = function(v) {
+  return ((this.x !== v.x) && (this.y !== v.y));
+};
+
+EZ3.Vector2.prototype.toString = function() {
+  return 'Vector2[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ']';
+};
+
+Object.defineProperty(EZ3.Vector2.prototype, 'x', {
+  get: function() {
+    return this._x;
+  },
+  set: function(x) {
+    this._x = x;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Vector2.prototype, 'y', {
+  get: function() {
+    return this._y;
+  },
+  set: function(y) {
+    this._y = y;
+    this.dirty = true;
+  }
+});
+
+/**
+ * @class Vector3
+ */
+
+EZ3.Vector3 = function(x, y, z) {
+  this._x = x || 0;
+  this._y = y || 0;
+  this._z = z || 0;
+  this.dirty = true;
+};
+
+EZ3.Vector3.prototype.constructor = EZ3.Vector3;
+
+EZ3.Vector3.prototype.init = function(x, y, z) {
+  this.x = x || 0;
+  this.y = y || 0;
+  this.z = z || 0;
+  return this;
+};
+
+EZ3.Vector3.prototype.set = function(x, y, z) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  return this;
+};
+
+EZ3.Vector3.prototype.add = function(v1, v2) {
+  this.x = v1.x + v2.x;
+  this.y = v1.y + v2.y;
+  this.z = v1.z + v2.z;
+  return this;
+};
+
+EZ3.Vector3.prototype.addEqual = function(v) {
+  this.x += v.x;
+  this.y += v.y;
+  this.z += v.z;
+  return this;
+};
+
+EZ3.Vector3.prototype.sub = function(v1, v2) {
+  this.x = v1.x - v2.x;
+  this.y = v1.y - v2.y;
+  this.z = v1.z - v2.z;
+  return this;
+};
+
+EZ3.Vector3.prototype.subEqual = function(v) {
+  this.x -= v.x;
+  this.y -= v.y;
+  this.z -= v.z;
+  return this;
+};
+
+EZ3.Vector3.prototype.addScale = function(v, s) {
+  this.x += v.x * s;
+  this.y += v.y * s;
+  this.z += v.z * s;
+};
+
+EZ3.Vector3.prototype.scale = function(v, s) {
+  this.x = v.x * s;
+  this.y = v.y * s;
+  this.z = v.z * s;
+  return this;
+};
+
+EZ3.Vector3.prototype.scaleEqual = function(s) {
+  this.x *= s;
+  this.y *= s;
+  this.z *= s;
+  return this;
+};
+
+EZ3.Vector3.prototype.div = function(v1, v2) {
+  if (v2 !== undefined) {
+    if (!v2.hasZero()) {
+      this.x = v1.x / v2.x;
+      this.y = v1.y / v2.y;
+      this.z = v1.z / v2.z;
+    }
+  } else {
+    if (!v1.hasZero()) {
+      this.x = this.x / v1.x;
+      this.y = this.y / v1.y;
+      this.z = this.z / v1.z;
+    }
+  }
+  return this;
+};
+
+EZ3.Vector3.prototype.divEqual = function(v) {
+  if (!v.hasZero()) {
+    this.x /= v.x;
+    this.y /= v.y;
+    this.z /= v.z;
+  }
+  return this;
+};
+
+EZ3.Vector3.prototype.dot = function(v1, v2) {
+  if (v2 !== undefined)
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+  else
+    return this.x * v1.x + this.y * v1.y + this.z * v1.z;
+};
+
+EZ3.Vector3.prototype.max = function(v1, v2) {
+  if (v2 !== undefined) {
+    this.x = (v1.x > v2.x) ? v1.x : v2.x;
+    this.y = (v1.y > v2.y) ? v1.y : v2.y;
+    this.z = (v1.z > v2.z) ? v1.z : v2.z;
+  } else {
+    if (this.x < v1.x)
+      this.x = v1.x;
+
+    if (this.y < v1.y)
+      this.y = v1.y;
+
+    if (this.z < v1.z)
+      this.z = v1.z;
+  }
+  return this;
+};
+
+EZ3.Vector3.prototype.min = function(v1, v2) {
+  if (v2 !== undefined) {
+    this.x = (v1.x < v2.x) ? v1.x : v2.x;
+    this.y = (v1.y < v2.y) ? v1.y : v2.y;
+    this.z = (v1.z < v2.z) ? v1.z : v2.z;
+  } else {
+    if (this.x > v1.x)
+      this.x = v1.x;
+
+    if (this.y > v1.y)
+      this.y = v1.y;
+
+    if (this.z > v1.z)
+      this.z = v1.z;
+  }
+  return this;
+};
+
+EZ3.Vector3.prototype.len = function() {
+  return this.x * this.x + this.y * this.y + this.z * this.z;
+};
+
+EZ3.Vector3.prototype.mul = function(o, v, m) {
+  var e = m.elements;
+  this.x = o.x + v.x * e[0] + v.y * e[1] + v.z * e[2];
+  this.y = o.y + v.x * e[3] + v.y * e[4] + v.z * e[5];
+  this.z = o.z + v.x * e[6] + v.y * e[7] + v.z * e[8];
+  return this;
+};
+
+EZ3.Vector3.prototype.cross = function(v1, v2) {
+  var x;
+  var y;
+  var z;
+
+  if (v2 !== undefined) {
+    x = v1.y * v2.z - v1.z * v2.y;
+    y = v1.z * v2.x - v1.x * v2.z;
+    z = v1.x * v2.y - v1.y * v2.x;
+  } else {
+    x = v1.y * this.z - v1.z * this.y;
+    y = v1.z * this.x - v1.x * this.z;
+    z = v1.x * this.y - v1.y * this.x;
+  }
+
+  this.x = x;
+  this.y = y;
+  this.z = z;
+
+  return this;
+};
+
+EZ3.Vector3.prototype.mulMat = function(m, v) {
+  var e = m.elements;
+  var x;
+  var y;
+  var z;
+
+  if (v !== undefined) {
+    x = v.x;
+    y = v.y;
+    z = v.z;
+  } else {
+    x = this.x;
+    y = this.y;
+    z = this.z;
+  }
+
+  this.x = x * e[0] + y * e[1] + z * e[2];
+  this.y = x * e[3] + y * e[4] + z * e[5];
+  this.z = x * e[6] + y * e[7] + z * e[8];
+
+  return this;
+};
+
+EZ3.Vector3.prototype.applyQuaternion = function(q) {
+  var x = this.x;
+  var y = this.y;
+  var z = this.z;
+  var qx = q.x;
+  var qy = q.y;
+  var qz = q.z;
+  var qs = q.s;
+  var ix = qs * x + qy * z - qz * y;
+  var iy = qs * y + qz * x - qx * z;
+  var iz = qs * z + qx * y - qy * x;
+  var iw = -qx * x - qy * y - qz * z;
+
+  this.x = ix * qs + iw * -qx + iy * -qz - iz * -qy;
+  this.y = iy * qs + iw * -qy + iz * -qx - ix * -qz;
+  this.z = iz * qs + iw * -qz + ix * -qy - iy * -qx;
+
+  return this;
+};
+
+EZ3.Vector3.prototype.length = function(v) {
+  if (v !== undefined)
+    return Math.sqrt(v.dot(v));
+  else
+    return Math.sqrt(this.dot(this));
+};
+
+EZ3.Vector3.prototype.normalize = function(v) {
+  var l;
+
+  if (v !== undefined) {
+
+    l = v.length();
+
+    if (l > 0) {
+      l = 1.0 / l;
+      this.x = v.x * l;
+      this.y = v.y * l;
+      this.z = v.z * l;
+    }
+  } else {
+
+    l = this.length();
+
+    if (l > 0) {
+      l = 1.0 / l;
+      this.x *= l;
+      this.y *= l;
+      this.z *= l;
+    }
+  }
+
+  return this;
+};
+
+EZ3.Vector3.prototype.invert = function(v) {
+  if (v !== undefined) {
+    this.x = -v.x;
+    this.y = -v.y;
+    this.z = -v.z;
+  } else {
+    this.x = -this.x;
+    this.y = -this.y;
+    this.z = -this.z;
+  }
+  return this;
+};
+
+EZ3.Vector3.prototype.copy = function(v) {
+  this.x = v.x;
+  this.y = v.y;
+  this.z = v.z;
+  return this;
+};
+
+EZ3.Vector3.prototype.clone = function() {
+  return new EZ3.Vector3(this.x, this.y, this.z);
+};
+
+EZ3.Vector3.prototype.toArray = function() {
+  return [this.x, this.y, this.z];
+};
+
+EZ3.Vector3.prototype.testEqual = function(v) {
+  if(v instanceof EZ3.Vector3)
+    return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
+  else
+    return false;
+};
+
+EZ3.Vector3.prototype.hasZero = function(v) {
+  if (v !== undefined)
+    return ((v.x === 0.0) || (v.y === 0.0) || (v.z === 0.0));
+  else
+    return ((this.x === 0.0) || (this.y === 0.0) || (this.z === 0.0));
+};
+
+EZ3.Vector3.prototype.testZero = function(v) {
+  if (v !== undefined)
+    return ((v.x === 0.0) && (v.y === 0.0) && (v.z === 0.0));
+  else
+    return ((this.x === 0.0) && (this.y === 0.0) && (this.z === 0.0));
+};
+
+EZ3.Vector3.prototype.testDiff = function(v) {
+  return ((this.x !== v.x) && (this.y !== v.y) && (this.z !== v.z));
+};
+
+EZ3.Vector3.prototype.toString = function() {
+  var x = this.x.toFixed(4);
+  var y = this.y.toFixed(4);
+  var z = this.z.toFixed(4);
+
+  return 'Vector3[' + x + ', ' + y + ', ' + z + ']';
+};
+
+EZ3.Vector3.prototype.setPositionFromMatrix = function(m) {
+  if (m instanceof EZ3.Matrix4) {
+    this.x = m.elements[12];
+    this.y = m.elements[13];
+    this.z = m.elements[14];
+  }
+
+  return this;
+};
+
+EZ3.Vector3.prototype.set = EZ3.Vector3.prototype.init;
+
+Object.defineProperty(EZ3.Vector3.prototype, 'x', {
+  get: function() {
+    return this._x;
+  },
+  set: function(x) {
+    this._x = x;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Vector3.prototype, 'y', {
+  get: function() {
+    return this._y;
+  },
+  set: function(y) {
+    this._y = y;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Vector3.prototype, 'z', {
+  get: function() {
+    return this._z;
+  },
+  set: function(z) {
+    this._z = z;
+    this.dirty = true;
+  }
+});
+
+/**
+ * @class Vec4
+ */
+
+EZ3.Vector4 = function(x, y, z, w) {
+  this._x = x || 0;
+  this._y = y || 0;
+  this._z = z || 0;
+  this._w = w || 0;
+  this.dirty = true;
+};
+
+EZ3.Vector4.prototype.constructor = EZ3.Vector4;
+
+EZ3.Vector4.prototype.init = function(x, y, z, w) {
+  this.x = x || 0;
+  this.y = y || 0;
+  this.z = z || 0;
+  this.w = w || 0;
+  return this;
+};
+
+EZ3.Vector4.prototype.set = function(x, y, z, w) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  this.w = w;
+};
+
+EZ3.Vector4.prototype.add = function(v1, v2) {
+  this.x = v1.x + v2.x;
+  this.y = v1.y + v2.y;
+  this.z = v1.z + v2.z;
+  this.w = v1.w + v2.w;
+  return this;
+};
+
+EZ3.Vector4.prototype.addEqual = function(v) {
+  this.x += v.x;
+  this.y += v.y;
+  this.z += v.z;
+  this.w += v.w;
+  return this;
+};
+
+EZ3.Vector4.prototype.sub = function(v1, v2) {
+  this.x = v1.x - v2.x;
+  this.y = v1.y - v2.y;
+  this.z = v1.z - v2.z;
+  this.w = v1.w - v2.w;
+  return this;
+};
+
+EZ3.Vector4.prototype.subEqual = function(v) {
+  this.x -= v.x;
+  this.y -= v.y;
+  this.z -= v.z;
+  this.w -= v.w;
+  return this;
+};
+
+EZ3.Vector4.prototype.addScale = function(v, s) {
+  this.x += v.x * s;
+  this.y += v.y * s;
+  this.z += v.z * s;
+  this.w += v.w * s;
+  return this;
+};
+
+EZ3.Vector4.prototype.scale = function(v, s) {
+  this.x = v.x * s;
+  this.y = v.y * s;
+  this.z = v.z * s;
+  this.w = v.w * s;
+  return this;
+};
+
+EZ3.Vector4.prototype.scaleEqual = function(s) {
+  this.x *= s;
+  this.y *= s;
+  this.z *= s;
+  this.w *= s;
+  return this;
+};
+
+EZ3.Vector4.prototype.div = function(v1, v2) {
+  if (v2 !== undefined) {
+    if (!v2.hasZero()) {
+      this.x = v1.x / v2.x;
+      this.y = v1.y / v2.y;
+      this.z = v1.z / v2.z;
+      this.w = v1.w / v2.w;
+    }
+  } else {
+    if (!v1.hasZero()) {
+      this.x = this.x / v1.x;
+      this.y = this.y / v1.y;
+      this.z = this.z / v1.z;
+      this.w = this.w / v1.w;
+    }
+  }
+  return this;
+};
+
+EZ3.Vector4.prototype.divEqual = function(v) {
+  if (!v.hasZero()) {
+    this.x /= v.x;
+    this.y /= v.y;
+    this.z /= v.z;
+    this.w /= v.w;
+  }
+  return this;
+};
+
+EZ3.Vector4.prototype.dot = function(v1, v2) {
+  if (v2 !== undefined)
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
+  else
+    return this.x * v1.x + this.y * v1.y + this.z * v1.z + this.w * v1.w;
+};
+
+EZ3.Vector4.prototype.max = function(v1, v2) {
+  if (v2 !== undefined) {
+    this.x = (v1.x > v2.x) ? v1.x : v2.x;
+    this.y = (v1.y > v2.y) ? v1.y : v2.y;
+    this.z = (v1.z > v2.z) ? v1.z : v2.z;
+    this.w = (v1.w > v2.w) ? v1.w : v2.w;
+  } else {
+    if (this.x < v1.x)
+      this.x = v1.x;
+
+    if (this.y < v1.y)
+      this.y = v1.y;
+
+    if (this.z < v1.z)
+      this.z = v1.z;
+
+    if (this.w < v1.w)
+      this.w = v1.w;
+  }
+  return this;
+};
+
+EZ3.Vector4.prototype.min = function(v1, v2) {
+  if (v2 !== undefined) {
+    this.x = (v1.x < v2.x) ? v1.x : v2.x;
+    this.y = (v1.y < v2.y) ? v1.y : v2.y;
+    this.z = (v1.z < v2.z) ? v1.z : v2.z;
+    this.w = (v1.w < v2.w) ? v1.w : v2.w;
+  } else {
+    if (this.x > v1.x)
+      this.x = v1.x;
+
+    if (this.y > v1.y)
+      this.y = v1.y;
+
+    if (this.z > v1.z)
+      this.z = v1.z;
+
+    if (this.w > v1.w)
+      this.w = v1.w;
+  }
+  return this;
+};
+
+EZ3.Vector4.prototype.len = function() {
+  return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+};
+
+EZ3.Vector4.prototype.mul = function(o, v, m) {
+  var e = m.elements;
+
+  this.x = o.x + v.x * e[0] + v.y * e[1] + v.z * e[2] + v.w * e[3];
+  this.y = o.y + v.x * e[4] + v.y * e[5] + v.z * e[6] + v.w * e[7];
+  this.z = o.z + v.x * e[8] + v.y * e[9] + v.z * e[10] + v.w * e[11];
+  this.w = o.w + v.x * e[12] + v.y * e[13] + v.z * e[14] + v.w * e[15];
+  return this;
+};
+
+EZ3.Vector4.prototype.mulMat = function(m, v) {
+  var x, y, z, w;
+  var e = m.elements;
+
+  if (v !== undefined) {
+    x = v.x;
+    y = v.y;
+    z = v.z;
+    w = v.w;
+  } else {
+    x = this.x;
+    y = this.y;
+    z = this.z;
+    w = this.w;
+  }
+
+  this.x = x * e[0] + y * e[4] + z * e[8] + w * e[12];
+  this.y = x * e[1] + y * e[5] + z * e[9] + w * e[13];
+  this.z = x * e[2] + y * e[6] + z * e[10] + w * e[14];
+  this.w = x * e[3] + y * e[7] + z * e[11] + w * e[15];
+
+  return this;
+};
+
+EZ3.Vector4.prototype.length = function(v) {
+  if (v !== undefined)
+    return Math.sqrt(v.dot(v));
+  else
+    return Math.sqrt(this.dot(this));
+};
+
+EZ3.Vector4.prototype.normalize = function(v) {
+  var l;
+
+  if (v !== undefined) {
+
+    l = v.length();
+
+    if (l > 0) {
+      l = 1.0 / l;
+      this.x = v.x * l;
+      this.y = v.y * l;
+      this.z = v.z * l;
+      this.w = v.w * l;
+    }
+  } else {
+
+    l = this.length();
+
+    if (l > 0) {
+      l = 1.0 / l;
+      this.x *= l;
+      this.y *= l;
+      this.z *= l;
+      this.w *= l;
+    }
+  }
+
+  return this;
+};
+
+EZ3.Vector4.prototype.invert = function(v) {
+  if (v !== undefined) {
+    this.x = -v.x;
+    this.y = -v.y;
+    this.z = -v.z;
+    this.w = -v.w;
+  } else {
+    this.x = -this.x;
+    this.y = -this.y;
+    this.z = -this.z;
+    this.w = -this.w;
+  }
+  return this;
+};
+
+EZ3.Vector4.prototype.copy = function(v) {
+  this.x = v.x;
+  this.y = v.y;
+  this.z = v.z;
+  this.w = v.w;
+  return this;
+};
+
+EZ3.Vector4.prototype.clone = function() {
+  return new EZ3.Vector4(this.x, this.y, this.z, this.w);
+};
+
+EZ3.Vector4.prototype.toArray = function() {
+  return [this.x, this.y, this.z, this.w];
+};
+
+EZ3.Vector4.prototype.testEqual = function(v) {
+  var x;
+  var y;
+  var z;
+  var w;
+
+  if(v instanceof EZ3.Vector4) {
+    x = (this.x === v.x);
+    y = (this.y === v.y);
+    z = (this.z === v.z);
+    w = (this.w === v.w);
+
+    return (x && y && z && w);
+  } else
+    return false;
+};
+
+EZ3.Vector4.prototype.hasZero = function(v) {
+  var ex;
+  var ey;
+  var ez;
+  var ew;
+
+  if (v !== undefined) {
+    ex = (v.x === 0.0);
+    ey = (v.y === 0.0);
+    ez = (v.z === 0.0);
+    ew = (v.w === 0.0);
+  }else {
+    ex = (this.x === 0.0);
+    ey = (this.y === 0.0);
+    ez = (this.z === 0.0);
+    ew = (this.w === 0.0);
+  }
+
+  return (ex || ey || ez || ew);
+};
+
+EZ3.Vector4.prototype.testZero = function(v) {
+  var ex;
+  var ey;
+  var ez;
+  var ew;
+
+  if (v !== undefined) {
+    ex = (v.x === 0.0);
+    ey = (v.y === 0.0);
+    ez = (v.z === 0.0);
+    ew = (v.w === 0.0);
+  }else {
+    ex = (this.x === 0.0);
+    ey = (this.y === 0.0);
+    ez = (this.z === 0.0);
+    ew = (this.w === 0.0);
+  }
+
+  return (ex && ey && ez && ew);
+};
+
+EZ3.Vector4.prototype.testDiff = function(v) {
+  var dx = (this.x !== v.x);
+  var dy = (this.y !== v.y);
+  var dz = (this.z !== v.z);
+  var dw = (this.w !== v.w);
+
+  return (dx && dy && dz && dw);
+};
+
+EZ3.Vector4.prototype.toString = function() {
+  var x = this.x.toFixed(4);
+  var y = this.y.toFixed(4);
+  var z = this.z.toFixed(4);
+  var w = this.w.toFixed(4);
+
+  return 'Vector4[' + x + ', ' + y + ', ' + z + ', ' + w + ']';
+};
+
+EZ3.Vector4.prototype.toVec2 = function() {
+  return new EZ3.Vector2(this.x, this.y);
+};
+
+EZ3.Vector4.prototype.toVec3 = function() {
+  return new EZ3.Vector3(this.x, this.y, this.z);
+};
+
+Object.defineProperty(EZ3.Vector4.prototype, 'x', {
+  get: function() {
+    return this._x;
+  },
+  set: function(x) {
+    this._x = x;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Vector4.prototype, 'y', {
+  get: function() {
+    return this._y;
+  },
+  set: function(y) {
+    this._y = y;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Vector4.prototype, 'z', {
+  get: function() {
+    return this._z;
+  },
+  set: function(z) {
+    this._z = z;
+    this.dirty = true;
+  }
+});
+
+Object.defineProperty(EZ3.Vector4.prototype, 'w', {
+  get: function() {
+    return this._w;
+  },
+  set: function(w) {
+    this._w = w;
+    this.dirty = true;
+  }
+});
+
+/**
+ * @class Geometry
+ */
 
 EZ3.Geometry = function() {
-  this.uvs = [];
-  this.indices = [];
-  this.normals = [];
-  this.vertices = [];
-  this.tangents = [];
-  this.bitangents = [];
-  this.maxPoint = vec3.create();
-  this.minPoint = vec3.create();
-  this.midPoint = vec3.create();
-
-  this.uvsNeedUpdate = true;
-  this.normalsNeedUpdate = true;
-  this.indicesNeedUpdate = true;
-  this.verticesNeedUpdate = true;
-  this.tangentsNeedUpdate = true;
-  this.bitangentsNeedUpdate = true;
+  this.buffers = new EZ3.ArrayBuffer();
 };
 
-EZ3.Geometry.prototype.initArray = function(size, value) {
-  return Array.apply(null, new Array(size)).map(function() {
-    return value;
-  });
-};
+EZ3.Geometry.prototype.processLinearIndices = function() {
+  var lines = [];
+  var triangles;
+  var i;
 
-EZ3.Geometry.prototype.calculateNormals = function() {
-  var x, y, z, k;
-  var normal, point0, point1, point2, vector0, vector1;
+  if (this.buffers.get('triangle')) {
+    triangles = this.buffers.get('triangle').data;
 
-  normal = vec3.create();
-  point0 = vec3.create();
-  point1 = vec3.create();
-  point2 = vec3.create();
-  vector0 = vec3.create();
-  vector1 = vec3.create();
-
-  var tempNormals = this.initArray(this.vertices.length, 0);
-  var tempAppearances = this.initArray(this.vertices.length / 3, 0);
-
-  for (k = 0; k < this.indices.length; k += 3) {
-
-    x = 3 * this.indices[k + 0];
-    y = 3 * this.indices[k + 1];
-    z = 3 * this.indices[k + 2];
-
-    vec3.set(point0, this.vertices[x + 0], this.vertices[x + 1], this.vertices[x + 2]);
-    vec3.set(point1, this.vertices[y + 0], this.vertices[y + 1], this.vertices[y + 2]);
-    vec3.set(point2, this.vertices[z + 0], this.vertices[z + 1], this.vertices[z + 2]);
-
-    vec3.sub(vector0, point1, point0);
-    vec3.sub(vector1, point2, point0);
-
-    vec3.cross(normal, vector0, vector1);
-
-    if (normal.x !== 0 || normal.y !== 0 || normal.z !== 0) {
-      vec3.normalize(normal, normal);
+    for (i = 0; i < triangles.length; i += 3) {
+      lines.push(triangles[i]);
+      lines.push(triangles[i + 1]);
+      lines.push(triangles[i]);
+      lines.push(triangles[i + 2]);
+      lines.push(triangles[i + 1]);
+      lines.push(triangles[i + 2]);
     }
 
-    tempNormals[x + 0] += normal[0];
-    tempNormals[x + 1] += normal[1];
-    tempNormals[x + 2] += normal[2];
+    this.buffers.add('line', new EZ3.IndexBuffer(lines, false));
+  }
+};
 
-    tempNormals[y + 0] += normal[0];
-    tempNormals[y + 1] += normal[1];
-    tempNormals[y + 2] += normal[2];
+EZ3.Geometry.prototype.processNormals = function() {
+  var normals = [];
+  var tmpNormals = [];
+  var tmpAppearances = [];
+  var normal = new EZ3.Vector3();
+  var point0 = new EZ3.Vector3();
+  var point1 = new EZ3.Vector3();
+  var point2 = new EZ3.Vector3();
+  var vector0 = new EZ3.Vector3();
+  var vector1 = new EZ3.Vector3();
+  var indices = this.buffers.get('triangle').data;
+  var vertices = this.buffers.get('position').data;
+  var buffer;
+  var x;
+  var y;
+  var z;
+  var k;
 
-    tempNormals[z + 0] += normal[0];
-    tempNormals[z + 1] += normal[1];
-    tempNormals[z + 2] += normal[2];
-
-    ++tempAppearances[x / 3];
-    ++tempAppearances[y / 3];
-    ++tempAppearances[z / 3];
+  for (k = 0; k < vertices.length / 3; ++k) {
+    tmpNormals.push(0);
+    tmpNormals.push(0);
+    tmpNormals.push(0);
+    tmpAppearances.push(0);
   }
 
-  for (k = 0; k < this.vertices.length / 3; ++k) {
+  for (k = 0; k < indices.length; k += 3) {
+    x = 3 * indices[k + 0];
+    y = 3 * indices[k + 1];
+    z = 3 * indices[k + 2];
+
+    point0.set(vertices[x + 0], vertices[x + 1], vertices[x + 2]);
+    point1.set(vertices[y + 0], vertices[y + 1], vertices[y + 2]);
+    point2.set(vertices[z + 0], vertices[z + 1], vertices[z + 2]);
+
+    vector0.sub(point1, point0);
+    vector1.sub(point2, point0);
+
+    normal = vector1.cross(vector0);
+
+    if (!normal.testZero())
+      normal.normalize();
+
+    tmpNormals[x + 0] += normal.x;
+    tmpNormals[x + 1] += normal.y;
+    tmpNormals[x + 2] += normal.z;
+
+    tmpNormals[y + 0] += normal.x;
+    tmpNormals[y + 1] += normal.y;
+    tmpNormals[y + 2] += normal.z;
+
+    tmpNormals[z + 0] += normal.x;
+    tmpNormals[z + 1] += normal.y;
+    tmpNormals[z + 2] += normal.z;
+
+    ++tmpAppearances[x / 3];
+    ++tmpAppearances[y / 3];
+    ++tmpAppearances[z / 3];
+  }
+
+  for (k = 0; k < vertices.length / 3; ++k) {
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    this.normals.push(tempNormals[x] / tempAppearances[k]);
-    this.normals.push(tempNormals[y] / tempAppearances[k]);
-    this.normals.push(tempNormals[z] / tempAppearances[k]);
+    normals.push(tmpNormals[x] / tmpAppearances[k]);
+    normals.push(tmpNormals[y] / tmpAppearances[k]);
+    normals.push(tmpNormals[z] / tmpAppearances[k]);
   }
 
-  tempNormals.splice(0, tempNormals.length);
-  tempAppearances.splice(0, tempAppearances.length);
+  tmpNormals = [];
+  tmpAppearances = [];
+  
+  buffer = new EZ3.VertexBuffer(normals, false);
+  buffer.addAttribute('normal', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('normal', buffer);
 };
 
-EZ3.Geometry.prototype.updateMaxPoint = function(x, y, z) {
-  this._maxPoint[0] = Math.max(this._maxPoint[0], x);
-  this._maxPoint[1] = Math.max(this._maxPoint[1], y);
-  this._maxPoint[2] = Math.max(this._maxPoint[2], z);
-};
+EZ3.Geometry.prototype.processTangentsAndBitangents = function() {
+  var tangents = [];
+  var bitangents = [];
+  var tmpTangents = [];
+  var tmpBitangents = [];
+  var point0 = new EZ3.Vector3();
+  var point1 = new EZ3.Vector3();
+  var point2 = new EZ3.Vector3();
+  var normal = new EZ3.Vector3();
+  var tangent = new EZ3.Vector3();
+  var vector0 = new EZ3.Vector3();
+  var vector1 = new EZ3.Vector3();
+  var tmpNormal  = new EZ3.Vector3();
+  var bitangent  = new EZ3.Vector3();
+  var textPoint0 = new EZ3.Vector2();
+  var textPoint1 = new EZ3.Vector2();
+  var textPoint2 = new EZ3.Vector2();
+  var textVector0 = new EZ3.Vector2();
+  var textVector1 = new EZ3.Vector2();
+  var uvs = this.uvs.data;
+  var indices = this.indices.data;
+  var normals = this.normals.data;
+  var vertices = this.vertices.data;
+  var handedness;
+  var x;
+  var y;
+  var z;
+  var vx;
+  var vy;
+  var vz;
+  var tx;
+  var ty;
+  var tz;
+  var r;
+  var k;
 
-EZ3.Geometry.prototype.updateMinPoint = function(x, y, z) {
-  this._minPoint[0] = Math.min(this._minPoint[0], x);
-  this._minPoint[1] = Math.min(this._minPoint[1], y);
-  this._minPoint[2] = Math.min(this._minPoint[2], z);
-};
-
-EZ3.Geometry.prototype.calculateMidPoint = function() {
-  this._midPoint[0] = (this._maxPoint[0] + this._minPoint[0]) * 0.5;
-  this._midPoint[0] = (this._maxPoint[1] + this._minPoint[1]) * 0.5;
-  this._midPoint[0] = (this._maxPoint[2] + this._minPoint[2]) * 0.5;
-};
-
-EZ3.Geometry.prototype.calculateTangents = function() {
-  var x, y, z, k, r;
-
-  var point0 = vec3.create();
-  var point1 = vec3.create();
-  var point2 = vec3.create();
-
-  var vector0 = vec3.create();
-  var vector1 = vec3.create();
-
-  var normal = vec3.create();
-  var tangent = vec4.create();
-  var bitangent = vec3.create();
-
-  var textPoint0 = vec2.create();
-  var textPoint1 = vec2.create();
-  var textPoint2 = vec2.create();
-
-  var textVector0 = vec2.create();
-  var textVector1 = vec2.create();
-
-  var tempT = this.initArray(this.vertices.length, 0);
-  var tempB = this.initArray(this.vertices.length, 0);
-
-  for(k = 0; k < this.indices.length; k += 3) {
-    x = this.indices[k + 0];
-    y = this.indices[k + 1];
-    z = this.indices[k + 2];
-
-    vec3.set(point0, this.vertices[3 * x + 0], this.vertices[3 * x + 1], this.vertices[3 * x + 2]);
-    vec3.set(point1, this.vertices[3 * y + 0], this.vertices[3 * y + 1], this.vertices[3 * y + 2]);
-    vec3.set(point2, this.vertices[3 * z + 0], this.vertices[3 * z + 1], this.vertices[3 * z + 2]);
-
-    vec2.set(textPoint0, this.uv[2 * x + 0], this.uv[2 * x + 1]);
-    vec2.set(textPoint1, this.uv[2 * y + 0], this.uv[2 * y + 1]);
-    vec2.set(textPoint2, this.uv[2 * z + 0], this.uv[2 * z + 1]);
-
-    vec3.sub(vector0, point1, point0);
-    vec3.sub(vector1, point2, point0);
-
-    vec2.sub(textVector0, textPoint1, textPoint0);
-    vec2.sub(textVector1, textPoint2, textPoint0);
-
-    r = 1.0 / (textVector0[0] * textVector1[1] - textVector1[0] * textVector0[1]);
-
-    tangent[0] = (textVector1[1] * vector0[0] - textVector0[1] * vector1[0]) * r;
-    tangent[1] = (textVector1[1] * vector0[1] - textVector0[1] * vector1[1]) * r;
-    tangent[2] = (textVector1[1] * vector0[2] - textVector0[1] * vector1[2]) * r;
-
-    bitangent[0] = (textVector0[0] * vector1[0] - textVector1[0] * vector0[0]) * r;
-    bitangent[1] = (textVector0[0] * vector1[1] - textVector1[0] * vector0[1]) * r;
-    bitangent[2] = (textVector0[0] * vector1[2] - textVector1[0] * vector0[2]) * r;
-
-    tempT[3 * x + 0] += tangent[0];
-    tempT[3 * y + 0] += tangent[1];
-    tempT[3 * z + 0] += tangent[2];
-
-    tempT[3 * x + 1] += tangent[0];
-    tempT[3 * y + 1] += tangent[1];
-    tempT[3 * z + 1] += tangent[2];
-
-    tempT[3 * x + 2] += tangent[0];
-    tempT[3 * y + 2] += tangent[1];
-    tempT[3 * z + 2] += tangent[2];
-
-    tempB[3 * x + 0] += bitangent[0];
-    tempB[3 * y + 0] += bitangent[1];
-    tempB[3 * z + 0] += bitangent[2];
-
-    tempB[3 * x + 1] += bitangent[0];
-    tempB[3 * y + 1] += bitangent[1];
-    tempB[3 * z + 1] += bitangent[2];
-
-    tempB[3 * x + 2] += bitangent[0];
-    tempB[3 * y + 2] += bitangent[1];
-    tempB[3 * z + 2] += bitangent[2];
+  for (k = 0; k < vertices.length; ++k) {
+    tmpTangents.push(0);
+    tmpBitangents.push(0);
   }
 
-  for(k = 0; k < this._vertices.length / 3; ++k) {
+  for (k = 0; k < indices.length; k += 3) {
 
+    vx = 3 * indices[k + 0];
+    vy = 3 * indices[k + 1];
+    vz = 3 * indices[k + 2];
+
+    tx = 2 * indices[k + 0];
+    ty = 2 * indices[k + 1];
+    tz = 2 * indices[k + 2];
+
+    textPoint0.set(uvs[tx + 0], uvs[tx + 1]);
+    textPoint1.set(uvs[ty + 0], uvs[ty + 1]);
+    textPoint2.set(uvs[tz + 0], uvs[tz + 1]);
+
+    point0.set(vertices[vx + 0], vertices[vx + 1], vertices[vx + 2]);
+    point1.set(vertices[vy + 0], vertices[vy + 1], vertices[vy + 2]);
+    point2.set(vertices[vz + 0], vertices[vz + 1], vertices[vz + 2]);
+
+    vector0.sub(point1, point0);
+    vector1.sub(point2, point0);
+
+    textVector0.sub(textPoint1, textPoint0);
+    textVector1.sub(textPoint2, textPoint0);
+
+    r = 1.0 / (textVector0.x * textVector1.y - textVector1.x * textVector0.y);
+
+    tangent.x = (textVector1.y * vector0.x - textVector0.y * vector1.x) * r;
+    tangent.y = (textVector1.y * vector0.y - textVector0.y * vector1.y) * r;
+    tangent.z = (textVector1.y * vector0.z - textVector0.y * vector1.z) * r;
+
+    bitangent.x = (textVector0.x * vector1.x - textVector1.x * vector0.x) * r;
+    bitangent.y = (textVector0.x * vector1.y - textVector1.x * vector0.y) * r;
+    bitangent.z = (textVector0.x * vector1.z - textVector1.x * vector0.z) * r;
+
+    tmpTangents[vx + 0] += tangent.x;
+    tmpTangents[vy + 0] += tangent.y;
+    tmpTangents[vz + 0] += tangent.z;
+
+    tmpTangents[vx + 1] += tangent.x;
+    tmpTangents[vy + 1] += tangent.y;
+    tmpTangents[vz + 1] += tangent.z;
+
+    tmpTangents[vx + 2] += tangent.x;
+    tmpTangents[vy + 2] += tangent.y;
+    tmpTangents[vz + 2] += tangent.z;
+
+    tmpBitangents[vx + 0] += bitangent.x;
+    tmpBitangents[vy + 0] += bitangent.y;
+    tmpBitangents[vz + 0] += bitangent.z;
+
+    tmpBitangents[vx + 1] += bitangent.x;
+    tmpBitangents[vy + 1] += bitangent.y;
+    tmpBitangents[vz + 1] += bitangent.z;
+
+    tmpBitangents[vx + 2] += bitangent.x;
+    tmpBitangents[vy + 2] += bitangent.y;
+    tmpBitangents[vz + 2] += bitangent.z;
+  }
+
+  for (k = 0; k < vertices.length / 3; ++k) {
     x = 3 * k + 0;
     y = 3 * k + 1;
     z = 3 * k + 2;
 
-    vec3.set(tangent, tempT[x], tempT[y], tempT[z]);
-    vec3.set(bitangent, tempB[x], tempB[y], tempB[z]);
-    vec3.set(normal, this.normals[x], this.normals[y], this.normals[z]);
+    tangent.set(tmpTangents[x], tmpTangents[y], tmpTangents[z]);
+    bitangent.set(tmpBitangents[x], tmpBitangents[y], tmpBitangents[z]);
+    normal.set(normals[x], normals[y], normals[z]);
+
+    tmpNormal.copy(normal);
+    tmpNormal.scaleEqual(tmpNormal.dot(tangent));
+    tangent.subEqual(tmpNormal);
+    tangent.normalize();
+
+    tmpNormal.copy(normal);
+    handedness = (bitangent.dot(tmpNormal.cross(tangent))) < 0 ? -1 : 1;
+
+    bitangents.push(bitangent.x, bitangent.y, bitangent.z);
+    tangents.push(tangent.x, tangent.y, tangent.z, handedness);
   }
+
+  tmpTangents = [];
+  tmpBitangents = [];
+
+  this.tangents.data = tangents;
+  this.bitangents.data = bitangents;
 };
 
-EZ3.Geometry.prototype.calculateBoundingBox = function() {
+/**
+ * @class ArrayBuffer
+ */
 
+EZ3.ArrayBuffer = function() {
+  this._id = null;
+  this._index = {};
+  this._vertex = {};
 };
 
-EZ3.Mesh = function(geometry, material) {
-  EZ3.Entity.call(this);
+EZ3.ArrayBuffer.prototype.constructor = EZ3.ArrayBuffer;
 
-  this.dynamic = false;
-  this._buffer = new EZ3.Buffer();
-  this.material = (material instanceof EZ3.Material) ? material : null;
-  this.geometry = (geometry instanceof EZ3.Geometry) ? geometry : null;
-};
+EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, index) {
+  var buffer;
+  var k;
 
-EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
-EZ3.Mesh.prototype.constructor = EZ3.Mesh;
+  if (state.extension['OES_vertex_array_object']) {
+    if (!this._id)
+      this._id = state.extension['OES_vertex_array_object'].createVertexArrayOES();
 
-EZ3.Mesh.prototype.init = function(gl) {
-  if(this.geometry){
-    var hint = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
+    state.extension['OES_vertex_array_object'].bindVertexArrayOES(this._id);
 
-    if (this.geometry.verticesNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.VERTEX, this.geometry.vertices.length, this.geometry.vertices, hint);
-      this.geometry.verticesNeedUpdate = false;
-    }
+    for (k in this._vertex) {
+      buffer = this._vertex[k];
 
-    if (this.geometry.normalsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.NORMAL, this.geometry.normals.length, this.geometry.normals, hint);
-      this.geometry.normalsNeedUpdate = false;
-    }
-
-    if (this.geometry.uvsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.UV, this.geometry.uvs.length, this.geometry.uvs, hint);
-      this.geometry.uvNeedUpdate = false;
-    }
-
-    if (this.geometry.tangentsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.TANGENTS, this.geometry.tangents.length, this.geometry.tangents, hint);
-      this.geometry.tangentNeedUpdate = false;
-    }
-
-    if (this.geometry.bitangentsNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.BITANGENTS, this.geometry.bitangents.length, this.geometry.bitangents, hint);
-      this.geometry.bitangentsNeedUpdate = false;
-    }
-
-    if (this.geometry.indicesNeedUpdate) {
-      this._buffer.init(gl, EZ3.Buffer.INDEX, this.geometry.indices.length, this.geometry.indices, hint);
-      this.geometry.indicesNeedUpdate = false;
-    }
-  }
-};
-
-EZ3.Mesh.prototype.render = function(gl) {
-  if(this.geometry){
-    if (this.geometry.indices.length)
-      this._buffer.draw(gl, EZ3.ELEMENTS_DRAW, this.geometry.indices.length);
-    else
-      this._buffer.draw(gl, EZ3.ARRAYS_DRAW, this.geometry.vertices.length);
-  }
-};
-
-EZ3.AstroidalEllipsoid = function(xRadius, yRadius, zRadius, stacks, slices) {
-  EZ3.Geometry.call(this);
-
-  this._slices = slices;
-  this._stacks = stacks;
-  this._xRadius = xRadius;
-  this._yRadius = yRadius;
-  this._zRadius = zRadius;
-
-  var that = this;
-
-  function _create() {
-    var u, v;
-    var phi, rho;
-    var normal, vertex;
-    var cosS, cosT, sinS, sinT;
-    var totalSlices, totalStacks;
-    var s, t;
-
-    vertex = vec3.create();
-    normal = vec3.create();
-
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
-
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
-        u = s * totalSlices;
-        v = t * totalStacks;
-
-        phi = EZ3.DOUBLE_PI * u - EZ3.PI;
-        rho = EZ3.PI * v - EZ3.HALF_PI;
-
-        cosS = Math.pow(Math.cos(phi), 3.0);
-        cosT = Math.pow(Math.cos(rho), 3.0);
-        sinS = Math.pow(Math.sin(phi), 3.0);
-        sinT = Math.pow(Math.sin(rho), 3.0);
-
-        vertex[0] = (that._xRadius * cosT * cosS);
-        vertex[1] = (that._yRadius * sinT);
-        vertex[2] = (that._zRadius * cosT * sinS);
-
-        normal[0] = vertex[0] / that._xRadius;
-        normal[1] = vertex[1] / that._yRadius;
-        normal[2] = vertex[2] / that._zRadius;
-
-        vec3.normalize(normal, normal);
-
-        that.uvs.push(u);
-        that.uvs.push(v);
-
-        that.normals.push(normal[0]);
-        that.normals.push(normal[1]);
-        that.normals.push(normal[2]);
-
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
+      if (buffer.validate(gl, attributes) && buffer.dirty) {
+        buffer.bind(gl, attributes);
+        buffer.update(gl);
+        buffer.dirty = false;
       }
     }
+  } else {
+    for (k in this._vertex) {
+      buffer = this._vertex[k];
 
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
+      if (buffer.validate(gl, attributes)) {
+        buffer.bind(gl, attributes, state);
 
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
+        if (buffer.dirty) {
+          buffer.update(gl);
+          buffer.dirty = false;
+        }
       }
     }
-
   }
 
-  _create();
+  if (index) {
+    index.bind(gl);
+
+    if (index.dirty) {
+      index.update(gl, state);
+      index.dirty = false;
+    }
+  }
 };
 
-EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
-
-EZ3.Box = function(width, height, depth) {
-  EZ3.Geometry.call(this);
-
-  this._width = width;
-  this._depth = depth;
-  this._height = height;
-
-  this._halfWidth  = this._width * 0.5;
-  this._halfDepth  = this._depth * 0.5;
-  this._halfHeight = this._height * 0.5;
-
-  var that = this;
-
-  function _create () {
-    that.vertices = [
-      +that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, +that._halfHeight, +that._halfDepth,
-      -that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, +that._halfDepth,
-      +that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, -that._halfHeight, -that._halfDepth,
-      -that._halfWidth, +that._halfHeight, -that._halfDepth,
-      +that._halfWidth, +that._halfHeight, -that._halfDepth
-    ];
-
-    that.indices = [
-      0, 1 ,2,
-      0, 2, 3,
-      7, 4, 5,
-      7, 5, 6,
-      6, 5, 2,
-      6, 2, 1,
-      7, 0, 3,
-      7, 3, 4,
-      7, 6, 1,
-      7, 1, 0,
-      3, 2, 5,
-      3, 5, 4
-    ];
-
-    that.calculateNormals();
-  }
-
-  _create();
+EZ3.ArrayBuffer.prototype.add = function(name, buffer) {
+  if (buffer instanceof EZ3.IndexBuffer)
+    this._index[name] = buffer;
+  else if (buffer instanceof EZ3.VertexBuffer)
+    this._vertex[name] = buffer;
 };
 
-EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.Box.prototype.constructor = EZ3.Box;
-
-EZ3.Cone = function(base, height, slices, stacks) {
-  EZ3.Geometry.call(this);
-
-  this._base = base;
-  this._height = height;
-  this._slices = slices;
-  this._stacks = stacks;
-
-  var that = this;
-
-  function _create() {
-    var u, v;
-    var vertex, normal;
-    var totalSlices, totalStacks;
-    var radius, actualHeight, step;
-    var s, t;
-
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
-
-    actualHeight = that._height;
-    step = (that._height - that._base) / that._slices;
-
-    vertex = vec3.create();
-    normal = vec3.create();
-
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
-
-        u = s * totalSlices;
-        v = t * totalStacks;
-
-        radius = Math.abs(that._height - actualHeight) * 0.5;
-
-        vertex[0] = radius * Math.cos(EZ3.DOUBLE_PI * v);
-        vertex[1] = actualHeight;
-        vertex[2] = radius * Math.sin(EZ3.DOUBLE_PI * v);
-
-        normal[0] = vertex[0];
-        normal[1] = vertex[1];
-        normal[2] = vertex[2];
-
-        vec3.normalize(normal, normal);
-
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
-
-        that.uvs.push(u);
-        that.uvs.push(v);
-
-      }
-
-      actualHeight -= step;
-
-      if(actualHeight < that._base)
-        break;
-
-    }
-
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
-
-      }
-    }
-
-    that.calculateNormals();
-
-  }
-
-  _create();
+EZ3.ArrayBuffer.prototype.get = function(name) {
+  if (this._index[name])
+    return this._index[name];
+  else
+    return this._vertex[name];
 };
 
-EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.Cone.prototype.constructor = EZ3.Cone;
-
-EZ3.Cylinder = function(radius, base, height, slices, stacks) {
-  EZ3.Geometry.call(this);
-
-  this._base = base;
-  this._radius = radius;
-  this._height = height;
-  this._slices = slices;
-  this._stacks = stacks;
-
-  var that = this;
-
-  function _create () {
-    var u, v;
-    var vertex, normal;
-    var actualHeight, step;
-    var totalSlices, totalStacks;
-    var s, t;
-
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
-
-    actualHeight = that._height;
-    step = (that._height - that._base) / that._slices;
-
-    vertex = vec3.create();
-    normal = vec3.create();
-
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
-
-        u = s * totalSlices;
-        v = t * totalStacks;
-
-        vertex[0] = that._radius * Math.cos(EZ3.DOUBLE_PI * v);
-        vertex[1] = actualHeight;
-        vertex[2] = that._radius * Math.sin(EZ3.DOUBLE_PI * v);
-
-        vec3.set(normal, vertex[0], vertex[1], vertex[2]);
-        vec3.normalize(normal, normal);
-
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
-
-        that.uvs.push(u);
-        that.uvs.push(v);
-
-      }
-
-      actualHeight -= step;
-
-      if(actualHeight < that._base)
-        break;
-
-    }
-
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
-      }
-    }
-
-    that.calculateNormals();
-
-  }
-
-  _create();
-};
-
-EZ3.Cylinder.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.Cylinder.prototype.constructor = EZ3.Cylinder;
-
-EZ3.Ellipsoid = function(xRadius, yRadius, zRadius, slices, stacks) {
-  EZ3.Geometry.call(this);
-
-  this._slices = slices;
-  this._stacks = stacks;
-  this._xRadius = xRadius;
-  this._yRadius = yRadius;
-  this._zRadius = zRadius;
-
-  var that = this;
-
-  function _create() {
-    var u, v;
-    var phi, rho;
-    var normal, vertex;
-    var totalSlices, totalStacks;
-    var s, t;
-
-    vertex = vec3.create();
-    normal = vec3.create();
-
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
-
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
-        u = s * totalSlices;
-        v = t * totalStacks;
-
-        phi = EZ3.DOUBLE_PI * u;
-        rho = EZ3.PI * v;
-
-        vertex[0] = (that._xRadius * Math.cos(phi) * Math.sin(rho));
-        vertex[1] = (that._yRadius * Math.sin(rho - EZ3.HALF_PI));
-        vertex[2] = (that._zRadius * Math.sin(phi) * Math.sin(rho));
-
-        normal[0] = vertex[0] / that._xRadius;
-        normal[1] = vertex[1] / that._yRadius;
-        normal[2] = vertex[2] / that._zRadius;
-
-        vec3.normalize(normal, normal);
-
-        that.uvs.push(u);
-        that.uvs.push(v);
-
-        that.normals.push(normal[0]);
-        that.normals.push(normal[1]);
-        that.normals.push(normal[2]);
-
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
-      }
-    }
-
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
-      }
-    }
-
-  }
-
-  _create();
-};
-
-EZ3.Ellipsoid.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.Ellipsoid.prototype.constructor = EZ3.Ellipsoid;
-
-EZ3.Grid = function(width, height) {
-  EZ3.Geometry.call(this);
-
-  this._width = width;
-  this._height = height;
-
-  var that = this;
-
-  function _create() {
-    var index0, index1, index2, index3, z, x;
-
-    for(z = 0; z < that._height + 1; ++z) {
-      for(x = 0; x < that._width + 1; ++x) {
-        that.vertices.push(x);
-        that.vertices.push(0);
-        that.vertices.push(z);
-
-        that.uvs.push(x / that._width);
-        that.uvs.push(z / that._height);
-      }
-    }
-
-    for(z = 0; z < that._height; ++z) {
-      for(x = 0; x < that._width; ++x) {
-        index0 = z * (that._height + 1) + x;
-        index1 = index0 + 1;
-        index2 = index0 + (that._height + 1);
-        index3 = index2 + 1;
-
-        that.indices.push(index0);
-        that.indices.push(index2);
-        that.indices.push(index1);
-
-        that.indices.push(index1);
-        that.indices.push(index2);
-        that.indices.push(index3);
-      }
-    }
-
-    that.calculateNormals();
-
-  }
-
-  _create();
-};
-
-EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.Grid.prototype.constructor = EZ3.Grid;
-
-EZ3.Sphere = function(radius, slices, stacks) {
-  EZ3.Geometry.call(this);
-
-  this._radius = radius;
-  this._slices = slices;
-  this._stacks = stacks;
-
-  var that = this;
-
-  function _create() {
-    var u, v;
-    var phi, rho;
-    var normal, vertex;
-    var totalSlices, totalStacks;
-    var s, t;
-
-    vertex = vec3.create();
-    normal = vec3.create();
-
-    totalSlices = 1.0 / (that._slices - 1);
-    totalStacks = 1.0 / (that._stacks - 1);
-
-    for(s = 0; s < that._slices; ++s) {
-      for(t = 0; t < that._stacks; ++t) {
-        u = s * totalSlices;
-        v = t * totalStacks;
-
-        phi = EZ3.DOUBLE_PI * u;
-        rho = EZ3.PI * v;
-
-        vertex[0] = (that._radius * Math.cos(phi) * Math.sin(rho));
-        vertex[1] = (that._radius * Math.sin(rho - EZ3.HALF_PI));
-        vertex[2] = (that._radius * Math.sin(phi) * Math.sin(rho));
-
-        normal[0] = vertex[0] / that._radius;
-        normal[1] = vertex[1] / that._radius;
-        normal[2] = vertex[2] / that._radius;
-
-        vec3.normalize(normal, normal);
-
-        that.uvs.push(u);
-        that.uvs.push(v);
-
-        that.normals.push(normal[0]);
-        that.normals.push(normal[1]);
-        that.normals.push(normal[2]);
-
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
-      }
-    }
-
-    for(s = 0; s < that._slices - 1; ++s) {
-      for(t = 0; t < that._stacks - 1; ++t) {
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 0) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-
-        that.indices.push((s + 0) * that._stacks + (t + 0));
-        that.indices.push((s + 1) * that._stacks + (t + 1));
-        that.indices.push((s + 1) * that._stacks + (t + 0));
-      }
-    }
-
-  }
-
-  _create();
-};
-
-EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.Sphere.prototype.constructor = EZ3.Sphere;
-
-EZ3.Torus = function(innerRadius, outerRadius, sides, rings) {
-  EZ3.Geometry.call(this);
-
-  this._sides = sides;
-  this._rings = rings;
-  this._innerRadius = innerRadius;
-  this._outerRadius = outerRadius;
-
-  var that = this;
-
-  function _create() {
-    var u, v;
-    var rho, phi;
-    var vertex, normal;
-    var cosS, cosR, sinS, sinR;
-    var totalSides, totalRings;
-    var s, r;
-
-    totalSides = 1.0 / (that._sides - 1);
-    totalRings = 1.0 / (that._rings - 1);
-
-    vertex = vec3.create();
-    normal = vec3.create();
-
-    for(s = 0; s < that._sides; ++s){
-      for(r = 0; r < that._rings; ++r){
-        u = s * totalSides;
-        v = r * totalRings;
-
-        rho = EZ3.DOUBLE_PI * u;
-        phi = EZ3.DOUBLE_PI * v;
-
-        cosS = Math.cos(rho);
-        cosR = Math.cos(phi);
-        sinS = Math.sin(rho);
-        sinR = Math.sin(phi);
-
-        vertex[0] = (that._innerRadius + that._outerRadius * cosR) * cosS;
-        vertex[1] = (that._outerRadius * sinR);
-        vertex[2] = (that._innerRadius + that._outerRadius * cosR) * sinS;
-
-        normal[0] = vertex[0] - that._innerRadius * cosS;
-        normal[1] = vertex[1];
-        normal[2] = vertex[2] - that._innerRadius * sinS;
-
-        vec3.normalize(normal, normal);
-
-        that.uvs.push(u);
-        that.uvs.push(v);
-
-        that.normals.push(normal[0]);
-        that.normals.push(normal[1]);
-        that.normals.push(normal[2]);
-
-        that.vertices.push(vertex[0]);
-        that.vertices.push(vertex[1]);
-        that.vertices.push(vertex[2]);
-      }
-    }
-
-    for(s = 0; s < that._sides - 1; ++s){
-      for(r = 0; r < that._rings - 1; ++r){
-        that.indices.push((s + 0) * that._rings + (r + 0));
-        that.indices.push((s + 0) * that._rings + (r + 1));
-        that.indices.push((s + 1) * that._rings + (r + 1));
-
-        that.indices.push((s + 0) * that._rings + (r + 0));
-        that.indices.push((s + 1) * that._rings + (r + 1));
-        that.indices.push((s + 1) * that._rings + (r + 0));
-      }
-    }
-
-  }
-
-  _create();
-};
-
-EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
-EZ3.Torus.prototype.constructor = EZ3.Torus;
-
-EZ3.Buffer = function() {
-  this._buffer = [];
-  this._buffer[EZ3.Buffer.UV] = -1;
-  this._buffer[EZ3.Buffer.INDEX] = -1;
-  this._buffer[EZ3.Buffer.VERTEX] = -1;
-  this._buffer[EZ3.Buffer.NORMAL] = -1;
-  this._buffer[EZ3.Buffer.TANGENT] = -1;
-  this._buffer[EZ3.Buffer.BITANGENT] = -1;
-};
-
-EZ3.Buffer.prototype.draw = function(gl, draw, size) {
-
-  if(~this._buffer[EZ3.Buffer.BITANGENT]) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.BITANGENT]);
-    gl.enableVertexAttribArray(EZ3.Buffer.BITANGENT_LAYOUT);
-    gl.vertexAttribPointer(EZ3.Buffer.BITANGENT_LAYOUT, EZ3.Buffer.BITANGENT_SIZE, gl.FLOAT, false, 0, 0);
-  }
-
-  if(~this._buffer[EZ3.Buffer.TANGENT]) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.TANGENT]);
-    gl.enableVertexAttribArray(EZ3.Buffer.TANGENT_LAYOUT);
-    gl.vertexAttribPointer(EZ3.Buffer.TANGENT_LAYOUT, EZ3.Buffer.TANGENT_SIZE, gl.FLOAT, false, 0, 0);
-  }
-
-  if(~this._buffer[EZ3.Buffer.UV]) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.UV]);
-    gl.enableVertexAttribArray(EZ3.Buffer.UV_LAYOUT);
-    gl.vertexAttribPointer(EZ3.Buffer.UV_LAYOUT, EZ3.Buffer.UV_SIZE, gl.FLOAT, false, 0, 0);
-  }
-
-  if(~this._buffer[EZ3.Buffer.NORMAL]) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.NORMAL]);
-    gl.enableVertexAttribArray(EZ3.Buffer.NORMAL_LAYOUT);
-    gl.vertexAttribPointer(EZ3.Buffer.NORMAL_LAYOUT, EZ3.Buffer.NORMAL_SIZE, gl.FLOAT, false, 0, 0);
-  }
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.VERTEX]);
-  gl.enableVertexAttribArray(EZ3.Buffer.VERTEX_LAYOUT);
-  gl.vertexAttribPointer(EZ3.Buffer.VERTEX_LAYOUT, EZ3.Buffer.VERTEX_SIZE, gl.FLOAT, false, 0, 0);
-
-  if(draw === EZ3.ELEMENTS_DRAW) {
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer[EZ3.Buffer.INDEX]);
-    gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, 0);
-  }else{
-    gl.drawArrays(gl.TRIANGLES, 0, size / 3);
-  }
-
-};
-
-EZ3.Buffer.prototype.init = function(gl, id, size, data, hint) {
-
-  if(id === EZ3.Buffer.VERTEX){
-
-    this._buffer[EZ3.Buffer.VERTEX] = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.VERTEX]);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), hint);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  }else if(id === EZ3.Buffer.NORMAL){
-
-    this._buffer[EZ3.Buffer.NORMAL] = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.NORMAL]);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), hint);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  }else if(id === EZ3.Buffer.UV){
-
-    this._buffer[EZ3.Buffer.UV] = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.UV]);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), hint);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  }else if(id === EZ3.Buffer.TANGENT){
-
-    this._buffer[EZ3.Buffer.TANGENT] = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.TANGENT]);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), hint);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  }else if(id === EZ3.Buffer.BITANGENT){
-
-    this._buffer[EZ3.Buffer.BITANGENT] = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer[EZ3.Buffer.BITANGENT]);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), hint);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  }else if(id == EZ3.Buffer.INDEX){
-
-    this._buffer[EZ3.Buffer.INDEX] = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer[EZ3.Buffer.INDEX]);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), hint);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-
-  }
-
+/**
+ * @class Buffer
+ */
+
+EZ3.Buffer = function(data, dynamic) {
+  this._id = null;
+
+  this.ranges = [];
+  this.data = data || [];
+  this.dynamic = dynamic || false;
+  this.usage = null;
+  this.length = null;
+  this.dirty = true;
 };
 
 EZ3.Buffer.prototype.constructor = EZ3.Buffer;
 
-EZ3.Buffer.VERTEX = 0;
-EZ3.Buffer.NORMAL = 1;
-EZ3.Buffer.INDEX = 2;
-EZ3.Buffer.UV = 3;
-EZ3.Buffer.TANGENT = 4;
-EZ3.Buffer.BITANGENT = 5;
+/**
+ * @class BufferRange
+ */
 
-EZ3.Buffer.VERTEX_LAYOUT = 0;
-EZ3.Buffer.NORMAL_LAYOUT = 1;
-EZ3.Buffer.UV_LAYOUT = 2;
-EZ3.Buffer.TANGENT_LAYOUT = 3;
-EZ3.Buffer.BITANGENT_LAYOUT = 4;
+EZ3.BufferRange = function(left, right) {
+  this.left = left;
+  this.right = right;
+};
 
-EZ3.Buffer.VERTEX_SIZE = 3;
-EZ3.Buffer.NORMAL_SIZE = 3;
-EZ3.Buffer.UV_SIZE = 2;
-EZ3.Buffer.TANGENT_SIZE = 4;
-EZ3.Buffer.BITANGENT_SIZE = 3;
+/**
+ * @class GLSLProgram
+ */
 
-EZ3.GLSLProgram = function(gl, material, code) {
-  this._code = code;
+EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
+  this.used = 1;
+  this._cache = {};
   this._shaders = [];
-  this._usedTimes = 1;
+  this._uniform = {};
+  this._attribute = {};
   this._program = null;
-  this._uniformList = {};
-  this._attributeList = {};
-
-  this._create(gl, material);
-};
-
-EZ3.GLSLProgram.prototype.enable = function(gl) {
-  gl.useProgram(this._program);
-};
-
-EZ3.GLSLProgram.prototype.disable = function(gl) {
-  gl.useProgram(null);
-};
-
-EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {
-  switch(size) {
-    case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-      gl.uniform1f(this._getUniform(name), data);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-      gl.uniform2f(this._getUniform(name), data[0], data[1]);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-      gl.uniform3f(this._getUniform(name), data[0], data[1], data[2]);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-      gl.uniform4f(this._getUniform(name), data[0], data[1], data[2], data[3]);
-    break;
-  }
-};
-
-EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
-  switch(size) {
-    case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-      gl.uniform1i(this._getUniform(name), data);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-      gl.uniform2i(this._getUniform(name), data[0], data[1]);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-      gl.uniform3i(this._getUniform(name), data[0], data[1], data[2]);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-      gl.uniform4i(this._getUniform(name), data[0], data[1], data[2], data[3]);
-    break;
-  }
-};
-
-EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
-  switch(size) {
-    case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
-      gl.uniformMatrix2fv(this._getUniform(name), false, data);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
-      gl.uniformMatrix3fv(this._getUniform(name), false, data);
-    break;
-    case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
-      gl.uniformMatrix4fv(this._getUniform(name), false, data);
-    break;
-  }
-};
-
-EZ3.GLSLProgram.prototype._initVertex = function(gl, vertexCode) {
-  var prefixVertex = [
-    'precision highp float;',
-    'attribute vec3 vertex;',
-    'uniform mat4 modelViewProjectionMatrix;',
-  ].join('\n');
-
-  this._compile(gl, gl.VERTEX_SHADER, prefixVertex + vertexCode);
-};
-
-EZ3.GLSLProgram.prototype._initFragment = function(gl, fragmentCode) {
-  var prefixFragment = [
-    'precision highp float;'
-  ].join('\n');
-
-  this._compile(gl, gl.FRAGMENT_SHADER, prefixFragment + fragmentCode);
+  this._create(gl, vertex, fragment, prefix);
 };
 
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
+  var infoLog;
+  var message;
+  var lineNumbers;
   var shader = gl.createShader(type);
+
   gl.shaderSource(shader, code);
   gl.compileShader(shader);
 
-  if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    var infoLog = gl.getShaderInfoLog(shader);
-    console.log('EZ3.GLSLProgram shader info log: ', infoLog, this._addLineNumbers(code) + '\n');
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    infoLog = gl.getShaderInfoLog(shader);
+    lineNumbers = this._addLineNumbers(code);
+    message = 'EZ3.GLSLProgram shader info log: ';
+    console.log(message + infoLog + lineNumbers + '\n');
   } else {
-    if(type === gl.VERTEX_SHADER)
-      this._shaders[EZ3.GLSLProgram.VERTEX_POSITION] = shader;
-    else if(type === gl.FRAGMENT_SHADER)
-      this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION] = shader;
+    if (type === gl.VERTEX_SHADER)
+      this._shaders[EZ3.GLSLProgram.VERTEX] = shader;
+    else if (type === gl.FRAGMENT_SHADER)
+      this._shaders[EZ3.GLSLProgram.FRAGMENT] = shader;
   }
 };
 
-EZ3.GLSLProgram.prototype._create = function(gl, material) {
+EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
+  var infoLog;
+  var message;
+
+  prefix = (prefix) ? prefix : '';
+
+  this._compile(gl, gl.VERTEX_SHADER, prefix + vertex);
+  this._compile(gl, gl.FRAGMENT_SHADER, prefix + fragment);
+
   this._program = gl.createProgram();
 
-  this._initVertex(gl, material.vertex);
-  this._initFragment(gl, material.fragment);
+  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX]);
+  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT]);
 
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);
   gl.linkProgram(this._program);
 
-  if(!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
-    var infolog = gl.getProgramInfoLog(this._program, gl.LINK_STATUS);
-    console.log('EZ3.GLSLProgram linking program error info log: ' + infoLog + '\n');
-  }else{
+  if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
+    infoLog = gl.getProgramInfoLog(this._program, gl.LINK_STATUS);
+    message = 'EZ3.GLSLProgram linking program error info log: ';
+    console.log(message + infoLog + '\n');
+  } else {
     this._loadUniforms(gl);
     this._loadAttributes(gl);
-    gl.deleteShader(this._shaders[EZ3.GLSLProgram.VERTEX_POSITION]);
-    gl.deleteShader(this._shaders[EZ3.GLSLProgram.FRAGMENT_POSITION]);
+
+    gl.deleteShader(this._shaders[EZ3.GLSLProgram.VERTEX]);
+    gl.deleteShader(this._shaders[EZ3.GLSLProgram.FRAGMENT]);
   }
 };
 
 EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
   var totalUniforms = gl.getProgramParameter(this._program, gl.ACTIVE_UNIFORMS);
+  var uniformInfo;
 
-  for(var k = 0; k < totalUniforms; ++k) {
-    var uniformInfo = gl.getActiveUniform(this._program, k);
+  for (var k = 0; k < totalUniforms; ++k) {
+    uniformInfo = gl.getActiveUniform(this._program, k);
     this._addUniform(gl, uniformInfo.name);
   }
 };
 
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
-  var totalAttributes = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
+  var totalAttrib = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
+  var attributeInfo;
 
-  for(var k = 0; k < totalAttributes; ++k){
-    var attributeInfo = gl.getActiveAttrib(this._program, k);
+  for (var k = 0; k < totalAttrib; ++k) {
+    attributeInfo = gl.getActiveAttrib(this._program, k);
     this._addAttribute(gl, attributeInfo.name);
   }
 };
 
 EZ3.GLSLProgram.prototype._addUniform = function(gl, name) {
-  this._uniformList[name] = gl.getUniformLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._getUniform = function(name) {
-  return this._uniformList[name];
+  this.uniforms[name] = gl.getUniformLocation(this._program, name);
 };
 
 EZ3.GLSLProgram.prototype._addAttribute = function(gl, name) {
-  this._attributeList[name] = gl.getAttribLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._getAttribute = function(name) {
-  return this._attributeList[name];
+  this.attributes[name] = gl.getAttribLocation(this._program, name);
 };
 
 EZ3.GLSLProgram.prototype._addLineNumbers = function(code) {
   var codeLines = code.split('\n');
 
-  for(var k = 0; k < codeLines.length; ++k)
-    codeLines[k] = (k + 1) + ": " + codeLines[k];
+  for (var k = 0; k < codeLines.length; ++k)
+    codeLines[k] = (k + 1) + ': ' + codeLines[k] + '\n\n';
 
   return codeLines;
 };
+
+EZ3.GLSLProgram.prototype._isCached = function(name, data) {
+  var cached = this._cache[name];
+
+  if (cached) {
+    if (cached instanceof EZ3.Matrix3 || cached instanceof EZ3.Matrix4 ||
+      cached instanceof EZ3.Vector2 || cached instanceof EZ3.Vector3 ||
+      cached instanceof EZ3.Vector4)
+      return cached.testEqual(data);
+    else if (cached === data)
+      return true;
+    else
+      return false;
+  } else
+    return false;
+};
+
+EZ3.GLSLProgram.prototype._caching = function(name, data) {
+  if (data instanceof EZ3.Matrix3 || data instanceof EZ3.Matrix4 ||
+    data instanceof EZ3.Vector2 || data instanceof EZ3.Vector3 ||
+    data instanceof EZ3.Vector4)
+    this._cache[name] = data.clone();
+  else
+    this._cache[name] = data;
+};
+
+EZ3.GLSLProgram.prototype.bind = function(gl) {
+  gl.useProgram(this._program);
+};
+
+EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {
+  var v;
+
+  if (!this._isCached(name, data)) {
+    this._caching(name, data);
+
+    if (size > 1)
+      v = data.toArray();
+
+    switch (size) {
+      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
+        gl.uniform1f(this.uniforms[name], data);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
+        gl.uniform2f(this.uniforms[name], v[0], v[1]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
+        gl.uniform3f(this.uniforms[name], v[0], v[1], v[2]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
+        gl.uniform4f(this.uniforms[name], v[0], v[1], v[2], v[3]);
+        break;
+    }
+  }
+};
+
+EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
+  var v;
+
+  if (!this._isCached(name, data)) {
+    this._caching(name, data);
+
+    if (size > 1)
+      v = data.toArray();
+
+    switch (size) {
+      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
+        gl.uniform1i(this.uniforms[name], data);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
+        gl.uniform2i(this.uniforms[name], v[0], v[1]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
+        gl.uniform3i(this.uniforms[name], v[0], v[1], v[2]);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
+        gl.uniform4i(this.uniforms[name], v[0], v[1], v[2], v[3]);
+        break;
+    }
+  }
+};
+
+EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
+  var v;
+
+  if (!this._isCached(name, data)) {
+    this._caching(name, data);
+
+    v = data.toArray();
+
+    switch (size) {
+      case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
+        gl.uniformMatrix2fv(this.uniforms[name], false, v);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
+        gl.uniformMatrix3fv(this.uniforms[name], false, v);
+        break;
+      case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
+        gl.uniformMatrix4fv(this.uniforms[name], false, v);
+        break;
+    }
+  }
+};
+
+Object.defineProperty(EZ3.GLSLProgram.prototype, 'uniforms', {
+  get: function() {
+    return this._uniform;
+  }
+});
+
+Object.defineProperty(EZ3.GLSLProgram.prototype, 'attributes', {
+  get: function() {
+    return this._attribute;
+  }
+});
 
 EZ3.GLSLProgram.UNIFORM_SIZE_1D = 1;
 EZ3.GLSLProgram.UNIFORM_SIZE_2D = 2;
@@ -2082,154 +5020,245 @@ EZ3.GLSLProgram.UNIFORM_SIZE_2X2 = 2;
 EZ3.GLSLProgram.UNIFORM_SIZE_3X3 = 3;
 EZ3.GLSLProgram.UNIFORM_SIZE_4X4 = 4;
 
-EZ3.GLSLProgram.VERTEX_POSITION = 0;
-EZ3.GLSLProgram.FRAGMENT_POSITION = 1;
+EZ3.GLSLProgram.VERTEX = 0;
+EZ3.GLSLProgram.FRAGMENT = 1;
 
 /**
  * @class Renderer
  */
 
 EZ3.Renderer = function(canvas, options) {
-  this._lights = [];
-  this._entities = [];
-  this._programs = [];
   this.context = null;
   this.canvas = canvas;
   this.options = options;
+  this.state = null;
 };
 
 EZ3.Renderer.prototype._processContextLost = function(event) {
   event.preventDefault();
 };
 
-EZ3.Renderer.prototype._processContextRecovered = function() {
-  this.initContext();
+EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
+  var gl = this.context;
+  var program = mesh.material.program;
+  var modelView = new EZ3.Matrix4();
+  var i;
+
+  program.bind(gl);
+  mesh.material.updateStates(gl, this.state);
+  mesh.material.updateUniforms(gl, this.state);
+
+  modelView.mul(mesh.world, camera.view);
+
+  program.loadUniformf(gl, 'uEyePosition', 3, camera.position);
+  program.loadUniformMatrix(gl, 'uModel', 4, mesh.world);
+  program.loadUniformMatrix(gl, 'uModelView', 4, modelView);
+  program.loadUniformMatrix(gl, 'uProjection', 4, camera.projection);
+
+  if (!lights.empty)
+    program.loadUniformMatrix(gl, 'uNormal', 3, mesh.normal);
+
+  for (i = 0; i < lights.point.length; i++)
+    lights.point[i].updateUniforms(gl, program, i);
+
+  for (i = 0; i < lights.directional.length; i++)
+    lights.directional[i].updateUniforms(gl, program, i);
+
+  for (i = 0; i < lights.spot.length; i++)
+    lights.spot[i].updateUniforms(gl, program, i);
+
+  mesh.render(gl, program.attributes, this.state);
 };
 
 EZ3.Renderer.prototype.initContext = function() {
+  var that = this;
   var names = [
     'webgl',
     'experimental-webgl',
     'webkit-3d',
     'moz-webgl'
   ];
+  var i;
 
-  for (var i = 0; i < names.length; i++) {
+  for (i = 0; i < names.length; i++) {
     try {
       this.context = this.canvas.getContext(names[i], this.options);
     } catch (e) {}
 
-    if (this.context)
+    if (this.context) {
+      this.state = new EZ3.RendererState(this.context);
       break;
+    }
   }
 
   if (!this.context)
-    throw new Error('Unable to initialize WebGL with selected options. Your browser may not support it.');
-
-  var that = this;
+    throw new Error('Unable to initialize WebGL with selected options.');
 
   this._onContextLost = function(event) {
     that._processContextLost(event);
   };
 
   this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
-
-  if (this._onContextRestored) {
-    this.canvas.removeEventListener('webglcontextrestored', this._onContextRestored, false);
-    delete this._onContextRestored;
-  }
 };
 
-EZ3.Renderer.prototype.updateMaterial = function(material) {
-  if(material.dirty){
+EZ3.Renderer.prototype.clear = function() {
+  var gl = this.context;
 
-    var shaders = EZ3.ShaderLib[material.name];
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+};
 
-    if(shaders) {
-      material.vertex = shaders.vertex;
-      material.fragment = shaders.fragment;
+EZ3.Renderer.prototype.viewport = function(position, size) {
+  var gl = this.context;
 
-      var program = new EZ3.GLSLProgram(this.context, material, 1);
-      material.program = program;
+  gl.viewport(position.x, position.y, size.x, size.y);
+};
+
+EZ3.Renderer.prototype.render = function(scene, camera) {
+  var gl = this.context;
+  var entities = [];
+  var meshes = {
+    common: [],
+    opaque: [],
+    transparent: []
+  };
+  var lights = {
+    empty: true,
+    point: [],
+    directional: [],
+    spot: []
+  };
+  var entity;
+  var mesh;
+  var i;
+
+  entities.push(scene);
+
+  while (entities.length) {
+    entity = entities.pop();
+
+    if (entity instanceof EZ3.PointLight)
+      lights.point.push(entity);
+    else if (entity instanceof EZ3.DirectionalLight)
+      lights.directional.push(entity);
+    else if (entity instanceof EZ3.SpotLight)
+      lights.spot.push(entity);
+    else if (entity instanceof EZ3.Mesh)
+      meshes.common.push(entity);
+
+    for (i = entity.children.length - 1; i >= 0; i--)
+      entities.push(entity.children[i]);
+
+    entity.updateWorld();
+  }
+
+  if (lights.point.length || lights.directional.length || lights.spot.length)
+    lights.empty = false;
+
+  for (i = 0; i < meshes.common.length; i++) {
+    mesh = meshes.common[i];
+
+    mesh.updateEssentialBuffers();
+
+    if (!lights.empty) {
+      mesh.updateIlluminationBuffers();
+      mesh.updateNormal();
     }
 
-    material.dirty = false;
+    mesh.material.updateProgram(gl, lights, this.state);
+
+    if (mesh.material.transparent)
+      meshes.transparent.push(mesh);
+    else
+      meshes.opaque.push(mesh);
   }
+
+  for (i = 0; i < meshes.opaque.length; i++)
+    this._renderMesh(meshes.opaque[i], camera, lights);
+
+  for (i = 0; i < meshes.transparent.length; i++)
+    this._renderMesh(meshes.transparent[i], camera, lights);
 };
 
-EZ3.Renderer.prototype.setupBasic = function(material) {
-  var mvp = mat4.create();
-  var view = mat4.create();
-  var projection = mat4.create();
+/**
+ * @class RendererState
+ */
 
-  var position = vec3.create();
-  vec3.set(position, 50, 50, 50);
+EZ3.RendererState = function(gl) {
+  this.program = {};
+  this.texture = {};
+  this.extension = {};
+  this.attribute = {};
+  this.capability = {};
+  this.currentTextureSlot = null;
 
-  var target = vec3.create();
-  vec3.set(target, 0, 0, 0);
-
-  var up = vec3.create();
-  vec3.set(up, 0, 1, 0);
-
-  mat4.lookAt(view, position, target, up);
-  mat4.perspective(projection, 70, 800 / 600, 1, 1000);
-  mat4.multiply(mvp, projection, view);
-
-  material.program.loadUniformf(this.context, 'color', EZ3.GLSLProgram.UNIFORM_SIZE_3D, material.color);
-  material.program.loadUniformMatrix(this.context, 'modelViewProjectionMatrix', EZ3.GLSLProgram.UNIFORM_SIZE_4X4, mvp);
+  this._initCapabilities();
+  this._initExtensions(gl);
 };
 
-EZ3.Renderer.prototype.render = function(screen) {
-  this.context.clearColor(0.0,0.0,0.0,1.0);
-  this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+EZ3.RendererState.prototype.constructor = EZ3.RendererState;
 
-  screen.scene.update();
-  this._entities.push(screen.scene);
-
-  while(this._entities.length) {
-    var entity = this._entities.pop();
-
-    if(entity instanceof EZ3.Mesh) {
-        entity.init(this.context);
-        this.updateMaterial(entity.material);
-
-        entity.material.program.enable(this.context);
-
-          if(entity.material instanceof EZ3.BasicMaterial)
-            this.setupBasic(entity.material);
-
-          entity.render(this.context);
-
-        entity.material.program.disable(this.context);
+EZ3.RendererState.prototype._initCapabilities = function() {
+  this.capability[EZ3.RendererState.DEPTH_TEST] = {
+    enabled: false,
+    value: null
+  };
+  this.capability[EZ3.RendererState.CULL_FACE] = {
+    enabled: false,
+    value: null
+  };
+  this.capability[EZ3.RendererState.BLENDING] = {
+    enabled: false,
+    blendEquation: null,
+    blendFunc: {
+      sfactor: null,
+      dfactor: null
     }
-
-    for(var k = entity.children.length - 1; k >= 0; --k)
-      this._entities.push(entity.children[k]);
-  }
+  };
 };
 
-EZ3.ShaderLib = {
-  'basic' : {
-      vertex: [
-        'void main() {',
-        ' gl_Position = modelViewProjectionMatrix * vec4(vertex, 1.0);',
-        '}'
-      ].join('\n'),
-      fragment: [
-        'uniform vec3 color;',
-        'void main() {',
-        ' gl_FragColor = vec4(color, 1.0);',
-        '}'
-      ].join('\n')
-  }
+EZ3.RendererState.prototype._initExtensions = function(gl) {
+  this.extension['OES_standard_derivatives'] = gl.getExtension('OES_standard_derivatives');
+  this.extension['OES_vertex_array_object'] = gl.getExtension('OES_vertex_array_object');
+  this.extension['OES_element_index_uint'] = gl.getExtension('OES_element_index_uint');
+};
+
+EZ3.RendererState.CULL_FACE = 0;
+EZ3.RendererState.BLENDING = 1;
+EZ3.RendererState.DEPTH_TEST = 2;
+
+/**
+* @class ShaderLibrary
+*/
+
+EZ3.ShaderLibrary = function() {
+  this.mesh = {};
+};
+
+EZ3.ShaderLibrary = new EZ3.ShaderLibrary();
+
+EZ3.ShaderLibrary['mesh'].vertex = "precision highp float;\r\n\r\nattribute vec3 position;\r\nattribute vec3 normal;\r\nattribute vec2 uv;\r\n\r\nuniform mat4 uModel;\r\nuniform mat3 uNormal;\r\nuniform mat4 uModelView;\r\nuniform mat4 uProjection;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\nvoid main() {\r\n  vPosition = vec3(uModel * vec4(position, 1.0));\r\n  vNormal = normalize(uNormal * normal);\r\n  vUv = uv;\r\n\r\n  gl_PointSize = 3.0;\r\n  gl_Position = uProjection * uModelView * vec4(position, 1.0);\r\n}\r\n";
+EZ3.ShaderLibrary['mesh'].fragment = "precision highp float;\r\n\r\nstruct PointLight\r\n{\r\n\tvec3 position;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct DirectionalLight\r\n{\r\n\tvec3 direction;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct SpotLight\r\n{\r\n\tvec3 position;\r\n\tvec3 direction;\r\n\tfloat cutoff;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nuniform vec3 uEmissive;\r\nuniform vec3 uDiffuse;\r\nuniform vec3 uSpecular;\r\nuniform float uShininess;\r\n\r\nuniform vec3 uEyePosition;\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  uniform PointLight uPointLights[MAX_POINT_LIGHTS];\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  uniform DirectionalLight uDirectionalLights[MAX_DIRECTIONAL_LIGHTS];\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\nuniform sampler2D uEmissiveSampler;\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\nuniform sampler2D uDiffuseSampler;\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\nuniform sampler2D uSpecularSampler;\r\n#endif\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\n#ifdef NORMAL_MAP\r\n#extension GL_OES_standard_derivatives : enable\r\n\r\nuniform sampler2D uNormalSampler;\r\n\r\nvec3 pertubNormal(vec3 v) {\r\n\tvec3 q0 = dFdx(v);\r\n\tvec3 q1 = dFdy(v);\r\n\r\n\tvec2 st0 = dFdx(vUv);\r\n\tvec2 st1 = dFdy(vUv);\r\n\r\n\tvec3 s = normalize(q0 * st1.t - q1 * st0.t);\r\n\tvec3 t = normalize(-q0 * st1.s + q1 * st0.s);\r\n\tvec3 n = normalize(vNormal);\r\n\r\n\tvec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;\r\n\r\n\treturn normalize(mat3(s, t, n) * d);\r\n}\r\n#endif\r\n\r\nvoid main() {\r\n\tvec3 emissive = uEmissive;\r\n\tvec3 diffuse = vec3(0.0, 0.0, 0.0);\r\n\tvec3 specular = vec3(0.0, 0.0, 0.0);\r\n\r\n\tvec3 v = normalize(uEyePosition - vPosition);\r\n\r\n#ifdef NORMAL_MAP\r\n\tvec3 n = pertubNormal(-v);\r\n#else\r\n\tvec3 n = vNormal;\r\n#endif\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_POINT_LIGHTS; i++)\r\n  {\r\n    vec3 s = normalize(uPointLights[i].position - vPosition);\r\n\t\tfloat q = max(dot(s, n), 0.0);\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\tvec3 r = reflect(-s, n);\r\n\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n    \tdiffuse += uPointLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uPointLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  for(int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)\r\n  {\r\n\t\tfloat q = max(dot(uDirectionalLights[i].direction, n), 0.0);\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\tvec3 r = reflect(-uDirectionalLights[i].direction, n);\r\n\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n    \tdiffuse += uDirectionalLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uDirectionalLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_SPOT_LIGHTS; i++)\r\n  {\r\n\t\tvec3 s = normalize(uSpotLights[i].position - vPosition);\r\n\t\tfloat angle = max(dot(s, uSpotLights[i].direction), 0.0);\r\n\r\n\t\tif(angle > uSpotLights[i].cutoff) {\r\n\t\t\tfloat q = max(dot(uSpotLights[i].direction, n), 0.0);\r\n\r\n\t\t\tif (q > 0.0) {\r\n\t\t\t\tvec3 r = reflect(-s, n);\r\n\t\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n\t\t\t\tdiffuse += uSpotLights[i].diffuse * uDiffuse * q;\r\n\t\t\t\tspecular += uSpotLights[i].specular * uSpecular * w;\r\n\t\t\t}\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\n  emissive *= vec3(texture2D(uEmissiveSampler, vUv));\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\n\tdiffuse *= vec3(texture2D(uDiffuseSampler, vUv));\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\n\tspecular *= vec3(texture2D(uSpecularSampler, vUv))\r\n#endif\r\n\r\n  gl_FragColor = vec4(emissive + diffuse + specular, 1.0);\r\n}\r\n";
+/**
+ * @class VertexBufferAttribute
+ */
+
+EZ3.VertexBufferAttribute = function(size, offset, normalized) {
+  this.size = size;
+  this.offset = 4 * offset || 0;
+  this.normalized = normalized || false;
 };
 
 /**
  * @class AnimationFrame
  */
 
-EZ3.AnimationFrame = function(device, timeOut) {
+EZ3.AnimationFrame = function(timeOut) {
+  var device;
+
   this._id = 0;
+
+  device = EZ3.Device;
 
   if (device.animationFrame === device.ANIMATION_FRAME.TIME_OUT || timeOut) {
     this._onRequestAnimationFrame = function(callback) {
@@ -2272,7 +5301,7 @@ EZ3.Device = function() {
 EZ3.Device = new EZ3.Device();
 
 EZ3.Device._check = function() {
-  var that = this;
+  var that;
 
   function checkOperatingSystem() {
     if (/Playstation Vita/.test(navigator.userAgent))
@@ -2328,6 +5357,8 @@ EZ3.Device._check = function() {
         that.touch = EZ3.Device.TOUCH.MSPOINTER;
     }
   }
+
+  that = this;
 
   checkOperatingSystem();
   checkAnimationFrame();
@@ -2432,17 +5463,219 @@ EZ3.Time.prototype.update = function() {
 };
 
 /**
- * @class MousePointer
- *  */
+ * @class Texture
+ */
 
-EZ3.MousePointer = function() {
-  EZ3.Pointer.call(this);
+EZ3.Texture = function(image) {
+  this._id = null;
+  this._image = image;
+
+  this.dirty = true;
+};
+
+EZ3.Texture.prototype.update = function(gl, type) {
+  if (type === gl.TEXTURE_2D) {
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    //gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+  }
+};
+
+EZ3.Texture.prototype.bind = function(gl, type, unit, state) {
+  var slot = gl.TEXTURE0 + unit;
+
+  if (!this._id)
+    this._id = gl.createTexture();
+
+  if (state.currentTextureSlot !== slot) {
+    gl.activeTexture(slot);
+    state.currentTextureSlot = slot;
+  }
+
+  if (!state.texture[slot]) {
+    state.texture[slot] = {
+      id: this._id,
+      type: type
+    };
+    gl.bindTexture(state.texture[slot].type, state.texture[slot].id);
+  } else {
+    if (state.texture[slot].id !== this._id || state.texture[slot].type !== type) {
+      state.texture[slot].id = this._id;
+      state.texture[slot].type = type;
+      gl.bindTexture(state.texture[slot].type, state.texture[slot].id);
+    }
+  }
+};
+
+/**
+ * @class FreeCamera
+ * @extends Camera
+ */
+
+EZ3.FreeCamera = function(position, target, up, mode, filter) {
+  EZ3.Camera.call(this, position, target, up, mode, filter);
+};
+
+EZ3.FreeCamera.prototype = Object.create(EZ3.Camera.prototype);
+EZ3.FreeCamera.prototype.constructor = EZ3.FreeCamera;
+
+EZ3.FreeCamera.prototype._update = function() {
+  var rx = EZ3.Math.toRadians(this._rotationAngles.x);
+  var ry = EZ3.Math.toRadians(this._rotationAngles.y);
+  var matrix = new EZ3.Matrix4().yawPitchRoll(rx, ry, 0);
+
+  this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat(matrix).toVec3();
+  this.look = new EZ3.Vector4(0, 0, 1, 0).mulMat(matrix).toVec3();
+  this.right = new EZ3.Vector4(1, 0, 0, 0).mulMat(matrix).toVec3();
+  this.target = new EZ3.Vector3().add(this.position, this.look);
+};
+
+EZ3.FreeCamera.prototype.lift = function(speed) {
+  var lift = new EZ3.Vector3().copy(this.up).scaleEqual(speed);
+  this.position.addEqual(lift);
+};
+
+EZ3.FreeCamera.prototype.walk = function(speed) {
+  var walk = new EZ3.Vector3().copy(this.look).scaleEqual(speed);
+  this.position.addEqual(walk);
+};
+
+EZ3.FreeCamera.prototype.strafe = function(speed) {
+  var strafe = new EZ3.Vector3().copy(this.right).scaleEqual(speed);
+  this.position.addEqual(strafe);
+};
+
+/**
+ * @class TargetCamera
+ * @extends Camera
+ */
+
+EZ3.TargetCamera = function(position, target, up, mode, filter) {
+  EZ3.Camera.call(this, position, target, up, mode, filter);
+
+  this.distance = 1;
+};
+
+EZ3.TargetCamera.prototype = Object.create(EZ3.Camera.prototype);
+EZ3.TargetCamera.prototype.constructor = EZ3.TargetCamera;
+
+EZ3.TargetCamera.prototype._update = function() {
+  var rx = EZ3.Math.toRadians(this._rotationAngles.x);
+  var ry = EZ3.Math.toRadians(this._rotationAngles.y);
+  var matrix = new EZ3.Matrix4().yawPitchRoll(rx, ry, 0);
+  var vector = new EZ3.Vector4(0, 0, -1, 0).mulMat(matrix).toVec3();
+
+  this.distance = new EZ3.Vector3().sub(this.position, this.target).length();
+  this.distance = Math.max(1, this.distance);
+
+  vector.scaleEqual(this.distance);
+
+  this.position = new EZ3.Vector3().add(this.target, vector);
+  this.look = new EZ3.Vector3().sub(this.target, this.position);
+  this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat(matrix).toVec3();
+  this.right = new EZ3.Vector3().cross(this.look.normalize(), this.up);
+};
+
+EZ3.TargetCamera.prototype.pan = function(dx, dy) {
+  var rx;
+  var ry;
+  var up;
+  var right;
+  var vector;
+
+  rx = dx * EZ3.Camera.MOVE_SPEED;
+  ry = -dy * EZ3.Camera.MOVE_SPEED;
+
+  right = new EZ3.Vector3().copy(this.right).scaleEqual(rx);
+  up = new EZ3.Vector3().copy(this.up).scaleEqual(ry);
+  vector = new EZ3.Vector3().add(right, up);
+
+  this.position.addEqual(vector);
+  this.target.addEqual(vector);
+};
+
+EZ3.TargetCamera.prototype.zoom = function(speed) {
+  var look = new EZ3.Vector3().copy(this.look).scaleEqual(speed);
+  this.position.addEqual(look);
+};
+
+/**
+ * @class Mesh
+ * @extends Entity
+ */
+
+EZ3.Mesh = function(geometry, material) {
+  EZ3.Entity.call(this);
+
+  this.geometry = geometry;
+  this.material = material;
+};
+
+EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
+EZ3.Mesh.prototype.constructor = EZ3.Mesh;
+
+EZ3.Mesh.prototype.updateEssentialBuffers = function() {
+  if (this.geometry.dirty) {
+    this.geometry.generate();
+    this.geometry.dirty = false;
+  }
+
+  if (this.material.fill === EZ3.Material.WIREFRAME && !this.geometry.buffers.get('line'))
+    this.geometry.processLinearIndices();
+};
+
+EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
+  if (!this.geometry.buffers.get('normal'))
+    this.geometry.processNormals();
+
+  if (this.material.bumpMap instanceof EZ3.Texture && !this.geometry.buffers.get('tangent'))
+    this.geometry.processTangentsAndBitangents();
+};
+
+EZ3.Mesh.prototype.updateNormal = function() {
+  if(this.normal.dirty) {
+    this.normal.normalFromMat4(this.world);
+    this.normal.dirty = false;
+  }
+};
+
+EZ3.Mesh.prototype.render = function(gl, attributes, state) {
+  var mode;
+  var buffer;
+
+  if (this.material.fill === EZ3.Material.WIREFRAME) {
+    buffer = this.geometry.buffers.get('line');
+    mode = gl.LINES;
+  } else if (this.material.fill === EZ3.Material.POINTS) {
+    buffer = this.geometry.buffers.get('position');
+    mode = gl.POINTS;
+  } else {
+    buffer = this.geometry.buffers.get('triangle');
+    mode = gl.TRIANGLES;
+  }
+
+  if (buffer instanceof EZ3.IndexBuffer) {
+    this.geometry.buffers.bind(gl, attributes, state, buffer);
+    gl.drawElements(mode, buffer.data.length, buffer.getType(gl, state), 0);
+  } else if (buffer instanceof EZ3.VertexBuffer) {
+    this.geometry.buffers.bind(gl, attributes, state);
+    gl.drawArrays(mode, 0, buffer.data.length / 3);
+  }
+};
+
+/**
+ * @class MousePointer
+ * @extends Pointer
+ */
+
+EZ3.MousePointer = function(domElement) {
+  EZ3.Pointer.call(this, domElement);
 
   this._buttons = [];
 
-  this.wheel = EZ3.Vec2.create();
-
-  EZ3.Vec2.set(this.wheel, 0, 0);
+  this.wheel = new EZ3.Vector2();
 };
 
 EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
@@ -2461,6 +5694,7 @@ EZ3.MousePointer.prototype.processPress = function(event, onPress, onMove) {
 
 EZ3.MousePointer.prototype.processMove = function(event, onMove) {
   EZ3.Pointer.prototype.processMove.call(this, event);
+
   onMove.dispatch(this);
 };
 
@@ -2475,14 +5709,14 @@ EZ3.MousePointer.prototype.processUp = function(event, onUp) {
 
 EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
   if (event.wheelDeltaX)
-    this.wheel[0] = event.wheelDeltaX;
+    this.wheel.x = event.wheelDeltaX;
   else
-    this.wheel[1] = event.deltaX;
+    this.wheel.y = event.deltaX;
 
   if (event.wheelDeltaY)
-    this.wheel[0] = event.wheelDeltaY;
+    this.wheel.x = event.wheelDeltaY;
   else
-    this.wheel[1] = event.deltaY;
+    this.wheel.y = event.deltaY;
 
   onWheel.dispatch(this);
 };
@@ -2496,17 +5730,19 @@ EZ3.MousePointer.prototype.getButton = function(code) {
 
 /**
  * @class TouchPointer
- *  *  */
+ * @extends Pointer
+ * @extends Switch
+ */
 
-EZ3.TouchPointer = function(code, id) {
-  EZ3.Pointer.call(this);
+EZ3.TouchPointer = function(domElement, code, id) {
+  EZ3.Pointer.call(this, domElement);
   EZ3.Switch.call(this, code);
 
   this.id = id || 0;
 };
 
 EZ3.TouchPointer.prototype = Object.create(EZ3.Pointer.prototype);
-mixin(EZ3.TouchPointer.prototype, EZ3.Switch.prototype);
+EZ3.extends(EZ3.TouchPointer.prototype, EZ3.Switch.prototype);
 EZ3.TouchPointer.prototype.constructor = EZ3.TouchPointer;
 
 EZ3.TouchPointer.prototype.processPress = function(event, onPress, onMove) {
@@ -2523,15 +5759,1154 @@ EZ3.TouchPointer.prototype.processMove = function(event, onMove) {
 };
 
 /**
- * @class BasicMaterial
- *  */
+ * @class DirectionalLight
+ * @extends Light
+ */
 
-EZ3.BasicMaterial = function(parameters){
-  EZ3.Material.call(this);
-  this.name = 'basic';
-  this.color = vec3.create();
-  this.color = vec3.set(this.color, parameters.color[0], parameters.color[1], parameters.color[2]);
+EZ3.DirectionalLight = function() {
+  EZ3.Light.call(this);
+
+  this.target = new EZ3.Vector3();
 };
 
-EZ3.BasicMaterial.prototype = Object.create(EZ3.Material.prototype);
-EZ3.BasicMaterial.prototype.constructor = EZ3.BasicMaterial;
+EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
+
+EZ3.DirectionalLight.prototype.updateUniforms = function(gl, program, i) {
+  var prefix = 'uDirectionalLights[' + i + '].';
+  var direction = new EZ3.Vector3().sub(this.position, this.target).normalize();
+
+  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
+
+  program.loadUniformf(gl, prefix + 'direction', 3, direction);
+};
+
+/**
+ * @class PointLight
+ * @extends Light
+ */
+
+EZ3.PointLight = function() {
+  EZ3.Light.call(this);
+};
+
+EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.PointLight.prototype.constructor = EZ3.PointLight;
+
+EZ3.PointLight.prototype.updateUniforms = function(gl, program, i) {
+  var prefix = 'uPointLights[' + i + '].';
+
+  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
+
+  program.loadUniformf(gl, prefix + 'position', 3, this.position);
+};
+
+/**
+ * @class SpotLight
+ * @extends Light
+ */
+
+EZ3.SpotLight = function() {
+  EZ3.Light.call(this);
+
+  this.target = new EZ3.Vector3();
+  this.cutoff = 0.8;
+};
+
+EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
+
+EZ3.SpotLight.prototype.updateUniforms = function(gl, program, i) {
+  var prefix = 'uSpotLights[' + i + '].';
+  var direction = new EZ3.Vector3().sub(this.position, this.target).normalize();
+
+  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
+  program.loadUniformf(gl, prefix + 'position', 3, this.position);
+  program.loadUniformf(gl, prefix + 'direction', 3, direction);
+  program.loadUniformf(gl, prefix + 'cutoff', 1, this.cutoff);
+};
+
+/**
+ * @class MeshMaterial
+ * @extends Material
+ */
+
+EZ3.MeshMaterial = function() {
+  EZ3.Material.call(this, 'mesh');
+
+  this.emissive = new EZ3.Vector3();
+  this.emissiveMap = null;
+  this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
+  this.diffuseMap = null;
+  this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
+  this.specularMap = null;
+  this.normalMap = null;
+  this.shininess = 180.0;
+  this.dirty = true;
+};
+
+EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
+EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
+
+EZ3.MeshMaterial.prototype.updateProgram = function(gl, lights, state) {
+  var id = this._name;
+  var defines = [];
+  var prefix = '#define ';
+  var vertex;
+  var fragment;
+
+  defines.push('MAX_POINT_LIGHTS ' + lights.point.length);
+  defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
+  defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
+
+  if (this.emissiveMap instanceof EZ3.Texture)
+    defines.push('EMISSIVE_MAP');
+
+  if (this.diffuseMap instanceof EZ3.Texture)
+    defines.push('DIFFUSE_MAP');
+
+  if (this.normalMap instanceof EZ3.Texture)
+    defines.push('NORMAL_MAP');
+
+  id += defines.join('.');
+  prefix += defines.join('\n ' + prefix) + '\n';
+
+  if (!state.program[id]) {
+    vertex = EZ3.ShaderLibrary.mesh.vertex;
+    fragment = EZ3.ShaderLibrary.mesh.fragment;
+
+    this.program = new EZ3.GLSLProgram(gl, vertex, fragment, prefix);
+    state.program[id] = this.program;
+  } else
+    this.program = state.program[id];
+};
+
+EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
+  this.program.loadUniformf(gl, 'uEmissive', 3, this.emissive);
+  this.program.loadUniformf(gl, 'uDiffuse', 3, this.diffuse);
+  this.program.loadUniformf(gl, 'uSpecular', 3, this.specular);
+  this.program.loadUniformf(gl, 'uShininess', 1, this.shininess);
+
+  if (this.emissiveMap instanceof EZ3.Texture) {
+    this.emissiveMap.bind(gl, gl.TEXTURE_2D, 0, state);
+
+    if (this.emissiveMap.dirty) {
+      this.emissiveMap.update(gl, gl.TEXTURE_2D);
+      this.emissiveMap.dirty = false;
+    }
+
+    this.program.loadUniformi(gl, 'uEmissiveSampler', 1, 0);
+  }
+
+  if (this.diffuseMap instanceof EZ3.Texture) {
+    this.diffuseMap.bind(gl, gl.TEXTURE_2D, 1, state);
+
+    if (this.diffuseMap.dirty) {
+      this.diffuseMap.update(gl, gl.TEXTURE_2D);
+      this.diffuseMap.dirty = false;
+    }
+
+    this.program.loadUniformi(gl, 'uDiffuseSampler', 1, 1);
+  }
+
+  if (this.normalMap instanceof EZ3.Texture) {
+    this.normalMap.bind(gl, gl.TEXTURE_2D, 2, state);
+
+    if (this.normalMap.dirty) {
+      this.normalMap.update(gl, gl.TEXTURE_2D);
+      this.normalMap.dirty = false;
+    }
+
+    this.program.loadUniformi(gl, 'uNormalSampler', 1, 2);
+  }
+};
+
+/**
+ * @class ShaderMaterial
+ * @extends Material
+ */
+
+EZ3.ShaderMaterial = function(name, vertex, fragment) {
+  this.name = name;
+  this.vertex = vertex;
+  this.fragment = fragment;
+};
+
+EZ3.ShaderMaterial.prototype = Object.create(EZ3.Material.prototype);
+EZ3.ShaderMaterial.prototype.constructor = EZ3.Material;
+
+/**
+ * @class AstroidalEllipsoid
+ * @extends Geometry
+ */
+
+EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
+  EZ3.Geometry.call(this);
+
+  if (radiuses instanceof EZ3.Vector3)
+    this.radiuses = radiuses;
+  else
+    this.radiuses = new EZ3.Vector3(1, 1, 1);
+
+  if (resolution instanceof EZ3.Vector2)
+    this.resolution = resolution;
+  else
+    this.resolution = new EZ3.Vector2(5, 5);
+
+  this.dirty = true;
+};
+
+EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
+
+EZ3.AstroidalEllipsoid.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var need32Bits = false;
+  var buffer;
+  var length;
+  var phi;
+  var rho;
+  var cosS;
+  var cosT;
+  var sinS;
+  var sinT;
+  var a;
+  var b;
+  var c;
+  var d;
+  var u;
+  var v;
+  var s;
+  var t;
+
+  for (s = 0; s < this.resolution.x; ++s) {
+    for (t = 0; t < this.resolution.y; ++t) {
+      u = s / (this.resolution.x - 1);
+      v = t / (this.resolution.y - 1);
+
+      phi = EZ3.Math.DOUBLE_PI * u - EZ3.Math.PI;
+      rho = EZ3.Math.PI * v - EZ3.Math.HALF_PI;
+
+      cosS = Math.pow(Math.cos(phi), 3.0);
+      cosT = Math.pow(Math.cos(rho), 3.0);
+      sinS = Math.pow(Math.sin(phi), 3.0);
+      sinT = Math.pow(Math.sin(rho), 3.0);
+
+      vertex.x = (this.radiuses.x * cosT * cosS);
+      vertex.y = (this.radiuses.y * sinT);
+      vertex.z = (this.radiuses.z * cosT * sinS);
+
+      uvs.push(u);
+      uvs.push(v);
+
+      vertices.push(vertex.x);
+      vertices.push(vertex.y);
+      vertices.push(vertex.z);
+    }
+  }
+
+  for (s = 0; s < this.resolution.x - 1; ++s) {
+    for (t = 0; t < this.resolution.y - 1; ++t) {
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
+
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
+    }
+  }
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class Box
+ * @extends Geometry
+ */
+
+EZ3.Box = function(dimensions, resolution) {
+  EZ3.Geometry.call(this);
+
+  if (dimensions instanceof EZ3.Vector3)
+    this.dimensions = dimensions;
+  else
+    this.dimensions = new EZ3.Vector3(1, 1, 1);
+
+  if (resolution instanceof EZ3.Vector3)
+    this.resolution = resolution;
+  else
+    this.resolution = new EZ3.Vector3(1, 1, 1);
+
+  this.dirty = true;
+};
+
+EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Box.prototype.constructor = EZ3.Box;
+
+EZ3.Box.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var width = this.dimensions.x;
+  var height = this.dimensions.y;
+  var depth = this.dimensions.z;
+  var widthHalf = width * 0.5;
+  var depthHalf = depth * 0.5;
+  var heightHalf = height * 0.5;
+  var need32Bits = false;
+  var widthSegments;
+  var heightSegments;
+  var depthSegments;
+  var buffer;
+  var length;
+
+  if (this.resolution !== undefined) {
+    widthSegments = this.resolution.x;
+    heightSegments = this.resolution.y;
+    depthSegments = this.resolution.z;
+  } else {
+    widthSegments = 1;
+    heightSegments = 1;
+    depthSegments = 1;
+  }
+
+  function buildPlane(u, v, udir, vdir, width, height, depth) {
+    var gridX = widthSegments;
+    var gridY = heightSegments;
+    var widthHalf = width * 0.5;
+    var heightHalf = height * 0.5;
+    var offset = vertices.length / 3;
+    var vector = new EZ3.Vector3();
+    var segmentWidth;
+    var segmentHeight;
+    var a;
+    var b;
+    var c;
+    var d;
+    var w;
+    var i;
+    var j;
+
+    if ((u === 'x' && v === 'y') || (u === 'y' && v === 'x')) {
+
+      w = 'z';
+
+    } else if ((u === 'x' && v === 'z') || (u === 'z' && v === 'x')) {
+
+      w = 'y';
+      gridY = depthSegments;
+
+    } else if ((u === 'z' && v === 'y') || (u === 'y' && v === 'z')) {
+
+      w = 'x';
+      gridX = depthSegments;
+
+    }
+
+    segmentWidth = width / gridX;
+    segmentHeight = height / gridY;
+
+    for (i = 0; i < gridY + 1; i++) {
+      for (j = 0; j < gridX + 1; j++) {
+        vector[u] = (j * segmentWidth - widthHalf) * udir;
+        vector[v] = (i * segmentHeight - heightHalf) * vdir;
+        vector[w] = depth;
+
+        uvs.push(j / gridX, i / gridY);
+        vertices.push(vector.x, vector.y, vector.z);
+      }
+    }
+
+    for (i = 0; i < gridY; ++i) {
+      for (j = 0; j < gridX; ++j) {
+
+        a = offset + (i * (gridX + 1) + j);
+        b = offset + (i * (gridX + 1) + (j + 1));
+        c = offset + ((i + 1) * (gridX + 1) + j);
+        d = offset + ((i + 1) * (gridX + 1) + (j + 1));
+
+        indices.push(a, d, b, a, c, d);
+
+        if (!need32Bits) {
+          length = indices.length;
+          need32Bits = need32Bits ||
+            (a > EZ3.Math.MAX_USHORT) ||
+            (b > EZ3.Math.MAX_USHORT) ||
+            (c > EZ3.Math.MAX_USHORT) ||
+            (d > EZ3.Math.MAX_USHORT);
+        }
+      }
+    }
+  }
+
+  buildPlane('z', 'y', -1, -1, depth, height, +widthHalf);
+  buildPlane('z', 'y', +1, -1, depth, height, -widthHalf);
+  buildPlane('x', 'z', +1, +1, width, depth, +heightHalf);
+  buildPlane('x', 'z', +1, -1, width, depth, -heightHalf);
+  buildPlane('x', 'y', +1, -1, width, height, +depthHalf);
+  buildPlane('x', 'y', -1, -1, width, height, -depthHalf);
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class Cone
+ * @extends Geometry
+ */
+
+EZ3.Cone = function(base, height, resolution) {
+  EZ3.Geometry.call(this);
+
+  this.base = base;
+  this.height = height;
+
+  if (resolution instanceof EZ3.Vector2)
+    this.resolution = resolution;
+  else
+    this.resolution = new EZ3.Vector2(5, 5);
+
+  this.dirty = true;
+};
+
+EZ3.Cone.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Cone.prototype.constructor = EZ3.Cone;
+
+EZ3.Cone.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var actualHeight = this.height;
+  var step = (this.height - this.base) / this.resolution.x;
+  var need32Bits = false;
+  var radius;
+  var buffer;
+  var length;
+  var a;
+  var b;
+  var c;
+  var d;
+  var u;
+  var v;
+  var s;
+  var t;
+
+  for (s = 0; s < this.resolution.x; ++s) {
+    for (t = 0; t < this.resolution.y; ++t) {
+      u = s / (this.resolution.x - 1);
+      v = t / (this.resolution.y - 1);
+
+      radius = Math.abs(this.height - actualHeight) * 0.5;
+
+      vertex.x = radius * Math.cos(EZ3.Math.DOUBLE_PI * v);
+      vertex.y = actualHeight;
+      vertex.z = radius * Math.sin(EZ3.Math.DOUBLE_PI * v);
+
+      vertices.push(vertex.x);
+      vertices.push(vertex.y);
+      vertices.push(vertex.z);
+
+      uvs.push(u);
+      uvs.push(v);
+    }
+
+    actualHeight -= step;
+
+    if (actualHeight < this.base)
+      break;
+  }
+
+  for (s = 0; s < this.resolution.x - 1; ++s) {
+    for (t = 0; t < this.resolution.y - 1; ++t) {
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
+
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
+    }
+  }
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class Cylinder
+ * @extends Geometry
+ */
+
+EZ3.Cylinder = function(radius, base, height, resolution) {
+  EZ3.Geometry.call(this);
+
+  this.base = base;
+  this.radius = radius;
+  this.height = height;
+
+  if (resolution instanceof EZ3.Vector2)
+    this.resolution = resolution;
+  else
+    this.resolution = new EZ3.Vector2(5, 5);
+
+  this.dirty = true;
+};
+
+EZ3.Cylinder.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Cylinder.prototype.constructor = EZ3.Cylinder;
+
+EZ3.Cylinder.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var actualHeight = this.height;
+  var step = (this.height - this.base) / this.resolution.x;
+  var need32Bits = false;
+  var buffer;
+  var length;
+  var a;
+  var b;
+  var c;
+  var d;
+  var u;
+  var v;
+  var s;
+  var t;
+
+  for (s = 0; s < this.resolution.x; ++s) {
+    for (t = 0; t < this.resolution.y; ++t) {
+      u = s / (this.resolution.x - 1);
+      v = t / (this.resolution.y - 1);
+
+      vertex.x = this.radius * Math.cos(EZ3.Math.DOUBLE_PI * v);
+      vertex.y = actualHeight;
+      vertex.z = this.radius * Math.sin(EZ3.Math.DOUBLE_PI * v);
+
+      vertices.push(vertex.x);
+      vertices.push(vertex.y);
+      vertices.push(vertex.z);
+
+      uvs.push(u);
+      uvs.push(v);
+    }
+
+    actualHeight -= step;
+
+    if (actualHeight < this.base)
+      break;
+  }
+
+  for (s = 0; s < this.resolution.x - 1; ++s) {
+    for (t = 0; t < this.resolution.y - 1; ++t) {
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
+
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
+    }
+  }
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class Ellipsoid
+ * @extends Geometry
+ */
+
+EZ3.Ellipsoid = function(radiuses, resolution) {
+  EZ3.Geometry.call(this);
+
+  if (radiuses instanceof EZ3.Vector3)
+    this.radiuses = radiuses;
+  else
+    this.radiuses = new EZ3.Vector3(3, 1, 3);
+
+  if (resolution instanceof EZ3.Vector2)
+    this.resolution = resolution;
+  else
+    this.resolution = new EZ3.Vector2(5, 5);
+
+  this.dirty = true;
+};
+
+EZ3.Ellipsoid.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Ellipsoid.prototype.constructor = EZ3.Ellipsoid;
+
+EZ3.Ellipsoid.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var need32Bits = false;
+  var buffer;
+  var length;
+  var phi;
+  var rho;
+  var a;
+  var b;
+  var c;
+  var d;
+  var u;
+  var v;
+  var s;
+  var t;
+
+  for (s = 0; s < this.resolution.x; ++s) {
+    for (t = 0; t < this.resolution.y; ++t) {
+      u = s / (this.resolution.x - 1);
+      v = t / (this.resolution.y - 1);
+
+      phi = EZ3.Math.DOUBLE_PI * u;
+      rho = EZ3.Math.PI * v;
+
+      vertex.x = (this.radiuses.x * Math.cos(phi) * Math.sin(rho));
+      vertex.y = (this.radiuses.y * Math.sin(rho - EZ3.Math.HALF_PI));
+      vertex.z = (this.radiuses.z * Math.sin(phi) * Math.sin(rho));
+
+      uvs.push(u);
+      uvs.push(v);
+
+      vertices.push(vertex.x);
+      vertices.push(vertex.y);
+      vertices.push(vertex.z);
+    }
+  }
+
+  for (s = 0; s < this.resolution.x - 1; ++s) {
+    for (t = 0; t < this.resolution.y - 1; ++t) {
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
+
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
+    }
+  }
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class Grid
+ * @extends Geometry
+ */
+
+EZ3.Grid = function(resolution) {
+  EZ3.Geometry.call(this);
+
+  if (resolution !== undefined) {
+    if (resolution instanceof EZ3.Vector2)
+      this.resolution = resolution;
+    else
+      this.resolution = new EZ3.Vector2(2, 2);
+  }
+
+  this.dirty = true;
+};
+
+EZ3.Grid.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Grid.prototype.constructor = EZ3.Grid;
+
+EZ3.Grid.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var need32Bits = false;
+  var buffer;
+  var length;
+  var a;
+  var b;
+  var c;
+  var d;
+  var x;
+  var z;
+
+  for (z = 0; z < this.resolution.x + 1; ++z) {
+    for (x = 0; x < this.resolution.y + 1; ++x) {
+      vertices.push(x);
+      vertices.push(0);
+      vertices.push(z);
+
+      uvs.push(x / this.resolution.y);
+      uvs.push(z / this.resolution.x);
+    }
+  }
+
+  for (z = 0; z < this.resolution.x; ++z) {
+    for (x = 0; x < this.resolution.y; ++x) {
+      a = z * (this.resolution.x + 1) + x;
+      b = a + 1;
+      c = a + (this.resolution.x + 1);
+      d = c + 1;
+
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, c, b, b, c, d);
+    }
+  }
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class Sphere
+ * @extends Geometry
+ */
+
+EZ3.Sphere = function(radius, resolution) {
+  EZ3.Geometry.call(this);
+
+  this.radius = radius;
+
+  if (resolution instanceof EZ3.Vector2)
+    this.resolution = resolution;
+  else
+    this.resolution = new EZ3.Vector2(5, 5);
+
+  this.dirty = true;
+};
+
+EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Sphere.prototype.constructor = EZ3.Sphere;
+
+EZ3.Sphere.prototype.generate = function() {
+  var vertex = new EZ3.Vector3();
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var need32Bits = false;
+  var buffer;
+  var length;
+  var phi;
+  var rho;
+  var a;
+  var b;
+  var c;
+  var d;
+  var u;
+  var v;
+  var s;
+  var t;
+
+  for (s = 0; s < this.resolution.x; s++) {
+    for (t = 0; t < this.resolution.y; t++) {
+      u = s / (this.resolution.x - 1);
+      v = t / (this.resolution.y - 1);
+
+      phi = EZ3.Math.DOUBLE_PI * u;
+      rho = EZ3.Math.PI * v;
+
+      vertex.x = (this.radius * Math.cos(phi) * Math.sin(rho));
+      vertex.y = (this.radius * Math.sin(rho - EZ3.Math.HALF_PI));
+      vertex.z = (this.radius * Math.sin(phi) * Math.sin(rho));
+
+      uvs.push(u);
+      uvs.push(v);
+
+      vertices.push(vertex.x);
+      vertices.push(vertex.y);
+      vertices.push(vertex.z);
+    }
+  }
+
+  for (s = 0; s < this.resolution.x - 1; ++s) {
+    for (t = 0; t < this.resolution.y - 1; ++t) {
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
+
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
+    }
+  }
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class Torus
+ * @extends Geometry
+ */
+
+EZ3.Torus = function(radiuses, resolution) {
+  EZ3.Geometry.call(this);
+
+  if (radiuses !== undefined) {
+    if (radiuses instanceof EZ3.Vector2)
+      this.radiuses = radiuses;
+    else
+      this.radiuses = new EZ3.Vector2(0.5, 1.0);
+  }
+
+  if (resolution !== undefined) {
+    if (resolution instanceof EZ3.Vector2)
+      this.resolution = resolution;
+    else
+      this.resolution = new EZ3.Vector2(5, 5);
+  }
+
+  this.dirty = true;
+};
+
+EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Torus.prototype.constructor = EZ3.Torus;
+
+EZ3.Torus.prototype.generate = function() {
+  var uvs = [];
+  var indices = [];
+  var vertices = [];
+  var vertex = new EZ3.Vector3();
+  var need32Bits = false;
+  var buffer;
+  var length;
+  var cosS;
+  var cosR;
+  var sinS;
+  var sinR;
+  var rho;
+  var phi;
+  var a;
+  var b;
+  var c;
+  var d;
+  var u;
+  var v;
+  var s;
+  var t;
+  var r;
+
+  for (s = 0; s < this.resolution.x; ++s) {
+    for (r = 0; r < this.resolution.y; ++r) {
+      u = s / (this.resolution.x - 1);
+      v = r / (this.resolution.y - 1);
+
+      rho = EZ3.Math.DOUBLE_PI * u;
+      phi = EZ3.Math.DOUBLE_PI * v;
+
+      cosS = Math.cos(rho);
+      cosR = Math.cos(phi);
+      sinS = Math.sin(rho);
+      sinR = Math.sin(phi);
+
+      vertex.x = (this.radiuses.x + this.radiuses.y * cosR) * cosS;
+      vertex.y = (this.radiuses.y * sinR);
+      vertex.z = (this.radiuses.x + this.radiuses.y * cosR) * sinS;
+
+      uvs.push(u);
+      uvs.push(v);
+
+      vertices.push(vertex.x);
+      vertices.push(vertex.y);
+      vertices.push(vertex.z);
+    }
+  }
+
+  for (s = 0; s < this.resolution.x - 1; ++s) {
+    for (t = 0; t < this.resolution.y - 1; ++t) {
+      a = s * this.resolution.y + t;
+      b = s * this.resolution.y + (t + 1);
+      c = (s + 1) * this.resolution.y + t;
+      d = (s + 1) * this.resolution.y + (t + 1);
+
+      if (!need32Bits) {
+        length = indices.length;
+        need32Bits = need32Bits ||
+          (a > EZ3.Math.MAX_USHORT) ||
+          (b > EZ3.Math.MAX_USHORT) ||
+          (c > EZ3.Math.MAX_USHORT) ||
+          (d > EZ3.Math.MAX_USHORT);
+      }
+
+      indices.push(a, b, d, a, d, c);
+    }
+  }
+
+  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
+  this.buffers.add('triangle', buffer);
+
+  buffer = new EZ3.VertexBuffer(uvs, false);
+  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+  this.buffers.add('uv', buffer);
+
+  buffer = new EZ3.VertexBuffer(vertices, false);
+  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+  this.buffers.add('position', buffer);
+};
+
+/**
+ * @class IndexBuffer
+ * @extends Buffer
+ */
+
+EZ3.IndexBuffer = function(data, dynamic, need32Bits) {
+  EZ3.Buffer.call(this, data, dynamic);
+
+  this.need32Bits = need32Bits || false;
+};
+
+EZ3.IndexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
+EZ3.IndexBuffer.prototype.constructor = EZ3.IndexBuffer;
+
+EZ3.IndexBuffer.prototype.bind = function(gl) {
+  if(!this._id)
+    this._id = gl.createBuffer();
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._id);
+};
+
+EZ3.IndexBuffer.prototype.update = function(gl, state) {
+  var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
+  var length;
+  var UintArray;
+  var offset;
+  var array;
+  var bytes;
+  var k;
+
+  if(this.need32Bits) {
+    if(state.extension['OES_element_index_uint']) {
+      bytes = 4;
+      UintArray = Uint32Array;
+    } else
+      return;
+  } else {
+    bytes = 2;
+    UintArray = Uint16Array;
+  }
+
+  length = bytes * this.data.length;
+
+  if((length !== this.length) || (usage !== this.usage)) {
+    this.usage = usage;
+    this.length = length;
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new UintArray(this.data), usage);
+  } else {
+    if(this.ranges.length) {
+      for(k = 0; k < this.ranges.length; k++) {
+        offset = bytes * this.ranges[k].left;
+        array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
+        gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, new UintArray(array));
+      }
+    } else {
+      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, new UintArray(this.data));
+    }
+  }
+};
+
+EZ3.IndexBuffer.prototype.getType = function(gl, state) {
+  return (state.extension['OES_element_index_uint'] && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+};
+
+/**
+ * @class VertexBuffer
+ * @extends Buffer
+ */
+
+EZ3.VertexBuffer = function(data, dynamic) {
+  EZ3.Buffer.call(this, data, dynamic);
+
+  this._stride = 0;
+  this._attributes = {};
+};
+
+EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
+EZ3.VertexBuffer.prototype.constructor = EZ3.VertexBuffer;
+
+EZ3.VertexBuffer.prototype.validate = function(gl, attributes) {
+  var k;
+
+  for (k in this._attributes)
+    if (attributes[k] >= 0)
+      return true;
+
+  return false;
+};
+
+EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
+  var type = gl.FLOAT;
+  var stride = this._stride;
+  var normalized;
+  var offset;
+  var layout;
+  var size;
+  var k;
+
+  if (!this._id)
+    this._id = gl.createBuffer();
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, this._id);
+
+  for (k in this._attributes) {
+    layout = attributes[k];
+    size = this._attributes[k].size;
+    offset = this._attributes[k].offset;
+    normalized = this._attributes[k].normalized;
+
+    if (layout >= 0) {
+      if(state) {
+        if(!state.attribute[layout]) {
+          gl.enableVertexAttribArray(layout);
+          state.attribute[layout] = true;
+        }
+        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+      } else {
+        gl.enableVertexAttribArray(layout);
+        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+      }
+    }
+  }
+};
+
+EZ3.VertexBuffer.prototype.update = function(gl) {
+  var bytes = 4;
+  var length = bytes * this.data.length;
+  var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
+  var offset;
+  var array;
+  var k;
+
+  if ((length !== this.length) || (usage !== this.usage)) {
+    this.usage = usage;
+    this.length = length;
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), usage);
+  } else {
+    if (this.ranges.length) {
+      for (k = 0; k < this.ranges.length; k++) {
+        offset = bytes * this.ranges[k].left;
+        array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
+        gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(array));
+      }
+    } else
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(this.data));
+  }
+};
+
+EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
+  if (attribute instanceof EZ3.VertexBufferAttribute) {
+    this._stride += 4 * attribute.size;
+    this._attributes[name] = attribute;
+  }
+};
+
+EZ3.VertexBuffer.prototype.getAttribute = function(name) {
+  return this._attributes[name];
+};

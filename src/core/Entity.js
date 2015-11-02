@@ -3,6 +3,7 @@
  */
 
 EZ3.Entity = function() {
+  this._cache = {};
   this.parent = null;
   this.children = [];
 
