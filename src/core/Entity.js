@@ -3,14 +3,12 @@
  */
 
 EZ3.Entity = function() {
+  this._cache = {};
   this.parent = null;
   this.children = [];
 
   this.model = new EZ3.Matrix4();
   this.world = new EZ3.Matrix4();
-
-  if(this instanceof EZ3.Mesh)
-    this.normal = new EZ3.Matrix3();
 
   this.scale = new EZ3.Vector3(1, 1, 1);
   this.position = new EZ3.Vector3(0, 0, 0);
@@ -35,43 +33,58 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.updateWorld = function() {
-  var k;
+  var positionDirty;
+  var rotationDirty;
+  var scaleDirty;
+  var modelDirty;
+  var parentWorldDirty;
 
-  if(this.position.dirty || this.rotation.dirty || this.scale.dirty) {
+  if(!this._cache.position || this._cache.position.testDiff(this.position)) {
+    this._cache.position = this.position.clone();
+    positionDirty = true;
+  }
+
+  if(!this._cache.rotation || this._cache.rotation.testDiff(this.rotation)) {
+    this._cache.rotation = this.rotation.clone();
+    rotationDirty = true;
+  }
+
+  if(!this._cache.scale || this._cache.scale.testDiff(this.scale)) {
+    this._cache.scale = this.scale.clone();
+    scaleDirty = true;
+  }
+
+  if(positionDirty || rotationDirty || scaleDirty) {
     this.model.fromRotationTranslation(this.model, this.rotation, this.position);
     this.model.scale(this.model, this.scale);
-
-    this.scale.dirty = false;
-    this.position.dirty = false;
-    this.rotation.dirty = false;
   }
 
   if (!this.parent) {
-    if(this.model.dirty) {
+    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
 
+    if(modelDirty) {
       this.world.copy(this.model);
-
-      for(k = 0; k < this.children.length; k++)
-        this.children[k].world.dirty = true;
-
-      this.model.dirty = false;
+      this._cache.model = this.model.clone();
 
       if(this instanceof EZ3.Mesh)
-        this.normal.dirty = true;
+        this.updateNormalMatrix = true;
     }
   } else {
-    if(this.world.dirty || this.model.dirty) {
+    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
+    parentWorldDirty = !this._cache.parentWorld || this._cache.parentWorld.testDiff(this.parent.world);
+
+    if(parentWorldDirty || modelDirty) {
+
+      if(modelDirty)
+        this._cache.model = this.model.clone();
+
+      if(parentWorldDirty)
+        this._cache.parentWorld = this.parent.world.clone();
 
       this.world.mul(this.model, this.parent.world);
 
-      for(k = 0; k < this.children.length; k++)
-        this.children[k].world.dirty = true;
-
-      this.model.dirty = false;
-      this.world.dirty = false;
-
       if(this instanceof EZ3.Mesh)
-        this.normal.dirty = true;
+        this.updateNormalMatrix = true;
     }
   }
 };
