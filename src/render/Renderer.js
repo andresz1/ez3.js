@@ -4,6 +4,7 @@
 
 EZ3.Renderer = function(canvas, options) {
   this.context = null;
+  this.extension = null;
   this.canvas = canvas;
   this.options = options;
   this.state = null;
@@ -42,7 +43,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   for (i = 0; i < lights.spot.length; i++)
     lights.spot[i].updateUniforms(gl, program, i);
 
-  mesh.render(gl, program.attributes, this.state);
+  mesh.render(gl, program.attributes, this.state, this.extension);
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -61,7 +62,8 @@ EZ3.Renderer.prototype.initContext = function() {
     } catch (e) {}
 
     if (this.context) {
-      this.state = new EZ3.RendererState(this.context);
+      this.state = new EZ3.State();
+      this.extension = new EZ3.Extension(this.context);
       break;
     }
   }

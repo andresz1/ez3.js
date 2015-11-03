@@ -699,6 +699,27 @@ EZ3.Matrix4.prototype.testEqual = function(m) {
     return false;
 };
 
+EZ3.Matrix4.prototype.testDiff = function(m) {
+  if(m instanceof EZ3.Matrix4) {
+    return m.elements[0] !== this.elements[0] ||
+           m.elements[1] !== this.elements[1] ||
+           m.elements[2] !== this.elements[2] ||
+           m.elements[3] !== this.elements[3] ||
+           m.elements[4] !== this.elements[4] ||
+           m.elements[5] !== this.elements[5] ||
+           m.elements[6] !== this.elements[6] ||
+           m.elements[7] !== this.elements[7] ||
+           m.elements[8] !== this.elements[8] ||
+           m.elements[9] !== this.elements[9] ||
+           m.elements[10] !== this.elements[10] ||
+           m.elements[11] !== this.elements[11] ||
+           m.elements[12] !== this.elements[12] ||
+           m.elements[13] !== this.elements[13] ||
+           m.elements[14] !== this.elements[14] ||
+           m.elements[15] !== this.elements[15];
+  } else
+    return false;
+};
 
 EZ3.Matrix4.prototype.set = EZ3.Matrix4.prototype.init;
 

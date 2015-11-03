@@ -221,14 +221,12 @@ EZ3.Engine.prototype._update = function() {
  */
 
 EZ3.Entity = function() {
+  this._cache = {};
   this.parent = null;
   this.children = [];
 
   this.model = new EZ3.Matrix4();
   this.world = new EZ3.Matrix4();
-
-  if(this instanceof EZ3.Mesh)
-    this.normal = new EZ3.Matrix3();
 
   this.scale = new EZ3.Vector3(1, 1, 1);
   this.position = new EZ3.Vector3(0, 0, 0);
@@ -253,43 +251,58 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.updateWorld = function() {
-  var k;
+  var positionDirty;
+  var rotationDirty;
+  var scaleDirty;
+  var modelDirty;
+  var parentWorldDirty;
 
-  if(this.position.dirty || this.rotation.dirty || this.scale.dirty) {
+  if(!this._cache.position || this._cache.position.testDiff(this.position)) {
+    this._cache.position = this.position.clone();
+    positionDirty = true;
+  }
+
+  if(!this._cache.rotation || this._cache.rotation.testDiff(this.rotation)) {
+    this._cache.rotation = this.rotation.clone();
+    rotationDirty = true;
+  }
+
+  if(!this._cache.scale || this._cache.scale.testDiff(this.scale)) {
+    this._cache.scale = this.scale.clone();
+    scaleDirty = true;
+  }
+
+  if(positionDirty || rotationDirty || scaleDirty) {
     this.model.fromRotationTranslation(this.model, this.rotation, this.position);
     this.model.scale(this.model, this.scale);
-
-    this.scale.dirty = false;
-    this.position.dirty = false;
-    this.rotation.dirty = false;
   }
 
   if (!this.parent) {
-    if(this.model.dirty) {
+    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
 
+    if(modelDirty) {
       this.world.copy(this.model);
-
-      for(k = 0; k < this.children.length; k++)
-        this.children[k].world.dirty = true;
-
-      this.model.dirty = false;
+      this._cache.model = this.model.clone();
 
       if(this instanceof EZ3.Mesh)
-        this.normal.dirty = true;
+        this.updateNormalMatrix = true;
     }
   } else {
-    if(this.world.dirty || this.model.dirty) {
+    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
+    parentWorldDirty = !this._cache.parentWorld || this._cache.parentWorld.testDiff(this.parent.world);
+
+    if(parentWorldDirty || modelDirty) {
+
+      if(modelDirty)
+        this._cache.model = this.model.clone();
+
+      if(parentWorldDirty)
+        this._cache.parentWorld = this.parent.world.clone();
 
       this.world.mul(this.model, this.parent.world);
 
-      for(k = 0; k < this.children.length; k++)
-        this.children[k].world.dirty = true;
-
-      this.model.dirty = false;
-      this.world.dirty = false;
-
       if(this instanceof EZ3.Mesh)
-        this.normal.dirty = true;
+        this.updateNormalMatrix = true;
     }
   }
 };
@@ -1005,7 +1018,6 @@ EZ3.Mouse.FORWARD_BUTTON = 4;
 EZ3.Pointer = function(domElement) {
   this._domElement = domElement;
   this._bound = domElement.getBoundingClientRect();
-  console.log(this._bound);
 
   this.page = new EZ3.Vector2();
   this.client = new EZ3.Vector2();
@@ -1750,7 +1762,6 @@ EZ3.Material = function(name) {
   this.program = null;
   this.fill = EZ3.MeshMaterial.WIREFRAME;
   this.transparent = false;
-  this.faceCulling = true;
   this.backFaceCulling = true;
   this.frontFaceCulling = false;
   this.depthTest = true;
@@ -1758,44 +1769,39 @@ EZ3.Material = function(name) {
 
 EZ3.Material.prototype.updateStates = function(gl, state) {
   if (this.depthTest) {
-    if (!state.capability[EZ3.RendererState.DEPTH_TEST].enabled) {
+    if (!state.capability[EZ3.State.DEPTH_TEST]) {
       gl.enable(gl.DEPTH_TEST);
-      state.capability[EZ3.RendererState.DEPTH_TEST].enabled = true;
-    }
-    if (state.capability[EZ3.RendererState.DEPTH_TEST].value !== gl.LEQUAL) {
       gl.depthFunc(gl.LEQUAL);
-      state.capability[EZ3.RendererState.DEPTH_TEST].value = gl.LEQUAL;
+      state.capability[EZ3.State.DEPTH_TEST] = true;
     }
   } else {
-    if (state.capability[EZ3.RendererState.DEPTH_TEST].enabled) {
+    if (state.capability[EZ3.State.DEPTH_TEST]) {
       gl.disable(gl.DEPTH_TEST);
-      state.capability[EZ3.RendererState.DEPTH_TEST].enabled = false;
-      state.capability[EZ3.RendererState.DEPTH_TEST].value = null;
+      state.capability[EZ3.State.DEPTH_TEST] = false;
     }
   }
 
-  if (this.faceCulling) {
-    if (!state.capability[EZ3.RendererState.CULL_FACE].enabled) {
+  if (this.backFaceCulling) {
+    if (!state.capability[EZ3.State.CULL_FACE]) {
       gl.enable(gl.CULL_FACE);
-      state.capability[EZ3.RendererState.CULL_FACE].enabled = true;
+      state.capability[EZ3.State.CULL_FACE] = true;
     }
-    if (this.backFaceCulling) {
-      if(state.capability[EZ3.RendererState.CULL_FACE].value !== gl.BACK) {
-        gl.cullFace(gl.BACK);
-        state.capability[EZ3.RendererState.CULL_FACE].value = gl.BACK;
-      }
-    } else if(this.frontFaceCulling) {
-      if(state.capability[EZ3.RendererState.CULL_FACE].value !== gl.FRONT) {
-        gl.cullFace(gl.FRONT);
-        state.capability[EZ3.RendererState.CULL_FACE].value = gl.FRONT;
-      }
+    if(!state.capability[EZ3.State.BACKFACE_CULLING]) {
+      gl.cullFace(gl.BACK);
+      state.capability[EZ3.State.BACKFACE_CULLING] = true;
     }
-  } else {
-    if (state.capability[EZ3.RendererState.CULL_FACE].enabled) {
-      gl.disable(gl.CULL_FACE);
-      state.capability[EZ3.RendererState.CULL_FACE].enabled = false;
-      state.capability[EZ3.RendererState.CULL_FACE].value = null;
+  } else if(this.frontFaceCulling) {
+    if (!state.capability[EZ3.State.CULL_FACE]) {
+      gl.enable(gl.CULL_FACE);
+      state.capability[EZ3.State.CULL_FACE] = true;
     }
+    if(!state.capability[EZ3.State.FRONTFACE_CULLING]) {
+      gl.cullFace(gl.FRONT);
+      state.capability[EZ3.State.FRONTFACE_CULLING] = true;
+    }
+  } else if (state.capability[EZ3.State.CULL_FACE]) {
+    gl.disable(gl.CULL_FACE);
+    state.capability[EZ3.State.CULL_FACE] = false;
   }
 };
 
@@ -3069,6 +3075,27 @@ EZ3.Matrix4.prototype.testEqual = function(m) {
     return false;
 };
 
+EZ3.Matrix4.prototype.testDiff = function(m) {
+  if(m instanceof EZ3.Matrix4) {
+    return m.elements[0] !== this.elements[0] ||
+           m.elements[1] !== this.elements[1] ||
+           m.elements[2] !== this.elements[2] ||
+           m.elements[3] !== this.elements[3] ||
+           m.elements[4] !== this.elements[4] ||
+           m.elements[5] !== this.elements[5] ||
+           m.elements[6] !== this.elements[6] ||
+           m.elements[7] !== this.elements[7] ||
+           m.elements[8] !== this.elements[8] ||
+           m.elements[9] !== this.elements[9] ||
+           m.elements[10] !== this.elements[10] ||
+           m.elements[11] !== this.elements[11] ||
+           m.elements[12] !== this.elements[12] ||
+           m.elements[13] !== this.elements[13] ||
+           m.elements[14] !== this.elements[14] ||
+           m.elements[15] !== this.elements[15];
+  } else
+    return false;
+};
 
 EZ3.Matrix4.prototype.set = EZ3.Matrix4.prototype.init;
 
@@ -4001,7 +4028,7 @@ EZ3.Vector3.prototype.testZero = function(v) {
 };
 
 EZ3.Vector3.prototype.testDiff = function(v) {
-  return ((this.x !== v.x) && (this.y !== v.y) && (this.z !== v.z));
+  return ((this.x !== v.x) || (this.y !== v.y) || (this.z !== v.z));
 };
 
 EZ3.Vector3.prototype.toString = function() {
@@ -4696,15 +4723,15 @@ EZ3.ArrayBuffer = function() {
 
 EZ3.ArrayBuffer.prototype.constructor = EZ3.ArrayBuffer;
 
-EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, index) {
+EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, index) {
   var buffer;
   var k;
 
-  if (state.extension['OES_vertex_array_object']) {
+  if (extension.vertexArrayObject) {
     if (!this._id)
-      this._id = state.extension['OES_vertex_array_object'].createVertexArrayOES();
+      this._id = extension.vertexArrayObject.createVertexArrayOES();
 
-    state.extension['OES_vertex_array_object'].bindVertexArrayOES(this._id);
+    extension.vertexArrayObject.bindVertexArrayOES(this._id);
 
     for (k in this._vertex) {
       buffer = this._vertex[k];
@@ -4734,7 +4761,7 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, index) {
     index.bind(gl);
 
     if (index.dirty) {
-      index.update(gl, state);
+      index.update(gl, extension);
       index.dirty = false;
     }
   }
@@ -4778,6 +4805,16 @@ EZ3.Buffer.prototype.constructor = EZ3.Buffer;
 EZ3.BufferRange = function(left, right) {
   this.left = left;
   this.right = right;
+};
+
+/**
+ * @class Extension
+ */
+
+EZ3.Extension = function(gl) {
+  this.elementIndexUInt = gl.getExtension('OES_element_index_uint');
+  this.vertexArrayObject = gl.getExtension('OES_vertex_array_object');
+  this.standardDerivates = gl.getExtension('OES_standard_derivatives');
 };
 
 /**
@@ -5014,6 +5051,7 @@ EZ3.GLSLProgram.FRAGMENT = 1;
 
 EZ3.Renderer = function(canvas, options) {
   this.context = null;
+  this.extension = null;
   this.canvas = canvas;
   this.options = options;
   this.state = null;
@@ -5052,7 +5090,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   for (i = 0; i < lights.spot.length; i++)
     lights.spot[i].updateUniforms(gl, program, i);
 
-  mesh.render(gl, program.attributes, this.state);
+  mesh.render(gl, program.attributes, this.state, this.extension);
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -5071,7 +5109,8 @@ EZ3.Renderer.prototype.initContext = function() {
     } catch (e) {}
 
     if (this.context) {
-      this.state = new EZ3.RendererState(this.context);
+      this.state = new EZ3.State();
+      this.extension = new EZ3.Extension(this.context);
       break;
     }
   }
@@ -5166,53 +5205,6 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 };
 
 /**
- * @class RendererState
- */
-
-EZ3.RendererState = function(gl) {
-  this.program = {};
-  this.texture = {};
-  this.extension = {};
-  this.attribute = {};
-  this.capability = {};
-  this.currentTextureSlot = null;
-
-  this._initCapabilities();
-  this._initExtensions(gl);
-};
-
-EZ3.RendererState.prototype.constructor = EZ3.RendererState;
-
-EZ3.RendererState.prototype._initCapabilities = function() {
-  this.capability[EZ3.RendererState.DEPTH_TEST] = {
-    enabled: false,
-    value: null
-  };
-  this.capability[EZ3.RendererState.CULL_FACE] = {
-    enabled: false,
-    value: null
-  };
-  this.capability[EZ3.RendererState.BLENDING] = {
-    enabled: false,
-    blendEquation: null,
-    blendFunc: {
-      sfactor: null,
-      dfactor: null
-    }
-  };
-};
-
-EZ3.RendererState.prototype._initExtensions = function(gl) {
-  this.extension['OES_standard_derivatives'] = gl.getExtension('OES_standard_derivatives');
-  this.extension['OES_vertex_array_object'] = gl.getExtension('OES_vertex_array_object');
-  this.extension['OES_element_index_uint'] = gl.getExtension('OES_element_index_uint');
-};
-
-EZ3.RendererState.CULL_FACE = 0;
-EZ3.RendererState.BLENDING = 1;
-EZ3.RendererState.DEPTH_TEST = 2;
-
-/**
 * @class ShaderLibrary
 */
 
@@ -5224,6 +5216,26 @@ EZ3.ShaderLibrary = new EZ3.ShaderLibrary();
 
 EZ3.ShaderLibrary['mesh'].vertex = "precision highp float;\r\n\r\nattribute vec3 position;\r\nattribute vec3 normal;\r\nattribute vec2 uv;\r\n\r\nuniform mat4 uModel;\r\nuniform mat3 uNormal;\r\nuniform mat4 uModelView;\r\nuniform mat4 uProjection;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\nvoid main() {\r\n  vPosition = vec3(uModel * vec4(position, 1.0));\r\n  vNormal = normalize(uNormal * normal);\r\n  vUv = uv;\r\n\r\n  gl_PointSize = 3.0;\r\n  gl_Position = uProjection * uModelView * vec4(position, 1.0);\r\n}\r\n";
 EZ3.ShaderLibrary['mesh'].fragment = "precision highp float;\r\n\r\nstruct PointLight\r\n{\r\n\tvec3 position;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct DirectionalLight\r\n{\r\n\tvec3 direction;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct SpotLight\r\n{\r\n\tvec3 position;\r\n\tvec3 direction;\r\n\tfloat cutoff;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nuniform vec3 uEmissive;\r\nuniform vec3 uDiffuse;\r\nuniform vec3 uSpecular;\r\nuniform float uShininess;\r\n\r\nuniform vec3 uEyePosition;\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  uniform PointLight uPointLights[MAX_POINT_LIGHTS];\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  uniform DirectionalLight uDirectionalLights[MAX_DIRECTIONAL_LIGHTS];\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\nuniform sampler2D uEmissiveSampler;\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\nuniform sampler2D uDiffuseSampler;\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\nuniform sampler2D uSpecularSampler;\r\n#endif\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\n#ifdef NORMAL_MAP\r\n#extension GL_OES_standard_derivatives : enable\r\n\r\nuniform sampler2D uNormalSampler;\r\n\r\nvec3 pertubNormal(vec3 v) {\r\n\tvec3 q0 = dFdx(v);\r\n\tvec3 q1 = dFdy(v);\r\n\r\n\tvec2 st0 = dFdx(vUv);\r\n\tvec2 st1 = dFdy(vUv);\r\n\r\n\tvec3 s = normalize(q0 * st1.t - q1 * st0.t);\r\n\tvec3 t = normalize(-q0 * st1.s + q1 * st0.s);\r\n\tvec3 n = normalize(vNormal);\r\n\r\n\tvec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;\r\n\r\n\treturn normalize(mat3(s, t, n) * d);\r\n}\r\n#endif\r\n\r\nvoid main() {\r\n\tvec3 emissive = uEmissive;\r\n\tvec3 diffuse = vec3(0.0, 0.0, 0.0);\r\n\tvec3 specular = vec3(0.0, 0.0, 0.0);\r\n\r\n\tvec3 v = normalize(uEyePosition - vPosition);\r\n\r\n#ifdef NORMAL_MAP\r\n\tvec3 n = pertubNormal(-v);\r\n#else\r\n\tvec3 n = vNormal;\r\n#endif\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_POINT_LIGHTS; i++)\r\n  {\r\n    vec3 s = normalize(uPointLights[i].position - vPosition);\r\n\t\tfloat q = max(dot(s, n), 0.0);\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\tvec3 r = reflect(-s, n);\r\n\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n    \tdiffuse += uPointLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uPointLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  for(int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)\r\n  {\r\n\t\tfloat q = max(dot(uDirectionalLights[i].direction, n), 0.0);\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\tvec3 r = reflect(-uDirectionalLights[i].direction, n);\r\n\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n    \tdiffuse += uDirectionalLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uDirectionalLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_SPOT_LIGHTS; i++)\r\n  {\r\n\t\tvec3 s = normalize(uSpotLights[i].position - vPosition);\r\n\t\tfloat angle = max(dot(s, uSpotLights[i].direction), 0.0);\r\n\r\n\t\tif(angle > uSpotLights[i].cutoff) {\r\n\t\t\tfloat q = max(dot(uSpotLights[i].direction, n), 0.0);\r\n\r\n\t\t\tif (q > 0.0) {\r\n\t\t\t\tvec3 r = reflect(-s, n);\r\n\t\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n\t\t\t\tdiffuse += uSpotLights[i].diffuse * uDiffuse * q;\r\n\t\t\t\tspecular += uSpotLights[i].specular * uSpecular * w;\r\n\t\t\t}\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\n  emissive *= vec3(texture2D(uEmissiveSampler, vUv));\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\n\tdiffuse *= vec3(texture2D(uDiffuseSampler, vUv));\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\n\tspecular *= vec3(texture2D(uSpecularSampler, vUv))\r\n#endif\r\n\r\n  gl_FragColor = vec4(emissive + diffuse + specular, 1.0);\r\n}\r\n";
+/**
+ * @class State
+ */
+
+EZ3.State = function() {
+  this.program = {};
+  this.texture = {};
+  this.attribute = {};
+  this.capability = {};
+  this.currentTextureSlot = null;
+};
+
+EZ3.State.prototype.constructor = EZ3.State;
+
+EZ3.State.FACE_CULLING = 0;
+EZ3.State.BACKFACE_CULLING = 1;
+EZ3.State.FRONTFACE_CULLING = 2;
+EZ3.State.BLENDING = 3;
+EZ3.State.DEPTH_TEST = 4;
+
 /**
  * @class VertexBufferAttribute
  */
@@ -5654,6 +5666,9 @@ EZ3.TargetCamera.prototype.zoom = function(speed) {
 EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
+  this.updateNormalMatrix = false;
+  this.normal = new EZ3.Matrix3();
+
   this.geometry = geometry;
   this.material = material;
 };
@@ -5680,13 +5695,13 @@ EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
-  if(this.normal.dirty) {
+  if(this.updateNormalMatrix) {
     this.normal.normalFromMat4(this.world);
-    this.normal.dirty = false;
+    this.updateNormalMatrix = false;
   }
 };
 
-EZ3.Mesh.prototype.render = function(gl, attributes, state) {
+EZ3.Mesh.prototype.render = function(gl, attributes, state, extension) {
   var mode;
   var buffer;
 
@@ -5702,10 +5717,10 @@ EZ3.Mesh.prototype.render = function(gl, attributes, state) {
   }
 
   if (buffer instanceof EZ3.IndexBuffer) {
-    this.geometry.buffers.bind(gl, attributes, state, buffer);
-    gl.drawElements(mode, buffer.data.length, buffer.getType(gl, state), 0);
+    this.geometry.buffers.bind(gl, attributes, state, extension, buffer);
+    gl.drawElements(mode, buffer.data.length, buffer.getType(gl, extension), 0);
   } else if (buffer instanceof EZ3.VertexBuffer) {
-    this.geometry.buffers.bind(gl, attributes, state);
+    this.geometry.buffers.bind(gl, attributes, state, extension);
     gl.drawArrays(mode, 0, buffer.data.length / 3);
   }
 };
@@ -6829,7 +6844,7 @@ EZ3.IndexBuffer.prototype.bind = function(gl) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._id);
 };
 
-EZ3.IndexBuffer.prototype.update = function(gl, state) {
+EZ3.IndexBuffer.prototype.update = function(gl, extension) {
   var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
   var length;
   var UintArray;
@@ -6839,7 +6854,7 @@ EZ3.IndexBuffer.prototype.update = function(gl, state) {
   var k;
 
   if(this.need32Bits) {
-    if(state.extension['OES_element_index_uint']) {
+    if(extension.elementIndexUInt) {
       bytes = 4;
       UintArray = Uint32Array;
     } else
@@ -6868,8 +6883,8 @@ EZ3.IndexBuffer.prototype.update = function(gl, state) {
   }
 };
 
-EZ3.IndexBuffer.prototype.getType = function(gl, state) {
-  return (state.extension['OES_element_index_uint'] && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+EZ3.IndexBuffer.prototype.getType = function(gl, extension) {
+  return (extension.elementIndexUInt && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
 };
 
 /**
