@@ -14,13 +14,14 @@ EZ3.Obj.prototype._parseMaterial = function() {
 
 EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
   var that, patterns, lines, line, result;
-  var mtllibs, materials, material, geometry, mesh, indices, normals, uvs;
+  var mtllibs, materials, material, geometry, mesh, indices, vertices, normals, uvs;
+  var i;
 
   function triangulate(face) {
     var data, i;
 
     data = [];
-    face = face.split(' ');
+    face = face.trim().split(' ');
 
     for (i = 1; i < face.length - 1; i++)
       data.push(face[0], face[i], face[i + 1]);
@@ -51,7 +52,6 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
 
   function processFace1(face) {
     var i;
-
     for (i = 0; i < face.length; i++)
       indices.vertex.push(parseInt(face[i]) - 1);
   }
@@ -93,47 +93,56 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
   function computeNormals() {
     var indicesCount;
     var i, j, k;
+    var buffer;
 
     indicesCount = [];
 
-    geometry.normals = new EZ3.GeometryArray({});
+    buffer = new EZ3.VertexBuffer();
+    buffer.addAttribute('normal', new EZ3.VertexBufferAttribute(3));
+    geometry.buffers.add('normal', buffer);
 
     for (i = 0; i < vertices.length / 3; i++) {
       indicesCount.push(0);
 
       for (j = 0; j < 3; j++)
-        geometry.normals.data.push(0);
+        buffer.data.push(0);
     }
 
     for (i = 0; i < indices.vertex.length; i++) {
       indicesCount[indices.vertex[i]]++;
 
       for (j = 0; j < 3; j++)
-        geometry.normals.data[3 * indices.vertex[i] + j] += normals[3 * indices.normal[i] + j];
+        buffer.data[3 * indices.vertex[i] + j] += normals[3 * indices.normal[i] + j];
     }
 
     for (i = 0, j = 0; i < vertices.length; i += 3, j++)
       for (k = 0; k < 3; k++)
-        geometry.normals.data[i + k] /= indicesCount[j];
+        buffer.data[i + k] /= indicesCount[j];
   }
 
   function computeUvs() {
-    geometry.uvs = new EZ3.GeometryArray({});
+    var i, j;
+    var buffer;
+
+    buffer = new EZ3.VertexBuffer();
+    buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+    geometry.buffers.add('uv', buffer);
 
     for (i = 0; i < indices.vertex.length; i++)
       for (j = 0; j < 2; j++)
-        geometry.uvs.data[2 * indices.vertex[i] + j] = uvs[2 * indices.uv[i] + j];
+        buffer.data[2 * indices.vertex[i] + j] = uvs[2 * indices.uv[i] + j];
   }
 
   function processMesh() {
-    if (indices.vertex.length && vertices.length) {
-      geometry.indices = new EZ3.GeometryArray({
-        data: indices.vertex
-      });
+    var buffer;
 
-      geometry.vertices = new EZ3.GeometryArray({
-        data: vertices
-      });
+    if (indices.vertex.length > 0 && vertices.length > 0) {
+      buffer = new EZ3.IndexBuffer(indices.vertex, false, true);
+      geometry.buffers.add('triangle', buffer);
+
+      buffer = new EZ3.VertexBuffer(vertices);
+      buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+      geometry.buffers.add('position', buffer);
 
       if (indices.normal.length && normals.length)
         computeNormals();
@@ -141,11 +150,11 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
       if (indices.uv.length && uvs.length)
         computeUvs();
 
+      console.log('2');
+
       that.content.add(mesh);
 
-      material = new EZ3.MeshMaterial({
-        fill: EZ3.MeshMaterial.WIREFRAME
-      });
+      material = new EZ3.MeshMaterial();
       geometry = new EZ3.Geometry();
       mesh = new EZ3.Mesh(geometry, material);
 
@@ -172,7 +181,7 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
       var i;
 
       for (i = 0; i < data.length; i++)
-        processMaterial(baseUrl, data[i].response);
+        processMaterial(baseUrl, data[i].response, load);
 
       load.onComplete.removeAll();
       load.onComplete.add(function() {
@@ -185,7 +194,7 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
     load.start();
   }
 
-  function processMaterial(baseUrl, data) {
+  function processMaterial(baseUrl, data, load) {
     var lines, line, key, value, material;
     var i, j;
 
@@ -202,29 +211,30 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
       value = (j >= 0) ? line.substring(j + 1) : '';
       value = value.trim();
 
-      if (key === "newmtl") {
+      if (key === 'newmtl') {
         material = materials[value];
-      } else if (key === "kd") {
+      } else if (key === 'kd') {
 
-      } else if (key === "ka") {
+      } else if (key === 'ka') {
 
-      } else if (key === "ks") {
+      } else if (key === 'ks') {
 
-      } else if (key === "ns") {
+      } else if (key === 'ns') {
 
-      } else if (key === "d") {
+      } else if (key === 'd') {
 
-      } else if (key === "map_ka") {
+      } else if (key === 'map_ka') {
 
-      } else if (key === "map_kd") {
+      } else if (key === 'map_kd') {
 
-      } else if (key === "map_ks") {
+        material.diffuseMap = new EZ3.Texture(load.image(baseUrl + value));
+      } else if (key === 'map_ks') {
 
-      } else if (key === "map_ns") {
+      } else if (key === 'map_ns') {
 
-      } else if (key === "map_bump") {
+      } else if (key === 'map_bump') {
 
-      } else if (key === "map_d") {
+      } else if (key === 'map_d') {
 
       }
     }
@@ -240,16 +250,14 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
     vertex: /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
     normal: /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
     uv: /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
-    face1: /f\s(([\d]{1,}[\s]?){3,})+/,
+    face1: /f\s(([\d]+[\s]){2,}[\d]+)+/,
     face2: /f\s((([\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
     face3: /f\s((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
     face4: /f\s((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
   };
   mtllibs = [];
   materials = {};
-  material = new EZ3.MeshMaterial({
-    fill: EZ3.MeshMaterial.WIREFRAME
-  });
+  material = new EZ3.MeshMaterial();
   geometry = new EZ3.Geometry();
   mesh = new EZ3.Mesh(geometry, material);
   indices = {
@@ -294,7 +302,6 @@ EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
 
     }
   }
-
   processMesh();
   processMaterials();
 };
