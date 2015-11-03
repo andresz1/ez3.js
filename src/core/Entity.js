@@ -4,15 +4,20 @@
 
 EZ3.Entity = function() {
   this._cache = {};
+
   this.parent = null;
   this.children = [];
-
   this.model = new EZ3.Matrix4();
   this.world = new EZ3.Matrix4();
-
   this.scale = new EZ3.Vector3(1, 1, 1);
   this.position = new EZ3.Vector3(0, 0, 0);
   this.rotation = new EZ3.Quaternion(1, 0, 0, 0);
+
+  this._cache.model = this.model.clone();
+  this._cache.scale = this.scale.clone();
+  this._cache.position = this.position.clone();
+  this._cache.rotation = this.rotation.clone();
+  this._cache.parentWorld = this.model.clone();
 };
 
 EZ3.Entity.prototype.add = function(child) {
@@ -39,17 +44,17 @@ EZ3.Entity.prototype.updateWorld = function() {
   var modelDirty;
   var parentWorldDirty;
 
-  if(!this._cache.position || this._cache.position.testDiff(this.position)) {
+  if(this._cache.position.testDiff(this.position)) {
     this._cache.position = this.position.clone();
     positionDirty = true;
   }
 
-  if(!this._cache.rotation || this._cache.rotation.testDiff(this.rotation)) {
+  if(this._cache.rotation.testDiff(this.rotation)) {
     this._cache.rotation = this.rotation.clone();
     rotationDirty = true;
   }
 
-  if(!this._cache.scale || this._cache.scale.testDiff(this.scale)) {
+  if(this._cache.scale.testDiff(this.scale)) {
     this._cache.scale = this.scale.clone();
     scaleDirty = true;
   }
@@ -60,7 +65,7 @@ EZ3.Entity.prototype.updateWorld = function() {
   }
 
   if (!this.parent) {
-    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
+    modelDirty = this._cache.model.testDiff(this.model);
 
     if(modelDirty) {
       this.world.copy(this.model);
@@ -70,8 +75,8 @@ EZ3.Entity.prototype.updateWorld = function() {
         this.updateNormalMatrix = true;
     }
   } else {
-    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
-    parentWorldDirty = !this._cache.parentWorld || this._cache.parentWorld.testDiff(this.parent.world);
+    modelDirty = this._cache.model.testDiff(this.model);
+    parentWorldDirty = this._cache.parentWorld.testDiff(this.parent.world);
 
     if(parentWorldDirty || modelDirty) {
 
