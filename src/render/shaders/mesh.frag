@@ -43,15 +43,20 @@ uniform vec3 uEyePosition;
 #endif
 
 #ifdef EMISSIVE_MAP
-uniform sampler2D uEmissiveSampler;
+	uniform sampler2D uEmissiveSampler;
 #endif
 
 #ifdef DIFFUSE_MAP
-uniform sampler2D uDiffuseSampler;
+	uniform sampler2D uDiffuseSampler;
 #endif
 
 #ifdef SPECULAR_MAP
-uniform sampler2D uSpecularSampler;
+	uniform sampler2D uSpecularSampler;
+#endif
+
+#ifdef ENVIRONMENT_MAP
+	uniform float reflectFactor;
+	uniform samplerCube uEnvironmentSampler;
 #endif
 
 varying vec3 vPosition;
@@ -154,6 +159,13 @@ void main() {
 
 #ifdef SPECULAR_MAP
 	specular *= vec3(texture2D(uSpecularSampler, vUv))
+#endif
+
+#ifdef ENVIRONMENT_MAP
+#ifdef REFLECTION
+vec3 r = reflect(-v, n);
+diffuse = textureCube(uEnvironmentSampler, r).rgb;
+#endif
 #endif
 
   gl_FragColor = vec4(emissive + diffuse + specular, 1.0);
