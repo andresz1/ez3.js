@@ -8,12 +8,22 @@ EZ3.MeshMaterial = function() {
 
   this.emissive = new EZ3.Vector3();
   this.emissiveMap = null;
+
   this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
   this.diffuseMap = null;
+
   this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
   this.specularMap = null;
+
+  this.environmentMap = null;
+  this.reflectFactor = 1.0;
+  this.reflective = false;
+  this.refractive = false;
+
   this.normalMap = null;
+
   this.shininess = 180.0;
+
   this.dirty = true;
 };
 
@@ -31,14 +41,24 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, lights, state) {
   defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
   defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
 
-  if (this.emissiveMap instanceof EZ3.Texture)
+  if (this.emissiveMap instanceof EZ3.Texture2D)
     defines.push('EMISSIVE_MAP');
 
-  if (this.diffuseMap instanceof EZ3.Texture)
+  if (this.diffuseMap instanceof EZ3.Texture2D)
     defines.push('DIFFUSE_MAP');
 
-  if (this.normalMap instanceof EZ3.Texture)
+  if (this.normalMap instanceof EZ3.Texture2D)
     defines.push('NORMAL_MAP');
+
+  if(this.environmentMap instanceof EZ3.Cubemap) {
+    defines.push('ENVIRONMENT_MAP');
+
+    if(this.reflective)
+      defines.push('REFLECTION');
+
+    if(this.refractive)
+      defines.push('REFRACTION');
+  }
 
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
@@ -59,36 +79,47 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
   this.program.loadUniformf(gl, 'uSpecular', 3, this.specular);
   this.program.loadUniformf(gl, 'uShininess', 1, this.shininess);
 
-  if (this.emissiveMap instanceof EZ3.Texture) {
-    this.emissiveMap.bind(gl, gl.TEXTURE_2D, 0, state);
+  if (this.emissiveMap instanceof EZ3.Texture2D) {
+    this.emissiveMap.bind(gl, state, 0);
 
     if (this.emissiveMap.dirty) {
-      this.emissiveMap.update(gl, gl.TEXTURE_2D);
+      this.emissiveMap.update(gl, gl.RGBA, gl.RGBA);
       this.emissiveMap.dirty = false;
     }
 
     this.program.loadUniformi(gl, 'uEmissiveSampler', 1, 0);
   }
 
-  if (this.diffuseMap instanceof EZ3.Texture) {
-    this.diffuseMap.bind(gl, gl.TEXTURE_2D, 1, state);
+  if (this.diffuseMap instanceof EZ3.Texture2D) {
+    this.diffuseMap.bind(gl, state, 1);
 
     if (this.diffuseMap.dirty) {
-      this.diffuseMap.update(gl, gl.TEXTURE_2D);
+      this.diffuseMap.update(gl, gl.RGBA, gl.RGBA);
       this.diffuseMap.dirty = false;
     }
 
     this.program.loadUniformi(gl, 'uDiffuseSampler', 1, 1);
   }
 
-  if (this.normalMap instanceof EZ3.Texture) {
-    this.normalMap.bind(gl, gl.TEXTURE_2D, 2, state);
+  if (this.normalMap instanceof EZ3.Texture2D) {
+    this.normalMap.bind(gl, state, 2);
 
     if (this.normalMap.dirty) {
-      this.normalMap.update(gl, gl.TEXTURE_2D);
+      this.normalMap.update(gl, gl.RGBA, gl.RGBA);
       this.normalMap.dirty = false;
     }
 
     this.program.loadUniformi(gl, 'uNormalSampler', 1, 2);
+  }
+
+  if(this.environmentMap instanceof EZ3.Cubemap) {
+    this.environmentMap.bind(gl, state, 3);
+
+    if(this.environmentMap.dirty) {
+      this.environmentMap.update(gl, gl.RGBA, gl.RGBA);
+      this.environmentMap.dirty = false;
+    }
+
+    this.program.loadUniformi(gl, 'uEnvironmentSampler', 1, 3);
   }
 };
