@@ -55,8 +55,15 @@ uniform vec3 uEyePosition;
 #endif
 
 #ifdef ENVIRONMENT_MAP
-	uniform float reflectFactor;
 	uniform samplerCube uEnvironmentSampler;
+
+#ifdef REFLECTION
+	uniform float uReflectFactor;
+#endif
+
+#ifdef REFRACTION
+	uniform float uRefractFactor;
+#endif
 #endif
 
 varying vec3 vPosition;
@@ -163,8 +170,11 @@ void main() {
 
 #ifdef ENVIRONMENT_MAP
 #ifdef REFLECTION
-vec3 r = reflect(-v, n);
-diffuse = textureCube(uEnvironmentSampler, r).rgb;
+	diffuse = mix(diffuse, textureCube(uEnvironmentSampler, reflect(-v, n)).rgb, 0.5);
+#endif
+
+#ifdef REFRACTION
+	diffuse = mix(diffuse, textureCube(uEnvironmentSampler, refract(-v, n, uRefractFactor)).rgb, 0.5);
 #endif
 #endif
 
