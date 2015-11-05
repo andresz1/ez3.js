@@ -16,7 +16,8 @@ EZ3.MeshMaterial = function() {
   this.specularMap = null;
 
   this.environmentMap = null;
-  this.reflectFactor = 1.0;
+  this.reflectFactor = 0.7;
+  this.refractFactor = 1.0;
   this.reflective = false;
   this.refractive = false;
 
@@ -56,8 +57,10 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, lights, state) {
     if(this.reflective)
       defines.push('REFLECTION');
 
-    if(this.refractive)
+    if(this.refractive) {
+      console.log('Almacenando refraccion');
       defines.push('REFRACTION');
+    }
   }
 
   id += defines.join('.');
@@ -87,7 +90,7 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
       this.emissiveMap.dirty = false;
     }
 
-    this.program.loadUniformi(gl, 'uEmissiveSampler', 1, 0);
+    this.program.loadUniformi(gl, 'uEmissiveSampler', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 0);
   }
 
   if (this.diffuseMap instanceof EZ3.Texture2D) {
@@ -98,7 +101,7 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
       this.diffuseMap.dirty = false;
     }
 
-    this.program.loadUniformi(gl, 'uDiffuseSampler', 1, 1);
+    this.program.loadUniformi(gl, 'uDiffuseSampler', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 1);
   }
 
   if (this.normalMap instanceof EZ3.Texture2D) {
@@ -109,7 +112,7 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
       this.normalMap.dirty = false;
     }
 
-    this.program.loadUniformi(gl, 'uNormalSampler', 1, 2);
+    this.program.loadUniformi(gl, 'uNormalSampler', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 2);
   }
 
   if(this.environmentMap instanceof EZ3.Cubemap) {
@@ -120,6 +123,12 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
       this.environmentMap.dirty = false;
     }
 
-    this.program.loadUniformi(gl, 'uEnvironmentSampler', 1, 3);
+    this.program.loadUniformi(gl, 'uEnvironmentSampler', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 3);
   }
+
+  if(this.reflective)
+    this.program.loadUniformf(gl, 'uReflectFactor', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.reflectFactor);
+
+  if(this.refractive)
+    this.program.loadUniformf(gl, 'uRefractFactor', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.refractFactor);
 };
