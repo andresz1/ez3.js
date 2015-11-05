@@ -267,7 +267,7 @@ EZ3.Obj.prototype._parse = function(data, onLoad) {
       console.log(fixedVertices);
       console.log(fixedUvs);
       console.log(fixedNormals);
-
+w
       console.log(fixedIndices.length);
       console.log(fixedVertices.length/3);
       console.log(fixedUvs.length/2);
@@ -346,18 +346,12 @@ EZ3.Obj.prototype._parse = function(data, onLoad) {
     load.onComplete.add(function() {
       var i;
 
-    //  console.log('1');
-
       for (i = 0; i < data.length; i++)
         processMaterial(baseUrl, data[i].response, load);
 
       load.onComplete.removeAll();
       load.onComplete.add(function() {
-    //    console.log('3');
         onLoad(that.url, that.content);
-      });
-      load.onProgress.add(function(a, b, c, d, e) {
-      //    console.log(a + ' ' + b + ' ' + c + ' '+ d + ' ' + e);
       });
 
       load.start();
@@ -400,8 +394,8 @@ EZ3.Obj.prototype._parse = function(data, onLoad) {
       } else if (key === 'map_ka') {
 
       } else if (key === 'map_kd') {
-        console.log(baseUrl + value);
-        material.diffuseMap = new EZ3.Texture2D(load.image(baseUrl + value));
+        for (var k = 0; k < material.length; k++)
+          material[k].diffuseMap = new EZ3.Texture2D(load.image(baseUrl + value));
       } else if (key === 'map_ks') {
 
       } else if (key === 'map_ns') {
@@ -445,7 +439,10 @@ EZ3.Obj.prototype._parse = function(data, onLoad) {
     } else if (/^usemtl/.test(line)) {
       processMesh();
       mesh.material.name = line.substring(7).trim();
-      materials[mesh.material.name] = mesh.material;
+      if (!materials[mesh.material.name])
+        materials[mesh.material.name] = [];
+
+      materials[mesh.material.name].push(mesh.material);
     }
   }
 
