@@ -68,8 +68,10 @@ EZ3.LoadManager.prototype.image = function(url, crossOrigin) {
   if(cached)
     return cached;
 
-  this._files[url] = new EZ3.Image(url, crossOrigin);
-  this.filesToLoad++;
+  if (!this._files[url]) {
+    this._files[url] = new EZ3.Image(url, crossOrigin);
+    this.filesToLoad++;
+  }
 
   return this._files[url].content;
 };
