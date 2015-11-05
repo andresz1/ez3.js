@@ -82,10 +82,12 @@ EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
 };
 
 EZ3.ScreenManager.prototype._processFullScreenChange = function() {
+  var device = EZ3.Device;
+
   this.fullScreened = !this.fullScreened;
 
   if (!this.fullScreened) {
-    this.canvas.removeEventListener(this._device.fullScreenChange, this._onFullScreenChange, true);
+    this.canvas.removeEventListener(device.fullScreenChange, this._onFullScreenChange, true);
     delete this._onFullScreenChange;
   }
 };
@@ -149,21 +151,27 @@ EZ3.ScreenManager.prototype.update = function() {
 };
 
 EZ3.ScreenManager.prototype.fullScreen = function() {
+  var device = EZ3.Device;
   var that;
 
-  if (this._device.requestFullScreen && !this.fullScreened) {
+  console.log('x');
+
+  if (device.requestFullScreen && !this.fullScreened) {
+    console.log('x1');
     that = this;
 
     this._onFullScreenChange = function(event) {
       that._processFullScreenChange(event);
     };
 
-    this.canvas.addEventListener(this._device.fullScreenChange, this._onFullScreenChange, true);
-    this.canvas[this._device.requestFullScreen]();
+    this.canvas.addEventListener(device.fullScreenChange, this._onFullScreenChange, true);
+    this.canvas[device.requestFullScreen]();
   }
 };
 
 EZ3.ScreenManager.prototype.windowed = function() {
-  if (this._device.cancelFullScreen && this.fullScreened)
-    this.canvas[this._device.cancelFullScreen]();
+  var device = EZ3.Device;
+
+  if (device.cancelFullScreen && this.fullScreened)
+    this.canvas[device.cancelFullScreen]();
 };

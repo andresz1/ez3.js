@@ -394,8 +394,10 @@ w
       } else if (key === 'map_ka') {
 
       } else if (key === 'map_kd') {
+        var zz = new EZ3.Texture2D(load.image(baseUrl + value));
+
         for (var k = 0; k < material.length; k++)
-          material[k].diffuseMap = new EZ3.Texture2D(load.image(baseUrl + value));
+          material[k].diffuseMap = zz;
       } else if (key === 'map_ks') {
 
       } else if (key === 'map_ns') {
@@ -432,8 +434,8 @@ w
     //  console.log('f4');
       processFace4(triangulate(result[1]));
     } else if (/^o/.test(line) || /^g/.test(line)) {
-      processMesh();
-      mesh.name = line.substring(2).trim();
+      /*processMesh();
+      mesh.name = line.substring(2).trim();*/
     } else if (/^mtllib/.test(line)) {
       libraries.push(line.substring(7).trim());
     } else if (/^usemtl/.test(line)) {
