@@ -49,17 +49,17 @@ EZ3.Cubemap.prototype.update = function(gl, internalFormat, format) {
   var face;
   var k;
 
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-  gl.texParameterf(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameterf(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameterf(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameterf(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
   for(k = 0; k < 6; k++) {
     face = gl.TEXTURE_CUBE_MAP_POSITIVE_X + k;
     image = this._images[EZ3.Cubemap.POSITIVE_X + k];
     gl.texImage2D(face, 0, internalFormat, format, gl.UNSIGNED_BYTE, image);
   }
+
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 };
 
 EZ3.Cubemap.POSITIVE_X = 0;
