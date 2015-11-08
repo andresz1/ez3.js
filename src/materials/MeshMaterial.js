@@ -19,8 +19,8 @@ EZ3.MeshMaterial = function() {
   this.reflective = false;
   this.refractive = false;
 
-  this.diffuseReflection = EZ3.MeshMaterial.OREN_NAYAR;
-  this.specularReflection = EZ3.MeshMaterial.COOK_TORRANCE;
+  this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
+  this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
   this.albedoFactor = 7.0;
   this.fresnelFactor = 0.0;
