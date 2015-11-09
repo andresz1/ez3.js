@@ -43,7 +43,7 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, inde
       }
     }
   }
-
+  
   if (index) {
     index.bind(gl);
 

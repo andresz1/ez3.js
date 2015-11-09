@@ -19,3 +19,15 @@ EZ3.Math.toRadians = function(x) {
 EZ3.Math.toDegrees = function(x) {
   return x * 180.0 / EZ3.Math.PI;
 };
+
+EZ3.Math.isPowerOfTwo = function(x) {
+  return (x & (x - 1)) === 0;
+};
+
+EZ3.Math.nextHighestPowerOfTwo = function(x) {
+  --x;
+  for (var i = 1; i < 32; i <<= 1) {
+    x = x | x >> i;
+  }
+  return x + 1;
+};

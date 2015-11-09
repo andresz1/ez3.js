@@ -6,7 +6,7 @@ EZ3.Screen = function(id, position, size) {
   this.id = id;
   this.position = position;
   this.size = size;
-  this.load = new EZ3.LoadManager();
+  this.loader = new EZ3.Loader();
   this.scene = new EZ3.Scene();
   this.camera = null;
 };

@@ -1,49 +1,47 @@
 /**
  * @class Image
+ * @extends File
  */
 
-EZ3.Image = function(url, crossOrigin) {
-  this.url = url;
-  this.crossOrigin = crossOrigin;
-  this.content = new Image();
+EZ3.Image = function(width, height, format, data) {
+  EZ3.File.call(this, data);
+
+  this.width = width || 0;
+  this.height = height || 0;
+  this.format = format || EZ3.Image.RGBA;
 };
 
-EZ3.Image.prototype._processLoad = function(image, onLoad) {
-  this._removeEventHandlers();
-  onLoad(this.url, image);
+EZ3.Image.prototype = Object.create(EZ3.File.prototype);
+EZ3.Image.prototype.constructor = EZ3.Image;
+
+EZ3.Image.prototype.getCanvas = function() {
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  var image = context.createImageData(this.width, this.height);
+
+  canvas.width = this.width;
+  canvas.height = this.height;
+
+  image.data.set(new Uint8ClampedArray(this.data));
+
+  context.putImageData(image, 0, 0);
+
+  return canvas;
 };
 
-EZ3.Image.prototype._processError = function(event, onError) {
-  this._removeEventHandlers();
-  onError(this.url, event);
+EZ3.Image.prototype.toPowerOfTwo = function() {
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+
+  canvas.width = EZ3.Math.nextHighestPowerOfTwo(this.width);
+  canvas.height = EZ3.Math.nextHighestPowerOfTwo(this.height);
+  context.drawImage(this.getCanvas(), 0, 0, this.width, this.height, 0, 0, canvas.width, canvas.height);
+
+  this.width = canvas.width;
+  this.height = canvas.height;
+  this.data = new Uint8Array(context.getImageData(0, 0, canvas.width, canvas.height).data);
+
+  return this;
 };
 
-EZ3.Image.prototype.load = function(onLoad, onError) {
-  var that;
-
-  that = this;
-
-  this._onLoad = function() {
-    that._processLoad(this, onLoad);
-  };
-
-  this._onError = function(event) {
-    that._processError(event, onLoad);
-  };
-
-  this.content.addEventListener('load', this._onLoad, false);
-  this.content.addEventListener('error', this._onError, false);
-
-  if (!this.crossOrigin)
-    this.content.crossOrigin = this.crossOrigin;
-
-  this.content.src = this.url;
-};
-
-EZ3.Image.prototype._removeEventHandlers = function() {
-  this.content.addEventListener('load', this._onLoad, false);
-  this.content.addEventListener('error', this._onError, false);
-
-  delete this._onLoad;
-  delete this._onError;
-};
+EZ3.Image.RGBA = 'RGBA';

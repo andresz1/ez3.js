@@ -99,13 +99,13 @@ EZ3.ScreenManager.prototype.add = function(screen) {
 
     if (screen.preload) {
       screen.preload();
-      screen.load.onComplete.add(screen.create, screen);
-      screen.load.onComplete.add(function() {
+      screen.loader.onComplete.add(screen.create, screen);
+      screen.loader.onComplete.add(function() {
         this._addEventListeners(screen);
         this._screens.unshift(screen);
       }, this);
 
-      screen.load.start();
+      screen.loader.start();
     } else {
       screen.create();
       this._addEventListeners(screen);
