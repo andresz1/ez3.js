@@ -7,23 +7,26 @@ EZ3.MeshMaterial = function() {
   EZ3.Material.call(this, 'mesh');
 
   this.emissive = new EZ3.Vector3();
-  this.emissiveMap = null;
-
   this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
-  this.diffuseMap = null;
-
   this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
-  this.specularMap = null;
 
+  this.normalMap = null;
+  this.diffuseMap = null;
+  this.emissiveMap = null;
+  this.specularMap = null;
   this.environmentMap = null;
-  this.reflectFactor = 0.7;
-  this.refractFactor = 1.0;
+
   this.reflective = false;
   this.refractive = false;
 
-  this.normalMap = null;
+  this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
+  this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
-  this.shininess = 180.0;
+  this.albedoFactor = 7.0;
+  this.fresnelFactor = 0.0;
+  this.refractFactor = 1.0;
+  this.roughnessFactor = 0.2;
+  this.shininessFactor = 180.0;
 
   this.dirty = true;
 };
@@ -57,11 +60,21 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, lights, state) {
     if(this.reflective)
       defines.push('REFLECTION');
 
-    if(this.refractive) {
-      console.log('Almacenando refraccion');
+    if(this.refractive)
       defines.push('REFRACTION');
-    }
   }
+
+  if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR)
+    defines.push('OREN_NAYAR');
+  else
+    defines.push('LAMBERT');
+
+  if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE)
+    defines.push('COOK_TORRANCE');
+  else if(this.specularReflection === EZ3.MeshMaterial.PHONG)
+    defines.push('PHONG');
+  else
+    defines.push('BLINN_PHONG');
 
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
@@ -80,7 +93,7 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
   this.program.loadUniformf(gl, 'uEmissive', 3, this.emissive);
   this.program.loadUniformf(gl, 'uDiffuse', 3, this.diffuse);
   this.program.loadUniformf(gl, 'uSpecular', 3, this.specular);
-  this.program.loadUniformf(gl, 'uShininess', 1, this.shininess);
+  this.program.loadUniformf(gl, 'uShininess', 1, this.shininessFactor);
 
   if (this.emissiveMap instanceof EZ3.Texture2D) {
     this.emissiveMap.bind(gl, state, 0);
@@ -126,9 +139,22 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
     this.program.loadUniformi(gl, 'uEnvironmentSampler', EZ3.GLSLProgram.UNIFORM_SIZE_1D, 3);
   }
 
-  if(this.reflective)
-    this.program.loadUniformf(gl, 'uReflectFactor', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.reflectFactor);
-
   if(this.refractive)
     this.program.loadUniformf(gl, 'uRefractFactor', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.refractFactor);
+
+  if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR) {
+    this.program.loadUniformf(gl, 'uAlbedo', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.albedoFactor);
+    this.program.loadUniformf(gl, 'uRoughness', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.roughnessFactor);
+  }
+
+  if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE) {
+    this.program.loadUniformf(gl, 'uFresnel', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.fresnelFactor);
+    this.program.loadUniformf(gl, 'uRoughness', EZ3.GLSLProgram.UNIFORM_SIZE_1D, this.roughnessFactor);
+  }
 };
+
+EZ3.MeshMaterial.LAMBERT = 0;
+EZ3.MeshMaterial.OREN_NAYAR = 1;
+EZ3.MeshMaterial.PHONG = 2;
+EZ3.MeshMaterial.BLINN_PHONG = 3;
+EZ3.MeshMaterial.COOK_TORRANCE = 4;
