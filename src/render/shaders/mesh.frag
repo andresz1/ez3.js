@@ -1,7 +1,5 @@
 precision highp float;
 
-#extension GL_EXT_shader_texture_lod : enable
-
 #extension GL_OES_standard_derivatives : enable
 
 struct PointLight
@@ -296,7 +294,7 @@ void main() {
 #endif
 
 #ifdef DIFFUSE_MAP
-	diffuse *= texture2DLodEXT(uDiffuseSampler, vUv, 0.0).rgb;
+	diffuse *= texture2D(uDiffuseSampler, vUv, 0.0).rgb;
 #endif
 
 #ifdef SPECULAR_MAP
@@ -305,12 +303,12 @@ void main() {
 
 #ifdef REFLECTION
 	vec3 reflection = reflect(-v, n);
-	diffuse *= textureCubeLodEXT(uEnvironmentSampler, reflection, 0.0).rgb;
+	diffuse *= textureCube(uEnvironmentSampler, reflection, 0.0).rgb;
 #endif
 
 #ifdef REFRACTION
 	vec3 refraction = refract(-v, n, uRefractFactor);
-	diffuse *= textureCubeLodEXT(uEnvironmentSampler, refraction, 0.0).rgb;
+	diffuse *= textureCube(uEnvironmentSampler, refraction, 0.0).rgb;
 #endif
 
   gl_FragColor = vec4(emissive + diffuse + specular, 1.0);

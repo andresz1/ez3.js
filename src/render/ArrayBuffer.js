@@ -43,7 +43,7 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, inde
       }
     }
   }
-  
+
   if (index) {
     index.bind(gl);
 
@@ -55,10 +55,15 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, inde
 };
 
 EZ3.ArrayBuffer.prototype.add = function(name, buffer) {
-  if (buffer instanceof EZ3.IndexBuffer)
+  if (buffer instanceof EZ3.IndexBuffer) {
     this._index[name] = buffer;
-  else if (buffer instanceof EZ3.VertexBuffer)
+    return buffer;
+  }
+
+  if (buffer instanceof EZ3.VertexBuffer) {
     this._vertex[name] = buffer;
+    return buffer;
+  }
 };
 
 EZ3.ArrayBuffer.prototype.get = function(name) {

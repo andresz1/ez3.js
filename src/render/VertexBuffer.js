@@ -6,8 +6,8 @@
 EZ3.VertexBuffer = function(data, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
 
-  this._stride = 0;
   this._attributes = {};
+  this._stride = 0;
 };
 
 EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
@@ -25,17 +25,13 @@ EZ3.VertexBuffer.prototype.validate = function(gl, attributes) {
 
 EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
   var type = gl.FLOAT;
-  var stride = this._stride;
   var normalized;
   var offset;
   var layout;
   var size;
   var k;
 
-  if (!this._id)
-    this._id = gl.createBuffer();
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, this._id);
+  EZ3.Buffer.prototype.bind.call(this, gl, gl.ARRAY_BUFFER);
 
   for (k in this._attributes) {
     layout = attributes[k];
@@ -49,37 +45,17 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
           gl.enableVertexAttribArray(layout);
           state.attribute[layout] = true;
         }
-        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+        gl.vertexAttribPointer(layout, size, type, normalized, this._stride, offset);
       } else {
         gl.enableVertexAttribArray(layout);
-        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+        gl.vertexAttribPointer(layout, size, type, normalized, this._stride, offset);
       }
     }
   }
 };
 
 EZ3.VertexBuffer.prototype.update = function(gl) {
-  var bytes = 4;
-  var length = bytes * this.data.length;
-  var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
-  var offset;
-  var array;
-  var k;
-
-  if ((length !== this.length) || (usage !== this.usage)) {
-    this.usage = usage;
-    this.length = length;
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), usage);
-  } else {
-    if (this.ranges.length) {
-      for (k = 0; k < this.ranges.length; k++) {
-        offset = bytes * this.ranges[k].left;
-        array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
-        gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(array));
-      }
-    } else
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(this.data));
-  }
+  EZ3.Buffer.prototype.update.call(this, gl, gl.ARRAY_BUFFER, 4);
 };
 
 EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
@@ -87,8 +63,4 @@ EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
     this._stride += 4 * attribute.size;
     this._attributes[name] = attribute;
   }
-};
-
-EZ3.VertexBuffer.prototype.getAttribute = function(name) {
-  return this._attributes[name];
 };

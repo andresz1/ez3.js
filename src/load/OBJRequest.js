@@ -320,10 +320,51 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
   }
 
   function processMaterial(baseUrl, data, loader) {
-    var lines, line, key, value, material;
-    var i, j;
+    var lines = data.split('\n');
+    var line;
+    var key;
+    var value;
+    var currents;
+    var i;
+    var j;
 
-    lines = data.split('\n');
+    function processColor(color) {
+      var values = color.split(' ');
+
+      return new EZ3.Vector3(parseFloat(values[0]), parseFloat(values[1]), parseFloat(values[2]));
+    }
+
+    function processEmissive(color) {
+      var emissive = processColor(color);
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].emissive = emissive;
+    }
+
+    function processDiffuse(color) {
+      var diffuse = processColor(color);
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].diffuse = diffuse;
+    }
+
+    function processSpecular(color) {
+      var specular = processColor(color);
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].specular = specular;
+    }
+
+    function processDiffuseMap(url) {
+      var texture = new EZ3.Texture2D(loader.add(new EZ3.ImageRequest(baseUrl + url)));
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].diffuseMap = texture;
+    }
 
     for (i = 0; i < lines.length; i++) {
       line = lines[i].trim();
@@ -336,16 +377,14 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
       value = (j >= 0) ? line.substring(j + 1) : '';
       value = value.trim();
 
-      key = key.toLowerCase();
-
       if (key === 'newmtl') {
-        material = materials[value];
-      } else if (key === 'kd') {
-
+        currents = materials[value];
       } else if (key === 'ka') {
-
+        processEmissive(value);
+      } else if (key === 'kd') {
+        processDiffuse(value);
       } else if (key === 'ks') {
-
+        processSpecular(value);
       } else if (key === 'ns') {
 
       } else if (key === 'd') {
@@ -353,10 +392,7 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
       } else if (key === 'map_ka') {
 
       } else if (key === 'map_kd') {
-        var zz = new EZ3.Texture2D(loader.add(new EZ3.ImageRequest(baseUrl + value)));
-
-        for (var k = 0; k < material.length; k++)
-          material[k].diffuseMap = zz;
+        processDiffuseMap(value);
       } else if (key === 'map_ks') {
 
       } else if (key === 'map_ns') {
@@ -372,30 +408,31 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
   for (i = 0; i < lines.length; i++) {
     line = lines[i].trim().replace(/ +(?= )/g, '');
 
-    if (line.length === 0 || line.charAt(0) === '#') {
+    if (line.length === 0 || line.charAt(0) === '#')
       continue;
-    } else if ((result = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line))) {
+    else if ((result = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
       processVertex(result);
-    } else if ((result = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line))) {
+    else if ((result = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
       processNormal(result);
-    } else if ((result = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line))) {
+    else if ((result = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
       processUv(result);
-    } else if ((result = /f\s(([+-]?\d+\s){2,}[+-]?\d+)/.exec(line))) {
+    else if ((result = /f\s(([+-]?\d+\s){2,}[+-]?\d+)/.exec(line)))
       processFace1(triangulate(result[1]));
-    } else if ((result = /f\s(([+-]?\d+\/[+-]?\d+\s){2,}[+-]?\d+\/[+-]?\d+)/.exec(line))) {
+    else if ((result = /f\s(([+-]?\d+\/[+-]?\d+\s){2,}[+-]?\d+\/[+-]?\d+)/.exec(line)))
       processFace2(triangulate(result[1]));
-    } else if ((result = /f\s((([+-]?\d+\/[+-]?\d+\/[+-]?\d+\s){2,})[+-]?\d+\/[+-]?\d+\/[+-]?\d+)/.exec(line))) {
+    else if ((result = /f\s((([+-]?\d+\/[+-]?\d+\/[+-]?\d+\s){2,})[+-]?\d+\/[+-]?\d+\/[+-]?\d+)/.exec(line)))
       processFace3(triangulate(result[1]));
-    } else if ((result = /f\s(([+-]?\d+\/\/[+-]?\d+\s){2,}[+-]?\d+\/\/[+-]?\d+)/.exec(line))) {
+    else if ((result = /f\s(([+-]?\d+\/\/[+-]?\d+\s){2,}[+-]?\d+\/\/[+-]?\d+)/.exec(line)))
       processFace4(triangulate(result[1]));
-    } else if (/^o/.test(line) || /^g/.test(line)) {
+    else if (/^mtllib/.test(line))
+      libraries.push(line.substring(7).trim());
+    else if (/^o/.test(line) || /^g/.test(line)) {
       processMesh();
       mesh.name = line.substring(2).trim();
-    } else if (/^mtllib/.test(line)) {
-      libraries.push(line.substring(7).trim());
     } else if (/^usemtl/.test(line)) {
       processMesh();
       mesh.material.name = line.substring(7).trim();
+
       if (!materials[mesh.material.name])
         materials[mesh.material.name] = [];
 
@@ -412,8 +449,11 @@ EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
   var loader = new EZ3.Loader();
   var file = loader.add(new EZ3.DataRequest(this.url, this.crossOrigin));
 
-  loader.onComplete.add(function() {
-    that._parse(file.data, onLoad, onError);
+  loader.onComplete.add(function(error) {
+    if (error)
+      onError(that.url, true);
+
+    that._parse(file.data, onLoad);
   });
 
   loader.start();
