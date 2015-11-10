@@ -1,6 +1,7 @@
-var EZ3 = {
-  VERSION: '1.0.0'
+var EZ3 = function() {
 };
+
+EZ3 = new EZ3();
 
 EZ3.extends = function(destination, source) {
   var k;
