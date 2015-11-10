@@ -102,9 +102,9 @@ float orenNayar(vec3 v, vec3 s, vec3 n)
 	float sigma2 = uRoughness * uRoughness;
 
 	float A = 1.0 + sigma2 * (uAlbedo / (sigma2 + 0.13) + 0.5 / (sigma2 + 0.33));
-  float B = 0.45 * sigma2 / (sigma2 + 0.09);
+	float B = 0.45 * sigma2 / (sigma2 + 0.09);
 
-  return uAlbedo * max(0.0, SdotN) * (A + B * S / T) / PI;
+	return uAlbedo * max(0.0, SdotN) * (A + B * S / T) / PI;
 }
 #endif
 
@@ -145,11 +145,11 @@ float cookTorrance(vec3 v, vec3 s, vec3 n)
 	float NdotH = max(dot(n, h), 0.0);
 
 	float G1 = (2.0 * NdotH * VdotN) / VdotH;
-  float G2 = (2.0 * NdotH * SdotN) / SdotH;
-  float G = min(1.0, min(G1, G2));
+	float G2 = (2.0 * NdotH * SdotN) / SdotH;
+	float G = min(1.0, min(G1, G2));
 
-  float D = beckmannDistribution(NdotH, uRoughness);
-  float F = pow(1.0 - VdotN, uFresnel);
+	float D = beckmannDistribution(NdotH, uRoughness);
+	float F = pow(1.0 - VdotN, uFresnel);
 	float PI = acos(-1.0);
 
   return  G * F * D / max(PI * VdotN, 0.0);
@@ -192,7 +192,7 @@ void main() {
 #if MAX_POINT_LIGHTS > 0
   for(int i = 0; i < MAX_POINT_LIGHTS; i++)
   {
-    vec3 s = normalize(uPointLights[i].position - vPosition);
+		vec3 s = normalize(uPointLights[i].position - vPosition);
 
 		#ifdef LAMBERT
 			float q = lambert(s, n);
@@ -215,7 +215,7 @@ void main() {
 				float w = phong(v, s, n);
 			#endif
 
-    	diffuse += uPointLights[i].diffuse * uDiffuse * q;
+			diffuse += uPointLights[i].diffuse * uDiffuse * q;
 			specular += uPointLights[i].specular * uSpecular * w;
 		}
   }
@@ -247,7 +247,7 @@ void main() {
 				float w = phong(v, s, n);
 			#endif
 
-    	diffuse += uDirectionalLights[i].diffuse * uDiffuse * q;
+			diffuse += uDirectionalLights[i].diffuse * uDiffuse * q;
 			specular += uDirectionalLights[i].specular * uSpecular * w;
 		}
   }
