@@ -4,7 +4,7 @@
  */
 
  EZ3.DepthFramebuffer = function(resolution) {
-   EZ3.Framebuffer.call(this, new EZ3.TargetTexture2D(resolution, 'DEPTH_COMPONENT'));
+   EZ3.Framebuffer.call(this, resolution, new EZ3.TargetTexture2D(resolution, 'DEPTH_COMPONENT'));
  };
 
  EZ3.DepthFramebuffer.prototype = Object.create(EZ3.Framebuffer.prototype);

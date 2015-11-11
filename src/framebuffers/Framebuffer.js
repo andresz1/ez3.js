@@ -2,10 +2,20 @@
  * @class Framebuffer
  */
 
- EZ3.Framebuffer = function(texture) {
+ EZ3.Framebuffer = function(resolution, texture) {
   this._id = null;
   this._cache = {};
-  this.texture = texture;
+
+  if(resolution instanceof EZ3.Vector2)
+    this.resolution = resolution;
+  else
+    this.resolution = null;
+
+  if(texture instanceof EZ3.TargetTexture2D || texture instanceof EZ3.TargetCubemap)
+    this.texture = texture;
+  else
+    this.texture = null;
+
   this.dirty = true;
 };
 
