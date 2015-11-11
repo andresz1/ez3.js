@@ -6,6 +6,7 @@
 EZ3.DirectionalLight = function() {
   EZ3.Light.call(this);
 
+  this._camera = null;
   this.target = new EZ3.Vector3();
 };
 
@@ -20,3 +21,24 @@ EZ3.DirectionalLight.prototype.updateUniforms = function(gl, program, i) {
 
   program.loadUniformf(gl, prefix + 'direction', 3, direction);
 };
+
+Object.defineProperty(EZ3.DirectionalLight.prototype, 'view', {
+  get: function() {
+    if (!this._camera) {
+      this._camera = new EZ3.TargetCamera(this.position, this.target, new EZ3.Vector3(0, 1, 0));
+    } else {
+      this._camera.target = this.target.clone();
+      this._camera.position = this.position.clone();
+    }
+    return this._camera.view;
+  }
+});
+
+Object.defineProperty(EZ3.DirectionalLight.prototype, 'projection', {
+  get: function() {
+    if(!this._camera)
+      this._camera = new EZ3.TargetCamera(this.position, this.target, new EZ3.Vector3(0, 1, 0));
+
+    return this._camera.projection;
+  }
+});
