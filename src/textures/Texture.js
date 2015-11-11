@@ -61,30 +61,35 @@ EZ3.Texture.prototype._updateParameters = function(gl, target) {
   }
 };
 
-EZ3.Texture.prototype.bind = function(gl, state, unit, target) {
-  var slot = gl.TEXTURE0 + unit;
+EZ3.Texture.prototype.bind = function(gl, target, state, unit) {
+  var slot;
 
   if (!this._id)
     this._id = gl.createTexture();
 
-  if (state.currentTextureSlot !== slot) {
-    gl.activeTexture(slot);
-    state.currentTextureSlot = slot;
-  }
+  if(state) {
+    slot = gl.TEXTURE0 + unit;
 
-  if (!state.texture[slot]) {
-    state.texture[slot] = {
-      id: this._id,
-      target: target
-    };
-    gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
-  } else {
-    if (state.texture[slot].id !== this._id || state.texture[slot].target !== target) {
-      state.texture[slot].id = this._id;
-      state.texture[slot].target = target;
-      gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+    if (state.currentTextureSlot !== slot) {
+      gl.activeTexture(slot);
+      state.currentTextureSlot = slot;
     }
-  }
+
+    if (!state.texture[slot]) {
+      state.texture[slot] = {
+        id: this._id,
+        target: target
+      };
+      gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+    } else {
+      if (state.texture[slot].id !== this._id || state.texture[slot].target !== target) {
+        state.texture[slot].id = this._id;
+        state.texture[slot].target = target;
+        gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+      }
+    }
+  } else
+      gl.bindTexture(target, this._id);
 };
 
 EZ3.Texture.LINEAR = 'LINEAR';
