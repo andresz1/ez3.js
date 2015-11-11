@@ -97,7 +97,8 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   var meshes = {
     common: [],
     opaque: [],
-    transparent: []
+    transparent: [],
+    shadowCasters: []
   };
   var lights = {
     empty: true,
@@ -108,6 +109,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   var entity;
   var mesh;
   var i;
+  var j;
 
   entities.push(scene);
 
@@ -148,6 +150,33 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
       meshes.transparent.push(mesh);
     else
       meshes.opaque.push(mesh);
+
+    if(mesh.material.shadowCaster)
+      meshes.shadowCasters.push(mesh);
+  }
+
+  if(meshes.shadowCasters.length) {
+
+    // Preguntar si el programa de profundidad ya fue creado.
+    // Si no ha sido creado, se crea, sino, no se crea.
+
+    for(i = 0; i < lights.directional.length; i++) {
+      for(j = 0; j < meshes.shadowCasters.length; j++) {
+
+      }
+    }
+
+    for(i = 0; i < lights.spot.length; i++) {
+      for(j = 0; j < meshes.shadowCasters.length; j++) {
+
+      }
+    }
+
+    for(i = 0; i < lights.point.length; i++) {
+      for(j = 0; j < meshes.shadowCasters.length; j++) {
+
+      }
+    }
   }
 
   for (i = 0; i < meshes.opaque.length; i++)
