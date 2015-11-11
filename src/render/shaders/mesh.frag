@@ -157,7 +157,8 @@ float cookTorrance(vec3 v, vec3 s, vec3 n)
 #ifdef NORMAL_MAP
 uniform sampler2D uNormalSampler;
 
-vec3 pertubNormal(vec3 v) {
+vec3 pertubNormal(vec3 v)
+{
 	vec3 q0 = dFdx(v);
 	vec3 q1 = dFdy(v);
 
@@ -174,7 +175,22 @@ vec3 pertubNormal(vec3 v) {
 }
 #endif
 
+#ifdef VARIANCE_SHADOW_MAPPING
+vec2 fixMomments()
+{
+	vec2 result;
+	return result;
+}
+
+float varianceShadowMapping()
+{
+	return 1.0;
+}
+#endif
+
 void main() {
+	vec3 color;
+	float shadowFactor = 1.0;
 	vec3 emissive = uEmissive;
 	vec3 diffuse = vec3(0.0, 0.0, 0.0);
 	vec3 specular = vec3(0.0, 0.0, 0.0);
@@ -290,15 +306,15 @@ void main() {
 #endif
 
 #ifdef EMISSIVE_MAP
-  emissive *= vec3(texture2D(uEmissiveSampler, vUv));
+  emissive *= texture2D(uEmissiveSampler, vUv).rgb;
 #endif
 
 #ifdef DIFFUSE_MAP
-	diffuse *= texture2D(uDiffuseSampler, vUv, 0.0).rgb;
+	diffuse *= texture2D(uDiffuseSampler, vUv).rgb;
 #endif
 
 #ifdef SPECULAR_MAP
-	specular *= vec3(texture2D(uSpecularSampler, vUv));
+	specular *= texture2D(uSpecularSampler, vUv).rgb;
 #endif
 
 #ifdef REFLECTION
@@ -311,5 +327,11 @@ void main() {
 	diffuse *= textureCube(uEnvironmentSampler, refraction, 0.0).rgb;
 #endif
 
-  gl_FragColor = vec4(emissive + diffuse + specular, 1.0);
+#ifdef VARIANCE_SHADOW_MAPPING
+	color = (emissive + diffuse + specular) * varianceShadowMapping();
+#else
+	color = emissive + diffuse + specular;
+#endif
+
+  gl_FragColor = vec4(color, 1.0);
 }
