@@ -8,6 +8,7 @@ EZ3.DirectionalLight = function() {
 
   this._camera = null;
   this.target = new EZ3.Vector3();
+  this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
 EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
