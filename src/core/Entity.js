@@ -11,7 +11,7 @@ EZ3.Entity = function() {
   this.world = new EZ3.Matrix4();
   this.scale = new EZ3.Vector3(1, 1, 1);
   this.position = new EZ3.Vector3(0, 0, 0);
-  this.rotation = new EZ3.Quaternion(1, 0, 0, 0);
+  this.rotation = new EZ3.Quaternion(0, 0, 0, 1);
 
   this._cache.model = this.model.clone();
   this._cache.scale = this.scale.clone();
@@ -60,15 +60,15 @@ EZ3.Entity.prototype.updateWorld = function() {
   }
 
   if(positionDirty || rotationDirty || scaleDirty) {
-    this.model.fromRotationTranslation(this.model, this.rotation, this.position);
-    this.model.scale(this.model, this.scale);
+    this.model.fromRotationTranslation(this.rotation, this.position);
+    this.model.scale(this.scale);
   }
 
   if (!this.parent) {
     modelDirty = this._cache.model.testDiff(this.model);
 
     if(modelDirty) {
-      this.world.copy(this.model);
+      this.world = this.model.clone();
       this._cache.model = this.model.clone();
 
       if(this instanceof EZ3.Mesh)
@@ -86,7 +86,7 @@ EZ3.Entity.prototype.updateWorld = function() {
       if(parentWorldDirty)
         this._cache.parentWorld = this.parent.world.clone();
 
-      this.world.mul(this.model, this.parent.world);
+      this.world.mul(this.parent.world, this.model);
 
       if(this instanceof EZ3.Mesh)
         this.updateNormalMatrix = true;
