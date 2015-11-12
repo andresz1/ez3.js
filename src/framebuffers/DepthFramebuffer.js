@@ -11,5 +11,5 @@
  EZ3.DepthFramebuffer.prototype.constructor = EZ3.DepthFramebuffer;
 
  EZ3.DepthFramebuffer.prototype.update = function(gl) {
-   EZ3.Framebuffer.prototype.update.call(gl, 'DEPTH_ATTACHMENT');
+   EZ3.Framebuffer.prototype.update.call(this, gl, 'DEPTH_ATTACHMENT');
  };
