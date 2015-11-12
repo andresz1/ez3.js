@@ -16,7 +16,10 @@ EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
 
 EZ3.DirectionalLight.prototype.updateUniforms = function(gl, program, i) {
   var prefix = 'uDirectionalLights[' + i + '].';
-  var direction = new EZ3.Vector3().sub(this.position, this.target).normalize();
+  var direction = new EZ3.Vector3().sub(this.position, this.target);
+
+  if(!direction.testZero())
+    direction.normalize();
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
 
