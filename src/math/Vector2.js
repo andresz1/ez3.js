@@ -3,9 +3,9 @@
  */
 
 EZ3.Vector2 = function(x, y) {
-  if(x === Number(x)) {
+  if(typeof x === 'number') {
     this.x = x;
-    this.y = (y === Number(y)) ? y : x;
+    this.y = (typeof y === 'number') ? y : x;
   } else {
     this.x = 0.0;
     this.y = 0.0;
@@ -148,8 +148,10 @@ EZ3.Vector2.prototype.toArray = function() {
 EZ3.Vector2.prototype.testEqual = function(v) {
   if(v instanceof EZ3.Vector2)
     return (this.x === v.x) && (this.y === v.y);
-  else
-    console.error('EZ3.Vector2.testEqual: not EZ3.Vector2 given.', v);
+  else {
+    console.error('EZ3.Vector2.testEqual: parameter is not s EZ3.Vector2.', v);
+    return false;
+  }
 };
 
 EZ3.Vector2.prototype.hasZero = function(v) {

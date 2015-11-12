@@ -3,10 +3,10 @@
  */
 
 EZ3.Vector3 = function(x, y, z) {
-  if(x === Number(x)) {
+  if (typeof x === 'number') {
     this.x = x;
-    this.y = (y === Number(y)) ? y : x;
-    this.z = (z === Number(z)) ? z : x;
+    this.y = (typeof y === 'number') ? y : x;
+    this.z = (typeof z === 'number') ? z : x;
   } else {
     this.x = 0.0;
     this.y = 0.0;
@@ -17,7 +17,7 @@ EZ3.Vector3 = function(x, y, z) {
 EZ3.Vector3.prototype.constructor = EZ3.Vector3;
 
 EZ3.Vector3.prototype.add = function(v1, v2) {
-  if(v2 instanceof EZ3.Vector3) {
+  if (v2 instanceof EZ3.Vector3) {
     this.x = v1.x + v2.x;
     this.y = v1.y + v2.y;
     this.z = v1.z + v2.z;
@@ -30,7 +30,7 @@ EZ3.Vector3.prototype.add = function(v1, v2) {
 };
 
 EZ3.Vector3.prototype.sub = function(v1, v2) {
-  if(v2 instanceof EZ3.Vector3) {
+  if (v2 instanceof EZ3.Vector3) {
     this.x = v1.x - v2.x;
     this.y = v1.y - v2.y;
     this.z = v1.z - v2.z;
@@ -50,7 +50,7 @@ EZ3.Vector3.prototype.set = function(x, y, z) {
 };
 
 EZ3.Vector3.prototype.scale = function(s, v) {
-  if(v instanceof EZ3.Vector3) {
+  if (v instanceof EZ3.Vector3) {
     this.x = v.x * s;
     this.y = v.y * s;
     this.z = v.z * s;
@@ -133,7 +133,7 @@ EZ3.Vector3.prototype.mulMat3 = function(m, v) {
   var y;
   var z;
 
-  if(m instanceof EZ3.Matrix3) {
+  if (m instanceof EZ3.Matrix3) {
     e = m.elements;
 
     if (v instanceof EZ3.Vector3) {
@@ -152,7 +152,7 @@ EZ3.Vector3.prototype.mulMat3 = function(m, v) {
 
     return this;
   } else {
-    console.error('EZ3.Vector3.mulMat3: No matrix given.', m);
+    console.warn('EZ3.Vector3.mulMat3: parameter is not a EZ3.Matrix3.', m);
     return null;
   }
 };
@@ -198,8 +198,8 @@ EZ3.Vector3.prototype.normalize = function(v) {
       this.z = v.z;
 
       return this;
-    } else
-      console.error('EZ3.Vector3.normalize: length is zero.', v);
+    } /*else
+      console.warn('EZ3.Vector3.normalize: length is zero.', v);*/
   } else {
     l = this.length();
 
@@ -208,7 +208,7 @@ EZ3.Vector3.prototype.normalize = function(v) {
 
       return this;
     } else
-      console.error('EZ3.Vector3.normalize: length is zero.', this);
+      console.warn('EZ3.Vector3.normalize: length is zero.', this);
   }
 };
 
@@ -241,9 +241,14 @@ EZ3.Vector3.prototype.toArray = function() {
 };
 
 EZ3.Vector3.prototype.testEqual = function(v) {
-  if(v instanceof EZ3.Vector3)
-    return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
-  else
+  if(v) {
+    if (v instanceof EZ3.Vector3)
+      return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
+    else {
+      console.warn('EZ3.Vector3.testEqual: parameter is not s EZ3.Vector3.', v);
+      return false;
+    }
+  } else
     return false;
 };
 
@@ -262,10 +267,15 @@ EZ3.Vector3.prototype.testZero = function(v) {
 };
 
 EZ3.Vector3.prototype.testDiff = function(v) {
-  if(v instanceof EZ3.Vector3)
-    return !this.testEqual(v);
-  else
-    console.error('EZ3.Vector3.testDiff: not EZ3.Vector3 given.', v);
+  if(v) {
+    if (v instanceof EZ3.Vector3)
+      return !this.testEqual(v);
+    else {
+      console.warn('EZ3.Vector3.testDiff: parameter is not a EZ3.Vector3.', v);
+      return true;
+    }
+  } else
+    return true;
 };
 
 EZ3.Vector3.prototype.toString = function() {

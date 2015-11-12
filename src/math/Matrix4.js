@@ -5,7 +5,7 @@
 EZ3.Matrix4 = function(value) {
   this.elements = null;
 
-  if (value === Number(value)) {
+  if (typeof value === 'number') {
     this.elements = [
       value, 0.0, 0.0, 0.0,
       0.0, value, 0.0, 0.0,
@@ -19,14 +19,8 @@ EZ3.Matrix4 = function(value) {
       value[8], value[9], value[10], value[11],
       value[12], value[13], value[14], value[15]
     ];
-  } else {
-    this.elements = [
-      1.0, 0.0, 0.0, 0.0,
-      0.0, 1.0, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, 0.0, 1.0
-    ];
-  }
+  } else
+    this.identity();
 };
 
 EZ3.Matrix4.prototype.constructor = EZ3.Matrix4;
@@ -64,7 +58,6 @@ EZ3.Matrix4.prototype.transpose = function(m) {
     this.elements[14] = e23;
   } else {
     em = this.elements;
-
     this.elements[0] = em[0];
     this.elements[1] = em[4];
     this.elements[2] = em[8];
@@ -121,7 +114,7 @@ EZ3.Matrix4.prototype.invert = function(m) {
   det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
   if (!det) {
-    console.error('EZ3.Matrix4.invert: determinant is zero.', m);
+    console.warn('EZ3.Matrix4.invert: determinant is zero.', m);
     return null;
   }
 
@@ -682,7 +675,7 @@ EZ3.Matrix4.prototype.testEqual = function(m) {
              m.elements[14] === this.elements[14] &&
              m.elements[15] === this.elements[15];
     } else {
-      console.warn('EZ3.Matrix4.testEqual: not EZ3.Matrix4 given.', m);
+      console.warn('EZ3.Matrix4.testEqual: parameter is not a EZ3.Matrix4.', m);
       return false;
     }
   } else
@@ -694,7 +687,7 @@ EZ3.Matrix4.prototype.testDiff = function(m) {
     if(m instanceof EZ3.Matrix4) {
       return !this.testEqual(m);
     } else
-      console.warn('EZ3.Matrix4.testDiff: not EZ3.Matrix4 given.', m);
+      console.warn('EZ3.Matrix4.testDiff: parameter is not a EZ3.Matrix4.', m);
   } else
     return true;
 };

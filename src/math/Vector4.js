@@ -3,11 +3,11 @@
  */
 
 EZ3.Vector4 = function(x, y, z, w) {
-  if (x === Number(x)) {
+  if (typeof x === 'number') {
     this.x = x;
-    this.y = (y === Number(y)) ? y : x;
-    this.z = (z === Number(z)) ? z : x;
-    this.w = (w === Number(w)) ? w : x;
+    this.y = (typeof y === 'number') ? y : x;
+    this.z = (typeof z === 'number') ? z : x;
+    this.w = (typeof w === 'number') ? w : x;
   } else {
     this.x = 0.0;
     this.y = 0.0;
@@ -157,7 +157,7 @@ EZ3.Vector4.prototype.mulMat4 = function(m, v) {
 
     return this;
   } else {
-    console.error('EZ3.Vector4.mulMat4: not EZ3.Matrix4 given.', m);
+    console.error('EZ3.Vector4.mulMat4: first parameter is not a EZ3.Matrix4.', m);
     return null;
   }
 };
@@ -185,7 +185,7 @@ EZ3.Vector4.prototype.normalize = function(v) {
 
       return this;
     } else
-      console.error('EZ3.Vector4.normalize: length is zero.', v);
+      console.warn('EZ3.Vector4.normalize: vector length is zero.', v);
   } else {
     l = this.length();
 
@@ -194,7 +194,7 @@ EZ3.Vector4.prototype.normalize = function(v) {
 
       return this;
     } else
-      console.error('EZ3.Vector4.normalize: length is zero.', this);
+      console.warn('EZ3.Vector4.normalize: vector length is zero.', this);
   }
 };
 
@@ -242,8 +242,10 @@ EZ3.Vector4.prototype.testEqual = function(v) {
     w = this.w === v.w;
 
     return x && y && z && w;
-  } else
-    console.error('EZ3.Vector4.testEqual: not EZ3.Vector4 given.', v);
+  } else{
+    console.warn('EZ3.Vector4.testEqual: parameter is not s EZ3.Vector4.', v);
+    return false;
+  }
 };
 
 EZ3.Vector4.prototype.hasZero = function(v) {
@@ -289,10 +291,15 @@ EZ3.Vector4.prototype.testZero = function(v) {
 };
 
 EZ3.Vector4.prototype.testDiff = function(v) {
-  if(v instanceof EZ3.Vector4)
-    return !this.testEqual(v);
-  else
-    console.error('EZ3.Vector4.testDiff: not EZ3.Vector4 given.', v);
+  if(v) {
+    if(v instanceof EZ3.Vector4)
+      return !this.testEqual(v);
+    else {
+      console.warn('EZ3.Vector4.testDiff: parameter is not a EZ3.Vector4.', v);
+      return false;
+    }
+  } else
+    return true;
 };
 
 EZ3.Vector4.prototype.toString = function() {
