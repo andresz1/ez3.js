@@ -48,19 +48,22 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
 
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
-  var shadow = new EZ3.Matrix4();
   var position = new EZ3.Vector2();
   var modelViewProjection = new EZ3.Matrix4();
-  var bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
   var framebuffer;
   var program;
+  var fragment;
+  var vertex;
   var light;
   var mesh;
   var i;
   var j;
 
-  if (!this.state.program.depth)
-    this.state.programs.depth = new EZ3.GLSLProgram(gl, EZ3.ShaderLibrary.depth.vert, EZ3.ShaderLibrary.depth.frag);
+  if (!this.state.programs.depth) {
+    vertex = EZ3.ShaderLibrary.depth.vertex;
+    fragment = EZ3.ShaderLibrary.depth.fragment;
+    this.state.programs.depth = new EZ3.GLSLProgram(gl, vertex, fragment);
+  }
 
   program = this.state.programs.depth;
 
@@ -78,13 +81,17 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
     }
 
     gl.clear(gl.DEPTH_BUFFER_BIT);
-    this.viewport(position, framebuffer.dimensions);
+    this.viewport(position, framebuffer.resolution);
 
     for (j = 0; j < shadowCasters.length; j++) {
       mesh = shadowCasters[j];
 
       modelViewProjection.mul(light.projection, new EZ3.Matrix4().mul(light.view, mesh.world));
-      shadow.mul(bias, modelViewProjection);
+      mesh.updateShadow(modelViewProjection);
+
+      program.loadUniformMatrix(gl, 'uModelViewProjection', modelViewProjection);
+
+      mesh.render(gl, program.attributes, this.state, this.extension);
     }
   }
 };
