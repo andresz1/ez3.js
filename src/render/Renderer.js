@@ -60,9 +60,9 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var j;
 
   if (!this.state.program.depth)
-    this.state.program.depth = new EZ3.GLSLProgram(gl, EZ3.ShaderLibrary.depth.vert, EZ3.ShaderLibrary.depth.frag);
+    this.state.programs.depth = new EZ3.GLSLProgram(gl, EZ3.ShaderLibrary.depth.vert, EZ3.ShaderLibrary.depth.frag);
 
-  program = this.state.program.depth;
+  program = this.state.programs.depth;
 
   program.bind(gl);
 
