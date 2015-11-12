@@ -18,7 +18,8 @@ EZ3.SpotLight.prototype.updateUniforms = function(gl, program, i) {
   var direction = new EZ3.Vector3().sub(this.position, this.target).normalize();
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
-  program.loadUniformf(gl, prefix + 'position', 3, this.position);
-  program.loadUniformf(gl, prefix + 'direction', 3, direction);
-  program.loadUniformf(gl, prefix + 'cutoff', 1, this.cutoff);
+
+  program.loadUniformFloat(gl, prefix + 'position', this.position);
+  program.loadUniformFloat(gl, prefix + 'direction', direction);
+  program.loadUniformFloat(gl, prefix + 'cutoff', this.cutoff);
 };

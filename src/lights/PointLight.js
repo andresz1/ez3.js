@@ -15,5 +15,5 @@ EZ3.PointLight.prototype.updateUniforms = function(gl, program, i) {
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
 
-  program.loadUniformf(gl, prefix + 'position', 3, this.position);
+  program.loadUniformFloat(gl, prefix + 'position', this.position);
 };

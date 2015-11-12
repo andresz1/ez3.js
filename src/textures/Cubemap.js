@@ -30,6 +30,8 @@ EZ3.Cubemap.prototype.update = function(gl) {
       EZ3.Texture.prototype._updateImage.call(this, gl, gl.TEXTURE_CUBE_MAP_POSITIVE_X + k, this._images[k]);
 
     EZ3.Texture.prototype._updateMipmaps.call(this, gl);
+
+    this.dirty = false;
   }
 
   EZ3.Texture.prototype._updateParameters.call(this, gl, gl.TEXTURE_CUBE_MAP);
