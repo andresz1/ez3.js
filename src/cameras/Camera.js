@@ -76,7 +76,7 @@ EZ3.Camera.prototype._filterMoves = function(dx, dy) {
     currentWeight *= EZ3.Camera.FILTER_WEIGHT;
   }
 
-  return new EZ3.Vector2(averageX, averageY).scaleEqual(1.0 / averageTotal);
+  return new EZ3.Vector2(averageX, averageY).scale(1.0 / averageTotal);
 };
 
 EZ3.Camera.prototype.rotate = function(dx, dy) {
