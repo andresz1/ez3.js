@@ -2,55 +2,55 @@
  * @class Material
  */
 
-EZ3.Material = function(name) {
-  this._name = name;
+EZ3.Material = function(id) {
+  this._id = id || null;
 
   this.program = null;
-  this.fill = EZ3.MeshMaterial.WIREFRAME;
+  this.fill = EZ3.Material.SOLID;
   this.transparent = false;
+  this.depthTest = true;
   this.backFaceCulling = true;
   this.frontFaceCulling = false;
-  this.depthTest = true;
 };
 
 EZ3.Material.prototype.updateStates = function(gl, state) {
   if (this.depthTest) {
-    if (!state.capability[EZ3.State.DEPTH_TEST]) {
+    if (!state.depthTest) {
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LEQUAL);
-      state.capability[EZ3.State.DEPTH_TEST] = true;
+      state.depthTest = true;
     }
-  } else {
-    if (state.capability[EZ3.State.DEPTH_TEST]) {
-      gl.disable(gl.DEPTH_TEST);
-      state.capability[EZ3.State.DEPTH_TEST] = false;
-    }
+  } else if (state.depthTest) {
+    gl.disable(gl.DEPTH_TEST);
+    state.depthTest = false;
   }
 
   if (this.backFaceCulling) {
-    if (!state.capability[EZ3.State.CULL_FACE]) {
+    if (!state.faceCulling) {
       gl.enable(gl.CULL_FACE);
-      state.capability[EZ3.State.CULL_FACE] = true;
+      state.faceCulling = true;
     }
-    if(!state.capability[EZ3.State.BACKFACE_CULLING]) {
+    if (!state.backFaceCulling) {
       gl.cullFace(gl.BACK);
-      state.capability[EZ3.State.BACKFACE_CULLING] = true;
+      state.backFaceCulling = true;
     }
-  } else if(this.frontFaceCulling) {
-    if (!state.capability[EZ3.State.CULL_FACE]) {
+  } else if (this.frontFaceCulling) {
+    if (!state.faceCulling) {
       gl.enable(gl.CULL_FACE);
-      state.capability[EZ3.State.CULL_FACE] = true;
+      state.faceCulling = true;
     }
-    if(!state.capability[EZ3.State.FRONTFACE_CULLING]) {
+    if (!state.frontFaceCulling) {
       gl.cullFace(gl.FRONT);
-      state.capability[EZ3.State.FRONTFACE_CULLING] = true;
+      state.frontFaceCulling = true;
     }
-  } else if (state.capability[EZ3.State.CULL_FACE]) {
+  } else if (state.faceCulling) {
     gl.disable(gl.CULL_FACE);
-    state.capability[EZ3.State.CULL_FACE] = false;
+    state.faceCulling = false;
   }
 };
 
+EZ3.Material.MESH = 'MESH.';
+EZ3.Material.SHADER = 'SHADER.';
 EZ3.Material.SOLID = 0;
 EZ3.Material.POINTS = 1;
 EZ3.Material.WIREFRAME = 2;

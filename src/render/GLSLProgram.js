@@ -3,29 +3,29 @@
  */
 
 EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
-  this.used = 1;
+  this._id = null;
   this._cache = {};
   this._shaders = [];
-  this._uniform = {};
-  this._attribute = {};
-  this._program = null;
+
+  this.uniforms = {};
+  this.attributes = {};
+
   this._create(gl, vertex, fragment, prefix);
 };
 
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
-  var infoLog;
-  var message;
-  var lineNumbers;
   var shader = gl.createShader(type);
+  var warning;
 
   gl.shaderSource(shader, code);
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    infoLog = gl.getShaderInfoLog(shader);
-    lineNumbers = this._addLineNumbers(code);
-    message = 'EZ3.GLSLProgram shader info log: ';
-    console.log(message + infoLog + lineNumbers + '\n');
+    warning = 'EZ3.GLSLProgram shader info log: ';
+    warning += gl.getShaderInfoLog(shader);
+    warning += '\n';
+
+    console.warn(warning);
   } else {
     if (type === gl.VERTEX_SHADER)
       this._shaders[EZ3.GLSLProgram.VERTEX] = shader;
@@ -35,25 +35,26 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
 };
 
 EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
-  var infoLog;
-  var message;
+  var warning;
 
   prefix = (prefix) ? prefix : '';
 
   this._compile(gl, gl.VERTEX_SHADER, prefix + vertex);
   this._compile(gl, gl.FRAGMENT_SHADER, prefix + fragment);
 
-  this._program = gl.createProgram();
+  this._id = gl.createProgram();
 
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX]);
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT]);
+  gl.attachShader(this._id, this._shaders[EZ3.GLSLProgram.VERTEX]);
+  gl.attachShader(this._id, this._shaders[EZ3.GLSLProgram.FRAGMENT]);
 
-  gl.linkProgram(this._program);
+  gl.linkProgram(this._id);
 
-  if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
-    infoLog = gl.getProgramInfoLog(this._program, gl.LINK_STATUS);
-    message = 'EZ3.GLSLProgram linking program error info log: ';
-    console.log(message + infoLog + '\n');
+  if (!gl.getProgramParameter(this._id, gl.LINK_STATUS)) {
+    warning = 'EZ3.GLSLProgram linking program error info log: ';
+    warning += gl.getProgramInfoLog(this._id, gl.LINK_STATUS);
+    warning += '\n';
+
+    console.warn(warning);
   } else {
     this._loadUniforms(gl);
     this._loadAttributes(gl);
@@ -64,164 +65,84 @@ EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
 };
 
 EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
-  var totalUniforms = gl.getProgramParameter(this._program, gl.ACTIVE_UNIFORMS);
-  var uniformInfo;
+  var uniforms = gl.getProgramParameter(this._id, gl.ACTIVE_UNIFORMS);
+  var name;
+  var k;
 
-  for (var k = 0; k < totalUniforms; ++k) {
-    uniformInfo = gl.getActiveUniform(this._program, k);
-    this._addUniform(gl, uniformInfo.name);
+  for (k = 0; k < uniforms; k++) {
+    name = gl.getActiveUniform(this._id, k).name;
+    this.uniforms[name] = gl.getUniformLocation(this._id, name);
   }
 };
 
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
-  var totalAttrib = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
-  var attributeInfo;
+  var attributes = gl.getProgramParameter(this._id, gl.ACTIVE_ATTRIBUTES);
+  var name;
+  var k;
 
-  for (var k = 0; k < totalAttrib; ++k) {
-    attributeInfo = gl.getActiveAttrib(this._program, k);
-    this._addAttribute(gl, attributeInfo.name);
+  for (k = 0; k < attributes; k++) {
+    name = gl.getActiveAttrib(this._id, k).name;
+    this.attributes[name] = gl.getAttribLocation(this._id, name);
   }
-};
-
-EZ3.GLSLProgram.prototype._addUniform = function(gl, name) {
-  this.uniforms[name] = gl.getUniformLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._addAttribute = function(gl, name) {
-  this.attributes[name] = gl.getAttribLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._addLineNumbers = function(code) {
-  var codeLines = code.split('\n');
-
-  for (var k = 0; k < codeLines.length; ++k)
-    codeLines[k] = (k + 1) + ': ' + codeLines[k] + '\n\n';
-
-  return codeLines;
-};
-
-EZ3.GLSLProgram.prototype._isCached = function(name, data) {
-  var cached = this._cache[name];
-
-  if (cached) {
-    if (cached instanceof EZ3.Matrix3 || cached instanceof EZ3.Matrix4 ||
-      cached instanceof EZ3.Vector2 || cached instanceof EZ3.Vector3 ||
-      cached instanceof EZ3.Vector4)
-      return cached.testEqual(data);
-    else if (cached === data)
-      return true;
-    else
-      return false;
-  } else
-    return false;
-};
-
-EZ3.GLSLProgram.prototype._caching = function(name, data) {
-  if (data instanceof EZ3.Matrix3 || data instanceof EZ3.Matrix4 ||
-    data instanceof EZ3.Vector2 || data instanceof EZ3.Vector3 ||
-    data instanceof EZ3.Vector4)
-    this._cache[name] = data.clone();
-  else
-    this._cache[name] = data;
 };
 
 EZ3.GLSLProgram.prototype.bind = function(gl) {
-  gl.useProgram(this._program);
+  gl.useProgram(this._id);
 };
 
-EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {
-  var v;
+EZ3.GLSLProgram.prototype.loadUniformInteger = function(gl, name, data) {
+  var location = this.uniforms[name];
 
-  if (!this._isCached(name, data)) {
-    this._caching(name, data);
-
-    if (size > 1)
-      v = data.toArray();
-
-    switch (size) {
-      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-        gl.uniform1f(this.uniforms[name], data);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2f(this.uniforms[name], v[0], v[1]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3f(this.uniforms[name], v[0], v[1], v[2]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4f(this.uniforms[name], v[0], v[1], v[2], v[3]);
-        break;
+  if (location) {
+    if (typeof data === 'number' && this._cache[name] !== data) {
+      gl.uniform1i(location, data);
+      this._cache[name] = data;
+    } else if (data instanceof EZ3.Vector2 && !data.testEqual(this._cache[name])) {
+      gl.uniform2iv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector3 && !data.testEqual(this._cache[name])) {
+      gl.uniform3iv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector4 && !data.testEqual(this._cache[name])) {
+      gl.uniform4iv(location, data.toArray());
+      this._cache[name] = data.clone();
     }
   }
 };
 
-EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
-  var v;
+EZ3.GLSLProgram.prototype.loadUniformFloat = function(gl, name, data) {
+  var location = this.uniforms[name];
 
-  if (!this._isCached(name, data)) {
-    this._caching(name, data);
-
-    if (size > 1)
-      v = data.toArray();
-
-    switch (size) {
-      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-        gl.uniform1i(this.uniforms[name], data);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2i(this.uniforms[name], v[0], v[1]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3i(this.uniforms[name], v[0], v[1], v[2]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4i(this.uniforms[name], v[0], v[1], v[2], v[3]);
-        break;
+  if (location) {
+    if (typeof data === 'number' && this._cache[name] !== data) {
+      gl.uniform1f(location, data);
+      this._cache[name] = data;
+    } else if (data instanceof EZ3.Vector2 && !data.testEqual(this._cache[name])) {
+      gl.uniform2fv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector3 && !data.testEqual(this._cache[name])) {
+      gl.uniform3fv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector4 && !data.testEqual(this._cache[name])) {
+      gl.uniform4fv(location, data.toArray());
+      this._cache[name] = data.clone();
     }
   }
 };
 
-EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
-  var v;
+EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
+  var location = this.uniforms[name];
 
-  if (!this._isCached(name, data)) {
-    this._caching(name, data);
-
-    v = data.toArray();
-
-    switch (size) {
-      case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
-        gl.uniformMatrix2fv(this.uniforms[name], false, v);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
-        gl.uniformMatrix3fv(this.uniforms[name], false, v);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
-        gl.uniformMatrix4fv(this.uniforms[name], false, v);
-        break;
+  if (location) {
+    if (data instanceof EZ3.Matrix3 && !data.testEqual(this._cache[name])) {
+      gl.uniformMatrix3fv(location, false, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Matrix4 && !data.testEqual(this._cache[name])) {
+      gl.uniformMatrix4fv(location, false, data.toArray());
+      this._cache[name] = data.clone();
     }
   }
 };
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, 'uniforms', {
-  get: function() {
-    return this._uniform;
-  }
-});
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, 'attributes', {
-  get: function() {
-    return this._attribute;
-  }
-});
-
-EZ3.GLSLProgram.UNIFORM_SIZE_1D = 1;
-EZ3.GLSLProgram.UNIFORM_SIZE_2D = 2;
-EZ3.GLSLProgram.UNIFORM_SIZE_3D = 3;
-EZ3.GLSLProgram.UNIFORM_SIZE_4D = 4;
-EZ3.GLSLProgram.UNIFORM_SIZE_2X2 = 2;
-EZ3.GLSLProgram.UNIFORM_SIZE_3X3 = 3;
-EZ3.GLSLProgram.UNIFORM_SIZE_4X4 = 4;
 
 EZ3.GLSLProgram.VERTEX = 0;
 EZ3.GLSLProgram.FRAGMENT = 1;

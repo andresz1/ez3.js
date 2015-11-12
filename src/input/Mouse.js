@@ -61,7 +61,7 @@ EZ3.Mouse.prototype.lock = function() {
 
 EZ3.Mouse.prototype.unlock = function() {
   if (this._device.cancelPointerLock && this.pointer.locked)
-    this._domElement[this._device.cancelPointerLock]();
+    document[this._device.cancelPointerLock]();
 };
 
 EZ3.Mouse.prototype.enable = function() {
