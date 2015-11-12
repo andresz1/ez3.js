@@ -24,7 +24,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   mesh.material.updateStates(gl, this.state);
   mesh.material.updateUniforms(gl, this.state);
 
-  modelView.mul(mesh.world, camera.view);
+  modelView.mul(camera.view, mesh.world);
 
   program.loadUniformf(gl, 'uEyePosition', 3, camera.position);
   program.loadUniformMatrix(gl, 'uModel', 4, mesh.world);
@@ -44,6 +44,49 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
     lights.spot[i].updateUniforms(gl, program, i);
 
   mesh.render(gl, program.attributes, this.state, this.extension);
+};
+
+EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
+  var gl = this.context;
+  var shadow = new EZ3.Matrix4();
+  var position = new EZ3.Vector2();
+  var modelViewProjection = new EZ3.Matrix4();
+  var bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
+  var framebuffer;
+  var program;
+  var light;
+  var mesh;
+  var i;
+  var j;
+
+  if (!this.state.program.depth)
+    this.state.program.depth = new EZ3.GLSLProgram(gl, EZ3.ShaderLibrary.depth.vert, EZ3.ShaderLibrary.depth.frag);
+
+  program = this.state.program.depth;
+
+  program.bind(gl);
+
+  for (i = 0; i < lights.length; i++) {
+    light = lights[i];
+    framebuffer = light.depthFramebuffer;
+
+    framebuffer.bind(gl);
+
+    if (framebuffer.dirty) {
+      framebuffer.update(gl);
+      framebuffer.dirty = false;
+    }
+
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    this.viewport(position, framebuffer.dimensions);
+
+    for (j = 0; j < shadowCasters.length; j++) {
+      mesh = shadowCasters[j];
+
+      modelViewProjection.mul(light.projection, new EZ3.Matrix4().mul(light.view, mesh.world));
+      shadow.mul(bias, modelViewProjection);
+    }
+  }
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -109,7 +152,6 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   var entity;
   var mesh;
   var i;
-  var j;
 
   entities.push(scene);
 
@@ -151,32 +193,16 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     else
       meshes.opaque.push(mesh);
 
-    if(mesh.material.shadowCaster)
+    if (mesh.material.shadowCaster)
       meshes.shadowCasters.push(mesh);
   }
 
-  if(meshes.shadowCasters.length) {
+  if (meshes.shadowCasters.length) {
+    this._renderDepth(lights.directional, meshes.shadowCasters);
+    this._renderDepth(lights.spot, meshes.shadowCasters);
 
-    // Preguntar si el programa de profundidad ya fue creado.
-    // Si no ha sido creado, se crea, sino, no se crea.
-
-    for(i = 0; i < lights.directional.length; i++) {
-      for(j = 0; j < meshes.shadowCasters.length; j++) {
-
-      }
-    }
-
-    for(i = 0; i < lights.spot.length; i++) {
-      for(j = 0; j < meshes.shadowCasters.length; j++) {
-
-      }
-    }
-
-    for(i = 0; i < lights.point.length; i++) {
-      for(j = 0; j < meshes.shadowCasters.length; j++) {
-
-      }
-    }
+    gl.viewport(0.0, 0.0, this.canvas.width, this.canvas.height);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, 0);
   }
 
   for (i = 0; i < meshes.opaque.length; i++)
