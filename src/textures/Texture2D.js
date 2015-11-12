@@ -13,7 +13,7 @@ EZ3.Texture2D.prototype = Object.create(EZ3.Texture.prototype);
 EZ3.Texture2D.prototype.constructor = EZ3.Texture2D;
 
 EZ3.Texture2D.prototype.bind = function(gl, state, unit) {
-  EZ3.Texture.prototype.bind.call(this, gl, state, unit, gl.TEXTURE_2D);
+  EZ3.Texture.prototype.bind.call(this, gl, gl.TEXTURE_2D, state, unit);
 };
 
 EZ3.Texture2D.prototype.update = function(gl) {

@@ -19,7 +19,7 @@ EZ3.Cubemap.prototype = Object.create(EZ3.Texture.prototype);
 EZ3.Cubemap.prototype.contructor = EZ3.Cubemap;
 
 EZ3.Cubemap.prototype.bind = function(gl, state, unit) {
-  EZ3.Texture.prototype.bind.call(this, gl, state, unit, gl.TEXTURE_CUBE_MAP);
+  EZ3.Texture.prototype.bind.call(this, gl, gl.TEXTURE_CUBE_MAP, state, unit);
 };
 
 EZ3.Cubemap.prototype.update = function(gl) {

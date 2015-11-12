@@ -10,11 +10,12 @@ EZ3.Camera = function(position, target, up, mode, filter) {
   this._rotationAngles = new EZ3.Vector2();
   this._mode = mode || EZ3.Camera.PERSPECTIVE;
 
-  this.fov = 70.0;
-  this.aspectRatio = 1.0;
   this.planes = {};
   this.planes.near = 0.1;
   this.planes.far = 1000.0;
+
+  this.fov = 70.0;
+  this.aspectRatio = 1.0;
   this.look = new EZ3.Vector3(0, 0, -1);
   this.right = new EZ3.Vector3(1, 0, 0);
 

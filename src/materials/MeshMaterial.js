@@ -22,6 +22,9 @@ EZ3.MeshMaterial = function() {
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
   this.specularReflection = EZ3.MeshMaterial.PHONG;
 
+  this.shadowCaster = false;
+  this.softShadows = false;
+
   this.albedoFactor = 7.0;
   this.fresnelFactor = 0.0;
   this.refractFactor = 1.0;
@@ -65,12 +68,18 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
   else
     defines.push('LAMBERT');
 
-  if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE)
-    defines.push('COOK_TORRANCE');
-  else if(this.specularReflection === EZ3.MeshMaterial.PHONG)
-    defines.push('PHONG');
-  else
+  if(this.specularReflection === EZ3.MeshMaterial.BLINN_PHONG)
     defines.push('BLINN_PHONG');
+  else if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE)
+    defines.push('COOK_TORRANCE');
+  else
+    defines.push('PHONG');
+
+  if(this.shadows)
+    defines.push('VARIANCE_SHADOW_MAPPING');
+
+  if(this.softShadows)
+    defines.push('SOFT_VARIANCE_SHADOW_MAPPING');
 
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
