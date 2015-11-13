@@ -251,14 +251,14 @@ EZ3.Matrix4.prototype.translate = function(v, m) {
   var a01 = em[1];
   var a02 = em[2];
   var a03 = em[3];
-  var a10 = em[0];
-  var a11 = em[1];
-  var a12 = em[2];
-  var a13 = em[3];
-  var a20 = em[0];
-  var a21 = em[1];
-  var a22 = em[2];
-  var a23 = em[3];
+  var a10 = em[4];
+  var a11 = em[5];
+  var a12 = em[6];
+  var a13 = em[7];
+  var a20 = em[8];
+  var a21 = em[9];
+  var a22 = em[10];
+  var a23 = em[11];
 
   this.elements[0] = a00;
   this.elements[1] = a01;
@@ -590,24 +590,7 @@ EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
 };
 
 EZ3.Matrix4.prototype.clone = function() {
-  return new EZ3.Matrix4(
-    this.elements[0],
-    this.elements[1],
-    this.elements[2],
-    this.elements[3],
-    this.elements[4],
-    this.elements[5],
-    this.elements[6],
-    this.elements[7],
-    this.elements[8],
-    this.elements[9],
-    this.elements[10],
-    this.elements[11],
-    this.elements[12],
-    this.elements[13],
-    this.elements[14],
-    this.elements[15]
-  );
+  return new EZ3.Matrix4(this.elements);
 };
 
 EZ3.Matrix4.prototype.copy = function(m) {
