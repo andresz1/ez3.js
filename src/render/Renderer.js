@@ -209,7 +209,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     this._renderDepth(lights.spot, meshes.shadowCasters);
 
     gl.viewport(0.0, 0.0, this.canvas.width, this.canvas.height);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   }
 
   for (i = 0; i < meshes.opaque.length; i++)

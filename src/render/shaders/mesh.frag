@@ -275,8 +275,6 @@ void main() {
 
 		if(angle > uSpotLights[i].cutoff) {
 
-			s = uSpotLights[i].direction;
-
 			#ifdef LAMBERT
 				float q = lambert(s, n);
 			#endif
