@@ -6,6 +6,7 @@ attribute vec2 uv;
 
 uniform mat4 uModel;
 uniform mat3 uNormal;
+uniform mat4 uShadow;
 uniform mat4 uModelView;
 uniform mat4 uProjection;
 

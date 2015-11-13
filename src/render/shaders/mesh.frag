@@ -14,6 +14,7 @@ struct DirectionalLight
 	vec3 direction;
 	vec3 diffuse;
 	vec3 specular;
+	sampler2D shadowSampler;
 };
 
 struct SpotLight
