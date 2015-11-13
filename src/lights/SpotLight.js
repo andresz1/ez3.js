@@ -15,7 +15,7 @@ EZ3.SpotLight = function() {
 EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
 EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
 
-EZ3.SpotLight.prototype.updateUniforms = function(gl, program, i) {
+EZ3.SpotLight.prototype.updateUniforms = function(gl, state, program, i) {
   var prefix = 'uSpotLights[' + i + '].';
   var direction = new EZ3.Vector3().sub(this.position, this.target);
 
@@ -27,6 +27,9 @@ EZ3.SpotLight.prototype.updateUniforms = function(gl, program, i) {
   program.loadUniformFloat(gl, prefix + 'position', this.position);
   program.loadUniformFloat(gl, prefix + 'direction', direction);
   program.loadUniformFloat(gl, prefix + 'cutoff', this.cutoff);
+
+  this.depthFramebuffer.texture.bind(gl, state, 4);
+  program.loadUniformInteger(gl, 'shadowSampler', 4);
 };
 
 Object.defineProperty(EZ3.SpotLight.prototype, 'view', {

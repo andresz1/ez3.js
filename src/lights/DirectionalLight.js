@@ -14,7 +14,7 @@ EZ3.DirectionalLight = function() {
 EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
 EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
 
-EZ3.DirectionalLight.prototype.updateUniforms = function(gl, program, i) {
+EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, program, i) {
   var prefix = 'uDirectionalLights[' + i + '].';
   var direction = new EZ3.Vector3().sub(this.position, this.target);
 
@@ -24,6 +24,9 @@ EZ3.DirectionalLight.prototype.updateUniforms = function(gl, program, i) {
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
 
   program.loadUniformFloat(gl, prefix + 'direction', direction);
+
+  this.depthFramebuffer.texture.bind(gl, state, 4);
+  program.loadUniformInteger(gl, 'shadowSampler', 4);
 };
 
 Object.defineProperty(EZ3.DirectionalLight.prototype, 'view', {

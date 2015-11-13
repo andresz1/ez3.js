@@ -35,13 +35,13 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
     program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
 
   for (i = 0; i < lights.point.length; i++)
-    lights.point[i].updateUniforms(gl, program, i);
+    lights.point[i].updateUniforms(gl, program,  i);
 
   for (i = 0; i < lights.directional.length; i++)
-    lights.directional[i].updateUniforms(gl, program, i);
+    lights.directional[i].updateUniforms(gl, this.state, program, i);
 
   for (i = 0; i < lights.spot.length; i++)
-    lights.spot[i].updateUniforms(gl, program, i);
+    lights.spot[i].updateUniforms(gl, this.state, program, i);
 
   mesh.render(gl, program.attributes, this.state, this.extension);
 };
@@ -49,7 +49,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
   var position = new EZ3.Vector2();
-  var modelViewProjection = new EZ3.Matrix4();
+  var lightWVP = new EZ3.Matrix4();
   var framebuffer;
   var program;
   var fragment;
@@ -75,21 +75,31 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
     framebuffer.bind(gl);
 
-    if (framebuffer.dirty) {
-      framebuffer.update(gl);
-      framebuffer.dirty = false;
-    }
+    framebuffer.update(gl);
 
-    gl.clear(gl.DEPTH_BUFFER_BIT);
     this.viewport(position, framebuffer.resolution);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    if (!this.state.frontFaceCulling) {
+      if (this.state.backFaceCulling)
+        this.state.backFaceCulling = false;
+
+      if (!this.state.faceCulling) {
+        gl.enable(gl.CULL_FACE);
+        this.state.faceCulling = true;
+      }
+
+      gl.cullFace(gl.FRONT);
+      this.state.frontFaceCulling = true;
+    }
 
     for (j = 0; j < shadowCasters.length; j++) {
       mesh = shadowCasters[j];
 
-      modelViewProjection.mul(light.projection, new EZ3.Matrix4().mul(light.view, mesh.world));
-      mesh.updateShadow(modelViewProjection);
+      lightWVP.mul(light.projection, new EZ3.Matrix4().mul(light.view, mesh.world));
+      mesh.updateShadow(lightWVP);
 
-      program.loadUniformMatrix(gl, 'uModelViewProjection', modelViewProjection);
+      program.loadUniformMatrix(gl, 'uLightWVP', lightWVP);
 
       mesh.render(gl, program.attributes, this.state, this.extension);
     }

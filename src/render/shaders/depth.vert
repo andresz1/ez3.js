@@ -2,8 +2,8 @@ precision highp float;
 
 attribute vec3 position;
 
-uniform mat4 uModelViewProjection;
+uniform mat4 uLightWVP;
 
 void main() {
-  gl_Position = uModelViewProjection * vec4(position, 1.0);
+  gl_Position = uLightWVP * vec4(position, 1.0);
 }

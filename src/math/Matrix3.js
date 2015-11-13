@@ -324,17 +324,7 @@ EZ3.Matrix3.prototype.identity = function() {
 };
 
 EZ3.Matrix3.prototype.clone = function() {
-  return new EZ3.Matrix3(
-    this.elements[0],
-    this.elements[1],
-    this.elements[2],
-    this.elements[3],
-    this.elements[4],
-    this.elements[5],
-    this.elements[6],
-    this.elements[7],
-    this.elements[8]
-  );
+  return new EZ3.Matrix3(this.elements);
 };
 
 EZ3.Matrix3.prototype.copy = function(m) {
