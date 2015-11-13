@@ -13,6 +13,7 @@ EZ3.Entity = function() {
   this.position = new EZ3.Vector3(0, 0, 0);
   this.rotation = new EZ3.Quaternion(0, 0, 0, 1);
 
+  this._cache.world = this.world.clone();
   this._cache.model = this.model.clone();
   this._cache.scale = this.scale.clone();
   this._cache.position = this.position.clone();
@@ -70,9 +71,6 @@ EZ3.Entity.prototype.updateWorld = function() {
     if(modelDirty) {
       this.world = this.model.clone();
       this._cache.model = this.model.clone();
-
-      if(this instanceof EZ3.Mesh)
-        this.updateNormalMatrix = true;
     }
   } else {
     modelDirty = this._cache.model.testDiff(this.model);
@@ -87,9 +85,6 @@ EZ3.Entity.prototype.updateWorld = function() {
         this._cache.parentWorld = this.parent.world.clone();
 
       this.world.mul(this.parent.world, this.model);
-
-      if(this instanceof EZ3.Mesh)
-        this.updateNormalMatrix = true;
     }
   }
 };
