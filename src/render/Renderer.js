@@ -31,11 +31,8 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   program.loadUniformMatrix(gl, 'uModelView', modelView);
   program.loadUniformMatrix(gl, 'uProjection', camera.projection);
 
-  if (!lights.empty) {
-    //mesh.updateNormal();
-    mesh.normal.normalFromMat4(mesh.world);
+  if (!lights.empty)
     program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
-  }
 
   this.state.activeShadowReceiver = mesh.material.shadowReceiver;
 
@@ -56,8 +53,9 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
 
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
-  var position = new EZ3.Vector2();
   var lightWVP = new EZ3.Matrix4();
+  var position = new EZ3.Vector2();
+  var lightVP = new EZ3.Matrix4();
   var framebuffer;
   var program;
   var fragment;
@@ -101,10 +99,12 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
       this.state.frontFaceCulling = true;
     }
 
+    lightVP.mul(light.projection, light.view);
+
     for (j = 0; j < shadowCasters.length; j++) {
       mesh = shadowCasters[j];
 
-      lightWVP.mul(light.projection, new EZ3.Matrix4().mul(light.view, mesh.world));
+      lightWVP.mul(lightVP, mesh.world);
 
       program.loadUniformMatrix(gl, 'uLightWVP', lightWVP);
 
@@ -210,7 +210,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
     if (!lights.empty) {
       mesh.updateIlluminationBuffers();
-      //mesh.updateNormal();
+      mesh.updateNormal();
     }
 
     mesh.material.updateProgram(gl, this.state, lights);
