@@ -35,7 +35,7 @@ EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
-  if (this._cache.world.testDiff(this.world)) {
+  if (!this._cache.world.testEqual(this.world)) {
     this.normal.normalFromMat4(this.world);
     this._cache.world = this.world.clone();
   }
