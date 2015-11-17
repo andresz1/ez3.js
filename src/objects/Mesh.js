@@ -35,19 +35,9 @@ EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
-  if(this._cache.world.testDiff(this.world)) {
+  if (this._cache.world.testDiff(this.world)) {
     this.normal.normalFromMat4(this.world);
     this._cache.world = this.world.clone();
-  }
-};
-
-EZ3.Mesh.prototype.updateShadow = function(lightWVP) {
-  var bias;
-
-  if(lightWVP.testDiff(this._cache.lightWVP)) {
-    bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
-    this.shadow.mul(bias, lightWVP);
-    this._cache.lightWVP = lightWVP.clone();
   }
 };
 
