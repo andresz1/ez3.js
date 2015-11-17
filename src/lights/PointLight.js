@@ -17,8 +17,8 @@ EZ3.PointLight.prototype.updateUniforms = function(gl, state, program, i) {
 
   program.loadUniformFloat(gl, prefix + 'position', this.position);
 
-  if(state.activeShadowReceiver) {
+  /*if(state.activeShadowReceiver) {
     this.depthFramebuffer.texture.bind(gl, state);
     program.loadUniformInteger(gl, 'uShadowSampler', state.usedTextureSlots++);
-  }
+  }*/
 };

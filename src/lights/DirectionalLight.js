@@ -64,6 +64,7 @@ Object.defineProperty(EZ3.DirectionalLight.prototype, 'view', {
 
 Object.defineProperty(EZ3.DirectionalLight.prototype, 'projection', {
   get: function() {
+    this._camera.mode = EZ3.Camera.ORTHOGRAPHIC;
     return this._camera.projection;
   }
 });
