@@ -31,19 +31,27 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   program.loadUniformMatrix(gl, 'uModelView', modelView);
   program.loadUniformMatrix(gl, 'uProjection', camera.projection);
 
-  if (!lights.empty)
+  if (!lights.empty) {
+    //mesh.updateNormal();
+    mesh.normal.normalFromMat4(mesh.world);
     program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
+  }
 
-  for (i = 0; i < lights.point.length; i++)
-    lights.point[i].updateUniforms(gl, program,  i);
-
-  for (i = 0; i < lights.directional.length; i++)
-    lights.directional[i].updateUniforms(gl, this.state, program, i);
+  this.state.activeShadowReceiver = mesh.material.shadowReceiver;
 
   for (i = 0; i < lights.spot.length; i++)
     lights.spot[i].updateUniforms(gl, this.state, program, i);
 
+  for (i = 0; i < lights.point.length; i++)
+    lights.point[i].updateUniforms(gl, this.state, program, i);
+
+  for (i = 0; i < lights.directional.length; i++)
+    lights.directional[i].updateUniforms(gl, this.state, program, i);
+
   mesh.render(gl, program.attributes, this.state, this.extension);
+
+  if (this.state.usedTextureSlots)
+    this.state.usedTextureSlots = 0;
 };
 
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
@@ -97,7 +105,6 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
       mesh = shadowCasters[j];
 
       lightWVP.mul(light.projection, new EZ3.Matrix4().mul(light.view, mesh.world));
-      mesh.updateShadow(lightWVP);
 
       program.loadUniformMatrix(gl, 'uLightWVP', lightWVP);
 
@@ -123,6 +130,7 @@ EZ3.Renderer.prototype.initContext = function() {
 
     if (this.context) {
       this.state = new EZ3.State();
+      this.state.maxTextureSlots = this.context.getParameter(this.context.MAX_TEXTURE_IMAGE_UNITS) - 1;
       this.extension = new EZ3.Extension(this.context);
       break;
     }
@@ -170,6 +178,8 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   var mesh;
   var i;
 
+  camera.update();
+
   entities.push(scene);
 
   while (entities.length) {
@@ -200,7 +210,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
     if (!lights.empty) {
       mesh.updateIlluminationBuffers();
-      mesh.updateNormal();
+      //mesh.updateNormal();
     }
 
     mesh.material.updateProgram(gl, this.state, lights);
