@@ -6,7 +6,6 @@
 EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
-  this.updateNormalMatrix = false;
   this.normal = new EZ3.Matrix3();
   this.shadow = new EZ3.Matrix4();
 
@@ -36,16 +35,10 @@ EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
-  if(this.updateNormalMatrix) {
+  if (!this._cache.world.testEqual(this.world)) {
     this.normal.normalFromMat4(this.world);
-    this.updateNormalMatrix = false;
+    this._cache.world = this.world.clone();
   }
-};
-
-EZ3.Mesh.prototype.updateShadow = function(modelViewProjection) {
-  var bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
-
-  this.shadow.mul(bias, modelViewProjection);
 };
 
 EZ3.Mesh.prototype.render = function(gl, attributes, state, extension) {

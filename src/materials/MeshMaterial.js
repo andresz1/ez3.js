@@ -23,7 +23,7 @@ EZ3.MeshMaterial = function() {
   this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
   this.shadowCaster = false;
-  this.softShadows = false;
+  this.shadowReceiver = false;
 
   this.albedoFactor = 7.0;
   this.fresnelFactor = 0.0;
@@ -44,6 +44,18 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
   defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
   defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
 
+  if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR)
+    defines.push('OREN_NAYAR');
+  else
+    defines.push('LAMBERT');
+
+  if(this.specularReflection === EZ3.MeshMaterial.BLINN_PHONG)
+    defines.push('BLINN_PHONG');
+  else if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE)
+    defines.push('COOK_TORRANCE');
+  else
+    defines.push('PHONG');
+
   if (this.emissiveMap instanceof EZ3.Texture2D)
     defines.push('EMISSIVE_MAP');
 
@@ -63,23 +75,8 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
       defines.push('REFRACTION');
   }
 
-  if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR)
-    defines.push('OREN_NAYAR');
-  else
-    defines.push('LAMBERT');
-
-  if(this.specularReflection === EZ3.MeshMaterial.BLINN_PHONG)
-    defines.push('BLINN_PHONG');
-  else if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE)
-    defines.push('COOK_TORRANCE');
-  else
-    defines.push('PHONG');
-
-  if(this.shadows)
-    defines.push('VARIANCE_SHADOW_MAPPING');
-
-  if(this.softShadows)
-    defines.push('SOFT_VARIANCE_SHADOW_MAPPING');
+  if(this.shadowReceiver)
+    defines.push('SHADOW_MAP');
 
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
@@ -102,31 +99,31 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
   this.program.loadUniformFloat(gl, 'uShininess', this.shininessFactor);
 
   if (this.emissiveMap instanceof EZ3.Texture2D) {
-    this.emissiveMap.bind(gl, state, 0);
+    this.emissiveMap.bind(gl, state);
     this.emissiveMap.update(gl);
 
-    this.program.loadUniformInteger(gl, 'uEmissiveSampler', 0);
+    this.program.loadUniformInteger(gl, 'uEmissiveSampler', state.usedTextureSlots++);
   }
 
   if (this.diffuseMap instanceof EZ3.Texture2D) {
-    this.diffuseMap.bind(gl, state, 1);
+    this.diffuseMap.bind(gl, state);
     this.diffuseMap.update(gl);
 
-    this.program.loadUniformInteger(gl, 'uDiffuseSampler', 1);
+    this.program.loadUniformInteger(gl, 'uDiffuseSampler', state.usedTextureSlots++);
   }
 
   if (this.normalMap instanceof EZ3.Texture2D) {
-    this.normalMap.bind(gl, state, 2);
+    this.normalMap.bind(gl, state);
     this.normalMap.update(gl);
 
-    this.program.loadUniformInteger(gl, 'uNormalSampler', 2);
+    this.program.loadUniformInteger(gl, 'uNormalSampler', state.usedTextureSlots++);
   }
 
   if(this.environmentMap instanceof EZ3.Cubemap) {
-    this.environmentMap.bind(gl, state, 3);
+    this.environmentMap.bind(gl, state);
     this.environmentMap.update(gl);
 
-    this.program.loadUniformInteger(gl, 'uEnvironmentSampler', 3);
+    this.program.loadUniformInteger(gl, 'uEnvironmentSampler', state.usedTextureSlots++);
   }
 
   if(this.refractive)

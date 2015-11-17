@@ -80,64 +80,42 @@ EZ3.Matrix4.prototype.transpose = function(m) {
 };
 
 EZ3.Matrix4.prototype.invert = function(m) {
-  var a = (m instanceof EZ3.Matrix4) ? m.elements : this.elements;
-  var a00 = a[0];
-  var a01 = a[1];
-  var a02 = a[2];
-  var a03 = a[3];
-  var a10 = a[4];
-  var a11 = a[5];
-  var a12 = a[6];
-  var a13 = a[7];
-  var a20 = a[8];
-  var a21 = a[9];
-  var a22 = a[10];
-  var a23 = a[11];
-  var a30 = a[12];
-  var a31 = a[13];
-  var a32 = a[14];
-  var a33 = a[15];
-  var b00 = a00 * a11 - a01 * a10;
-  var b01 = a00 * a12 - a02 * a10;
-  var b02 = a00 * a13 - a03 * a10;
-  var b03 = a01 * a12 - a02 * a11;
-  var b04 = a01 * a13 - a03 * a11;
-  var b05 = a02 * a13 - a03 * a12;
-  var b06 = a20 * a31 - a21 * a30;
-  var b07 = a20 * a32 - a22 * a30;
-  var b08 = a20 * a33 - a23 * a30;
-  var b09 = a21 * a32 - a22 * a31;
-  var b10 = a21 * a33 - a23 * a31;
-  var b11 = a22 * a33 - a23 * a32;
-  var det;
+  var te = this.elements;
+		var me = m.elements;
 
-  det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+		var n11 = me[ 0 ], n12 = me[ 4 ], n13 = me[ 8 ], n14 = me[ 12 ];
+		var n21 = me[ 1 ], n22 = me[ 5 ], n23 = me[ 9 ], n24 = me[ 13 ];
+		var n31 = me[ 2 ], n32 = me[ 6 ], n33 = me[ 10 ], n34 = me[ 14 ];
+		var n41 = me[ 3 ], n42 = me[ 7 ], n43 = me[ 11 ], n44 = me[ 15 ];
 
-  if (!det) {
-    console.warn('EZ3.Matrix4.invert: determinant is zero.', m);
-    return null;
-  }
+		te[ 0 ] = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44;
+		te[ 4 ] = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44;
+		te[ 8 ] = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44;
+		te[ 12 ] = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+		te[ 1 ] = n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44;
+		te[ 5 ] = n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44;
+		te[ 9 ] = n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44;
+		te[ 13 ] = n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34;
+		te[ 2 ] = n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44;
+		te[ 6 ] = n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44;
+		te[ 10 ] = n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44;
+		te[ 14 ] = n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34;
+		te[ 3 ] = n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43;
+		te[ 7 ] = n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43;
+		te[ 11 ] = n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43;
+		te[ 15 ] = n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33;
 
-  det = 1.0 / det;
+		var det = n11 * te[ 0 ] + n21 * te[ 4 ] + n31 * te[ 8 ] + n41 * te[ 12 ];
 
-  this.elements[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
-  this.elements[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
-  this.elements[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
-  this.elements[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
-  this.elements[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
-  this.elements[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
-  this.elements[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
-  this.elements[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
-  this.elements[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
-  this.elements[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
-  this.elements[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
-  this.elements[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
-  this.elements[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
-  this.elements[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
-  this.elements[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
-  this.elements[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+    if(!det) {
+      console.warn('Dicks');
+      return this.identity;
+    }
+
+    this.scale( 1 / det );
 
   return this;
+
 };
 
 EZ3.Matrix4.prototype.mul = function(m2, m1) {
@@ -251,14 +229,14 @@ EZ3.Matrix4.prototype.translate = function(v, m) {
   var a01 = em[1];
   var a02 = em[2];
   var a03 = em[3];
-  var a10 = em[0];
-  var a11 = em[1];
-  var a12 = em[2];
-  var a13 = em[3];
-  var a20 = em[0];
-  var a21 = em[1];
-  var a22 = em[2];
-  var a23 = em[3];
+  var a10 = em[4];
+  var a11 = em[5];
+  var a12 = em[6];
+  var a13 = em[7];
+  var a20 = em[8];
+  var a21 = em[9];
+  var a22 = em[10];
+  var a23 = em[11];
 
   this.elements[0] = a00;
   this.elements[1] = a01;
@@ -398,51 +376,33 @@ EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
   return this;
 };
 
-EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
-  var rl = 1 / (right - left);
-  var tb = 1 / (top - bottom);
-  var nf = 1 / (near - far);
+EZ3.Matrix4.prototype.orthographic = function(left, right, top, bottom, near, far) {
+  var w = right - left;
+  var h = top - bottom;
+  var p = far - near;
 
-  this.elements[0] = (near * 2) * rl;
-  this.elements[1] = 0;
-  this.elements[2] = 0;
-  this.elements[3] = 0;
-  this.elements[4] = 0;
-  this.elements[5] = (near * 2) * tb;
-  this.elements[6] = 0;
-  this.elements[7] = 0;
-  this.elements[8] = (right + left) * rl;
-  this.elements[9] = (top + bottom) * tb;
-  this.elements[10] = (far + near) * nf;
-  this.elements[11] = -1;
-  this.elements[12] = 0;
-  this.elements[13] = 0;
-  this.elements[14] = (far * near * 2) * nf;
-  this.elements[15] = 0;
+  var x = (right + left) / w;
+  var y = (top + bottom) / h;
+  var z = (far + near) / p;
 
-  return this;
-};
-
-EZ3.Matrix4.prototype.ortho = function(left, right, bottom, top, near, far) {
-  var lr = 1.0 / (left - right);
-  var bt = 1.0 / (bottom - top);
-  var nf = 1.0 / (near - far);
-
-  this.elements[0] = -2.0 * lr;
+  this.elements[0] = 2.0 / w;
   this.elements[1] = 0.0;
   this.elements[2] = 0.0;
   this.elements[3] = 0.0;
+
   this.elements[4] = 0.0;
-  this.elements[5] = -2.0 * bt;
+  this.elements[5] = 2.0 / h;
   this.elements[6] = 0.0;
   this.elements[7] = 0.0;
+
   this.elements[8] = 0.0;
   this.elements[9] = 0.0;
-  this.elements[10] = 2.0 * nf;
+  this.elements[10] = -2.0 / p;
   this.elements[11] = 0.0;
-  this.elements[12] = (left + right) * lr;
-  this.elements[13] = (top + bottom) * bt;
-  this.elements[14] = (far + near) * nf;
+
+  this.elements[12] = -x;
+  this.elements[13] = -y;
+  this.elements[14] = -z;
   this.elements[15] = 1.0;
 
   return this;
@@ -590,24 +550,7 @@ EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
 };
 
 EZ3.Matrix4.prototype.clone = function() {
-  return new EZ3.Matrix4(
-    this.elements[0],
-    this.elements[1],
-    this.elements[2],
-    this.elements[3],
-    this.elements[4],
-    this.elements[5],
-    this.elements[6],
-    this.elements[7],
-    this.elements[8],
-    this.elements[9],
-    this.elements[10],
-    this.elements[11],
-    this.elements[12],
-    this.elements[13],
-    this.elements[14],
-    this.elements[15]
-  );
+  return new EZ3.Matrix4(this.toArray());
 };
 
 EZ3.Matrix4.prototype.copy = function(m) {
@@ -638,21 +581,34 @@ EZ3.Matrix4.prototype.toArray = function() {
 EZ3.Matrix4.prototype.toString = function() {
   return 'Matrix4[' + '\n' +
     this.elements[0].toFixed(4) + ', ' +
-    this.elements[1].toFixed(4) + ', ' +
-    this.elements[2].toFixed(4) + ', ' +
-    this.elements[3].toFixed(4) + '\n' +
     this.elements[4].toFixed(4) + ', ' +
-    this.elements[5].toFixed(4) + ', ' +
-    this.elements[6].toFixed(4) + ', ' +
-    this.elements[7].toFixed(4) + '\n' +
     this.elements[8].toFixed(4) + ', ' +
+    this.elements[12].toFixed(4) + '\n' +
+    this.elements[1].toFixed(4) + ', ' +
+    this.elements[5].toFixed(4) + ', ' +
     this.elements[9].toFixed(4) + ', ' +
+    this.elements[13].toFixed(4) + '\n' +
+    this.elements[2].toFixed(4) + ', ' +
+    this.elements[6].toFixed(4) + ', ' +
     this.elements[10].toFixed(4) + ', ' +
-    this.elements[11].toFixed(4) + '\n' +
-    this.elements[12].toFixed(4) + ', ' +
-    this.elements[13].toFixed(4) + ', ' +
-    this.elements[14].toFixed(4) + ', ' +
+    this.elements[14].toFixed(4) + '\n' +
+    this.elements[3].toFixed(4) + ', ' +
+    this.elements[7].toFixed(4) + ', ' +
+    this.elements[11].toFixed(4) + ', ' +
     this.elements[15].toFixed(4) + '\n]';
+};
+
+EZ3.Matrix4.prototype.toMat3 = function(m) {
+  var e = (m instanceof EZ3.Matrix4) ? m.elements : this.elements;
+  var matrix = new EZ3.Matrix3();
+
+  matrix.elements = [
+    e[0], e[3], e[6],
+    e[1], e[4], e[7],
+    e[2], e[5], e[8]
+  ];
+
+  return matrix;
 };
 
 EZ3.Matrix4.prototype.testEqual = function(m) {

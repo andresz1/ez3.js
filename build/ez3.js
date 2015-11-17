@@ -1,6 +1,7 @@
-var EZ3 = {
-  VERSION: '1.0.0'
+var EZ3 = function() {
 };
+
+EZ3 = new EZ3();
 
 EZ3.extends = function(destination, source) {
   var k;
@@ -22,11 +23,12 @@ EZ3.Camera = function(position, target, up, mode, filter) {
   this._rotationAngles = new EZ3.Vector2();
   this._mode = mode || EZ3.Camera.PERSPECTIVE;
 
-  this.fov = 70.0;
-  this.aspectRatio = 1.0;
   this.planes = {};
   this.planes.near = 0.1;
   this.planes.far = 1000.0;
+
+  this.fov = 70.0;
+  this.aspectRatio = 1.0;
   this.look = new EZ3.Vector3(0, 0, -1);
   this.right = new EZ3.Vector3(1, 0, 0);
 
@@ -87,7 +89,7 @@ EZ3.Camera.prototype._filterMoves = function(dx, dy) {
     currentWeight *= EZ3.Camera.FILTER_WEIGHT;
   }
 
-  return new EZ3.Vector2(averageX, averageY).scaleEqual(1.0 / averageTotal);
+  return new EZ3.Vector2(averageX, averageY).scale(1.0 / averageTotal);
 };
 
 EZ3.Camera.prototype.rotate = function(dx, dy) {
@@ -140,45 +142,6 @@ EZ3.Camera.FILTER_WEIGHT = 0.75;
 EZ3.Camera.FILTER_BUFFER_SIZE = 10;
 
 /**
- * @class Cache
- */
-
-EZ3.Cache = function() {
-  this.ASSET = {};
-  this.ASSET.IMAGE = 0;
-  this.ASSET.DATA = 1;
-  this.ASSET.ENTITY = 2;
-
-  this._assets = [];
-  this._assets[this.ASSET.IMAGE] = {};
-  this._assets[this.ASSET.DATA] = {};
-  this._assets[this.ASSET.ENTITY] = {};
-};
-
-EZ3.Cache = new EZ3.Cache();
-
-EZ3.Cache.add = function(url, asset) {
-  if (asset instanceof Image)
-    this._assets[this.ASSET.IMAGE][url] = asset;
-  else if (asset instanceof XMLHttpRequest)
-    this._assets[this.ASSET.DATA][url] = asset;
-  else if (asset instanceof EZ3.Entity)
-    this._assets[this.ASSET.ENTITY][url] = asset;
-};
-
-EZ3.Cache.image = function(url) {
-  return this._assets[this.ASSET.IMAGE][url];
-};
-
-EZ3.Cache.data = function(url) {
-  return this._assets[this.ASSET.DATA][url];
-};
-
-EZ3.Cache.entity = function(url) {
-  return this._assets[this.ASSET.ENTITY][url];
-};
-
-/**
  * @class Engine
  */
 
@@ -222,15 +185,20 @@ EZ3.Engine.prototype._update = function() {
 
 EZ3.Entity = function() {
   this._cache = {};
+
   this.parent = null;
   this.children = [];
-
   this.model = new EZ3.Matrix4();
   this.world = new EZ3.Matrix4();
-
   this.scale = new EZ3.Vector3(1, 1, 1);
   this.position = new EZ3.Vector3(0, 0, 0);
-  this.rotation = new EZ3.Quaternion(1, 0, 0, 0);
+  this.rotation = new EZ3.Quaternion(0, 0, 0, 1);
+
+  this._cache.model = this.model.clone();
+  this._cache.scale = this.scale.clone();
+  this._cache.position = this.position.clone();
+  this._cache.rotation = this.rotation.clone();
+  this._cache.parentWorld = this.model.clone();
 };
 
 EZ3.Entity.prototype.add = function(child) {
@@ -257,39 +225,39 @@ EZ3.Entity.prototype.updateWorld = function() {
   var modelDirty;
   var parentWorldDirty;
 
-  if(!this._cache.position || this._cache.position.testDiff(this.position)) {
+  if(this._cache.position.testDiff(this.position)) {
     this._cache.position = this.position.clone();
     positionDirty = true;
   }
 
-  if(!this._cache.rotation || this._cache.rotation.testDiff(this.rotation)) {
+  if(this._cache.rotation.testDiff(this.rotation)) {
     this._cache.rotation = this.rotation.clone();
     rotationDirty = true;
   }
 
-  if(!this._cache.scale || this._cache.scale.testDiff(this.scale)) {
+  if(this._cache.scale.testDiff(this.scale)) {
     this._cache.scale = this.scale.clone();
     scaleDirty = true;
   }
 
   if(positionDirty || rotationDirty || scaleDirty) {
-    this.model.fromRotationTranslation(this.model, this.rotation, this.position);
-    this.model.scale(this.model, this.scale);
+    this.model.fromRotationTranslation(this.rotation, this.position);
+    this.model.scale(this.scale);
   }
 
   if (!this.parent) {
-    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
+    modelDirty = this._cache.model.testDiff(this.model);
 
     if(modelDirty) {
-      this.world.copy(this.model);
+      this.world = this.model.clone();
       this._cache.model = this.model.clone();
 
       if(this instanceof EZ3.Mesh)
         this.updateNormalMatrix = true;
     }
   } else {
-    modelDirty = !this._cache.model || this._cache.model.testDiff(this.model);
-    parentWorldDirty = !this._cache.parentWorld || this._cache.parentWorld.testDiff(this.parent.world);
+    modelDirty = this._cache.model.testDiff(this.model);
+    parentWorldDirty = this._cache.parentWorld.testDiff(this.parent.world);
 
     if(parentWorldDirty || modelDirty) {
 
@@ -299,7 +267,7 @@ EZ3.Entity.prototype.updateWorld = function() {
       if(parentWorldDirty)
         this._cache.parentWorld = this.parent.world.clone();
 
-      this.world.mul(this.model, this.parent.world);
+      this.world.mul(this.parent.world, this.model);
 
       if(this instanceof EZ3.Mesh)
         this.updateNormalMatrix = true;
@@ -322,7 +290,7 @@ EZ3.Screen = function(id, position, size) {
   this.id = id;
   this.position = position;
   this.size = size;
-  this.load = new EZ3.LoadManager();
+  this.loader = new EZ3.Loader();
   this.scene = new EZ3.Scene();
   this.camera = null;
 };
@@ -433,10 +401,12 @@ EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
 };
 
 EZ3.ScreenManager.prototype._processFullScreenChange = function() {
+  var device = EZ3.Device;
+
   this.fullScreened = !this.fullScreened;
 
   if (!this.fullScreened) {
-    this.canvas.removeEventListener(this._device.fullScreenChange, this._onFullScreenChange, true);
+    this.canvas.removeEventListener(device.fullScreenChange, this._onFullScreenChange, true);
     delete this._onFullScreenChange;
   }
 };
@@ -448,13 +418,13 @@ EZ3.ScreenManager.prototype.add = function(screen) {
 
     if (screen.preload) {
       screen.preload();
-      screen.load.onComplete.add(screen.create, screen);
-      screen.load.onComplete.add(function() {
+      screen.loader.onComplete.add(screen.create, screen);
+      screen.loader.onComplete.add(function() {
         this._addEventListeners(screen);
         this._screens.unshift(screen);
       }, this);
 
-      screen.load.start();
+      screen.loader.start();
     } else {
       screen.create();
       this._addEventListeners(screen);
@@ -500,23 +470,29 @@ EZ3.ScreenManager.prototype.update = function() {
 };
 
 EZ3.ScreenManager.prototype.fullScreen = function() {
+  var device = EZ3.Device;
   var that;
 
-  if (this._device.requestFullScreen && !this.fullScreened) {
+  console.log('x');
+
+  if (device.requestFullScreen && !this.fullScreened) {
+    console.log('x1');
     that = this;
 
     this._onFullScreenChange = function(event) {
       that._processFullScreenChange(event);
     };
 
-    this.canvas.addEventListener(this._device.fullScreenChange, this._onFullScreenChange, true);
-    this.canvas[this._device.requestFullScreen]();
+    this.canvas.addEventListener(device.fullScreenChange, this._onFullScreenChange, true);
+    this.canvas[device.requestFullScreen]();
   }
 };
 
 EZ3.ScreenManager.prototype.windowed = function() {
-  if (this._device.cancelFullScreen && this.fullScreened)
-    this.canvas[this._device.cancelFullScreen]();
+  var device = EZ3.Device;
+
+  if (device.cancelFullScreen && this.fullScreened)
+    this.canvas[device.cancelFullScreen]();
 };
 
 /**
@@ -715,6 +691,49 @@ EZ3.SignalBinding.prototype.detach = function() {
 
 EZ3.SignalBinding.prototype.isBound = function() {
   return (!!this._signal && !!this.listener);
+};
+
+/**
+ * @class Framebuffer
+ */
+
+ EZ3.Framebuffer = function(resolution, texture) {
+  this._id = null;
+  this._cache = {};
+
+  if(resolution instanceof EZ3.Vector2)
+    this.resolution = resolution;
+  else
+    this.resolution = null;
+
+  if(texture instanceof EZ3.TargetTexture2D || texture instanceof EZ3.TargetCubemap)
+    this.texture = texture;
+  else
+    this.texture = null;
+
+  this.dirty = true;
+};
+
+EZ3.Framebuffer.prototype.constructor = EZ3.Framebuffer;
+
+EZ3.Framebuffer.prototype.bind = function(gl) {
+  if(!this._id)
+    this._id = gl.createFramebuffer();
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this._id);
+};
+
+EZ3.Framebuffer.prototype.update = function(gl, attachment) {
+  if(this.dirty) {
+    this.texture.bind(gl);
+
+    if(this.texture.dirty) {
+      this.texture.update(gl);
+      this.texture.dirty = false;
+    }
+  }
+
+  this.texture.attachToFramebuffer(gl, attachment);
 };
 
 /**
@@ -959,7 +978,7 @@ EZ3.Mouse.prototype.lock = function() {
 
 EZ3.Mouse.prototype.unlock = function() {
   if (this._device.cancelPointerLock && this.pointer.locked)
-    this._domElement[this._device.cancelPointerLock]();
+    document[this._device.cancelPointerLock]();
 };
 
 EZ3.Mouse.prototype.enable = function() {
@@ -1216,595 +1235,190 @@ EZ3.Light.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Light.prototype.constructor = EZ3.Light;
 
 EZ3.Light.prototype.updateUniforms = function(gl, program, prefix) {
-  program.loadUniformf(gl, prefix + 'diffuse', 3, this.diffuse);
-  program.loadUniformf(gl, prefix + 'specular', 3, this.specular);
+  program.loadUniformFloat(gl, prefix + 'diffuse', this.diffuse);
+  program.loadUniformFloat(gl, prefix + 'specular', this.specular);
 };
 
 /**
- * @class Data
+ * @class Cache
  */
 
-EZ3.Data = function(url, crossOrigin, responseType) {
-  this.url = url;
-  this.crossOrigin = crossOrigin;
-  this.responseType = responseType;
-  this.content = new XMLHttpRequest();
+EZ3.Cache = function() {
+  this._files = [];
 };
 
-EZ3.Data.prototype._processLoad = function(request, onLoad) {
-  this._removeEventHandlers();
-  onLoad(this.url, request);
+EZ3.Cache = new EZ3.Cache();
+
+EZ3.Cache.add = function(url, file) {
+  if (file instanceof EZ3.File) {
+    this._files[url] = file;
+    return this._files[url];
+  }
 };
 
-EZ3.Data.prototype._processError = function(event, onError) {
-  this._removeEventHandlers();
-  onError(this.url, event);
-};
-
-EZ3.Data.prototype.load = function(onLoad, onError) {
-  var that;
-
-  that = this;
-
-  this._onLoad = function() {
-    that._processLoad(this, onLoad);
-  };
-
-  this._onError = function(event) {
-    that._processError(event, onLoad);
-  };
-
-  this.content.open('GET', this.url, true);
-
-  this.content.addEventListener('load', this._onLoad, false);
-  this.content.addEventListener('error', this._onError, false);
-
-  if (this.crossOrigin)
-    this.content.crossOrigin = this.crossOrigin;
-
-  if (this.responseType)
-    this.content.responseType = this.responseType;
-
-  this.content.send(null);
-};
-
-EZ3.Data.prototype._removeEventHandlers = function() {
-  this.content.addEventListener('load', this._onLoad, false);
-  this.content.addEventListener('error', this._onError, false);
-
-  delete this._onLoad;
-  delete this._onError;
+EZ3.Cache.get = function(url) {
+  return this._files[url];
 };
 
 /**
- * @class Image
+ * @class File
  */
 
-EZ3.Image = function(url, crossOrigin) {
-  this.url = url;
-  this.crossOrigin = crossOrigin;
-  this.content = new Image();
+EZ3.File = function(data) {
+  this.data = data || null;
 };
 
-EZ3.Image.prototype._processLoad = function(image, onLoad) {
-  this._removeEventHandlers();
-  onLoad(this.url, image);
-};
-
-EZ3.Image.prototype._processError = function(event, onError) {
-  this._removeEventHandlers();
-  onError(this.url, event);
-};
-
-EZ3.Image.prototype.load = function(onLoad, onError) {
-  var that;
-
-  that = this;
-
-  this._onLoad = function() {
-    that._processLoad(this, onLoad);
-  };
-
-  this._onError = function(event) {
-    that._processError(event, onLoad);
-  };
-
-  this.content.addEventListener('load', this._onLoad, false);
-  this.content.addEventListener('error', this._onError, false);
-
-  if (!this.crossOrigin)
-    this.content.crossOrigin = this.crossOrigin;
-
-  this.content.src = this.url;
-};
-
-EZ3.Image.prototype._removeEventHandlers = function() {
-  this.content.addEventListener('load', this._onLoad, false);
-  this.content.addEventListener('error', this._onError, false);
-
-  delete this._onLoad;
-  delete this._onError;
-};
+EZ3.File.prototype.constructor = EZ3.File;
 
 /**
- * @class LoadManager
+ * @class Loader
  */
 
-EZ3.LoadManager = function() {
-  this._cache = EZ3.Cache;
-  this._files = {};
+EZ3.Loader = function() {
+  this._requests = {};
 
   this.started = false;
-  this.filesToLoad = 0;
-  this.loadedFiles = 0;
-  this.failedFiles = 0;
+  this.toSend = 0;
+  this.loaded = 0;
+  this.failed = 0;
   this.onComplete = new EZ3.Signal();
   this.onProgress = new EZ3.Signal();
 };
 
-EZ3.LoadManager.prototype._processLoad = function(url, data) {
-  this.loadedFiles++;
+EZ3.Loader.prototype._processLoad = function(url, data) {
+  var cache = EZ3.Cache;
 
-  this._cache.add(url, data);
+  this.loaded++;
+
+  cache.add(url, data);
   this._processProgress(url);
 };
 
-EZ3.LoadManager.prototype._processError = function(url, data) {
-  this.failedFiles++;
+EZ3.Loader.prototype._processError = function(url, data) {
+  this.failed++;
 
   this._processProgress(url, data);
 };
 
-EZ3.LoadManager.prototype._processProgress = function(url, error) {
-  var loadedFiles, failedFiles;
+EZ3.Loader.prototype._processProgress = function(url, error) {
+  var loaded, failed;
 
-  this.onProgress.dispatch(url, error, this.loadedFiles, this.failedFiles, this.filesToLoad);
+  this.onProgress.dispatch(url, error, this.loaded, this.failed, this.toSend);
 
-  if(this.filesToLoad === this.loadedFiles + this.failedFiles) {
-    loadedFiles = this.loadedFiles;
-    failedFiles = this.failedFiles;
+  if (this.toSend === this.loaded + this.failed) {
+    loaded = this.loaded;
+    failed = this.failed;
 
-    this._files = {};
-    this.filesToLoad = 0;
-    this.loadedFiles = 0;
-    this.failedFiles = 0;
+    this._requests = {};
+    this.toSend = 0;
+    this.loaded = 0;
+    this.failed = 0;
     this.started = false;
 
-    this.onComplete.dispatch(failedFiles, loadedFiles);
+    this.onComplete.dispatch(failed, loaded);
   }
 };
 
-EZ3.LoadManager.prototype.data = function(url, crossOrigin, responseType) {
-  var cached;
+EZ3.Loader.prototype.add = function(request) {
+  var cache;
+  var file;
 
-  cached = this._cache.data(url);
+  if (request instanceof EZ3.Request) {
+    cache = EZ3.Cache;
 
-  if(cached)
-    return cached;
+    if ((request instanceof EZ3.ImageRequest || request instanceof EZ3.DataRequest)) {
+      file = cache.get(request.url);
 
-  this._files[url] = new EZ3.Data(url, crossOrigin, responseType);
-  this.filesToLoad++;
+      if (file)
+        return file;
+    }
 
-  return this._files[url].content;
+    if (!this._requests[request.url]) {
+      this._requests[request.url] = request;
+      this.toSend++;
+    }
+
+    return this._requests[request.url].response;
+  }
 };
 
-EZ3.LoadManager.prototype.image = function(url, crossOrigin) {
-  var cached;
-
-  cached = this._cache.image(url);
-
-  if(cached)
-    return cached;
-
-  this._files[url] = new EZ3.Image(url, crossOrigin);
-  this.filesToLoad++;
-
-  return this._files[url].content;
-};
-
-EZ3.LoadManager.prototype.obj = function(url, crossOrigin) {
-  var cached;
-
-  cached = this._cache.entity(url);
-
-  if(cached)
-    return cached;
-
-  this._files[url] = new EZ3.Obj(url, crossOrigin);
-  this.filesToLoad++;
-
-  return this._files[url].content;
-};
-
-EZ3.LoadManager.prototype.start = function() {
+EZ3.Loader.prototype.start = function() {
   var i;
 
-  if (!this.filesToLoad)
+  if (!this.toSend)
     this.onComplete.dispatch(0, 0);
 
   this.started = true;
 
-  for (i in this._files)
-    this._files[i].load(this._processLoad.bind(this), this._processError.bind(this));
+  for (i in this._requests)
+    this._requests[i].send(this._processLoad.bind(this), this._processError.bind(this));
 };
 
 /**
- * @class Obj
+ * @class Request
  */
 
-EZ3.Obj = function(url, crossOrigin) {
+EZ3.Request = function(url, response, crossOrigin) {
   this.url = url;
-  this.crossOrigin = crossOrigin;
-  this.content = new EZ3.Entity();
+  this.response = response;
+  this.crossOrigin = crossOrigin || false;
 };
 
-EZ3.Obj.prototype._parseMaterial = function() {
-
-};
-
-EZ3.Obj.prototype._parse = function(data, onLoad, onError) {
-  var that, patterns, lines, line, result;
-  var mtllibs, materials, material, geometry, mesh, indices, vertices, normals, uvs;
-  var i;
-
-  function triangulate(face) {
-    var data, i;
-
-    data = [];
-    face = face.trim().split(' ');
-
-    for (i = 1; i < face.length - 1; i++)
-      data.push(face[0], face[i], face[i + 1]);
-
-    return data;
-  }
-
-  function processVertex(vertex) {
-    var i;
-
-    for (i = 1; i < 4; i++)
-      vertices.push(parseFloat(vertex[i]));
-  }
-
-  function processNormal(normal) {
-    var i;
-
-    for (i = 1; i < 4; i++)
-      normals.push(parseFloat(normal[i]));
-  }
-
-  function processUv(uv) {
-    var i;
-
-    for (i = 1; i < 3; i++)
-      uvs.push(parseFloat(uv[i]));
-  }
-
-  function processFace1(face) {
-    var i;
-    for (i = 0; i < face.length; i++)
-      indices.vertex.push(parseInt(face[i]) - 1);
-  }
-
-  function processFace2(face) {
-    var point, i;
-
-    for (i = 0; i < face.length; i++) {
-      point = face[i].split('/');
-
-      indices.vertex.push(parseInt(point[0]) - 1);
-      indices.uv.push(parseInt(point[1]) - 1);
-    }
-  }
-
-  function processFace3(face) {
-    var point, i;
-
-    for (i = 0; i < face.length; i++) {
-      point = face[i].split('/');
-
-      indices.vertex.push(parseInt(point[0]) - 1);
-      indices.uv.push(parseInt(point[1]) - 1);
-      indices.normal.push(parseInt(point[2]) - 1);
-    }
-  }
-
-  function processFace4(face) {
-    var point, i;
-
-    for (i = 0; i < face.length; i++) {
-      point = face[i].split('//');
-
-      indices.vertex.push(parseInt(point[0]) - 1);
-      indices.normal.push(parseInt(point[1]) - 1);
-    }
-  }
-
-  function computeNormals() {
-    var indicesCount;
-    var i, j, k;
-    var buffer;
-
-    indicesCount = [];
-
-    buffer = new EZ3.VertexBuffer();
-    buffer.addAttribute('normal', new EZ3.VertexBufferAttribute(3));
-    geometry.buffers.add('normal', buffer);
-
-    for (i = 0; i < vertices.length / 3; i++) {
-      indicesCount.push(0);
-
-      for (j = 0; j < 3; j++)
-        buffer.data.push(0);
-    }
-
-    for (i = 0; i < indices.vertex.length; i++) {
-      indicesCount[indices.vertex[i]]++;
-
-      for (j = 0; j < 3; j++)
-        buffer.data[3 * indices.vertex[i] + j] += normals[3 * indices.normal[i] + j];
-    }
-
-    for (i = 0, j = 0; i < vertices.length; i += 3, j++)
-      for (k = 0; k < 3; k++)
-        buffer.data[i + k] /= indicesCount[j];
-  }
-
-  function computeUvs() {
-    var i, j;
-    var buffer;
-
-    buffer = new EZ3.VertexBuffer();
-    buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
-    geometry.buffers.add('uv', buffer);
-
-    for (i = 0; i < indices.vertex.length; i++)
-      for (j = 0; j < 2; j++)
-        buffer.data[2 * indices.vertex[i] + j] = uvs[2 * indices.uv[i] + j];
-  }
-
-  function processMesh() {
-    var buffer;
-
-    if (indices.vertex.length > 0 && vertices.length > 0) {
-      buffer = new EZ3.IndexBuffer(indices.vertex, false, true);
-      geometry.buffers.add('triangle', buffer);
-
-      buffer = new EZ3.VertexBuffer(vertices);
-      buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
-      geometry.buffers.add('position', buffer);
-
-      if (indices.normal.length && normals.length)
-        computeNormals();
-
-      if (indices.uv.length && uvs.length)
-        computeUvs();
-
-      console.log('2');
-
-      that.content.add(mesh);
-
-      material = new EZ3.MeshMaterial();
-      geometry = new EZ3.Geometry();
-      mesh = new EZ3.Mesh(geometry, material);
-
-      indices.vertex = [];
-      indices.normal = [];
-      indices.uv = [];
-    }
-  }
-
-  function processMaterials() {
-    var load, data, tokens, baseUrl;
-    var i;
-
-    load = new EZ3.LoadManager();
-    data = [];
-
-    tokens = that.url.split('/');
-    baseUrl = that.url.substr(0, that.url.length - tokens[tokens.length - 1].length);
-
-    for (i = 0; i < mtllibs.length; i++)
-      data.push(load.data(baseUrl + mtllibs[i]));
-
-    load.onComplete.add(function() {
-      var i;
-
-      for (i = 0; i < data.length; i++)
-        processMaterial(baseUrl, data[i].response, load);
-
-      load.onComplete.removeAll();
-      load.onComplete.add(function() {
-        onLoad(that.url, that.content);
-      });
-
-      load.start();
-    });
-
-    load.start();
-  }
-
-  function processMaterial(baseUrl, data, load) {
-    var lines, line, key, value, material;
-    var i, j;
-
-    lines = data.split('\n');
-
-    for (i = 0; i < lines.length; i++) {
-      line = lines[i].trim();
-
-      j = line.indexOf(' ');
-
-      key = (j >= 0) ? line.substring(0, j) : line;
-      key = key.toLowerCase();
-
-      value = (j >= 0) ? line.substring(j + 1) : '';
-      value = value.trim();
-
-      if (key === 'newmtl') {
-        material = materials[value];
-      } else if (key === 'kd') {
-
-      } else if (key === 'ka') {
-
-      } else if (key === 'ks') {
-
-      } else if (key === 'ns') {
-
-      } else if (key === 'd') {
-
-      } else if (key === 'map_ka') {
-
-      } else if (key === 'map_kd') {
-
-        material.diffuseMap = new EZ3.Texture(load.image(baseUrl + value));
-      } else if (key === 'map_ks') {
-
-      } else if (key === 'map_ns') {
-
-      } else if (key === 'map_bump') {
-
-      } else if (key === 'map_d') {
-
-      }
-    }
-  }
-
-  that = this;
-  patterns = {
-    obj: /^o/,
-    group: /^g/,
-    mtllib: /^mtllib/,
-    usemtl: /^usemtl/,
-    smooth: /^s/,
-    vertex: /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
-    normal: /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
-    uv: /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/,
-    face1: /f\s(([\d]+[\s]){2,}[\d]+)+/,
-    face2: /f\s((([\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
-    face3: /f\s((([\d]{1,}\/[\d]{1,}\/[\d]{1,}[\s]?){3,})+)/,
-    face4: /f\s((([\d]{1,}\/\/[\d]{1,}[\s]?){3,})+)/
-  };
-  mtllibs = [];
-  materials = {};
-  material = new EZ3.MeshMaterial();
-  geometry = new EZ3.Geometry();
-  mesh = new EZ3.Mesh(geometry, material);
-  indices = {
-    vertex: [],
-    normal: [],
-    uv: []
-  };
-  vertices = [];
-  normals = [];
-  uvs = [];
-  lines = data.split('\n');
-
-  for (i = 0; i < lines.length; i++) {
-    line = lines[i].trim().replace(/ +(?= )/g, '');
-
-    if (line.length === 0 || line.charAt(0) === '#') {
-      continue;
-    } else if ((result = patterns.vertex.exec(line))) {
-      processVertex(result);
-    } else if ((result = patterns.normal.exec(line))) {
-      processNormal(result);
-    } else if ((result = patterns.uv.exec(line))) {
-      processUv(result);
-    } else if ((result = patterns.face1.exec(line))) {
-      processFace1(triangulate(result[1]));
-    } else if ((result = patterns.face2.exec(line))) {
-      processFace2(triangulate(result[1]));
-    } else if ((result = patterns.face3.exec(line))) {
-      processFace3(triangulate(result[1]));
-    } else if ((result = patterns.face4.exec(line))) {
-      processFace4(triangulate(result[1]));
-    } else if (patterns.obj.test(line) || patterns.group.test(line)) {
-      processMesh();
-      mesh.name = line.substring(2).trim();
-    } else if (patterns.mtllib.test(line)) {
-      mtllibs.push(line.substring(7).trim());
-    } else if (patterns.usemtl.test(line)) {
-      processMesh();
-      material.name = line.substring(7).trim();
-      materials[material.name] = material;
-    } else if (patterns.smooth.test(line)) {
-
-    }
-  }
-  processMesh();
-  processMaterials();
-};
-
-EZ3.Obj.prototype.load = function(onLoad, onError) {
-  var that, load, data;
-
-  that = this;
-  load = new EZ3.LoadManager();
-
-  data = load.data(this.url);
-  load.onComplete.add(function() {
-    that._parse(data.response, onLoad, onError);
-  });
-
-  load.start();
-
-  return this.content;
-};
+EZ3.Request.prototype.constructor = EZ3.Request;
 
 /**
  * @class Material
  */
 
-EZ3.Material = function(name) {
-  this._name = name;
+EZ3.Material = function(id) {
+  this._id = id || null;
 
   this.program = null;
-  this.fill = EZ3.MeshMaterial.WIREFRAME;
+  this.fill = EZ3.Material.SOLID;
   this.transparent = false;
+  this.depthTest = true;
   this.backFaceCulling = true;
   this.frontFaceCulling = false;
-  this.depthTest = true;
 };
 
 EZ3.Material.prototype.updateStates = function(gl, state) {
   if (this.depthTest) {
-    if (!state.capability[EZ3.State.DEPTH_TEST]) {
+    if (!state.depthTest) {
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LEQUAL);
-      state.capability[EZ3.State.DEPTH_TEST] = true;
+      state.depthTest = true;
     }
-  } else {
-    if (state.capability[EZ3.State.DEPTH_TEST]) {
-      gl.disable(gl.DEPTH_TEST);
-      state.capability[EZ3.State.DEPTH_TEST] = false;
-    }
+  } else if (state.depthTest) {
+    gl.disable(gl.DEPTH_TEST);
+    state.depthTest = false;
   }
 
   if (this.backFaceCulling) {
-    if (!state.capability[EZ3.State.CULL_FACE]) {
+    if (!state.faceCulling) {
       gl.enable(gl.CULL_FACE);
-      state.capability[EZ3.State.CULL_FACE] = true;
+      state.faceCulling = true;
     }
-    if(!state.capability[EZ3.State.BACKFACE_CULLING]) {
+    if (!state.backFaceCulling) {
       gl.cullFace(gl.BACK);
-      state.capability[EZ3.State.BACKFACE_CULLING] = true;
+      state.backFaceCulling = true;
     }
-  } else if(this.frontFaceCulling) {
-    if (!state.capability[EZ3.State.CULL_FACE]) {
+  } else if (this.frontFaceCulling) {
+    if (!state.faceCulling) {
       gl.enable(gl.CULL_FACE);
-      state.capability[EZ3.State.CULL_FACE] = true;
+      state.faceCulling = true;
     }
-    if(!state.capability[EZ3.State.FRONTFACE_CULLING]) {
+    if (!state.frontFaceCulling) {
       gl.cullFace(gl.FRONT);
-      state.capability[EZ3.State.FRONTFACE_CULLING] = true;
+      state.frontFaceCulling = true;
     }
-  } else if (state.capability[EZ3.State.CULL_FACE]) {
+  } else if (state.faceCulling) {
     gl.disable(gl.CULL_FACE);
-    state.capability[EZ3.State.CULL_FACE] = false;
+    state.faceCulling = false;
   }
 };
 
+EZ3.Material.MESH = 'MESH.';
+EZ3.Material.SHADER = 'SHADER.';
 EZ3.Material.SOLID = 0;
 EZ3.Material.POINTS = 1;
 EZ3.Material.WIREFRAME = 2;
@@ -1843,6 +1457,10 @@ EZ3.Math = function() {
 
 EZ3.Math = new EZ3.Math();
 
+EZ3.Math.isPowerOfTwo = function(x) {
+  return (x & (x - 1)) === 0;
+};
+
 EZ3.Math.toRadians = function(x) {
   return x * EZ3.Math.PI / 180.0;
 };
@@ -1851,111 +1469,96 @@ EZ3.Math.toDegrees = function(x) {
   return x * 180.0 / EZ3.Math.PI;
 };
 
+EZ3.Math.nextHighestPowerOfTwo = function(x) {
+  --x;
+  for (var i = 1; i < 32; i <<= 1) {
+    x = x | x >> i;
+  }
+  return x + 1;
+};
+
 /**
  * @class Matrix3
  */
 
-EZ3.Matrix3 = function(e00, e01, e02, e10, e11, e12, e20, e21, e22) {
-  this.dirty = true;
-  this._elements = [];
+EZ3.Matrix3 = function(value) {
+  this.elements = null;
 
-  this.init(
-    e00 || 1, e01 || 0, e02 || 0,
-    e10 || 0, e11 || 1, e12 || 0,
-    e20 || 0, e21 || 0, e22 || 1
-  );
+  if (typeof value === 'number') {
+    this.elements = [
+      value, 0.0, 0.0,
+      0.0, value, 0.0,
+      0.0, 0.0, value
+    ];
+  } else if (value instanceof Array && value.length === 9) {
+    this.elements = [
+      value[0], value[1], value[2],
+      value[3], value[4], value[5],
+      value[6], value[7], value[8],
+    ];
+  } else
+    this.identity();
 };
 
 EZ3.Matrix3.prototype.constructor = EZ3.Matrix3;
 
-EZ3.Matrix3.prototype.init = function(e00, e01, e02, e10, e11, e12, e20, e21, e22) {
-  this.elements = [
-    e00, e01, e02,
-    e10, e11, e12,
-    e20, e21, e22
-  ];
-
-  return this;
-};
-
 EZ3.Matrix3.prototype.add = function(m1, m2) {
-  var e = this.elements;
-  var em1 = m1.elements;
-  var em2 = m2.elements;
+  var em1;
+  var em2;
 
-  e[0] = em1[0] + em2[0];
-  e[1] = em1[1] + em2[1];
-  e[2] = em1[2] + em2[2];
-  e[3] = em1[3] + em2[3];
-  e[4] = em1[4] + em2[4];
-  e[5] = em1[5] + em2[5];
-  e[6] = em1[6] + em2[6];
-  e[7] = em1[7] + em2[7];
-  e[8] = em1[8] + em2[8];
+  if (m2 instanceof EZ3.Matrix3) {
+    em1 = m1.elements;
+    em2 = m2.elements;
+  } else {
+    em1 = this.elements;
+    em2 = m1.elements;
+  }
 
-  this.dirty = true;
-
-  return this;
-};
-
-EZ3.Matrix3.prototype.addEqual = function(m) {
-  var em = m.elements;
-
-  this.elements[0] += em[0];
-  this.elements[1] += em[1];
-  this.elements[2] += em[2];
-  this.elements[3] += em[3];
-  this.elements[4] += em[4];
-  this.elements[5] += em[5];
-  this.elements[6] += em[6];
-  this.elements[7] += em[7];
-  this.elements[8] += em[8];
-
-  this.dirty = true;
+  this.elements[0] = em1[0] + em2[0];
+  this.elements[1] = em1[1] + em2[1];
+  this.elements[2] = em1[2] + em2[2];
+  this.elements[3] = em1[3] + em2[3];
+  this.elements[4] = em1[4] + em2[4];
+  this.elements[5] = em1[5] + em2[5];
+  this.elements[6] = em1[6] + em2[6];
+  this.elements[7] = em1[7] + em2[7];
+  this.elements[8] = em1[8] + em2[8];
 
   return this;
 };
 
 EZ3.Matrix3.prototype.sub = function(m1, m2) {
-  var e = this.elements;
-  var em1 = m1.elements;
-  var em2 = m2.elements;
+  var em1;
+  var em2;
 
-  e[0] = em1[0] - em2[0];
-  e[1] = em1[1] - em2[1];
-  e[2] = em1[2] - em2[2];
-  e[3] = em1[3] - em2[3];
-  e[4] = em1[4] - em2[4];
-  e[5] = em1[5] - em2[5];
-  e[6] = em1[6] - em2[6];
-  e[7] = em1[7] - em2[7];
-  e[8] = em1[8] - em2[8];
+  if (m2 instanceof EZ3.Matrix3) {
+    em1 = m1.elements;
+    em2 = m2.elements;
+  } else {
+    em1 = this.elements;
+    em2 = m1.elements;
+  }
 
-  this.dirty = true;
-
-  return this;
-};
-
-EZ3.Matrix3.prototype.subEqual = function(m) {
-  var em = m.elements;
-
-  this.elements[0] -= em[0];
-  this.elements[1] -= em[1];
-  this.elements[2] -= em[2];
-  this.elements[3] -= em[3];
-  this.elements[4] -= em[4];
-  this.elements[5] -= em[5];
-  this.elements[6] -= em[6];
-  this.elements[7] -= em[7];
-  this.elements[8] -= em[8];
-
-  this.dirty = true;
+  this.elements[0] = em1[0] - em2[0];
+  this.elements[1] = em1[1] - em2[1];
+  this.elements[2] = em1[2] - em2[2];
+  this.elements[3] = em1[3] - em2[3];
+  this.elements[4] = em1[4] - em2[4];
+  this.elements[5] = em1[5] - em2[5];
+  this.elements[6] = em1[6] - em2[6];
+  this.elements[7] = em1[7] - em2[7];
+  this.elements[8] = em1[8] - em2[8];
 
   return this;
 };
 
-EZ3.Matrix3.prototype.scale = function(m, s) {
-  var em = m.elements;
+EZ3.Matrix3.prototype.scale = function(s, m) {
+  var em;
+
+  if(m instanceof EZ3.Matrix3)
+   em = m.elements;
+  else
+   em = this.elements;
 
   this.elements[0] = em[0] * s;
   this.elements[1] = em[1] * s;
@@ -1966,24 +1569,6 @@ EZ3.Matrix3.prototype.scale = function(m, s) {
   this.elements[6] = em[6] * s;
   this.elements[7] = em[7] * s;
   this.elements[8] = em[8] * s;
-
-  this.dirty = true;
-
-  return this;
-};
-
-EZ3.Matrix3.prototype.scaleEqual = function(s) {
-  this.elements[0] *= s;
-  this.elements[1] *= s;
-  this.elements[2] *= s;
-  this.elements[3] *= s;
-  this.elements[4] *= s;
-  this.elements[5] *= s;
-  this.elements[6] *= s;
-  this.elements[7] *= s;
-  this.elements[8] *= s;
-
-  this.dirty = true;
 
   return this;
 };
@@ -2011,7 +1596,7 @@ EZ3.Matrix3.prototype.mul = function(m1, m2) {
   var b7;
   var b8;
 
-  if (m2 !== undefined) {
+  if (m2 instanceof EZ3.Matrix3) {
     em2 = m2.elements;
 
     a0 = em1[0];
@@ -2065,92 +1650,6 @@ EZ3.Matrix3.prototype.mul = function(m1, m2) {
   this.elements[7] = a6 * b1 + a7 * b4 + a8 * b7;
   this.elements[8] = a6 * b2 + a7 * b5 + a8 * b8;
 
-  this.dirty = true;
-
-  return this;
-};
-
-EZ3.Matrix3.prototype.mulScale = function(m, sx, sy, sz, Prepend) {
-  var em = m.elements;
-  var e = this.elements;
-  var prepend = Prepend || false;
-
-  if (prepend) {
-    e[0] = sx * em[0];
-    e[1] = sx * em[1];
-    e[2] = sx * em[2];
-    e[3] = sy * em[3];
-    e[4] = sy * em[4];
-    e[5] = sy * em[5];
-    e[6] = sz * em[6];
-    e[7] = sz * em[7];
-    e[8] = sz * em[8];
-  } else {
-    e[0] = em[0] * sx;
-    e[1] = em[1] * sy;
-    e[2] = em[2] * sz;
-    e[3] = em[3] * sx;
-    e[4] = em[4] * sy;
-    e[5] = em[5] * sz;
-    e[6] = em[6] * sx;
-    e[7] = em[7] * sy;
-    e[8] = em[8] * sz;
-  }
-
-  this.elements = e;
-
-  return this;
-};
-
-EZ3.Matrix3.prototype.mulRotate = function(m, rad, ax, ay, az, Prepend) {
-  var tm = m.elements;
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
-  var c1 = 1 - c;
-  var r00 = ax * ax * c1 + c;
-  var r01 = ax * ay * c1 - az * s;
-  var r02 = ax * az * c1 + ay * s;
-  var r10 = ay * ax * c1 + az * s;
-  var r11 = ay * ay * c1 + c;
-  var r12 = ay * az * c1 - ax * s;
-  var r20 = az * ax * c1 - ay * s;
-  var r21 = az * ay * c1 + ax * s;
-  var r22 = az * az * c1 + c;
-  var a0 = tm[0];
-  var a3 = tm[3];
-  var a6 = tm[6];
-  var a1 = tm[1];
-  var a4 = tm[4];
-  var a7 = tm[7];
-  var a2 = tm[2];
-  var a5 = tm[5];
-  var a8 = tm[8];
-  var prepend = Prepend || false;
-
-  if (prepend) {
-    this.elements[0] = r00 * a0 + r01 * a3 + r02 * a6;
-    this.elements[1] = r00 * a1 + r01 * a4 + r02 * a7;
-    this.elements[2] = r00 * a2 + r01 * a5 + r02 * a8;
-    this.elements[3] = r10 * a0 + r11 * a3 + r12 * a6;
-    this.elements[4] = r10 * a1 + r11 * a4 + r12 * a7;
-    this.elements[5] = r10 * a2 + r11 * a5 + r12 * a8;
-    this.elements[6] = r20 * a0 + r21 * a3 + r22 * a6;
-    this.elements[7] = r20 * a1 + r21 * a4 + r22 * a7;
-    this.elements[8] = r20 * a2 + r21 * a5 + r22 * a8;
-  } else {
-    this.elements[0] = a0 * r00 + a1 * r10 + a2 * r20;
-    this.elements[1] = a0 * r01 + a1 * r11 + a2 * r21;
-    this.elements[2] = a0 * r02 + a1 * r12 + a2 * r22;
-    this.elements[3] = a3 * r00 + a4 * r10 + a5 * r20;
-    this.elements[4] = a3 * r01 + a4 * r11 + a5 * r21;
-    this.elements[5] = a3 * r02 + a4 * r12 + a5 * r22;
-    this.elements[6] = a6 * r00 + a7 * r10 + a8 * r20;
-    this.elements[7] = a6 * r01 + a7 * r11 + a8 * r21;
-    this.elements[8] = a6 * r02 + a7 * r12 + a8 * r22;
-  }
-
-  this.dirty = true;
-
   return this;
 };
 
@@ -2176,12 +1675,10 @@ EZ3.Matrix3.prototype.transpose = function(m) {
   this.elements[7] = a5;
   this.elements[8] = a8;
 
-  this.dirty = true;
-
   return this;
 };
 
-EZ3.Matrix3.prototype.setQuat = function(q) {
+EZ3.Matrix3.prototype.setFromQuaternion = function(q) {
   var x2 = 2 * q.x;
   var y2 = 2 * q.y;
   var z2 = 2 * q.z;
@@ -2205,13 +1702,11 @@ EZ3.Matrix3.prototype.setQuat = function(q) {
   this.elements[7] = yz + sx;
   this.elements[8] = 1 - xx - yy;
 
-  this.dirty = true;
-
   return this;
 };
 
 EZ3.Matrix3.prototype.invert = function(m) {
-  var e = (m !== undefined) ? m.elements : this.elements;
+  var e = (m instanceof EZ3.Matrix3) ? m.elements : this.elements;
   var a0 = e[0];
   var a3 = e[3];
   var a6 = e[6];
@@ -2238,8 +1733,6 @@ EZ3.Matrix3.prototype.invert = function(m) {
   this.elements[6] = dt * (a3 * a7 - a4 * a6);
   this.elements[7] = dt * (a1 * a6 - a0 * a7);
   this.elements[8] = dt * (a0 * a4 - a1 * a3);
-
-  this.dirty = true;
 
   return this;
 };
@@ -2279,24 +1772,22 @@ EZ3.Matrix3.prototype.normalFromMat4 = function(m) {
 
   det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
-  if (!det)
+  if (!det) {
+    console.warn('EZ3.Matrix3.inverse: determinant is zero.', m);
     return null;
+  }
 
   det = 1.0 / det;
 
   this.elements[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
   this.elements[1] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
   this.elements[2] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
-
   this.elements[3] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
   this.elements[4] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
   this.elements[5] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
-
   this.elements[6] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
   this.elements[7] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
   this.elements[8] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
-
-  this.dirty = true;
 
   return this;
 };
@@ -2348,59 +1839,56 @@ EZ3.Matrix3.prototype.toString = function() {
 };
 
 EZ3.Matrix3.prototype.testEqual = function(m) {
-  if(m instanceof EZ3.Matrix3) {
+  if (m instanceof EZ3.Matrix3) {
     return m.elements[0] === this.elements[0] &&
-           m.elements[1] === this.elements[1] &&
-           m.elements[2] === this.elements[2] &&
-           m.elements[3] === this.elements[3] &&
-           m.elements[4] === this.elements[4] &&
-           m.elements[5] === this.elements[5] &&
-           m.elements[6] === this.elements[6] &&
-           m.elements[7] === this.elements[7] &&
-           m.elements[8] === this.elements[8];
+      m.elements[1] === this.elements[1] &&
+      m.elements[2] === this.elements[2] &&
+      m.elements[3] === this.elements[3] &&
+      m.elements[4] === this.elements[4] &&
+      m.elements[5] === this.elements[5] &&
+      m.elements[6] === this.elements[6] &&
+      m.elements[7] === this.elements[7] &&
+      m.elements[8] === this.elements[8];
   } else
     return false;
 };
 
-EZ3.Matrix3.prototype.set = EZ3.Matrix3.prototype.init;
-
-Object.defineProperty(EZ3.Matrix3.prototype, 'elements', {
-  get: function() {
-    return this._elements;
-  },
-  set: function(e) {
-    this._elements = e;
-    this.dirty = true;
-  }
-});
+EZ3.Matrix3.prototype.testDiff = function(m) {
+  if(m) {
+    if(m instanceof EZ3.Matrix3) {
+      return !this.testEqual(m);
+    } else
+      console.warn('EZ3.Matrix3.testDiff: parameter is not a EZ3.Matrix3.', m);
+  } else
+    return true;
+};
 
 /**
  * @class Matrix4
  */
 
-EZ3.Matrix4 = function(e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, e30, e31, e32, e33) {
-  this._elements = [];
-  this.dirty = true;
+EZ3.Matrix4 = function(value) {
+  this.elements = null;
 
-  this.init(
-    e00 || 1, e01 || 0, e02 || 0, e03 || 0,
-    e10 || 0, e11 || 1, e12 || 0, e13 || 0,
-    e20 || 0, e21 || 0, e22 || 1, e23 || 0,
-    e30 || 0, e31 || 0, e32 || 0, e33 || 1
-  );
+  if (typeof value === 'number') {
+    this.elements = [
+      value, 0.0, 0.0, 0.0,
+      0.0, value, 0.0, 0.0,
+      0.0, 0.0, value, 0.0,
+      0.0, 0.0, 0.0, value
+    ];
+  } else if (value instanceof Array && value.length === 16) {
+    this.elements = [
+      value[0], value[1], value[2], value[3],
+      value[4], value[5], value[6], value[7],
+      value[8], value[9], value[10], value[11],
+      value[12], value[13], value[14], value[15]
+    ];
+  } else
+    this.identity();
 };
 
 EZ3.Matrix4.prototype.constructor = EZ3.Matrix4;
-
-EZ3.Matrix4.prototype.init = function(e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, e30, e31, e32, e33) {
-  this.elements = [
-    e00, e01, e02, e03,
-    e10, e11, e12, e13,
-    e20, e21, e22, e23,
-    e30, e31, e32, e33
-  ];
-  return this;
-};
 
 EZ3.Matrix4.prototype.transpose = function(m) {
   var e01;
@@ -2411,7 +1899,7 @@ EZ3.Matrix4.prototype.transpose = function(m) {
   var e23;
   var em;
 
-  if (m !== undefined) {
+  if (m instanceof EZ3.Matrix4) {
     em = m.elements;
 
     e01 = em[1];
@@ -2435,7 +1923,6 @@ EZ3.Matrix4.prototype.transpose = function(m) {
     this.elements[14] = e23;
   } else {
     em = this.elements;
-
     this.elements[0] = em[0];
     this.elements[1] = em[4];
     this.elements[2] = em[8];
@@ -2454,13 +1941,11 @@ EZ3.Matrix4.prototype.transpose = function(m) {
     this.elements[15] = em[15];
   }
 
-  this.dirty = true;
-
   return this;
 };
 
 EZ3.Matrix4.prototype.invert = function(m) {
-  var a = m.elements;
+  var a = (m instanceof EZ3.Matrix4) ? m.elements : this.elements;
   var a00 = a[0];
   var a01 = a[1];
   var a02 = a[2];
@@ -2493,8 +1978,10 @@ EZ3.Matrix4.prototype.invert = function(m) {
 
   det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
-  if (!det)
+  if (!det) {
+    console.warn('EZ3.Matrix4.invert: determinant is zero.', m);
     return null;
+  }
 
   det = 1.0 / det;
 
@@ -2515,12 +2002,10 @@ EZ3.Matrix4.prototype.invert = function(m) {
   this.elements[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
   this.elements[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
 
-  this.dirty = true;
-
   return this;
 };
 
-EZ3.Matrix4.prototype.mul = function(m1, m2) {
+EZ3.Matrix4.prototype.mul = function(m2, m1) {
   var em1;
   var em2;
   var a00;
@@ -2556,12 +2041,12 @@ EZ3.Matrix4.prototype.mul = function(m1, m2) {
   var b32;
   var b33;
 
-  if (m2 !== undefined) {
+  if (m1 instanceof EZ3.Matrix4) {
     em1 = m1.elements;
     em2 = m2.elements;
   } else {
-    em1 = this.elements;
-    em2 = m1.elements;
+    em1 = m2.elements;
+    em2 = this.elements;
   }
 
   a00 = em1[0];
@@ -2618,16 +2103,15 @@ EZ3.Matrix4.prototype.mul = function(m1, m2) {
   this.elements[14] = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32;
   this.elements[15] = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33;
 
-  this.dirty = true;
-
   return this;
 };
 
-EZ3.Matrix4.prototype.translate = function(m, v) {
-  var em = m.elements;
+EZ3.Matrix4.prototype.translate = function(v, m) {
+  var em = (m instanceof EZ3.Matrix4) ? m.elements : this.elements;
   var x = v.x;
   var y = v.y;
   var z = v.z;
+
   var a00 = em[0];
   var a01 = em[1];
   var a02 = em[2];
@@ -2658,16 +2142,14 @@ EZ3.Matrix4.prototype.translate = function(m, v) {
   this.elements[14] = a02 * x + a12 * y + a22 * z + this.elements[14];
   this.elements[15] = a03 * x + a13 * y + a23 * z + this.elements[15];
 
-  this.dirty = true;
-
   return this;
 };
 
-EZ3.Matrix4.prototype.scale = function(m, s) {
+EZ3.Matrix4.prototype.scale = function(s, m) {
   var x = s.x;
   var y = s.y;
   var z = s.z;
-  var em = m.elements;
+  var em = (m instanceof EZ3.Matrix4) ? m.elements : this.elements;
 
   this.elements[0] = em[0] * x;
   this.elements[1] = em[1] * x;
@@ -2686,12 +2168,10 @@ EZ3.Matrix4.prototype.scale = function(m, s) {
   this.elements[14] = em[14];
   this.elements[15] = em[15];
 
-  this.dirty = true;
-
   return this;
 };
 
-EZ3.Matrix4.prototype.setQuat = function(q) {
+EZ3.Matrix4.prototype.setFromQuaternion = function(q) {
   var x2 = 2 * q.x;
   var y2 = 2 * q.y;
   var z2 = 2 * q.z;
@@ -2701,33 +2181,31 @@ EZ3.Matrix4.prototype.setQuat = function(q) {
   var xy = q.x * y2;
   var yz = q.y * z2;
   var xz = q.x * z2;
-  var sx = q.s * x2;
-  var sy = q.s * y2;
-  var sz = q.s * z2;
+  var wx = q.w * x2;
+  var wy = q.w * y2;
+  var wz = q.w * z2;
 
-  this.elements[0] = 1 - yy - zz;
-  this.elements[1] = xy - sz;
-  this.elements[2] = xz + sy;
-  this.elements[3] = 0;
-  this.elements[4] = xy + sz;
-  this.elements[5] = 1 - xx - zz;
-  this.elements[6] = yz - sx;
-  this.elements[7] = 0;
-  this.elements[8] = xz - sy;
-  this.elements[9] = yz + sx;
-  this.elements[10] = 1 - xx - yy;
-  this.elements[11] = 0;
-  this.elements[12] = 0;
-  this.elements[13] = 0;
-  this.elements[14] = 0;
-  this.elements[15] = 1;
-
-  this.dirty = true;
+  this.elements[0] = 1.0 - yy - zz;
+  this.elements[1] = xy - wz;
+  this.elements[2] = xz + wy;
+  this.elements[3] = 0.0;
+  this.elements[4] = xy + wz;
+  this.elements[5] = 1.0 - xx - zz;
+  this.elements[6] = yz - wx;
+  this.elements[7] = 0.0;
+  this.elements[8] = xz - wy;
+  this.elements[9] = yz + wx;
+  this.elements[10] = 1.0 - xx - yy;
+  this.elements[11] = 0.0;
+  this.elements[12] = 0.0;
+  this.elements[13] = 0.0;
+  this.elements[14] = 0.0;
+  this.elements[15] = 1.0;
 
   return this;
 };
 
-EZ3.Matrix4.prototype.fromRotationTranslation = function(m, q, v) {
+EZ3.Matrix4.prototype.fromRotationTranslation = function(q, v) {
   var x2 = 2 * q.x;
   var y2 = 2 * q.y;
   var z2 = 2 * q.z;
@@ -2737,28 +2215,26 @@ EZ3.Matrix4.prototype.fromRotationTranslation = function(m, q, v) {
   var xy = q.x * y2;
   var yz = q.y * z2;
   var xz = q.x * z2;
-  var sx = q.s * x2;
-  var sy = q.s * y2;
-  var sz = q.s * z2;
+  var wx = q.w * x2;
+  var wy = q.w * y2;
+  var wz = q.w * z2;
 
-  this.elements[0] = 1 - yy - zz;
-  this.elements[1] = xy - sz;
-  this.elements[2] = xz + sy;
-  this.elements[3] = 0;
-  this.elements[4] = xy + sz;
-  this.elements[5] = 1 - xx - zz;
-  this.elements[6] = yz - sx;
-  this.elements[7] = 0;
-  this.elements[8] = xz - sy;
-  this.elements[9] = yz + sx;
-  this.elements[10] = 1 - xx - yy;
-  this.elements[11] = 0;
+  this.elements[0] = 1.0 - yy - zz;
+  this.elements[1] = xy - wz;
+  this.elements[2] = xz + wy;
+  this.elements[3] = 0.0;
+  this.elements[4] = xy + wz;
+  this.elements[5] = 1.0 - xx - zz;
+  this.elements[6] = yz - wx;
+  this.elements[7] = 0.0;
+  this.elements[8] = xz - wy;
+  this.elements[9] = yz + wx;
+  this.elements[10] = 1.0 - xx - yy;
+  this.elements[11] = 0.0;
   this.elements[12] = v.x;
   this.elements[13] = v.y;
   this.elements[14] = v.z;
-  this.elements[15] = 1;
-
-  this.dirty = true;
+  this.elements[15] = 1.0;
 
   return this;
 };
@@ -2783,8 +2259,6 @@ EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
   this.elements[13] = 0;
   this.elements[14] = (2 * far * near) * nf;
   this.elements[15] = 0;
-
-  this.dirty = true;
 
   return this;
 };
@@ -2811,34 +2285,30 @@ EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
   this.elements[14] = (far * near * 2) * nf;
   this.elements[15] = 0;
 
-  this.dirty = true;
-
   return this;
 };
 
 EZ3.Matrix4.prototype.ortho = function(left, right, bottom, top, near, far) {
-  var lr = 1 / (left - right);
-  var bt = 1 / (bottom - top);
-  var nf = 1 / (near - far);
+  var lr = 1.0 / (left - right);
+  var bt = 1.0 / (bottom - top);
+  var nf = 1.0 / (near - far);
 
-  this.elements[0] = -2 * lr;
-  this.elements[1] = 0;
-  this.elements[2] = 0;
-  this.elements[3] = 0;
-  this.elements[4] = 0;
-  this.elements[5] = -2 * bt;
-  this.elements[6] = 0;
-  this.elements[7] = 0;
-  this.elements[8] = 0;
-  this.elements[9] = 0;
-  this.elements[10] = 2 * nf;
-  this.elements[11] = 0;
+  this.elements[0] = -2.0 * lr;
+  this.elements[1] = 0.0;
+  this.elements[2] = 0.0;
+  this.elements[3] = 0.0;
+  this.elements[4] = 0.0;
+  this.elements[5] = -2.0 * bt;
+  this.elements[6] = 0.0;
+  this.elements[7] = 0.0;
+  this.elements[8] = 0.0;
+  this.elements[9] = 0.0;
+  this.elements[10] = 2.0 * nf;
+  this.elements[11] = 0.0;
   this.elements[12] = (left + right) * lr;
   this.elements[13] = (top + bottom) * bt;
   this.elements[14] = (far + near) * nf;
-  this.elements[15] = 1;
-
-  this.dirty = true;
+  this.elements[15] = 1.0;
 
   return this;
 };
@@ -2943,8 +2413,6 @@ EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
   this.elements[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
   this.elements[15] = 1;
 
-  this.dirty = true;
-
   return this;
 };
 
@@ -3024,7 +2492,6 @@ EZ3.Matrix4.prototype.copy = function(m) {
   this.elements[13] = m.elements[13];
   this.elements[14] = m.elements[14];
   this.elements[15] = m.elements[15];
-  this.dirty = true;
 
   return this;
 };
@@ -3054,60 +2521,41 @@ EZ3.Matrix4.prototype.toString = function() {
 };
 
 EZ3.Matrix4.prototype.testEqual = function(m) {
-  if(m instanceof EZ3.Matrix4) {
-    return m.elements[0] === this.elements[0] &&
-           m.elements[1] === this.elements[1] &&
-           m.elements[2] === this.elements[2] &&
-           m.elements[3] === this.elements[3] &&
-           m.elements[4] === this.elements[4] &&
-           m.elements[5] === this.elements[5] &&
-           m.elements[6] === this.elements[6] &&
-           m.elements[7] === this.elements[7] &&
-           m.elements[8] === this.elements[8] &&
-           m.elements[9] === this.elements[9] &&
-           m.elements[10] === this.elements[10] &&
-           m.elements[11] === this.elements[11] &&
-           m.elements[12] === this.elements[12] &&
-           m.elements[13] === this.elements[13] &&
-           m.elements[14] === this.elements[14] &&
-           m.elements[15] === this.elements[15];
+  if(m) {
+    if(m instanceof EZ3.Matrix4) {
+      return m.elements[0] === this.elements[0] &&
+             m.elements[1] === this.elements[1] &&
+             m.elements[2] === this.elements[2] &&
+             m.elements[3] === this.elements[3] &&
+             m.elements[4] === this.elements[4] &&
+             m.elements[5] === this.elements[5] &&
+             m.elements[6] === this.elements[6] &&
+             m.elements[7] === this.elements[7] &&
+             m.elements[8] === this.elements[8] &&
+             m.elements[9] === this.elements[9] &&
+             m.elements[10] === this.elements[10] &&
+             m.elements[11] === this.elements[11] &&
+             m.elements[12] === this.elements[12] &&
+             m.elements[13] === this.elements[13] &&
+             m.elements[14] === this.elements[14] &&
+             m.elements[15] === this.elements[15];
+    } else {
+      console.warn('EZ3.Matrix4.testEqual: parameter is not a EZ3.Matrix4.', m);
+      return false;
+    }
   } else
     return false;
 };
 
 EZ3.Matrix4.prototype.testDiff = function(m) {
-  if(m instanceof EZ3.Matrix4) {
-    return m.elements[0] !== this.elements[0] ||
-           m.elements[1] !== this.elements[1] ||
-           m.elements[2] !== this.elements[2] ||
-           m.elements[3] !== this.elements[3] ||
-           m.elements[4] !== this.elements[4] ||
-           m.elements[5] !== this.elements[5] ||
-           m.elements[6] !== this.elements[6] ||
-           m.elements[7] !== this.elements[7] ||
-           m.elements[8] !== this.elements[8] ||
-           m.elements[9] !== this.elements[9] ||
-           m.elements[10] !== this.elements[10] ||
-           m.elements[11] !== this.elements[11] ||
-           m.elements[12] !== this.elements[12] ||
-           m.elements[13] !== this.elements[13] ||
-           m.elements[14] !== this.elements[14] ||
-           m.elements[15] !== this.elements[15];
+  if(m) {
+    if(m instanceof EZ3.Matrix4) {
+      return !this.testEqual(m);
+    } else
+      console.warn('EZ3.Matrix4.testDiff: parameter is not a EZ3.Matrix4.', m);
   } else
-    return false;
+    return true;
 };
-
-EZ3.Matrix4.prototype.set = EZ3.Matrix4.prototype.init;
-
-Object.defineProperty(EZ3.Matrix4.prototype, 'elements', {
-  get: function() {
-    return this._elements;
-  },
-  set: function(e) {
-    this._elements = e;
-    this.dirty = true;
-  }
-});
 
 /**
  * @class Plane
@@ -3117,110 +2565,57 @@ Object.defineProperty(EZ3.Matrix4.prototype, 'elements', {
  * @class Quaternion
  */
 
-EZ3.Quaternion = function(s, x, y, z) {
-  this.s = (s !== undefined) ? s : 1;
+EZ3.Quaternion = function(x, y, z, w) {
   this.x = x || 0;
   this.y = y || 0;
   this.z = z || 0;
-  this.dirty = true;
+  this.w = (w !== undefined) ? w : 1.0;
 };
 
 EZ3.Quaternion.prototype.constructor = EZ3.Quaternion;
 
-EZ3.Quaternion.prototype.init = function(s, x, y, z) {
-  this.s = (s !== undefined) ? s : 1;
-  this.x = x || 0;
-  this.y = y || 0;
-  this.z = z || 0;
-
-  return this;
-};
-
 EZ3.Quaternion.prototype.add = function(q1, q2) {
-  if (q2 !== undefined) {
-    this.s = q1.s + q2.s;
+  if (q2 instanceof EZ3.Quaternion) {
+    this.w = q1.w + q2.w;
     this.x = q1.x + q2.x;
     this.y = q1.y + q2.y;
     this.z = q1.z + q2.z;
   } else {
-    this.s += q1.s;
+    this.w += q1.w;
     this.x += q1.x;
     this.y += q1.y;
     this.z += q1.z;
   }
-
-  return this;
-};
-
-EZ3.Quaternion.prototype.addTime = function(v, t) {
-  var x;
-  var y;
-  var z;
-  var qs;
-  var qx;
-  var qy;
-  var qz;
-  var ns;
-  var nx;
-  var ny;
-  var nz;
-  var s;
-
-  x = v.x;
-  y = v.y;
-  z = v.z;
-
-  qs = this.s;
-  qx = this.x;
-  qy = this.y;
-  qz = this.z;
-
-  t *= 0.5;
-
-  ns = (-x * qx - y * qy - z * qz) * t;
-  nx = (x * qs + y * qz - z * qy) * t;
-  ny = (-x * qz + y * qs + z * qx) * t;
-  nz = (x * qy - y * qx + z * qs) * t;
-
-  qs += ns;
-  qx += nx;
-  qy += ny;
-  qz += nz;
-
-  s = 1 / Math.sqrt(qs * qs + qx * qx + qy * qy + qz * qz);
-
-  this.s = qs * s;
-  this.x = qx * s;
-  this.y = qy * s;
-  this.z = qz * s;
-
   return this;
 };
 
 EZ3.Quaternion.prototype.sub = function(q1, q2) {
-  if (q2 !== undefined) {
-    this.s = q1.s - q2.s;
+  if (q2 instanceof EZ3.Quaternion) {
+    this.w = q1.w - q2.w;
     this.x = q1.x - q2.x;
     this.y = q1.y - q2.y;
     this.z = q1.z - q2.z;
   } else {
-    this.s -= q1.s;
+    this.w -= q1.w;
     this.x -= q1.x;
     this.y -= q1.y;
     this.z -= q1.z;
   }
-
-  this.dirty = true;
-
   return this;
 };
 
-EZ3.Quaternion.prototype.scale = function(q, s) {
-  this.s = q.s * s;
-  this.x = q.x * s;
-  this.y = q.y * s;
-  this.z = q.z * s;
-
+EZ3.Quaternion.prototype.scale = function(s, q) {
+  if(q instanceof EZ3.Quaternion) {
+    this.x = q.x * s;
+    this.y = q.y * s;
+    this.z = q.z * s;
+    this.w = q.w * s;
+  } else {
+    this.x *= s;
+    this.y *= s;
+    this.z *= s;
+    this.w *= s;
+  }
   return this;
 };
 
@@ -3228,83 +2623,33 @@ EZ3.Quaternion.prototype.mul = function(q1, q2) {
   var ax;
   var ay;
   var az;
-  var as;
+  var aw;
   var bx;
   var by;
   var bz;
-  var bs;
+  var bw;
 
   ax = q1.x;
   ay = q1.y;
   az = q1.z;
-  as = q1.s;
+  aw = q1.w;
 
-  if (q2 !== undefined) {
+  if (q2 instanceof EZ3.Quaternion) {
     bx = q2.x;
     by = q2.y;
     bz = q2.z;
-    bs = q2.s;
+    bw = q2.w;
   } else {
     bx = this.x;
     by = this.y;
     bz = this.z;
-    bs = this.s;
+    bw = this.w;
   }
 
-  this.s = as * bs - ax * bx - ay * by - az * bz;
-  this.x = ax * bs + as * bx + ay * bz - az * by;
-  this.y = ay * bs + as * by + az * bx - ax * bz;
-  this.z = az * bs + as * bz + ax * by - ay * bx;
-
-  return this;
-};
-
-EZ3.Quaternion.prototype.arc = function(v1, v2) {
-  var x1;
-  var y1;
-  var z1;
-  var x2;
-  var y2;
-  var z2;
-  var cx;
-  var cy;
-  var cz;
-  var d;
-
-  x1 = v1.x;
-  y1 = v1.y;
-  z1 = v1.z;
-
-  x2 = v2.x;
-  y2 = v2.y;
-  z2 = v2.z;
-
-  d = x1 * x2 + y1 * y2 + z1 * z2;
-
-  if (d === -1) {
-    x2 = y1 * x1 - z1 * z1;
-    y2 = -z1 * y1 - x1 * x1;
-    z2 = x1 * z1 + y1 * y1;
-
-    d = 1 / Math.sqrt(x2 * x2 + y2 * y2 + z2 * z2);
-
-    this.s = 0;
-    this.x = x2 * d;
-    this.y = y2 * d;
-    this.z = z2 * d;
-  } else {
-    cx = y1 * z2 - z1 * y2;
-    cy = z1 * x2 - x1 * z2;
-    cz = x1 * y2 - y1 * x2;
-
-    this.s = Math.sqrt((1 + d) * 0.5);
-
-    d = 0.5 / this.s;
-
-    this.x = cx * d;
-    this.y = cy * d;
-    this.z = cz * d;
-  }
+  this.x = ax * bw + aw * bx + ay * bz - az * by;
+  this.y = ay * bw + aw * by + az * bx - ax * bz;
+  this.z = az * bw + aw * bz + ax * by - ay * bx;
+  this.w = aw * bw - ax * bx - ay * by - az * bz;
 
   return this;
 };
@@ -3316,75 +2661,77 @@ EZ3.Quaternion.prototype.normalize = function(q) {
   var y2;
   var z2;
 
-  if (q !== undefined) {
-    len = Math.sqrt(q.s * q.s + q.x * q.x + q.y * q.y + q.z * q.z);
+  if (q instanceof EZ3.Quaternion) {
+    len = Math.sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
 
-    if (len > 0)
+    if (len > 0.0) {
       len = 1.0 / len;
+      q.scale(len);
 
-    this.s = q.s * len;
-    this.x = q.x * len;
-    this.y = q.y * len;
-    this.z = q.z * len;
+      this.x = q.x;
+      this.y = q.y;
+      this.z = q.z;
+      this.w = q.w;
+    } else
+      console.log('EZ3.Quaterion Error: Quaternion Length is Zero\n\n');
+
   } else {
-
-    s2 = this.s * this.s;
     x2 = this.x * this.x;
     y2 = this.y * this.y;
     z2 = this.z * this.z;
+    s2 = this.w * this.w;
 
     len = Math.sqrt(s2 + x2 + y2 + z2);
 
-    if (len > 0)
+    if (len > 0.0) {
       len = 1.0 / len;
-
-    this.s = this.s * len;
-    this.x = this.x * len;
-    this.y = this.y * len;
-    this.z = this.z * len;
+      this.scale(len);
+    } else
+      console.log('EZ3.Quaterion Error: Quaternion Length is Zero\n\n');
   }
   return this;
 };
 
 EZ3.Quaternion.prototype.invert = function(q) {
-  if(q !== undefined) {
-    this.s = q.s;
+  if(q instanceof EZ3.Quaternion) {
     this.x = -q.x;
     this.y = -q.y;
     this.z = -q.z;
+    this.w = q.w;
   } else {
-    this.s = +this.s;
     this.x = -this.x;
     this.y = -this.y;
     this.z = -this.z;
+    this.w = this.w;
   }
   return this;
 };
 
 EZ3.Quaternion.prototype.length = function() {
-  var s2 = this.s * this.s;
   var x2 = this.x * this.x;
   var y2 = this.y * this.y;
   var z2 = this.z * this.z;
+  var s2 = this.w * this.w;
 
   return Math.sqrt(s2 + x2 + y2 + z2);
 };
 
 EZ3.Quaternion.prototype.testDiff = function(q) {
-  var ds = (this.s !== q.s);
   var dx = (this.x !== q.x);
   var dy = (this.y !== q.y);
   var dz = (this.z !== q.z);
+  var dw = (this.w !== q.w);
 
-  return (ds || dx || dy || dz);
+  return (dx || dy || dz || dw);
 };
 
 EZ3.Quaternion.prototype.fromAxisAngle = function(axis, angle) {
   var sin2 = Math.sin(0.5 * angle);
+
   this.x = sin2 * axis.x;
   this.y = sin2 * axis.y;
   this.z = sin2 * axis.z;
-  this.s = Math.cos(0.5 * angle);
+  this.w = Math.cos(0.5 * angle);
 
   return this;
 };
@@ -3401,15 +2748,15 @@ EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
   var wx2;
   var xx2;
 
-  if(q) {
+  if(q instanceof EZ3.Quaternion) {
     yy2 = 2.0 * q.y * q.y;
     xy2 = 2.0 * q.x * q.y;
     xz2 = 2.0 * q.x * q.z;
     yz2 = 2.0 * q.y * q.z;
     zz2 = 2.0 * q.z * q.z;
-    wz2 = 2.0 * q.s * q.z;
-    wy2 = 2.0 * q.s * q.y;
-    wx2 = 2.0 * q.s * q.x;
+    wz2 = 2.0 * q.w * q.z;
+    wy2 = 2.0 * q.w * q.y;
+    wx2 = 2.0 * q.w * q.x;
     xx2 = 2.0 * q.x * q.x;
   } else {
     yy2 = 2.0 * this.y * this.y;
@@ -3417,20 +2764,18 @@ EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
     xz2 = 2.0 * this.x * this.z;
     yz2 = 2.0 * this.y * this.z;
     zz2 = 2.0 * this.z * this.z;
-    wz2 = 2.0 * this.s * this.z;
-    wy2 = 2.0 * this.s * this.y;
-    wx2 = 2.0 * this.s * this.x;
+    wz2 = 2.0 * this.w * this.z;
+    wy2 = 2.0 * this.w * this.y;
+    wx2 = 2.0 * this.w * this.x;
     xx2 = 2.0 * this.x * this.x;
   }
 
   matrix.elements[0] = - yy2 - zz2 + 1.0;
   matrix.elements[1] = xy2 - mode * wz2;
   matrix.elements[2] = xz2 + mode * wy2;
-
   matrix.elements[3] = xy2 + mode * wz2;
   matrix.elements[4] = - xx2 - zz2 + 1.0;
   matrix.elements[5] = yz2 - mode * wx2;
-
   matrix.elements[6] = xz2 - mode * wy2;
   matrix.elements[7] = yz2 + mode * wx2;
   matrix.elements[8] = - xx2 - yy2 + 1.0;
@@ -3439,65 +2784,25 @@ EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
 };
 
 EZ3.Quaternion.prototype.copy = function(q) {
-  this.s = q.s;
   this.x = q.x;
   this.y = q.y;
   this.z = q.z;
+  this.w = q.w;
   return this;
 };
 
 EZ3.Quaternion.prototype.clone = function() {
-  return new EZ3.Quaternion(this.s, this.x, this.y, this.z);
+  return new EZ3.Quaternion(this.w, this.x, this.y, this.z);
 };
 
 EZ3.Quaternion.prototype.toString = function() {
   var x = this.x.toFixed(4);
   var y = this.y.toFixed(4);
   var z = this.z.toFixed(4);
-  var s = this.s.toFixed(4);
+  var w = this.w.toFixed(4);
 
-  return 'Quaternion[' + s + ', ' + x + ', ' + y + ', ' + z + ' ]';
+  return 'Quaternion[' + x + ', ' + y + ', ' + z + ', ' + w + ' ]';
 };
-
-Object.defineProperty(EZ3.Quaternion.prototype, 's', {
-  get: function() {
-    return this._s;
-  },
-  set: function(s) {
-    this._s = s;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Quaternion.prototype, 'x', {
-  get: function() {
-    return this._x;
-  },
-  set: function(x) {
-    this._x = x;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Quaternion.prototype, 'y', {
-  get: function() {
-    return this._y;
-  },
-  set: function(y) {
-    this._y = y;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Quaternion.prototype, 'z', {
-  get: function() {
-    return this._z;
-  },
-  set: function(z) {
-    this._z = z;
-    this.dirty = true;
-  }
-});
 
 EZ3.Quaternion.NORMAL = 1.0;
 EZ3.Quaternion.INVERSE = -1.0;
@@ -3507,14 +2812,34 @@ EZ3.Quaternion.INVERSE = -1.0;
  */
 
 EZ3.Vector2 = function(x, y) {
-  this._x = x || 0;
-  this._y = y || 0;
-  this.dirty = true;
+  if(typeof x === 'number') {
+    this.x = x;
+    this.y = (typeof y === 'number') ? y : x;
+  } else {
+    this.x = 0.0;
+    this.y = 0.0;
+  }
 };
 
-EZ3.Vector2.prototype.init = function(x, y) {
-  this.x = x || 0;
-  this.y = y || 0;
+EZ3.Vector2.prototype.add = function(v1, v2) {
+  if(v2 instanceof EZ3.Vector2) {
+    this.x = v1.x + v2.x;
+    this.y = v1.y + v2.y;
+  } else {
+    this.x += v1.x;
+    this.y += v1.y;
+  }
+  return this;
+};
+
+EZ3.Vector2.prototype.sub = function(v1, v2) {
+  if(v2 instanceof EZ3.Vector2) {
+    this.x = v1.x - v2.x;
+    this.y = v1.y - v2.y;
+  } else {
+    this.x -= v1.x;
+    this.y -= v1.y;
+  }
   return this;
 };
 
@@ -3524,74 +2849,28 @@ EZ3.Vector2.prototype.set = function(x, y) {
   return this;
 };
 
-EZ3.Vector2.prototype.add = function(v1, v2) {
-  this.x = v1.x + v2.x;
-  this.y = v1.y + v2.y;
-  return this;
-};
-
-EZ3.Vector2.prototype.addEqual = function(v) {
-  this.x += v.x;
-  this.y += v.y;
-  return this;
-};
-
-EZ3.Vector2.prototype.sub = function(v1, v2) {
-  this.x = v1.x - v2.x;
-  this.y = v1.y - v2.y;
-  return this;
-};
-
-EZ3.Vector2.prototype.subEqual = function(v) {
-  this.x -= v.x;
-  this.y -= v.y;
-  return this;
-};
-
-EZ3.Vector2.prototype.addScale = function(v, s) {
-  this.x += v.x * s;
-  this.y += v.y * s;
-  return this;
-};
-
-EZ3.Vector2.prototype.scale = function(v, s) {
-  this.x = v.x * s;
-  this.y = v.y * s;
-  return this;
-};
-
-EZ3.Vector2.prototype.scaleEqual = function(s) {
-  this.x *= s;
-  this.y *= s;
-  return this;
-};
-
-EZ3.Vector2.prototype.div = function(v1, v2) {
-  if (!v2.hasZero()) {
-    this.x = v1.x / v2.x;
-    this.y = v1.y / v2.y;
-  }
-  return this;
-};
-
-EZ3.Vector2.prototype.divEqual = function(v) {
-  if (!v.hasZero()) {
-    this.x /= v.x;
-    this.y /= v.y;
-    this.z /= v.z;
+EZ3.Vector2.prototype.scale = function(s, v) {
+  if(s === Number(s)) {
+    if(v instanceof EZ3.Vector2) {
+      this.x = v.x * s;
+      this.y = v.y * s;
+    } else {
+      this.x *= s;
+      this.y *= s;
+    }
   }
   return this;
 };
 
 EZ3.Vector2.prototype.dot = function(v1, v2) {
-  if (v2 !== undefined)
+  if (v2 instanceof EZ3.Vector2)
     return v1.x * v2.x + v1.y * v2.y;
   else
     return this.x * v1.x + this.y * v1.y;
 };
 
 EZ3.Vector2.prototype.max = function(v1, v2) {
-  if (v2 !== undefined) {
+  if (v2 instanceof EZ3.Vector2) {
     this.x = (v1.x > v2.x) ? v1.x : v2.x;
     this.y = (v1.y > v2.y) ? v1.y : v2.y;
   } else {
@@ -3605,7 +2884,7 @@ EZ3.Vector2.prototype.max = function(v1, v2) {
 };
 
 EZ3.Vector2.prototype.min = function(v1, v2) {
-  if (v2 !== undefined) {
+  if (v2 instanceof EZ3.Vector2) {
     this.x = (v1.x < v2.x) ? v1.x : v2.x;
     this.y = (v1.y < v2.y) ? v1.y : v2.y;
   } else {
@@ -3619,7 +2898,7 @@ EZ3.Vector2.prototype.min = function(v1, v2) {
 };
 
 EZ3.Vector2.prototype.length = function(v) {
-  if (v !== undefined)
+  if (v instanceof EZ3.Vector2)
     return Math.sqrt(v.dot(v));
   else
     return Math.sqrt(this.dot(this));
@@ -3628,28 +2907,30 @@ EZ3.Vector2.prototype.length = function(v) {
 EZ3.Vector2.prototype.normalize = function(v) {
   var l;
 
-  if (v !== undefined) {
+  if (v instanceof EZ3.Vector2) {
     l = v.length();
 
     if (l > 0) {
       l = 1.0 / l;
-      this.x = v.x * l;
-      this.y = v.y * l;
-    }
+      v.scale(l);
+      this.x = v.x;
+      this.y = v.y;
+    } else
+      console.error('EZ3.Vector2.normalize: length is zero.', v);
   } else {
     l = this.length();
 
     if (l > 0) {
       l = 1.0 / l;
-      this.x *= l;
-      this.y *= l;
-    }
+      this.scale(l);
+    } else
+      console.error('EZ3.Vector2.normalize: length is zero.', this);
   }
   return this;
 };
 
 EZ3.Vector2.prototype.invert = function(v) {
-  if (v !== undefined) {
+  if (v instanceof EZ3.Vector2) {
     this.x = -v.x;
     this.y = -v.y;
   } else {
@@ -3675,70 +2956,79 @@ EZ3.Vector2.prototype.toArray = function() {
 
 EZ3.Vector2.prototype.testEqual = function(v) {
   if(v instanceof EZ3.Vector2)
-    return ((this.x === v.x) && (this.y === v.y));
-  else
+    return (this.x === v.x) && (this.y === v.y);
+  else {
+    console.error('EZ3.Vector2.testEqual: parameter is not s EZ3.Vector2.', v);
     return false;
+  }
 };
 
 EZ3.Vector2.prototype.hasZero = function(v) {
-  if (v !== undefined)
-    return ((v.x === 0.0) || (v.y === 0.0));
+  if (v instanceof EZ3.Vector2)
+    return (v.x === 0.0) || (v.y === 0.0);
   else
-    return ((this.x === 0.0) || (this.y === 0.0));
+    return (this.x === 0.0) || (this.y === 0.0);
 };
 
 EZ3.Vector2.prototype.testZero = function(v) {
-  if (v !== undefined)
+  if (v instanceof EZ3.Vector2)
     return ((v.x === 0.0) && (v.y === 0.0));
   else
     return ((this.x === 0.0) && (this.y === 0.0));
 };
 
 EZ3.Vector2.prototype.testDiff = function(v) {
-  return ((this.x !== v.x) && (this.y !== v.y));
+  if(v instanceof EZ3.Vector2)
+    return !this.testEqual(v);
+  else
+    console.error('EZ3.Vector2.testDiff: not EZ3.Vector2 given.', v);
 };
 
 EZ3.Vector2.prototype.toString = function() {
   return 'Vector2[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ']';
 };
 
-Object.defineProperty(EZ3.Vector2.prototype, 'x', {
-  get: function() {
-    return this._x;
-  },
-  set: function(x) {
-    this._x = x;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Vector2.prototype, 'y', {
-  get: function() {
-    return this._y;
-  },
-  set: function(y) {
-    this._y = y;
-    this.dirty = true;
-  }
-});
-
 /**
  * @class Vector3
  */
 
 EZ3.Vector3 = function(x, y, z) {
-  this._x = x || 0;
-  this._y = y || 0;
-  this._z = z || 0;
-  this.dirty = true;
+  if (typeof x === 'number') {
+    this.x = x;
+    this.y = (typeof y === 'number') ? y : x;
+    this.z = (typeof z === 'number') ? z : x;
+  } else {
+    this.x = 0.0;
+    this.y = 0.0;
+    this.z = 0.0;
+  }
 };
 
 EZ3.Vector3.prototype.constructor = EZ3.Vector3;
 
-EZ3.Vector3.prototype.init = function(x, y, z) {
-  this.x = x || 0;
-  this.y = y || 0;
-  this.z = z || 0;
+EZ3.Vector3.prototype.add = function(v1, v2) {
+  if (v2 instanceof EZ3.Vector3) {
+    this.x = v1.x + v2.x;
+    this.y = v1.y + v2.y;
+    this.z = v1.z + v2.z;
+  } else {
+    this.x += v1.x;
+    this.y += v1.y;
+    this.z += v1.z;
+  }
+  return this;
+};
+
+EZ3.Vector3.prototype.sub = function(v1, v2) {
+  if (v2 instanceof EZ3.Vector3) {
+    this.x = v1.x - v2.x;
+    this.y = v1.y - v2.y;
+    this.z = v1.z - v2.z;
+  } else {
+    this.x -= v1.x;
+    this.y -= v1.y;
+    this.z -= v1.z;
+  }
   return this;
 };
 
@@ -3749,82 +3039,21 @@ EZ3.Vector3.prototype.set = function(x, y, z) {
   return this;
 };
 
-EZ3.Vector3.prototype.add = function(v1, v2) {
-  this.x = v1.x + v2.x;
-  this.y = v1.y + v2.y;
-  this.z = v1.z + v2.z;
-  return this;
-};
-
-EZ3.Vector3.prototype.addEqual = function(v) {
-  this.x += v.x;
-  this.y += v.y;
-  this.z += v.z;
-  return this;
-};
-
-EZ3.Vector3.prototype.sub = function(v1, v2) {
-  this.x = v1.x - v2.x;
-  this.y = v1.y - v2.y;
-  this.z = v1.z - v2.z;
-  return this;
-};
-
-EZ3.Vector3.prototype.subEqual = function(v) {
-  this.x -= v.x;
-  this.y -= v.y;
-  this.z -= v.z;
-  return this;
-};
-
-EZ3.Vector3.prototype.addScale = function(v, s) {
-  this.x += v.x * s;
-  this.y += v.y * s;
-  this.z += v.z * s;
-};
-
-EZ3.Vector3.prototype.scale = function(v, s) {
-  this.x = v.x * s;
-  this.y = v.y * s;
-  this.z = v.z * s;
-  return this;
-};
-
-EZ3.Vector3.prototype.scaleEqual = function(s) {
-  this.x *= s;
-  this.y *= s;
-  this.z *= s;
-  return this;
-};
-
-EZ3.Vector3.prototype.div = function(v1, v2) {
-  if (v2 !== undefined) {
-    if (!v2.hasZero()) {
-      this.x = v1.x / v2.x;
-      this.y = v1.y / v2.y;
-      this.z = v1.z / v2.z;
-    }
+EZ3.Vector3.prototype.scale = function(s, v) {
+  if (v instanceof EZ3.Vector3) {
+    this.x = v.x * s;
+    this.y = v.y * s;
+    this.z = v.z * s;
   } else {
-    if (!v1.hasZero()) {
-      this.x = this.x / v1.x;
-      this.y = this.y / v1.y;
-      this.z = this.z / v1.z;
-    }
-  }
-  return this;
-};
-
-EZ3.Vector3.prototype.divEqual = function(v) {
-  if (!v.hasZero()) {
-    this.x /= v.x;
-    this.y /= v.y;
-    this.z /= v.z;
+    this.x *= s;
+    this.y *= s;
+    this.z *= s;
   }
   return this;
 };
 
 EZ3.Vector3.prototype.dot = function(v1, v2) {
-  if (v2 !== undefined)
+  if (v2 instanceof EZ3.Vector3)
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
   else
     return this.x * v1.x + this.y * v1.y + this.z * v1.z;
@@ -3866,24 +3095,12 @@ EZ3.Vector3.prototype.min = function(v1, v2) {
   return this;
 };
 
-EZ3.Vector3.prototype.len = function() {
-  return this.x * this.x + this.y * this.y + this.z * this.z;
-};
-
-EZ3.Vector3.prototype.mul = function(o, v, m) {
-  var e = m.elements;
-  this.x = o.x + v.x * e[0] + v.y * e[1] + v.z * e[2];
-  this.y = o.y + v.x * e[3] + v.y * e[4] + v.z * e[5];
-  this.z = o.z + v.x * e[6] + v.y * e[7] + v.z * e[8];
-  return this;
-};
-
 EZ3.Vector3.prototype.cross = function(v1, v2) {
   var x;
   var y;
   var z;
 
-  if (v2 !== undefined) {
+  if (v2 instanceof EZ3.Vector3) {
     x = v1.y * v2.z - v1.z * v2.y;
     y = v1.z * v2.x - v1.x * v2.z;
     z = v1.x * v2.y - v1.y * v2.x;
@@ -3900,51 +3117,58 @@ EZ3.Vector3.prototype.cross = function(v1, v2) {
   return this;
 };
 
-EZ3.Vector3.prototype.mulMat = function(m, v) {
-  var e = m.elements;
+EZ3.Vector3.prototype.mulMat3 = function(m, v) {
+  var e;
   var x;
   var y;
   var z;
 
-  if (v !== undefined) {
-    x = v.x;
-    y = v.y;
-    z = v.z;
+  if (m instanceof EZ3.Matrix3) {
+    e = m.elements;
+
+    if (v instanceof EZ3.Vector3) {
+      x = v.x;
+      y = v.y;
+      z = v.z;
+    } else {
+      x = this.x;
+      y = this.y;
+      z = this.z;
+    }
+
+    this.x = x * e[0] + y * e[3] + z * e[6];
+    this.y = x * e[1] + y * e[4] + z * e[7];
+    this.z = x * e[2] + y * e[5] + z * e[8];
+
+    return this;
   } else {
-    x = this.x;
-    y = this.y;
-    z = this.z;
+    console.warn('EZ3.Vector3.mulMat3: parameter is not a EZ3.Matrix3.', m);
+    return null;
   }
-
-  this.x = x * e[0] + y * e[1] + z * e[2];
-  this.y = x * e[3] + y * e[4] + z * e[5];
-  this.z = x * e[6] + y * e[7] + z * e[8];
-
-  return this;
 };
 
-EZ3.Vector3.prototype.applyQuaternion = function(q) {
+EZ3.Vector3.prototype.mulQuaternion = function(q) {
   var x = this.x;
   var y = this.y;
   var z = this.z;
   var qx = q.x;
   var qy = q.y;
   var qz = q.z;
-  var qs = q.s;
-  var ix = qs * x + qy * z - qz * y;
-  var iy = qs * y + qz * x - qx * z;
-  var iz = qs * z + qx * y - qy * x;
+  var qw = q.w;
+  var ix = qw * x + qy * z - qz * y;
+  var iy = qw * y + qz * x - qx * z;
+  var iz = qw * z + qx * y - qy * x;
   var iw = -qx * x - qy * y - qz * z;
 
-  this.x = ix * qs + iw * -qx + iy * -qz - iz * -qy;
-  this.y = iy * qs + iw * -qy + iz * -qx - ix * -qz;
-  this.z = iz * qs + iw * -qz + ix * -qy - iy * -qx;
+  this.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
+  this.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
+  this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
 
   return this;
 };
 
 EZ3.Vector3.prototype.length = function(v) {
-  if (v !== undefined)
+  if (v instanceof EZ3.Vector3)
     return Math.sqrt(v.dot(v));
   else
     return Math.sqrt(this.dot(this));
@@ -3953,33 +3177,33 @@ EZ3.Vector3.prototype.length = function(v) {
 EZ3.Vector3.prototype.normalize = function(v) {
   var l;
 
-  if (v !== undefined) {
-
+  if (v instanceof EZ3.Vector3) {
     l = v.length();
 
     if (l > 0) {
-      l = 1.0 / l;
-      this.x = v.x * l;
-      this.y = v.y * l;
-      this.z = v.z * l;
-    }
-  } else {
+      v.scale(1.0 / l);
 
+      this.x = v.x;
+      this.y = v.y;
+      this.z = v.z;
+
+      return this;
+    } /*else
+      console.warn('EZ3.Vector3.normalize: length is zero.', v);*/
+  } else {
     l = this.length();
 
     if (l > 0) {
-      l = 1.0 / l;
-      this.x *= l;
-      this.y *= l;
-      this.z *= l;
-    }
-  }
+      this.scale(1.0 / l);
 
-  return this;
+      return this;
+    } else
+      console.warn('EZ3.Vector3.normalize: length is zero.', this);
+  }
 };
 
 EZ3.Vector3.prototype.invert = function(v) {
-  if (v !== undefined) {
+  if (v instanceof EZ3.Vector3) {
     this.x = -v.x;
     this.y = -v.y;
     this.z = -v.z;
@@ -4007,28 +3231,41 @@ EZ3.Vector3.prototype.toArray = function() {
 };
 
 EZ3.Vector3.prototype.testEqual = function(v) {
-  if(v instanceof EZ3.Vector3)
-    return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z));
-  else
+  if(v) {
+    if (v instanceof EZ3.Vector3)
+      return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
+    else {
+      console.warn('EZ3.Vector3.testEqual: parameter is not s EZ3.Vector3.', v);
+      return false;
+    }
+  } else
     return false;
 };
 
 EZ3.Vector3.prototype.hasZero = function(v) {
-  if (v !== undefined)
-    return ((v.x === 0.0) || (v.y === 0.0) || (v.z === 0.0));
+  if (v instanceof EZ3.Vector3)
+    return (v.x === 0.0) || (v.y === 0.0) || (v.z === 0.0);
   else
-    return ((this.x === 0.0) || (this.y === 0.0) || (this.z === 0.0));
+    return (this.x === 0.0) || (this.y === 0.0) || (this.z === 0.0);
 };
 
 EZ3.Vector3.prototype.testZero = function(v) {
-  if (v !== undefined)
-    return ((v.x === 0.0) && (v.y === 0.0) && (v.z === 0.0));
+  if (v instanceof EZ3.Vector3)
+    return (v.x === 0.0) && (v.y === 0.0) && (v.z === 0.0);
   else
-    return ((this.x === 0.0) && (this.y === 0.0) && (this.z === 0.0));
+    return (this.x === 0.0) && (this.y === 0.0) && (this.z === 0.0);
 };
 
 EZ3.Vector3.prototype.testDiff = function(v) {
-  return ((this.x !== v.x) || (this.y !== v.y) || (this.z !== v.z));
+  if(v) {
+    if (v instanceof EZ3.Vector3)
+      return !this.testEqual(v);
+    else {
+      console.warn('EZ3.Vector3.testDiff: parameter is not a EZ3.Vector3.', v);
+      return true;
+    }
+  } else
+    return true;
 };
 
 EZ3.Vector3.prototype.toString = function() {
@@ -4039,69 +3276,38 @@ EZ3.Vector3.prototype.toString = function() {
   return 'Vector3[' + x + ', ' + y + ', ' + z + ']';
 };
 
+EZ3.Vector3.prototype.toVec2 = function() {
+  return new EZ3.Vector2(this.x, this.y);
+};
+
 EZ3.Vector3.prototype.setPositionFromMatrix = function(m) {
   if (m instanceof EZ3.Matrix4) {
     this.x = m.elements[12];
     this.y = m.elements[13];
     this.z = m.elements[14];
   }
-
   return this;
 };
-
-EZ3.Vector3.prototype.set = EZ3.Vector3.prototype.init;
-
-Object.defineProperty(EZ3.Vector3.prototype, 'x', {
-  get: function() {
-    return this._x;
-  },
-  set: function(x) {
-    this._x = x;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Vector3.prototype, 'y', {
-  get: function() {
-    return this._y;
-  },
-  set: function(y) {
-    this._y = y;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Vector3.prototype, 'z', {
-  get: function() {
-    return this._z;
-  },
-  set: function(z) {
-    this._z = z;
-    this.dirty = true;
-  }
-});
 
 /**
  * @class Vec4
  */
 
 EZ3.Vector4 = function(x, y, z, w) {
-  this._x = x || 0;
-  this._y = y || 0;
-  this._z = z || 0;
-  this._w = w || 0;
-  this.dirty = true;
+  if (typeof x === 'number') {
+    this.x = x;
+    this.y = (typeof y === 'number') ? y : x;
+    this.z = (typeof z === 'number') ? z : x;
+    this.w = (typeof w === 'number') ? w : x;
+  } else {
+    this.x = 0.0;
+    this.y = 0.0;
+    this.z = 0.0;
+    this.w = 0.0;
+  }
 };
 
 EZ3.Vector4.prototype.constructor = EZ3.Vector4;
-
-EZ3.Vector4.prototype.init = function(x, y, z, w) {
-  this.x = x || 0;
-  this.y = y || 0;
-  this.z = z || 0;
-  this.w = w || 0;
-  return this;
-};
 
 EZ3.Vector4.prototype.set = function(x, y, z, w) {
   this.x = x;
@@ -4111,99 +3317,66 @@ EZ3.Vector4.prototype.set = function(x, y, z, w) {
 };
 
 EZ3.Vector4.prototype.add = function(v1, v2) {
-  this.x = v1.x + v2.x;
-  this.y = v1.y + v2.y;
-  this.z = v1.z + v2.z;
-  this.w = v1.w + v2.w;
-  return this;
-};
-
-EZ3.Vector4.prototype.addEqual = function(v) {
-  this.x += v.x;
-  this.y += v.y;
-  this.z += v.z;
-  this.w += v.w;
-  return this;
-};
-
-EZ3.Vector4.prototype.sub = function(v1, v2) {
-  this.x = v1.x - v2.x;
-  this.y = v1.y - v2.y;
-  this.z = v1.z - v2.z;
-  this.w = v1.w - v2.w;
-  return this;
-};
-
-EZ3.Vector4.prototype.subEqual = function(v) {
-  this.x -= v.x;
-  this.y -= v.y;
-  this.z -= v.z;
-  this.w -= v.w;
-  return this;
-};
-
-EZ3.Vector4.prototype.addScale = function(v, s) {
-  this.x += v.x * s;
-  this.y += v.y * s;
-  this.z += v.z * s;
-  this.w += v.w * s;
-  return this;
-};
-
-EZ3.Vector4.prototype.scale = function(v, s) {
-  this.x = v.x * s;
-  this.y = v.y * s;
-  this.z = v.z * s;
-  this.w = v.w * s;
-  return this;
-};
-
-EZ3.Vector4.prototype.scaleEqual = function(s) {
-  this.x *= s;
-  this.y *= s;
-  this.z *= s;
-  this.w *= s;
-  return this;
-};
-
-EZ3.Vector4.prototype.div = function(v1, v2) {
-  if (v2 !== undefined) {
-    if (!v2.hasZero()) {
-      this.x = v1.x / v2.x;
-      this.y = v1.y / v2.y;
-      this.z = v1.z / v2.z;
-      this.w = v1.w / v2.w;
-    }
+  if (v2 instanceof EZ3.Vector4) {
+    this.x = v1.x + v2.x;
+    this.y = v1.y + v2.y;
+    this.z = v1.z + v2.z;
+    this.w = v1.w + v2.w;
   } else {
-    if (!v1.hasZero()) {
-      this.x = this.x / v1.x;
-      this.y = this.y / v1.y;
-      this.z = this.z / v1.z;
-      this.w = this.w / v1.w;
-    }
+    this.x += v1.x;
+    this.y += v1.y;
+    this.z += v1.z;
+    this.w += v1.w;
   }
   return this;
 };
 
-EZ3.Vector4.prototype.divEqual = function(v) {
-  if (!v.hasZero()) {
-    this.x /= v.x;
-    this.y /= v.y;
-    this.z /= v.z;
-    this.w /= v.w;
+EZ3.Vector4.prototype.sub = function(v1, v2) {
+  if (v2 instanceof EZ3.Vector4) {
+    this.x = v1.x - v2.x;
+    this.y = v1.y - v2.y;
+    this.z = v1.z - v2.z;
+    this.w = v1.w - v2.w;
+  } else {
+    this.x -= v1.x;
+    this.y -= v1.y;
+    this.z -= v1.z;
+    this.w -= v1.w;
+  }
+  return this;
+};
+
+EZ3.Vector4.prototype.scale = function(s, v) {
+  if (v instanceof EZ3.Vector4) {
+    this.x = v.x * s;
+    this.y = v.y * s;
+    this.z = v.z * s;
+    this.w = v.w * s;
+  } else {
+    this.x *= s;
+    this.y *= s;
+    this.z *= s;
+    this.w *= s;
   }
   return this;
 };
 
 EZ3.Vector4.prototype.dot = function(v1, v2) {
-  if (v2 !== undefined)
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
-  else
-    return this.x * v1.x + this.y * v1.y + this.z * v1.z + this.w * v1.w;
+  if (v2 instanceof EZ3.Vector4) {
+    if(v1 instanceof EZ3.Vector4)
+      return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
+    else
+      console.error('EZ3.Vector4.dot: not EZ3.Vector4 given.', v1);
+  } else {
+    if(v1 instanceof EZ3.Vector4)
+      return this.x * v1.x + this.y * v1.y + this.z * v1.z + this.w * v1.w;
+    else
+      console.error('EZ3.Vector4.dot: not EZ3.Vector4 given.', v1);
+  }
 };
 
 EZ3.Vector4.prototype.max = function(v1, v2) {
-  if (v2 !== undefined) {
+  if (v2 instanceof EZ3.Vector4) {
     this.x = (v1.x > v2.x) ? v1.x : v2.x;
     this.y = (v1.y > v2.y) ? v1.y : v2.y;
     this.z = (v1.z > v2.z) ? v1.z : v2.z;
@@ -4225,7 +3398,7 @@ EZ3.Vector4.prototype.max = function(v1, v2) {
 };
 
 EZ3.Vector4.prototype.min = function(v1, v2) {
-  if (v2 !== undefined) {
+  if (v2 instanceof EZ3.Vector4) {
     this.x = (v1.x < v2.x) ? v1.x : v2.x;
     this.y = (v1.y < v2.y) ? v1.y : v2.y;
     this.z = (v1.z < v2.z) ? v1.z : v2.z;
@@ -4246,46 +3419,42 @@ EZ3.Vector4.prototype.min = function(v1, v2) {
   return this;
 };
 
-EZ3.Vector4.prototype.len = function() {
-  return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
-};
+EZ3.Vector4.prototype.mulMat4 = function(m, v) {
+  var x;
+  var y;
+  var z;
+  var w;
+  var e;
 
-EZ3.Vector4.prototype.mul = function(o, v, m) {
-  var e = m.elements;
+  if(m instanceof EZ3.Matrix4) {
+    e = m.elements;
 
-  this.x = o.x + v.x * e[0] + v.y * e[1] + v.z * e[2] + v.w * e[3];
-  this.y = o.y + v.x * e[4] + v.y * e[5] + v.z * e[6] + v.w * e[7];
-  this.z = o.z + v.x * e[8] + v.y * e[9] + v.z * e[10] + v.w * e[11];
-  this.w = o.w + v.x * e[12] + v.y * e[13] + v.z * e[14] + v.w * e[15];
-  return this;
-};
+    if (v instanceof EZ3.Vector4) {
+      x = v.x;
+      y = v.y;
+      z = v.z;
+      w = v.w;
+    } else {
+      x = this.x;
+      y = this.y;
+      z = this.z;
+      w = this.w;
+    }
 
-EZ3.Vector4.prototype.mulMat = function(m, v) {
-  var x, y, z, w;
-  var e = m.elements;
+    this.x = x * e[0] + y * e[4] + z * e[8] + w * e[12];
+    this.y = x * e[1] + y * e[5] + z * e[9] + w * e[13];
+    this.z = x * e[2] + y * e[6] + z * e[10] + w * e[14];
+    this.w = x * e[3] + y * e[7] + z * e[11] + w * e[15];
 
-  if (v !== undefined) {
-    x = v.x;
-    y = v.y;
-    z = v.z;
-    w = v.w;
+    return this;
   } else {
-    x = this.x;
-    y = this.y;
-    z = this.z;
-    w = this.w;
+    console.error('EZ3.Vector4.mulMat4: first parameter is not a EZ3.Matrix4.', m);
+    return null;
   }
-
-  this.x = x * e[0] + y * e[4] + z * e[8] + w * e[12];
-  this.y = x * e[1] + y * e[5] + z * e[9] + w * e[13];
-  this.z = x * e[2] + y * e[6] + z * e[10] + w * e[14];
-  this.w = x * e[3] + y * e[7] + z * e[11] + w * e[15];
-
-  return this;
 };
 
 EZ3.Vector4.prototype.length = function(v) {
-  if (v !== undefined)
+  if (v instanceof EZ3.Vector4)
     return Math.sqrt(v.dot(v));
   else
     return Math.sqrt(this.dot(this));
@@ -4294,35 +3463,34 @@ EZ3.Vector4.prototype.length = function(v) {
 EZ3.Vector4.prototype.normalize = function(v) {
   var l;
 
-  if (v !== undefined) {
-
+  if (v instanceof EZ3.Vector4) {
     l = v.length();
 
     if (l > 0) {
-      l = 1.0 / l;
-      this.x = v.x * l;
-      this.y = v.y * l;
-      this.z = v.z * l;
-      this.w = v.w * l;
-    }
-  } else {
+      v.scale(1.0 / l);
 
+      this.x = v.x;
+      this.y = v.y;
+      this.z = v.z;
+      this.w = v.w;
+
+      return this;
+    } else
+      console.warn('EZ3.Vector4.normalize: vector length is zero.', v);
+  } else {
     l = this.length();
 
     if (l > 0) {
-      l = 1.0 / l;
-      this.x *= l;
-      this.y *= l;
-      this.z *= l;
-      this.w *= l;
-    }
-  }
+      this.scale(1.0 / l);
 
-  return this;
+      return this;
+    } else
+      console.warn('EZ3.Vector4.normalize: vector length is zero.', this);
+  }
 };
 
 EZ3.Vector4.prototype.invert = function(v) {
-  if (v !== undefined) {
+  if (v instanceof EZ3.Vector4) {
     this.x = -v.x;
     this.y = -v.y;
     this.z = -v.z;
@@ -4358,15 +3526,17 @@ EZ3.Vector4.prototype.testEqual = function(v) {
   var z;
   var w;
 
-  if(v instanceof EZ3.Vector4) {
-    x = (this.x === v.x);
-    y = (this.y === v.y);
-    z = (this.z === v.z);
-    w = (this.w === v.w);
+  if (v instanceof EZ3.Vector4) {
+    x = this.x === v.x;
+    y = this.y === v.y;
+    z = this.z === v.z;
+    w = this.w === v.w;
 
-    return (x && y && z && w);
-  } else
+    return x && y && z && w;
+  } else{
+    console.warn('EZ3.Vector4.testEqual: parameter is not s EZ3.Vector4.', v);
     return false;
+  }
 };
 
 EZ3.Vector4.prototype.hasZero = function(v) {
@@ -4375,19 +3545,19 @@ EZ3.Vector4.prototype.hasZero = function(v) {
   var ez;
   var ew;
 
-  if (v !== undefined) {
-    ex = (v.x === 0.0);
-    ey = (v.y === 0.0);
-    ez = (v.z === 0.0);
-    ew = (v.w === 0.0);
-  }else {
-    ex = (this.x === 0.0);
-    ey = (this.y === 0.0);
-    ez = (this.z === 0.0);
-    ew = (this.w === 0.0);
+  if (v instanceof EZ3.Vector4) {
+    ex = v.x === 0.0;
+    ey = v.y === 0.0;
+    ez = v.z === 0.0;
+    ew = v.w === 0.0;
+  } else {
+    ex = this.x === 0.0;
+    ey = this.y === 0.0;
+    ez = this.z === 0.0;
+    ew = this.w === 0.0;
   }
 
-  return (ex || ey || ez || ew);
+  return ex || ey || ez || ew;
 };
 
 EZ3.Vector4.prototype.testZero = function(v) {
@@ -4396,28 +3566,31 @@ EZ3.Vector4.prototype.testZero = function(v) {
   var ez;
   var ew;
 
-  if (v !== undefined) {
-    ex = (v.x === 0.0);
-    ey = (v.y === 0.0);
-    ez = (v.z === 0.0);
-    ew = (v.w === 0.0);
-  }else {
-    ex = (this.x === 0.0);
-    ey = (this.y === 0.0);
-    ez = (this.z === 0.0);
-    ew = (this.w === 0.0);
+  if (v instanceof EZ3.Vector4) {
+    ex = v.x === 0.0;
+    ey = v.y === 0.0;
+    ez = v.z === 0.0;
+    ew = v.w === 0.0;
+  } else {
+    ex = this.x === 0.0;
+    ey = this.y === 0.0;
+    ez = this.z === 0.0;
+    ew = this.w === 0.0;
   }
 
-  return (ex && ey && ez && ew);
+  return ex && ey && ez && ew;
 };
 
 EZ3.Vector4.prototype.testDiff = function(v) {
-  var dx = (this.x !== v.x);
-  var dy = (this.y !== v.y);
-  var dz = (this.z !== v.z);
-  var dw = (this.w !== v.w);
-
-  return (dx && dy && dz && dw);
+  if(v) {
+    if(v instanceof EZ3.Vector4)
+      return !this.testEqual(v);
+    else {
+      console.warn('EZ3.Vector4.testDiff: parameter is not a EZ3.Vector4.', v);
+      return false;
+    }
+  } else
+    return true;
 };
 
 EZ3.Vector4.prototype.toString = function() {
@@ -4436,46 +3609,6 @@ EZ3.Vector4.prototype.toVec2 = function() {
 EZ3.Vector4.prototype.toVec3 = function() {
   return new EZ3.Vector3(this.x, this.y, this.z);
 };
-
-Object.defineProperty(EZ3.Vector4.prototype, 'x', {
-  get: function() {
-    return this._x;
-  },
-  set: function(x) {
-    this._x = x;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Vector4.prototype, 'y', {
-  get: function() {
-    return this._y;
-  },
-  set: function(y) {
-    this._y = y;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Vector4.prototype, 'z', {
-  get: function() {
-    return this._z;
-  },
-  set: function(z) {
-    this._z = z;
-    this.dirty = true;
-  }
-});
-
-Object.defineProperty(EZ3.Vector4.prototype, 'w', {
-  get: function() {
-    return this._w;
-  },
-  set: function(w) {
-    this._w = w;
-    this.dirty = true;
-  }
-});
 
 /**
  * @class Geometry
@@ -4768,10 +3901,15 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, inde
 };
 
 EZ3.ArrayBuffer.prototype.add = function(name, buffer) {
-  if (buffer instanceof EZ3.IndexBuffer)
+  if (buffer instanceof EZ3.IndexBuffer) {
     this._index[name] = buffer;
-  else if (buffer instanceof EZ3.VertexBuffer)
+    return buffer;
+  }
+
+  if (buffer instanceof EZ3.VertexBuffer) {
     this._vertex[name] = buffer;
+    return buffer;
+  }
 };
 
 EZ3.ArrayBuffer.prototype.get = function(name) {
@@ -4787,16 +3925,62 @@ EZ3.ArrayBuffer.prototype.get = function(name) {
 
 EZ3.Buffer = function(data, dynamic) {
   this._id = null;
+  this._cache = {};
+  this._ranges = [];
 
-  this.ranges = [];
   this.data = data || [];
   this.dynamic = dynamic || false;
-  this.usage = null;
-  this.length = null;
   this.dirty = true;
 };
 
 EZ3.Buffer.prototype.constructor = EZ3.Buffer;
+
+EZ3.Buffer.prototype.bind = function(gl, target) {
+  if(!this._id)
+    this._id = gl.createBuffer();
+
+  gl.bindBuffer(target, this._id);
+};
+
+EZ3.Buffer.prototype.update = function(gl, target, bytes) {
+  var length = bytes * this.data.length;
+  var ArrayType;
+  var offset;
+  var data;
+  var k;
+
+  if (target === gl.ARRAY_BUFFER) {
+    ArrayType = Float32Array;
+  } else {
+    if (bytes === 4)
+      ArrayType = Uint32Array;
+    else
+      ArrayType = Uint16Array;
+  }
+
+  if ((this._cache.length !== length) || (this._cache.dynamic !== this.dynamic)) {
+    this._cache.length = length;
+    this._cache.dynamic =  this.dynamic;
+
+    gl.bufferData(target, new ArrayType(this.data), (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW);
+  } else {
+    if (this._ranges.length) {
+      for (k = 0; k < this._ranges.length; k++) {
+        offset = bytes * this._ranges[k].left;
+        data = this.data.slice(this._ranges[k].left, this._ranges[k].right);
+        gl.bufferSubData(target, offset, new ArrayType(data));
+      }
+
+      this._ranges = [];
+    } else
+      gl.bufferSubData(target, 0, new ArrayType(this.data));
+  }
+};
+
+EZ3.Buffer.prototype.addRange = function(range) {
+  if (range instanceof EZ3.VertexBufferAttribute)
+    this._ranges.push(range);
+};
 
 /**
  * @class BufferRange
@@ -4815,6 +3999,8 @@ EZ3.Extension = function(gl) {
   this.elementIndexUInt = gl.getExtension('OES_element_index_uint');
   this.vertexArrayObject = gl.getExtension('OES_vertex_array_object');
   this.standardDerivates = gl.getExtension('OES_standard_derivatives');
+  this.depthTextures = gl.getExtension('WEBGL_depth_texture');
+  this.shaderLOD = gl.getExtension('EXT_shader_texture_lod');
 };
 
 /**
@@ -4822,29 +4008,29 @@ EZ3.Extension = function(gl) {
  */
 
 EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
-  this.used = 1;
+  this._id = null;
   this._cache = {};
   this._shaders = [];
-  this._uniform = {};
-  this._attribute = {};
-  this._program = null;
+
+  this.uniforms = {};
+  this.attributes = {};
+
   this._create(gl, vertex, fragment, prefix);
 };
 
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
-  var infoLog;
-  var message;
-  var lineNumbers;
   var shader = gl.createShader(type);
+  var warning;
 
   gl.shaderSource(shader, code);
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    infoLog = gl.getShaderInfoLog(shader);
-    lineNumbers = this._addLineNumbers(code);
-    message = 'EZ3.GLSLProgram shader info log: ';
-    console.log(message + infoLog + lineNumbers + '\n');
+    warning = 'EZ3.GLSLProgram shader info log: ';
+    warning += gl.getShaderInfoLog(shader);
+    warning += '\n';
+
+    console.warn(warning);
   } else {
     if (type === gl.VERTEX_SHADER)
       this._shaders[EZ3.GLSLProgram.VERTEX] = shader;
@@ -4854,25 +4040,26 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
 };
 
 EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
-  var infoLog;
-  var message;
+  var warning;
 
   prefix = (prefix) ? prefix : '';
 
   this._compile(gl, gl.VERTEX_SHADER, prefix + vertex);
   this._compile(gl, gl.FRAGMENT_SHADER, prefix + fragment);
 
-  this._program = gl.createProgram();
+  this._id = gl.createProgram();
 
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.VERTEX]);
-  gl.attachShader(this._program, this._shaders[EZ3.GLSLProgram.FRAGMENT]);
+  gl.attachShader(this._id, this._shaders[EZ3.GLSLProgram.VERTEX]);
+  gl.attachShader(this._id, this._shaders[EZ3.GLSLProgram.FRAGMENT]);
 
-  gl.linkProgram(this._program);
+  gl.linkProgram(this._id);
 
-  if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
-    infoLog = gl.getProgramInfoLog(this._program, gl.LINK_STATUS);
-    message = 'EZ3.GLSLProgram linking program error info log: ';
-    console.log(message + infoLog + '\n');
+  if (!gl.getProgramParameter(this._id, gl.LINK_STATUS)) {
+    warning = 'EZ3.GLSLProgram linking program error info log: ';
+    warning += gl.getProgramInfoLog(this._id, gl.LINK_STATUS);
+    warning += '\n';
+
+    console.warn(warning);
   } else {
     this._loadUniforms(gl);
     this._loadAttributes(gl);
@@ -4883,164 +4070,84 @@ EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
 };
 
 EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
-  var totalUniforms = gl.getProgramParameter(this._program, gl.ACTIVE_UNIFORMS);
-  var uniformInfo;
+  var uniforms = gl.getProgramParameter(this._id, gl.ACTIVE_UNIFORMS);
+  var name;
+  var k;
 
-  for (var k = 0; k < totalUniforms; ++k) {
-    uniformInfo = gl.getActiveUniform(this._program, k);
-    this._addUniform(gl, uniformInfo.name);
+  for (k = 0; k < uniforms; k++) {
+    name = gl.getActiveUniform(this._id, k).name;
+    this.uniforms[name] = gl.getUniformLocation(this._id, name);
   }
 };
 
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
-  var totalAttrib = gl.getProgramParameter(this._program, gl.ACTIVE_ATTRIBUTES);
-  var attributeInfo;
+  var attributes = gl.getProgramParameter(this._id, gl.ACTIVE_ATTRIBUTES);
+  var name;
+  var k;
 
-  for (var k = 0; k < totalAttrib; ++k) {
-    attributeInfo = gl.getActiveAttrib(this._program, k);
-    this._addAttribute(gl, attributeInfo.name);
+  for (k = 0; k < attributes; k++) {
+    name = gl.getActiveAttrib(this._id, k).name;
+    this.attributes[name] = gl.getAttribLocation(this._id, name);
   }
-};
-
-EZ3.GLSLProgram.prototype._addUniform = function(gl, name) {
-  this.uniforms[name] = gl.getUniformLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._addAttribute = function(gl, name) {
-  this.attributes[name] = gl.getAttribLocation(this._program, name);
-};
-
-EZ3.GLSLProgram.prototype._addLineNumbers = function(code) {
-  var codeLines = code.split('\n');
-
-  for (var k = 0; k < codeLines.length; ++k)
-    codeLines[k] = (k + 1) + ': ' + codeLines[k] + '\n\n';
-
-  return codeLines;
-};
-
-EZ3.GLSLProgram.prototype._isCached = function(name, data) {
-  var cached = this._cache[name];
-
-  if (cached) {
-    if (cached instanceof EZ3.Matrix3 || cached instanceof EZ3.Matrix4 ||
-      cached instanceof EZ3.Vector2 || cached instanceof EZ3.Vector3 ||
-      cached instanceof EZ3.Vector4)
-      return cached.testEqual(data);
-    else if (cached === data)
-      return true;
-    else
-      return false;
-  } else
-    return false;
-};
-
-EZ3.GLSLProgram.prototype._caching = function(name, data) {
-  if (data instanceof EZ3.Matrix3 || data instanceof EZ3.Matrix4 ||
-    data instanceof EZ3.Vector2 || data instanceof EZ3.Vector3 ||
-    data instanceof EZ3.Vector4)
-    this._cache[name] = data.clone();
-  else
-    this._cache[name] = data;
 };
 
 EZ3.GLSLProgram.prototype.bind = function(gl) {
-  gl.useProgram(this._program);
+  gl.useProgram(this._id);
 };
 
-EZ3.GLSLProgram.prototype.loadUniformf = function(gl, name, size, data) {
-  var v;
+EZ3.GLSLProgram.prototype.loadUniformInteger = function(gl, name, data) {
+  var location = this.uniforms[name];
 
-  if (!this._isCached(name, data)) {
-    this._caching(name, data);
-
-    if (size > 1)
-      v = data.toArray();
-
-    switch (size) {
-      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-        gl.uniform1f(this.uniforms[name], data);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2f(this.uniforms[name], v[0], v[1]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3f(this.uniforms[name], v[0], v[1], v[2]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4f(this.uniforms[name], v[0], v[1], v[2], v[3]);
-        break;
+  if (location) {
+    if (typeof data === 'number' && this._cache[name] !== data) {
+      gl.uniform1i(location, data);
+      this._cache[name] = data;
+    } else if (data instanceof EZ3.Vector2 && !data.testEqual(this._cache[name])) {
+      gl.uniform2iv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector3 && !data.testEqual(this._cache[name])) {
+      gl.uniform3iv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector4 && !data.testEqual(this._cache[name])) {
+      gl.uniform4iv(location, data.toArray());
+      this._cache[name] = data.clone();
     }
   }
 };
 
-EZ3.GLSLProgram.prototype.loadUniformi = function(gl, name, size, data) {
-  var v;
+EZ3.GLSLProgram.prototype.loadUniformFloat = function(gl, name, data) {
+  var location = this.uniforms[name];
 
-  if (!this._isCached(name, data)) {
-    this._caching(name, data);
-
-    if (size > 1)
-      v = data.toArray();
-
-    switch (size) {
-      case EZ3.GLSLProgram.UNIFORM_SIZE_1D:
-        gl.uniform1i(this.uniforms[name], data);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_2D:
-        gl.uniform2i(this.uniforms[name], v[0], v[1]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_3D:
-        gl.uniform3i(this.uniforms[name], v[0], v[1], v[2]);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_4D:
-        gl.uniform4i(this.uniforms[name], v[0], v[1], v[2], v[3]);
-        break;
+  if (location) {
+    if (typeof data === 'number' && this._cache[name] !== data) {
+      gl.uniform1f(location, data);
+      this._cache[name] = data;
+    } else if (data instanceof EZ3.Vector2 && !data.testEqual(this._cache[name])) {
+      gl.uniform2fv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector3 && !data.testEqual(this._cache[name])) {
+      gl.uniform3fv(location, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Vector4 && !data.testEqual(this._cache[name])) {
+      gl.uniform4fv(location, data.toArray());
+      this._cache[name] = data.clone();
     }
   }
 };
 
-EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, size, data) {
-  var v;
+EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
+  var location = this.uniforms[name];
 
-  if (!this._isCached(name, data)) {
-    this._caching(name, data);
-
-    v = data.toArray();
-
-    switch (size) {
-      case EZ3.GLSLProgram.UNIFORM_SIZE_2X2:
-        gl.uniformMatrix2fv(this.uniforms[name], false, v);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_3X3:
-        gl.uniformMatrix3fv(this.uniforms[name], false, v);
-        break;
-      case EZ3.GLSLProgram.UNIFORM_SIZE_4X4:
-        gl.uniformMatrix4fv(this.uniforms[name], false, v);
-        break;
+  if (location) {
+    if (data instanceof EZ3.Matrix3 && !data.testEqual(this._cache[name])) {
+      gl.uniformMatrix3fv(location, false, data.toArray());
+      this._cache[name] = data.clone();
+    } else if (data instanceof EZ3.Matrix4 && !data.testEqual(this._cache[name])) {
+      gl.uniformMatrix4fv(location, false, data.toArray());
+      this._cache[name] = data.clone();
     }
   }
 };
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, 'uniforms', {
-  get: function() {
-    return this._uniform;
-  }
-});
-
-Object.defineProperty(EZ3.GLSLProgram.prototype, 'attributes', {
-  get: function() {
-    return this._attribute;
-  }
-});
-
-EZ3.GLSLProgram.UNIFORM_SIZE_1D = 1;
-EZ3.GLSLProgram.UNIFORM_SIZE_2D = 2;
-EZ3.GLSLProgram.UNIFORM_SIZE_3D = 3;
-EZ3.GLSLProgram.UNIFORM_SIZE_4D = 4;
-EZ3.GLSLProgram.UNIFORM_SIZE_2X2 = 2;
-EZ3.GLSLProgram.UNIFORM_SIZE_3X3 = 3;
-EZ3.GLSLProgram.UNIFORM_SIZE_4X4 = 4;
 
 EZ3.GLSLProgram.VERTEX = 0;
 EZ3.GLSLProgram.FRAGMENT = 1;
@@ -5071,15 +4178,15 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   mesh.material.updateStates(gl, this.state);
   mesh.material.updateUniforms(gl, this.state);
 
-  modelView.mul(mesh.world, camera.view);
+  modelView.mul(camera.view, mesh.world);
 
-  program.loadUniformf(gl, 'uEyePosition', 3, camera.position);
-  program.loadUniformMatrix(gl, 'uModel', 4, mesh.world);
-  program.loadUniformMatrix(gl, 'uModelView', 4, modelView);
-  program.loadUniformMatrix(gl, 'uProjection', 4, camera.projection);
+  program.loadUniformFloat(gl, 'uEyePosition', camera.position);
+  program.loadUniformMatrix(gl, 'uModel', mesh.world);
+  program.loadUniformMatrix(gl, 'uModelView', modelView);
+  program.loadUniformMatrix(gl, 'uProjection', camera.projection);
 
   if (!lights.empty)
-    program.loadUniformMatrix(gl, 'uNormal', 3, mesh.normal);
+    program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
 
   for (i = 0; i < lights.point.length; i++)
     lights.point[i].updateUniforms(gl, program, i);
@@ -5091,6 +4198,56 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
     lights.spot[i].updateUniforms(gl, program, i);
 
   mesh.render(gl, program.attributes, this.state, this.extension);
+};
+
+EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
+  var gl = this.context;
+  var position = new EZ3.Vector2();
+  var modelViewProjection = new EZ3.Matrix4();
+  var framebuffer;
+  var program;
+  var fragment;
+  var vertex;
+  var light;
+  var mesh;
+  var i;
+  var j;
+
+  if (!this.state.programs.depth) {
+    vertex = EZ3.ShaderLibrary.depth.vertex;
+    fragment = EZ3.ShaderLibrary.depth.fragment;
+    this.state.programs.depth = new EZ3.GLSLProgram(gl, vertex, fragment);
+  }
+
+  program = this.state.programs.depth;
+
+  program.bind(gl);
+
+  for (i = 0; i < lights.length; i++) {
+    light = lights[i];
+    framebuffer = light.depthFramebuffer;
+
+    framebuffer.bind(gl);
+
+    if (framebuffer.dirty) {
+      framebuffer.update(gl);
+      framebuffer.dirty = false;
+    }
+
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    this.viewport(position, framebuffer.resolution);
+
+    for (j = 0; j < shadowCasters.length; j++) {
+      mesh = shadowCasters[j];
+
+      modelViewProjection.mul(light.projection, new EZ3.Matrix4().mul(light.view, mesh.world));
+      mesh.updateShadow(modelViewProjection);
+
+      program.loadUniformMatrix(gl, 'uModelViewProjection', modelViewProjection);
+
+      mesh.render(gl, program.attributes, this.state, this.extension);
+    }
+  }
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -5144,7 +4301,8 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   var meshes = {
     common: [],
     opaque: [],
-    transparent: []
+    transparent: [],
+    shadowCasters: []
   };
   var lights = {
     empty: true,
@@ -5189,12 +4347,23 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
       mesh.updateNormal();
     }
 
-    mesh.material.updateProgram(gl, lights, this.state);
+    mesh.material.updateProgram(gl, this.state, lights);
 
     if (mesh.material.transparent)
       meshes.transparent.push(mesh);
     else
       meshes.opaque.push(mesh);
+
+    if (mesh.material.shadowCaster)
+      meshes.shadowCasters.push(mesh);
+  }
+
+  if (meshes.shadowCasters.length) {
+    this._renderDepth(lights.directional, meshes.shadowCasters);
+    this._renderDepth(lights.spot, meshes.shadowCasters);
+
+    gl.viewport(0.0, 0.0, this.canvas.width, this.canvas.height);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   }
 
   for (i = 0; i < meshes.opaque.length; i++)
@@ -5210,31 +4379,32 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
 EZ3.ShaderLibrary = function() {
   this.mesh = {};
+  this.depth = {};
 };
 
 EZ3.ShaderLibrary = new EZ3.ShaderLibrary();
 
+EZ3.ShaderLibrary['depth'].vertex = "precision highp float;\r\n\r\nattribute vec3 position;\r\n\r\nuniform mat4 uModelViewProjection;\r\n\r\nvoid main() {\r\n  gl_Position = uModelViewProjection * vec4(position, 1.0);\r\n}\r\n";
 EZ3.ShaderLibrary['mesh'].vertex = "precision highp float;\r\n\r\nattribute vec3 position;\r\nattribute vec3 normal;\r\nattribute vec2 uv;\r\n\r\nuniform mat4 uModel;\r\nuniform mat3 uNormal;\r\nuniform mat4 uModelView;\r\nuniform mat4 uProjection;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\nvoid main() {\r\n  vPosition = vec3(uModel * vec4(position, 1.0));\r\n  vNormal = normalize(uNormal * normal);\r\n  vUv = uv;\r\n\r\n  gl_PointSize = 3.0;\r\n  gl_Position = uProjection * uModelView * vec4(position, 1.0);\r\n}\r\n";
-EZ3.ShaderLibrary['mesh'].fragment = "precision highp float;\r\n\r\nstruct PointLight\r\n{\r\n\tvec3 position;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct DirectionalLight\r\n{\r\n\tvec3 direction;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct SpotLight\r\n{\r\n\tvec3 position;\r\n\tvec3 direction;\r\n\tfloat cutoff;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nuniform vec3 uEmissive;\r\nuniform vec3 uDiffuse;\r\nuniform vec3 uSpecular;\r\nuniform float uShininess;\r\n\r\nuniform vec3 uEyePosition;\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  uniform PointLight uPointLights[MAX_POINT_LIGHTS];\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  uniform DirectionalLight uDirectionalLights[MAX_DIRECTIONAL_LIGHTS];\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\nuniform sampler2D uEmissiveSampler;\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\nuniform sampler2D uDiffuseSampler;\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\nuniform sampler2D uSpecularSampler;\r\n#endif\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\n#ifdef NORMAL_MAP\r\n#extension GL_OES_standard_derivatives : enable\r\n\r\nuniform sampler2D uNormalSampler;\r\n\r\nvec3 pertubNormal(vec3 v) {\r\n\tvec3 q0 = dFdx(v);\r\n\tvec3 q1 = dFdy(v);\r\n\r\n\tvec2 st0 = dFdx(vUv);\r\n\tvec2 st1 = dFdy(vUv);\r\n\r\n\tvec3 s = normalize(q0 * st1.t - q1 * st0.t);\r\n\tvec3 t = normalize(-q0 * st1.s + q1 * st0.s);\r\n\tvec3 n = normalize(vNormal);\r\n\r\n\tvec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;\r\n\r\n\treturn normalize(mat3(s, t, n) * d);\r\n}\r\n#endif\r\n\r\nvoid main() {\r\n\tvec3 emissive = uEmissive;\r\n\tvec3 diffuse = vec3(0.0, 0.0, 0.0);\r\n\tvec3 specular = vec3(0.0, 0.0, 0.0);\r\n\r\n\tvec3 v = normalize(uEyePosition - vPosition);\r\n\r\n#ifdef NORMAL_MAP\r\n\tvec3 n = pertubNormal(-v);\r\n#else\r\n\tvec3 n = vNormal;\r\n#endif\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_POINT_LIGHTS; i++)\r\n  {\r\n    vec3 s = normalize(uPointLights[i].position - vPosition);\r\n\t\tfloat q = max(dot(s, n), 0.0);\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\tvec3 r = reflect(-s, n);\r\n\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n    \tdiffuse += uPointLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uPointLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  for(int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)\r\n  {\r\n\t\tfloat q = max(dot(uDirectionalLights[i].direction, n), 0.0);\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\tvec3 r = reflect(-uDirectionalLights[i].direction, n);\r\n\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n    \tdiffuse += uDirectionalLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uDirectionalLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_SPOT_LIGHTS; i++)\r\n  {\r\n\t\tvec3 s = normalize(uSpotLights[i].position - vPosition);\r\n\t\tfloat angle = max(dot(s, uSpotLights[i].direction), 0.0);\r\n\r\n\t\tif(angle > uSpotLights[i].cutoff) {\r\n\t\t\tfloat q = max(dot(uSpotLights[i].direction, n), 0.0);\r\n\r\n\t\t\tif (q > 0.0) {\r\n\t\t\t\tvec3 r = reflect(-s, n);\r\n\t\t\t\tfloat w = pow(max(dot(r, v), 0.0), uShininess);\r\n\r\n\t\t\t\tdiffuse += uSpotLights[i].diffuse * uDiffuse * q;\r\n\t\t\t\tspecular += uSpotLights[i].specular * uSpecular * w;\r\n\t\t\t}\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\n  emissive *= vec3(texture2D(uEmissiveSampler, vUv));\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\n\tdiffuse *= vec3(texture2D(uDiffuseSampler, vUv));\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\n\tspecular *= vec3(texture2D(uSpecularSampler, vUv))\r\n#endif\r\n\r\n  gl_FragColor = vec4(emissive + diffuse + specular, 1.0);\r\n}\r\n";
+EZ3.ShaderLibrary['depth'].fragment = "precision highp float;\r\n\r\nvoid main() {\r\n  // Nothing to do\r\n}\r\n";
+EZ3.ShaderLibrary['mesh'].fragment = "precision highp float;\r\n\r\n#extension GL_OES_standard_derivatives : enable\r\n\r\nstruct PointLight\r\n{\r\n\tvec3 position;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct DirectionalLight\r\n{\r\n\tvec3 direction;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nstruct SpotLight\r\n{\r\n\tvec3 position;\r\n\tvec3 direction;\r\n\tfloat cutoff;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n};\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\nuniform vec3 uEmissive;\r\nuniform vec3 uDiffuse;\r\nuniform vec3 uSpecular;\r\nuniform float uShininess;\r\nuniform vec3 uEyePosition;\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  uniform PointLight uPointLights[MAX_POINT_LIGHTS];\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  uniform DirectionalLight uDirectionalLights[MAX_DIRECTIONAL_LIGHTS];\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\n\tuniform sampler2D uEmissiveSampler;\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\n\tuniform sampler2D uDiffuseSampler;\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\n\tuniform sampler2D uSpecularSampler;\r\n#endif\r\n\r\n#ifdef ENVIRONMENT_MAP\r\n\tuniform samplerCube uEnvironmentSampler;\r\n#endif\r\n\r\n#ifdef REFRACTION\r\n\tuniform float uRefractFactor;\r\n#endif\r\n\r\n#if defined(COOK_TORRANCE) && defined(OREN_NAYAR)\r\n\tuniform float uAlbedo;\r\n\tuniform float uFresnel;\r\n\tuniform float uRoughness;\r\n#elif defined(COOK_TORRANCE)\r\n\tuniform float uFresnel;\r\n\tuniform float uRoughness;\r\n#elif defined(OREN_NAYAR)\r\n\tuniform float uAlbedo;\r\n\tuniform float uRoughness;\r\n#endif\r\n\r\n#ifdef LAMBERT\r\nfloat lambert(vec3 s, vec3 n)\r\n{\r\n\treturn max(dot(s, n), 0.0);\r\n}\r\n#endif\r\n\r\n#ifdef OREN_NAYAR\r\nfloat orenNayar(vec3 v, vec3 s, vec3 n)\r\n{\r\n\tfloat PI = acos(-1.0);\r\n\r\n\tfloat SdotV = dot(s, v);\r\n\tfloat SdotN = dot(s, n);\r\n\tfloat NdotV = dot(n, v);\r\n\r\n\tfloat S = SdotV - SdotN * NdotV;\r\n\tfloat T = mix(1.0, max(SdotN, NdotV), step(0.0, S));\r\n\tfloat sigma2 = uRoughness * uRoughness;\r\n\r\n\tfloat A = 1.0 + sigma2 * (uAlbedo / (sigma2 + 0.13) + 0.5 / (sigma2 + 0.33));\r\n\tfloat B = 0.45 * sigma2 / (sigma2 + 0.09);\r\n\r\n\treturn uAlbedo * max(0.0, SdotN) * (A + B * S / T) / PI;\r\n}\r\n#endif\r\n\r\n#ifdef PHONG\r\nfloat phong(vec3 v, vec3 s, vec3 n)\r\n{\r\n\tvec3 r = reflect(-s, n);\r\n\treturn pow(max(dot(r, v), 0.0), uShininess);\r\n}\r\n#endif\r\n\r\n#ifdef BLINN_PHONG\r\nfloat blinnPhong(vec3 v, vec3 s, vec3 n)\r\n{\r\n\tvec3 h = normalize(s + v);\r\n\treturn pow(max(dot(h, n), 0.0), uShininess);\r\n}\r\n#endif\r\n\r\n#ifdef COOK_TORRANCE\r\nfloat beckmannDistribution(float NdotH, float roughness)\r\n{\r\n\tfloat PI = acos(-1.0);\r\n\tfloat cos2Beta = NdotH * NdotH;\r\n\tfloat tan2Beta = (cos2Beta - 1.0) / cos2Beta;\r\n\tfloat div =  PI * roughness * roughness * cos2Beta * cos2Beta;\r\n\treturn exp(tan2Beta / (roughness * roughness)) / div;\r\n}\r\n\r\nfloat cookTorrance(vec3 v, vec3 s, vec3 n)\r\n{\r\n\tvec3 h = normalize(s + v);\r\n\r\n\tfloat VdotN = max(dot(v, n), 0.0);\r\n\tfloat SdotN = max(dot(s, n), 0.0);\r\n\tfloat VdotH = max(dot(v, h), 0.0);\r\n\tfloat SdotH = max(dot(s, h), 0.0);\r\n\tfloat NdotH = max(dot(n, h), 0.0);\r\n\r\n\tfloat G1 = (2.0 * NdotH * VdotN) / VdotH;\r\n\tfloat G2 = (2.0 * NdotH * SdotN) / SdotH;\r\n\tfloat G = min(1.0, min(G1, G2));\r\n\r\n\tfloat D = beckmannDistribution(NdotH, uRoughness);\r\n\tfloat F = pow(1.0 - VdotN, uFresnel);\r\n\tfloat PI = acos(-1.0);\r\n\r\n  return  G * F * D / max(PI * VdotN, 0.0);\r\n}\r\n#endif\r\n\r\n#ifdef NORMAL_MAP\r\nuniform sampler2D uNormalSampler;\r\n\r\nvec3 pertubNormal(vec3 v)\r\n{\r\n\tvec3 q0 = dFdx(v);\r\n\tvec3 q1 = dFdy(v);\r\n\r\n\tvec2 st0 = dFdx(vUv);\r\n\tvec2 st1 = dFdy(vUv);\r\n\r\n\tvec3 s = normalize(q0 * st1.t - q1 * st0.t);\r\n\tvec3 t = normalize(-q0 * st1.s + q1 * st0.s);\r\n\tvec3 n = normalize(vNormal);\r\n\r\n\tvec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;\r\n\r\n\treturn normalize(mat3(s, t, n) * d);\r\n}\r\n#endif\r\n\r\n#ifdef VARIANCE_SHADOW_MAPPING\r\nvec2 fixMomments()\r\n{\r\n\tvec2 result;\r\n\treturn result;\r\n}\r\n\r\nfloat varianceShadowMapping()\r\n{\r\n\treturn 1.0;\r\n}\r\n#endif\r\n\r\nvoid main() {\r\n\tvec3 color;\r\n\tfloat shadowFactor = 1.0;\r\n\tvec3 emissive = uEmissive;\r\n\tvec3 diffuse = vec3(0.0, 0.0, 0.0);\r\n\tvec3 specular = vec3(0.0, 0.0, 0.0);\r\n\r\n\tvec3 v = normalize(uEyePosition - vPosition);\r\n\r\n#ifdef NORMAL_MAP\r\n\tvec3 n = pertubNormal(-v);\r\n#else\r\n\tvec3 n = vNormal;\r\n#endif\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_POINT_LIGHTS; i++)\r\n  {\r\n\t\tvec3 s = normalize(uPointLights[i].position - vPosition);\r\n\r\n\t\t#ifdef LAMBERT\r\n\t\t\tfloat q = lambert(s, n);\r\n\t\t#endif\r\n\r\n\t\t#ifdef OREN_NAYAR\r\n\t\t\tfloat q = orenNayar(v, s, n);\r\n\t\t#endif\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\t#ifdef BLINN_PHONG\r\n\t\t\t\tfloat w = blinnPhong(v, s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\t#ifdef COOK_TORRANCE\r\n\t\t\t\tfloat w = cookTorrance(v, s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\t#ifdef PHONG\r\n\t\t\t\tfloat w = phong(v, s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\tdiffuse += uPointLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uPointLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  for(int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++)\r\n  {\r\n\t\tvec3 s = uDirectionalLights[i].direction;\r\n\r\n\t\t#ifdef LAMBERT\r\n\t\t\tfloat q = lambert(s, n);\r\n\t\t#endif\r\n\r\n\t\t#ifdef OREN_NAYAR\r\n\t\t\tfloat q = orenNayar(v, s, n);\r\n\t\t#endif\r\n\r\n\t\tif (q > 0.0) {\r\n\t\t\t#ifdef BLINN_PHONG\r\n\t\t\t\tfloat w = blinnPhong(v, s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\t#ifdef COOK_TORRANCE\r\n\t\t\t\tfloat w = cookTorrance(v, s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\t#ifdef PHONG\r\n\t\t\t\tfloat w = phong(v, s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\tdiffuse += uDirectionalLights[i].diffuse * uDiffuse * q;\r\n\t\t\tspecular += uDirectionalLights[i].specular * uSpecular * w;\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  for(int i = 0; i < MAX_SPOT_LIGHTS; i++)\r\n  {\r\n\t\tvec3 s = normalize(uSpotLights[i].position - vPosition);\r\n\t\tfloat angle = max(dot(s, uSpotLights[i].direction), 0.0);\r\n\r\n\t\tif(angle > uSpotLights[i].cutoff) {\r\n\r\n\t\t\t#ifdef LAMBERT\r\n\t\t\t\tfloat q = lambert(s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\t#ifdef OREN_NAYAR\r\n\t\t\t\tfloat q = orenNayar(v, s, n);\r\n\t\t\t#endif\r\n\r\n\t\t\tif (q > 0.0) {\r\n\t\t\t\t#ifdef BLINN_PHONG\r\n\t\t\t\t\tfloat w = blinnPhong(v, s, n);\r\n\t\t\t\t#endif\r\n\r\n\t\t\t\t#ifdef COOK_TORRANCE\r\n\t\t\t\t\tfloat w = cookTorrance(v, s, n);\r\n\t\t\t\t#endif\r\n\r\n\t\t\t\t#ifdef PHONG\r\n\t\t\t\t\tfloat w = phong(v, s, n);\r\n\t\t\t\t#endif\r\n\r\n\t\t\t\tdiffuse += uSpotLights[i].diffuse * uDiffuse * q;\r\n\t\t\t\tspecular += uSpotLights[i].specular * uSpecular * w;\r\n\t\t\t}\r\n\t\t}\r\n  }\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\n  emissive *= texture2D(uEmissiveSampler, vUv).rgb;\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\n\tdiffuse *= texture2D(uDiffuseSampler, vUv).rgb;\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\n\tspecular *= texture2D(uSpecularSampler, vUv).rgb;\r\n#endif\r\n\r\n#ifdef REFLECTION\r\n\tvec3 reflection = reflect(-v, n);\r\n\tdiffuse *= textureCube(uEnvironmentSampler, reflection, 0.0).rgb;\r\n#endif\r\n\r\n#ifdef REFRACTION\r\n\tvec3 refraction = refract(-v, n, uRefractFactor);\r\n\tdiffuse *= textureCube(uEnvironmentSampler, refraction, 0.0).rgb;\r\n#endif\r\n\r\n#ifdef VARIANCE_SHADOW_MAPPING\r\n\tcolor = (emissive + diffuse + specular) * varianceShadowMapping();\r\n#else\r\n\tcolor = emissive + diffuse + specular;\r\n#endif\r\n\r\n  gl_FragColor = vec4(color, 1.0);\r\n}\r\n";
 /**
  * @class State
  */
 
 EZ3.State = function() {
-  this.program = {};
+  this.programs = {};
   this.texture = {};
   this.attribute = {};
-  this.capability = {};
   this.currentTextureSlot = null;
+
+  this.depthTest = false;
+  this.faceCulling = false;
+  this.backFaceCulling = false;
+  this.frontFaceCulling = false;
 };
 
 EZ3.State.prototype.constructor = EZ3.State;
-
-EZ3.State.FACE_CULLING = 0;
-EZ3.State.BACKFACE_CULLING = 1;
-EZ3.State.FRONTFACE_CULLING = 2;
-EZ3.State.BLENDING = 3;
-EZ3.State.DEPTH_TEST = 4;
 
 /**
  * @class VertexBufferAttribute
@@ -5523,48 +4693,115 @@ EZ3.Time.prototype.update = function() {
  * @class Texture
  */
 
-EZ3.Texture = function(image) {
+EZ3.Texture = function(generateMipmaps) {
   this._id = null;
-  this._image = image;
+  this._cache = {};
 
+  this.generateMipmaps = (generateMipmaps) ? true : false;
+  this.wrapS = EZ3.Texture.REPEAT;
+  this.wrapT = EZ3.Texture.REPEAT;
+  this.magFilter = EZ3.Texture.LINEAR;
+  this.minFilter = EZ3.Texture.LINEAR_MIPMAP_LINEAR;
+  this.flipY = false;
   this.dirty = true;
 };
 
-EZ3.Texture.prototype.update = function(gl, type) {
-  if (type === gl.TEXTURE_2D) {
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+EZ3.Texture.prototype._updateImage = function(gl, target, image) {
+  var format = gl[image.format];
+  var internalFormat;
+  var type;
+
+  if(format === gl.DEPTH_COMPONENT) {
+    internalFormat = gl.DEPTH_COMPONENT16;
+    type = gl.UNSIGNED_SHORT;
+  } else {
+    internalFormat = format;
+    type = gl.UNSIGNED_BYTE;
+  }
+
+  if (!EZ3.Math.isPowerOfTwo(image.width) || !EZ3.Math.isPowerOfTwo(image.height))
+    image.toPowerOfTwo();
+
+  gl.texImage2D(target, 0, format, image.width, image.height, 0, format, type, image.data);
+};
+
+EZ3.Texture.prototype._updateMipmaps = function(gl) {
+  if (!this.generateMipmaps) {
+    this.magFilter = EZ3.Texture.LINEAR;
+    this.minFilter = EZ3.Texture.LINEAR;
+  } else
     gl.generateMipmap(gl.TEXTURE_2D);
-    //gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+};
+
+EZ3.Texture.prototype._updatePixelStore = function(gl) {
+  if (this._cache.flipY !== this.flipY) {
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, this.flipY);
+    this._cache.flipY = this.flipY;
   }
 };
 
-EZ3.Texture.prototype.bind = function(gl, type, unit, state) {
-  var slot = gl.TEXTURE0 + unit;
+EZ3.Texture.prototype._updateParameters = function(gl, target) {
+  if (this._cache.wrapS !== this.wrapS) {
+    gl.texParameteri(target, gl.TEXTURE_WRAP_S, gl[this.wrapS]);
+    this._cache.wrapS = this.wrapS;
+  }
+
+  if (this._cache.wrapT !== this.wrapT) {
+    gl.texParameteri(target, gl.TEXTURE_WRAP_T, gl[this.wrapT]);
+    this._cache.wrapT = this.wrapT;
+  }
+
+  if (this._cache.magFilter !== this.magFilter) {
+    gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, gl[this.magFilter]);
+    this._cache.magFilter = this.magFilter;
+  }
+
+  if (this._cache.minFilter !== this.minFilter) {
+    gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, gl[this.minFilter]);
+    this._cache.minFilter = this.minFilter;
+  }
+};
+
+EZ3.Texture.prototype.bind = function(gl, target, state, unit) {
+  var slot;
 
   if (!this._id)
     this._id = gl.createTexture();
 
-  if (state.currentTextureSlot !== slot) {
-    gl.activeTexture(slot);
-    state.currentTextureSlot = slot;
-  }
+  if(state) {
+    slot = gl.TEXTURE0 + unit;
 
-  if (!state.texture[slot]) {
-    state.texture[slot] = {
-      id: this._id,
-      type: type
-    };
-    gl.bindTexture(state.texture[slot].type, state.texture[slot].id);
-  } else {
-    if (state.texture[slot].id !== this._id || state.texture[slot].type !== type) {
-      state.texture[slot].id = this._id;
-      state.texture[slot].type = type;
-      gl.bindTexture(state.texture[slot].type, state.texture[slot].id);
+    if (state.currentTextureSlot !== slot) {
+      gl.activeTexture(slot);
+      state.currentTextureSlot = slot;
     }
-  }
+
+    if (!state.texture[slot]) {
+      state.texture[slot] = {
+        id: this._id,
+        target: target
+      };
+      gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+    } else {
+      if (state.texture[slot].id !== this._id || state.texture[slot].target !== target) {
+        state.texture[slot].id = this._id;
+        state.texture[slot].target = target;
+        gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+      }
+    }
+  } else
+      gl.bindTexture(target, this._id);
 };
+
+EZ3.Texture.LINEAR = 'LINEAR';
+EZ3.Texture.NEAREST = 'NEAREST';
+EZ3.Texture.LINEAR_MIPMAP_LINEAR = 'LINEAR_MIPMAP_LINEAR';
+EZ3.Texture.NEAREST_MIPMAP_NEAREST = 'NEAREST_MIPMAP_NEAREST';
+EZ3.Texture.NEAREST_MIPMAP_LINEAR = 'NEAREST_MIPMAP_LINEAR';
+EZ3.Texture.LINEAR_MIPMAP_NEAREST = 'LINEAR_MIPMAP_NEAREST';
+EZ3.Texture.CLAMP_TO_EDGE = 'CLAMP_TO_EDGE';
+EZ3.Texture.REPEAT = 'REPEAT';
+EZ3.Texture.MIRRORED_REPEAT = 'MIRRORED_REPEAT';
 
 /**
  * @class FreeCamera
@@ -5583,25 +4820,26 @@ EZ3.FreeCamera.prototype._update = function() {
   var ry = EZ3.Math.toRadians(this._rotationAngles.y);
   var matrix = new EZ3.Matrix4().yawPitchRoll(rx, ry, 0);
 
-  this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat(matrix).toVec3();
-  this.look = new EZ3.Vector4(0, 0, 1, 0).mulMat(matrix).toVec3();
-  this.right = new EZ3.Vector4(1, 0, 0, 0).mulMat(matrix).toVec3();
+  this.up = new EZ3.Vector4(0.0, 1.0, 0.0, 0.0).mulMat4(matrix).toVec3();
+  this.look = new EZ3.Vector4(0.0, 0.0, 1.0, 0.0).mulMat4(matrix).toVec3();
+  this.right = new EZ3.Vector4(1.0, 0.0, 0.0, 0.0).mulMat4(matrix).toVec3();
+
   this.target = new EZ3.Vector3().add(this.position, this.look);
 };
 
 EZ3.FreeCamera.prototype.lift = function(speed) {
-  var lift = new EZ3.Vector3().copy(this.up).scaleEqual(speed);
-  this.position.addEqual(lift);
+  var lift = this.up.clone().scale(speed);
+  this.position.add(lift);
 };
 
 EZ3.FreeCamera.prototype.walk = function(speed) {
-  var walk = new EZ3.Vector3().copy(this.look).scaleEqual(speed);
-  this.position.addEqual(walk);
+  var walk = this.look.clone().scale(speed);
+  this.position.add(walk);
 };
 
 EZ3.FreeCamera.prototype.strafe = function(speed) {
-  var strafe = new EZ3.Vector3().copy(this.right).scaleEqual(speed);
-  this.position.addEqual(strafe);
+  var strafe = this.right.clone().scale(speed);
+  this.position.add(strafe);
 };
 
 /**
@@ -5622,16 +4860,16 @@ EZ3.TargetCamera.prototype._update = function() {
   var rx = EZ3.Math.toRadians(this._rotationAngles.x);
   var ry = EZ3.Math.toRadians(this._rotationAngles.y);
   var matrix = new EZ3.Matrix4().yawPitchRoll(rx, ry, 0);
-  var vector = new EZ3.Vector4(0, 0, -1, 0).mulMat(matrix).toVec3();
+  var vector = new EZ3.Vector4(0, 0, -1, 0).mulMat4(matrix).toVec3();
 
   this.distance = new EZ3.Vector3().sub(this.position, this.target).length();
   this.distance = Math.max(1, this.distance);
 
-  vector.scaleEqual(this.distance);
+  vector.scale(this.distance);
 
   this.position = new EZ3.Vector3().add(this.target, vector);
   this.look = new EZ3.Vector3().sub(this.target, this.position);
-  this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat(matrix).toVec3();
+  this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat4(matrix).toVec3();
   this.right = new EZ3.Vector3().cross(this.look.normalize(), this.up);
 };
 
@@ -5645,17 +4883,17 @@ EZ3.TargetCamera.prototype.pan = function(dx, dy) {
   rx = dx * EZ3.Camera.MOVE_SPEED;
   ry = -dy * EZ3.Camera.MOVE_SPEED;
 
-  right = new EZ3.Vector3().copy(this.right).scaleEqual(rx);
-  up = new EZ3.Vector3().copy(this.up).scaleEqual(ry);
+  right = new EZ3.Vector3().copy(this.right).scale(rx);
+  up = new EZ3.Vector3().copy(this.up).scale(ry);
   vector = new EZ3.Vector3().add(right, up);
 
-  this.position.addEqual(vector);
-  this.target.addEqual(vector);
+  this.position.add(vector);
+  this.target.add(vector);
 };
 
 EZ3.TargetCamera.prototype.zoom = function(speed) {
-  var look = new EZ3.Vector3().copy(this.look).scaleEqual(speed);
-  this.position.addEqual(look);
+  var look = this.look.clone().scale(speed);
+  this.position.add(look);
 };
 
 /**
@@ -5668,6 +4906,7 @@ EZ3.Mesh = function(geometry, material) {
 
   this.updateNormalMatrix = false;
   this.normal = new EZ3.Matrix3();
+  this.shadow = new EZ3.Matrix4();
 
   this.geometry = geometry;
   this.material = material;
@@ -5701,6 +4940,12 @@ EZ3.Mesh.prototype.updateNormal = function() {
   }
 };
 
+EZ3.Mesh.prototype.updateShadow = function(modelViewProjection) {
+  var bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
+
+  this.shadow.mul(bias, modelViewProjection);
+};
+
 EZ3.Mesh.prototype.render = function(gl, attributes, state, extension) {
   var mode;
   var buffer;
@@ -5724,6 +4969,37 @@ EZ3.Mesh.prototype.render = function(gl, attributes, state, extension) {
     gl.drawArrays(mode, 0, buffer.data.length / 3);
   }
 };
+
+/**
+ * @class CubeDepthFramebuffer
+ * @extends Framebuffer
+ */
+
+EZ3.CubeDepthFramebuffer = function(resolution) {
+  EZ3.Framebuffer.call(this, resolution, new EZ3.TargetCubemap(resolution, 'DEPTH_COMPONENT'));
+};
+
+EZ3.CubeDepthFramebuffer.prototype.constructor = EZ3.CubeDepthFramebuffer;
+
+EZ3.CubeDepthFramebuffer.prototype.update = function(gl) {
+  EZ3.Framebuffer.prototype.update.call(gl, 'DEPTH_ATTACHMENT');
+};
+
+/**
+ * @class DepthFramebuffer
+ * @extends Framebuffer
+ */
+
+ EZ3.DepthFramebuffer = function(resolution) {
+   EZ3.Framebuffer.call(this, resolution, new EZ3.TargetTexture2D(resolution, 'DEPTH_COMPONENT'));
+ };
+
+ EZ3.DepthFramebuffer.prototype = Object.create(EZ3.Framebuffer.prototype);
+ EZ3.DepthFramebuffer.prototype.constructor = EZ3.DepthFramebuffer;
+
+ EZ3.DepthFramebuffer.prototype.update = function(gl) {
+   EZ3.Framebuffer.prototype.update.call(this, gl, 'DEPTH_ATTACHMENT');
+ };
 
 /**
  * @class MousePointer
@@ -5837,7 +5113,9 @@ EZ3.TouchPointer.prototype.processUp = function(onUp) {
 EZ3.DirectionalLight = function() {
   EZ3.Light.call(this);
 
+  this._camera = null;
   this.target = new EZ3.Vector3();
+  this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
 EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
@@ -5845,12 +5123,36 @@ EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
 
 EZ3.DirectionalLight.prototype.updateUniforms = function(gl, program, i) {
   var prefix = 'uDirectionalLights[' + i + '].';
-  var direction = new EZ3.Vector3().sub(this.position, this.target).normalize();
+  var direction = new EZ3.Vector3().sub(this.position, this.target);
+
+  if(!direction.testZero())
+    direction.normalize();
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
 
-  program.loadUniformf(gl, prefix + 'direction', 3, direction);
+  program.loadUniformFloat(gl, prefix + 'direction', direction);
 };
+
+Object.defineProperty(EZ3.DirectionalLight.prototype, 'view', {
+  get: function() {
+    if (!this._camera) {
+      this._camera = new EZ3.TargetCamera(this.position, this.target, new EZ3.Vector3(0, 1, 0));
+    } else {
+      this._camera.target = this.target.clone();
+      this._camera.position = this.position.clone();
+    }
+    return this._camera.view;
+  }
+});
+
+Object.defineProperty(EZ3.DirectionalLight.prototype, 'projection', {
+  get: function() {
+    if(!this._camera)
+      this._camera = new EZ3.TargetCamera(this.position, this.target, new EZ3.Vector3(0, 1, 0));
+
+    return this._camera.projection;
+  }
+});
 
 /**
  * @class PointLight
@@ -5869,7 +5171,7 @@ EZ3.PointLight.prototype.updateUniforms = function(gl, program, i) {
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
 
-  program.loadUniformf(gl, prefix + 'position', 3, this.position);
+  program.loadUniformFloat(gl, prefix + 'position', this.position);
 };
 
 /**
@@ -5880,8 +5182,10 @@ EZ3.PointLight.prototype.updateUniforms = function(gl, program, i) {
 EZ3.SpotLight = function() {
   EZ3.Light.call(this);
 
-  this.target = new EZ3.Vector3();
   this.cutoff = 0.8;
+  this._camera = null;
+  this.target = new EZ3.Vector3();
+  this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
 EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
@@ -5889,12 +5193,675 @@ EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
 
 EZ3.SpotLight.prototype.updateUniforms = function(gl, program, i) {
   var prefix = 'uSpotLights[' + i + '].';
-  var direction = new EZ3.Vector3().sub(this.position, this.target).normalize();
+  var direction = new EZ3.Vector3().sub(this.position, this.target);
+
+  if(!direction.testZero())
+    direction.normalize();
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
-  program.loadUniformf(gl, prefix + 'position', 3, this.position);
-  program.loadUniformf(gl, prefix + 'direction', 3, direction);
-  program.loadUniformf(gl, prefix + 'cutoff', 1, this.cutoff);
+
+  program.loadUniformFloat(gl, prefix + 'position', this.position);
+  program.loadUniformFloat(gl, prefix + 'direction', direction);
+  program.loadUniformFloat(gl, prefix + 'cutoff', this.cutoff);
+};
+
+Object.defineProperty(EZ3.SpotLight.prototype, 'view', {
+  get: function() {
+    if (!this._camera)
+      this._camera = new EZ3.TargetCamera(this.position, this.target, new EZ3.Vector3(0, 1, 0));
+    else {
+      this._camera.target = this.target.clone();
+      this._camera.position = this.position.clone();
+    }
+    return this._camera.view;
+  }
+});
+
+Object.defineProperty(EZ3.SpotLight.prototype, 'projection', {
+  get: function() {
+    if(!this._camera)
+      this._camera = new EZ3.TargetCamera(this.position, this.target, new EZ3.Vector3(0, 1, 0));
+
+    return this._camera.projection;
+  }
+});
+
+/**
+ * @class Image
+ * @extends File
+ */
+
+EZ3.Image = function(width, height, format, data) {
+  EZ3.File.call(this, data);
+
+  this.width = width || 0;
+  this.height = height || 0;
+  this.format = format || EZ3.Image.RGBA;
+};
+
+EZ3.Image.prototype = Object.create(EZ3.File.prototype);
+EZ3.Image.prototype.constructor = EZ3.Image;
+
+EZ3.Image.prototype.getCanvas = function() {
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  var image = context.createImageData(this.width, this.height);
+
+  canvas.width = this.width;
+  canvas.height = this.height;
+
+  image.data.set(new Uint8ClampedArray(this.data));
+
+  context.putImageData(image, 0, 0);
+
+  return canvas;
+};
+
+EZ3.Image.prototype.toPowerOfTwo = function() {
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+
+  canvas.width = EZ3.Math.nextHighestPowerOfTwo(this.width);
+  canvas.height = EZ3.Math.nextHighestPowerOfTwo(this.height);
+  context.drawImage(this.getCanvas(), 0, 0, this.width, this.height, 0, 0, canvas.width, canvas.height);
+
+  this.width = canvas.width;
+  this.height = canvas.height;
+  this.data = new Uint8Array(context.getImageData(0, 0, canvas.width, canvas.height).data);
+
+  return this;
+};
+
+EZ3.Image.RGBA = 'RGBA';
+
+/**
+ * @class DataRequest
+ * @extends Request
+ */
+
+EZ3.DataRequest = function(url, crossOrigin) {
+  EZ3.Request.call(this, url, new EZ3.File(), crossOrigin);
+
+  this._request = new XMLHttpRequest();
+};
+
+EZ3.DataRequest.prototype = Object.create(EZ3.Request.prototype);
+EZ3.DataRequest.prototype.constructor = EZ3.DataRequest;
+
+EZ3.DataRequest.prototype._processLoad = function(data, onLoad) {
+  this._removeEventListeners();
+
+  this.response.data = data.response;
+
+  onLoad(this.url, this.response);
+};
+
+EZ3.DataRequest.prototype._processError = function(event, onError) {
+  this._removeEventListeners();
+  onError(this.url, event);
+};
+
+EZ3.DataRequest.prototype._addEventListeners = function(onLoad, onError) {
+  var that = this;
+
+  this._onLoad = function() {
+    that._processLoad(this, onLoad);
+  };
+
+  this._onError = function(event) {
+    that._processError(event, onError);
+  };
+
+  this._request.addEventListener('load', this._onLoad, false);
+  this._request.addEventListener('error', this._onError, false);
+};
+
+EZ3.DataRequest.prototype._removeEventListeners = function() {
+  this._request.removeEventListener('load', this._onLoad, false);
+  this._request.removeEventListener('error', this._onError, false);
+
+  delete this._onLoad;
+  delete this._onError;
+};
+
+EZ3.DataRequest.prototype.send = function(onLoad, onError) {
+  this._request.open('GET', this.url, true);
+
+  this._addEventListeners(onLoad, onError);
+
+  if (this.crossOrigin)
+    this._request.crossOrigin = this.crossOrigin;
+
+  this._request.send(null);
+};
+
+/**
+ * @class ImageRequest
+ * @extends Request
+ */
+
+EZ3.ImageRequest = function(url, crossOrigin) {
+  EZ3.Request.call(this, url, new EZ3.Image(), crossOrigin);
+
+  this._request = new Image();
+};
+
+EZ3.ImageRequest.prototype = Object.create(EZ3.Request.prototype);
+EZ3.ImageRequest.prototype.constructor = EZ3.ImageRequest;
+
+EZ3.ImageRequest.prototype._processLoad = function(image, onLoad) {
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+
+  canvas.width = image.width;
+  canvas.height = image.height;
+  context.drawImage(image, 0, 0);
+
+  this.response.width = image.width;
+  this.response.height = image.height;
+  this.response.data = new Uint8Array(context.getImageData(0, 0, image.width, image.height).data);
+
+  this._removeEventListeners();
+
+  onLoad(this.url, this.response);
+};
+
+EZ3.ImageRequest.prototype._processError = function(event, onError) {
+  this._removeEventListeners();
+  onError(this.url, event);
+};
+
+EZ3.ImageRequest.prototype._addEventListeners = function(onLoad, onError) {
+  var that = this;
+
+  this._onLoad = function() {
+    that._processLoad(this, onLoad);
+  };
+
+  this._onError = function(event) {
+    that._processError(event, onError);
+  };
+
+  this._request.addEventListener('load', this._onLoad, false);
+  this._request.addEventListener('error', this._onError, false);
+};
+
+EZ3.ImageRequest.prototype._removeEventListeners = function() {
+  this._request.removeEventListener('load', this._onLoad, false);
+  this._request.removeEventListener('error', this._onError, false);
+
+  delete this._onLoad;
+  delete this._onError;
+};
+
+EZ3.ImageRequest.prototype.send = function(onLoad, onError) {
+  this._addEventListeners(onLoad, onError);
+
+  if (!this.crossOrigin)
+    this._request.crossOrigin = this.crossOrigin;
+
+  this._request.src = this.url;
+};
+
+/**
+ * @class OBJRequest
+ * @extends Request
+ */
+
+EZ3.OBJRequest = function(url, crossOrigin) {
+  EZ3.Request.call(this, url, new EZ3.Entity(), crossOrigin);
+};
+
+EZ3.OBJRequest.prototype = Object.create(EZ3.Request.prototype);
+EZ3.OBJRequest.prototype.constructor = EZ3.OBJRequest;
+
+EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
+  var that = this;
+  var mesh = new EZ3.Mesh(new EZ3.Geometry(), new EZ3.MeshMaterial());
+  var lines = data.split('\n');
+  var indices = [];
+  var vertices = [];
+  var normals = [];
+  var uvs = [];
+  var fixedIndices = [];
+  var fixedVertices = [];
+  var fixedNormals = [];
+  var fixedUvs = [];
+  var materials = [];
+  var libraries = [];
+  var line;
+  var result;
+  var i;
+
+  function triangulate(face) {
+    var data = [];
+    var i;
+
+    face = face.split(' ');
+
+    for (i = 1; i < face.length - 1; i++)
+      data.push(face[0], face[i], face[i + 1]);
+
+    return data;
+  }
+
+  function processVertex(vertex) {
+    var i;
+
+    for (i = 1; i < 4; i++)
+      vertices.push(parseFloat(vertex[i]));
+  }
+
+  function processNormal(normal) {
+    var i;
+
+    for (i = 1; i < 4; i++)
+      normals.push(parseFloat(normal[i]));
+  }
+
+  function processUv(uv) {
+    var i;
+
+    for (i = 1; i < 3; i++)
+      uvs.push(parseFloat(uv[i]));
+  }
+
+  function processVertexIndex(index) {
+    index = parseInt(index);
+
+    if (index <= 0)
+      return vertices.length / 3 + index;
+
+    return index - 1;
+  }
+
+  function processNormalIndex(index) {
+    index = parseInt(index);
+
+    if (index <= 0)
+      return normals.length / 3 + index;
+
+    return index - 1;
+  }
+
+  function processUvIndex(index) {
+    index = parseInt(index);
+
+    if (index <= 0)
+      return uvs.length / 2 + index;
+
+    return index - 1;
+  }
+
+  function processFace1(face) {
+    var vertex;
+    var index;
+    var i;
+    var j;
+
+    for (i = 0; i < face.length; i++) {
+      vertex = processVertexIndex(face[i]);
+
+      if (indices[vertex] === undefined) {
+        index = fixedVertices.length / 3;
+        indices[vertex] = index;
+
+        fixedIndices.push(index);
+
+        for (j = 0; j < 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+      } else
+        fixedIndices.push(indices[vertex]);
+    }
+  }
+
+  function processFace2(face) {
+    var point;
+    var vertex;
+    var uv;
+    var index;
+    var count;
+    var i;
+    var j;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('/');
+
+      vertex = processVertexIndex(point[0]);
+      uv = processUvIndex(point[1]);
+
+      index = -1;
+      count = fixedVertices.length / 3;
+
+      if (!indices[vertex])
+        indices[vertex] = [];
+
+      for (j = 0; j < indices[vertex].length; j++) {
+        if (indices[vertex][j].uv === uv) {
+          index = indices[vertex][j].index;
+          break;
+        }
+      }
+
+      if (index >= 0)
+        fixedIndices.push(index);
+      else {
+        indices[vertex].push({
+          uv: uv,
+          index: count
+        });
+
+        fixedIndices.push(count);
+
+        for (j = 0; j < 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+
+        fixedUvs.push(uvs[2 * uv]);
+        fixedUvs.push(1.0 - uvs[2 * uv + 1]);
+      }
+    }
+  }
+
+  function processFace3(face) {
+    var point;
+    var vertex;
+    var uv;
+    var normal;
+    var index;
+    var count;
+    var i;
+    var j;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('/');
+
+      vertex = processVertexIndex(point[0]);
+      uv = processUvIndex(point[1]);
+      normal = processNormalIndex(point[2]);
+
+      index = -1;
+      count = fixedVertices.length / 3;
+
+      if (!indices[vertex])
+        indices[vertex] = [];
+
+      for (j = 0; j < indices[vertex].length; j++) {
+        if (indices[vertex][j].uv === uv && indices[vertex][j].normal === normal) {
+          index = indices[vertex][j].index;
+          break;
+        }
+      }
+
+      if (index >= 0)
+        fixedIndices.push(index);
+      else {
+        indices[vertex].push({
+          uv: uv,
+          normal: normal,
+          index: count
+        });
+
+        fixedIndices.push(count);
+
+        for (j = 0; j < 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+
+        for (j = 0; j < 3; j++)
+          fixedNormals.push(normals[3 * normal + j]);
+
+        fixedUvs.push(uvs[2 * uv]);
+        fixedUvs.push(1.0 - uvs[2 * uv + 1]);
+      }
+    }
+  }
+
+  function processFace4(face) {
+    var point;
+    var vertex;
+    var normal;
+    var index;
+    var count;
+    var i;
+    var j;
+
+    for (i = 0; i < face.length; i++) {
+      point = face[i].split('//');
+
+      vertex = processVertexIndex(point[0]);
+      normal = processNormalIndex(point[1]);
+
+      index = -1;
+      count = fixedVertices.length / 3;
+
+      if (!indices[vertex])
+        indices[vertex] = [];
+
+      for (j = 0; j < indices[vertex].length; j++) {
+        if (indices[vertex][j].normal === normal) {
+          index = indices[vertex][j].index;
+          break;
+        }
+      }
+
+      if (index >= 0)
+        fixedIndices.push(index);
+      else {
+        indices[vertex].push({
+          normal: normal,
+          index: count
+        });
+
+        fixedIndices.push(count);
+
+        for (j = 0; j < 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+
+        for (j = 0; j < 3; j++)
+          fixedNormals.push(normals[3 * normal + j]);
+      }
+    }
+  }
+
+  function processMesh() {
+    var buffer;
+
+    if (fixedIndices.length) {
+      buffer = new EZ3.IndexBuffer(fixedIndices, false, true);
+      mesh.geometry.buffers.add('triangle', buffer);
+
+      buffer = new EZ3.VertexBuffer(fixedVertices);
+      buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
+      mesh.geometry.buffers.add('position', buffer);
+
+      if (fixedUvs.length) {
+        buffer = new EZ3.VertexBuffer(fixedUvs);
+        buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
+        mesh.geometry.buffers.add('uv', buffer);
+
+        fixedUvs = [];
+      }
+
+      if (fixedNormals.length) {
+        buffer = new EZ3.VertexBuffer(fixedNormals);
+        buffer.addAttribute('normal', new EZ3.VertexBufferAttribute(3));
+        mesh.geometry.buffers.add('normal', buffer);
+
+        fixedNormals = [];
+      }
+
+      indices = [];
+      fixedIndices = [];
+      fixedVertices = [];
+
+      that.response.add(mesh);
+
+      mesh = new EZ3.Mesh(new EZ3.Geometry(), new EZ3.MeshMaterial());
+    }
+  }
+
+  function processMaterials() {
+    var loader = new EZ3.Loader();
+    var tokens = that.url.split('/');
+    var baseUrl = that.url.substr(0, that.url.length - tokens[tokens.length - 1].length);
+    var files = [];
+    var i;
+
+    for (i = 0; i < libraries.length; i++)
+      files.push(loader.add(new EZ3.DataRequest(baseUrl + libraries[i])));
+
+    loader.onComplete.add(function() {
+      for (i = 0; i < files.length; i++)
+        processMaterial(baseUrl, files[i].data, loader);
+
+      loader.onComplete.removeAll();
+      loader.onComplete.add(function() {
+        onLoad(that.url, that.response);
+      });
+
+      loader.start();
+    });
+
+    loader.start();
+  }
+
+  function processMaterial(baseUrl, data, loader) {
+    var lines = data.split('\n');
+    var line;
+    var key;
+    var value;
+    var currents;
+    var i;
+    var j;
+
+    function processColor(color) {
+      var values = color.split(' ');
+
+      return new EZ3.Vector3(parseFloat(values[0]), parseFloat(values[1]), parseFloat(values[2]));
+    }
+
+    function processEmissive(color) {
+      var emissive = processColor(color);
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].emissive = emissive;
+    }
+
+    function processDiffuse(color) {
+      var diffuse = processColor(color);
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].diffuse = diffuse;
+    }
+
+    function processSpecular(color) {
+      var specular = processColor(color);
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].specular = specular;
+    }
+
+    function processDiffuseMap(url) {
+      var texture = new EZ3.Texture2D(loader.add(new EZ3.ImageRequest(baseUrl + url)));
+      var i;
+
+      for (i = 0; i < currents.length; i++)
+        currents[i].diffuseMap = texture;
+    }
+
+    for (i = 0; i < lines.length; i++) {
+      line = lines[i].trim();
+
+      j = line.indexOf(' ');
+
+      key = (j >= 0) ? line.substring(0, j) : line;
+      key = key.toLowerCase();
+
+      value = (j >= 0) ? line.substring(j + 1) : '';
+      value = value.trim();
+
+      if (key === 'newmtl') {
+        currents = materials[value];
+      } else if (key === 'ka') {
+        processEmissive(value);
+      } else if (key === 'kd') {
+        processDiffuse(value);
+      } else if (key === 'ks') {
+        processSpecular(value);
+      } else if (key === 'ns') {
+
+      } else if (key === 'd') {
+
+      } else if (key === 'map_ka') {
+
+      } else if (key === 'map_kd') {
+        processDiffuseMap(value);
+      } else if (key === 'map_ks') {
+
+      } else if (key === 'map_ns') {
+
+      } else if (key === 'map_bump') {
+
+      } else if (key === 'map_d') {
+
+      }
+    }
+  }
+
+  for (i = 0; i < lines.length; i++) {
+    line = lines[i].trim().replace(/ +(?= )/g, '');
+
+    if (line.length === 0 || line.charAt(0) === '#')
+      continue;
+    else if ((result = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+      processVertex(result);
+    else if ((result = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+      processNormal(result);
+    else if ((result = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+      processUv(result);
+    else if ((result = /f\s(([+-]?\d+\s){2,}[+-]?\d+)/.exec(line)))
+      processFace1(triangulate(result[1]));
+    else if ((result = /f\s(([+-]?\d+\/[+-]?\d+\s){2,}[+-]?\d+\/[+-]?\d+)/.exec(line)))
+      processFace2(triangulate(result[1]));
+    else if ((result = /f\s((([+-]?\d+\/[+-]?\d+\/[+-]?\d+\s){2,})[+-]?\d+\/[+-]?\d+\/[+-]?\d+)/.exec(line)))
+      processFace3(triangulate(result[1]));
+    else if ((result = /f\s(([+-]?\d+\/\/[+-]?\d+\s){2,}[+-]?\d+\/\/[+-]?\d+)/.exec(line)))
+      processFace4(triangulate(result[1]));
+    else if (/^mtllib/.test(line))
+      libraries.push(line.substring(7).trim());
+    else if (/^o/.test(line) || /^g/.test(line)) {
+      processMesh();
+      mesh.name = line.substring(2).trim();
+    } else if (/^usemtl/.test(line)) {
+      processMesh();
+      mesh.material.name = line.substring(7).trim();
+
+      if (!materials[mesh.material.name])
+        materials[mesh.material.name] = [];
+
+      materials[mesh.material.name].push(mesh.material);
+    }
+  }
+
+  processMesh();
+  processMaterials();
+};
+
+EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
+  var that = this;
+  var loader = new EZ3.Loader();
+  var file = loader.add(new EZ3.DataRequest(this.url, this.crossOrigin));
+
+  loader.onComplete.add(function(error) {
+    if (error)
+      onError(that.url, true);
+
+    that._parse(file.data, onLoad);
+  });
+
+  loader.start();
 };
 
 /**
@@ -5903,108 +5870,231 @@ EZ3.SpotLight.prototype.updateUniforms = function(gl, program, i) {
  */
 
 EZ3.MeshMaterial = function() {
-  EZ3.Material.call(this, 'mesh');
+  EZ3.Material.call(this);
 
   this.emissive = new EZ3.Vector3();
-  this.emissiveMap = null;
   this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
-  this.diffuseMap = null;
   this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
-  this.specularMap = null;
+
   this.normalMap = null;
-  this.shininess = 180.0;
-  this.dirty = true;
+  this.diffuseMap = null;
+  this.emissiveMap = null;
+  this.specularMap = null;
+  this.environmentMap = null;
+
+  this.reflective = false;
+  this.refractive = false;
+
+  this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
+  this.specularReflection = EZ3.MeshMaterial.PHONG;
+
+  this.shadowCaster = false;
+  this.softShadows = false;
+
+  this.albedoFactor = 7.0;
+  this.fresnelFactor = 0.0;
+  this.refractFactor = 1.0;
+  this.roughnessFactor = 0.2;
+  this.shininessFactor = 180.1;
 };
 
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
-EZ3.MeshMaterial.prototype.updateProgram = function(gl, lights, state) {
-  var id = this._name;
+EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
+  var id = EZ3.Material.MESH;
   var defines = [];
   var prefix = '#define ';
-  var vertex;
-  var fragment;
 
   defines.push('MAX_POINT_LIGHTS ' + lights.point.length);
   defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
   defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
 
-  if (this.emissiveMap instanceof EZ3.Texture)
+  if (this.emissiveMap instanceof EZ3.Texture2D)
     defines.push('EMISSIVE_MAP');
 
-  if (this.diffuseMap instanceof EZ3.Texture)
+  if (this.diffuseMap instanceof EZ3.Texture2D)
     defines.push('DIFFUSE_MAP');
 
-  if (this.normalMap instanceof EZ3.Texture)
+  if (this.normalMap instanceof EZ3.Texture2D)
     defines.push('NORMAL_MAP');
+
+  if(this.environmentMap instanceof EZ3.Cubemap) {
+    defines.push('ENVIRONMENT_MAP');
+
+    if(this.reflective)
+      defines.push('REFLECTION');
+
+    if(this.refractive)
+      defines.push('REFRACTION');
+  }
+
+  if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR)
+    defines.push('OREN_NAYAR');
+  else
+    defines.push('LAMBERT');
+
+  if(this.specularReflection === EZ3.MeshMaterial.BLINN_PHONG)
+    defines.push('BLINN_PHONG');
+  else if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE)
+    defines.push('COOK_TORRANCE');
+  else
+    defines.push('PHONG');
+
+  if(this.shadows)
+    defines.push('VARIANCE_SHADOW_MAPPING');
+
+  if(this.softShadows)
+    defines.push('SOFT_VARIANCE_SHADOW_MAPPING');
 
   id += defines.join('.');
   prefix += defines.join('\n ' + prefix) + '\n';
 
-  if (!state.program[id]) {
-    vertex = EZ3.ShaderLibrary.mesh.vertex;
-    fragment = EZ3.ShaderLibrary.mesh.fragment;
+  if (this._id !== id) {
+    this._id = id;
 
-    this.program = new EZ3.GLSLProgram(gl, vertex, fragment, prefix);
-    state.program[id] = this.program;
-  } else
-    this.program = state.program[id];
+    if (!state.programs[id]) {
+      this.program = new EZ3.GLSLProgram(gl, EZ3.ShaderLibrary.mesh.vertex, EZ3.ShaderLibrary.mesh.fragment, prefix);
+      state.programs[id] = this.program;
+    } else
+      this.program = state.programs[id];
+  }
 };
 
 EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
-  this.program.loadUniformf(gl, 'uEmissive', 3, this.emissive);
-  this.program.loadUniformf(gl, 'uDiffuse', 3, this.diffuse);
-  this.program.loadUniformf(gl, 'uSpecular', 3, this.specular);
-  this.program.loadUniformf(gl, 'uShininess', 1, this.shininess);
+  this.program.loadUniformFloat(gl, 'uEmissive', this.emissive);
+  this.program.loadUniformFloat(gl, 'uDiffuse', this.diffuse);
+  this.program.loadUniformFloat(gl, 'uSpecular', this.specular);
+  this.program.loadUniformFloat(gl, 'uShininess', this.shininessFactor);
 
-  if (this.emissiveMap instanceof EZ3.Texture) {
-    this.emissiveMap.bind(gl, gl.TEXTURE_2D, 0, state);
+  if (this.emissiveMap instanceof EZ3.Texture2D) {
+    this.emissiveMap.bind(gl, state, 0);
+    this.emissiveMap.update(gl);
 
-    if (this.emissiveMap.dirty) {
-      this.emissiveMap.update(gl, gl.TEXTURE_2D);
-      this.emissiveMap.dirty = false;
-    }
-
-    this.program.loadUniformi(gl, 'uEmissiveSampler', 1, 0);
+    this.program.loadUniformInteger(gl, 'uEmissiveSampler', 0);
   }
 
-  if (this.diffuseMap instanceof EZ3.Texture) {
-    this.diffuseMap.bind(gl, gl.TEXTURE_2D, 1, state);
+  if (this.diffuseMap instanceof EZ3.Texture2D) {
+    this.diffuseMap.bind(gl, state, 1);
+    this.diffuseMap.update(gl);
 
-    if (this.diffuseMap.dirty) {
-      this.diffuseMap.update(gl, gl.TEXTURE_2D);
-      this.diffuseMap.dirty = false;
-    }
-
-    this.program.loadUniformi(gl, 'uDiffuseSampler', 1, 1);
+    this.program.loadUniformInteger(gl, 'uDiffuseSampler', 1);
   }
 
-  if (this.normalMap instanceof EZ3.Texture) {
-    this.normalMap.bind(gl, gl.TEXTURE_2D, 2, state);
+  if (this.normalMap instanceof EZ3.Texture2D) {
+    this.normalMap.bind(gl, state, 2);
+    this.normalMap.update(gl);
 
-    if (this.normalMap.dirty) {
-      this.normalMap.update(gl, gl.TEXTURE_2D);
-      this.normalMap.dirty = false;
-    }
+    this.program.loadUniformInteger(gl, 'uNormalSampler', 2);
+  }
 
-    this.program.loadUniformi(gl, 'uNormalSampler', 1, 2);
+  if(this.environmentMap instanceof EZ3.Cubemap) {
+    this.environmentMap.bind(gl, state, 3);
+    this.environmentMap.update(gl);
+
+    this.program.loadUniformInteger(gl, 'uEnvironmentSampler', 3);
+  }
+
+  if(this.refractive)
+    this.program.loadUniformFloat(gl, 'uRefractFactor', this.refractFactor);
+
+  if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR) {
+    this.program.loadUniformFloat(gl, 'uAlbedo', this.albedoFactor);
+    this.program.loadUniformFloat(gl, 'uRoughness', this.roughnessFactor);
+  }
+
+  if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE) {
+    this.program.loadUniformFloat(gl, 'uFresnel', this.fresnelFactor);
+    this.program.loadUniformFloat(gl, 'uRoughness', this.roughnessFactor);
   }
 };
+
+EZ3.MeshMaterial.LAMBERT = 0;
+EZ3.MeshMaterial.OREN_NAYAR = 1;
+EZ3.MeshMaterial.PHONG = 2;
+EZ3.MeshMaterial.BLINN_PHONG = 3;
+EZ3.MeshMaterial.COOK_TORRANCE = 4;
 
 /**
  * @class ShaderMaterial
  * @extends Material
  */
 
-EZ3.ShaderMaterial = function(name, vertex, fragment) {
-  this.name = name;
-  this.vertex = vertex;
-  this.fragment = fragment;
+EZ3.ShaderMaterial = function(id, vertex, fragment) {
+  EZ3.Material.call(this, EZ3.Material.SHADER + id);
+
+  this._vertex = vertex;
+  this._fragment = fragment;
+  this._uniformIntegers = {};
+  this._uniformFloats = {};
+  this._uniformMatrices = {};
+  this._uniformTextures = {};
 };
 
 EZ3.ShaderMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.ShaderMaterial.prototype.constructor = EZ3.Material;
+
+EZ3.ShaderMaterial.prototype.updateProgram = function(gl, state) {
+  if (!this.program) {
+    if(state.programs[this._id])
+      this.program = state.programs[this._id];
+    else {
+      this.program = new EZ3.GLSLProgram(gl, this._vertex, this._fragment);
+      state.programs[this._id] = this.program;
+    }
+  }
+};
+
+EZ3.ShaderMaterial.prototype.updateUniforms = function(gl) {
+  var i = 0;
+  var name;
+  var texture;
+
+  for (name in this._uniformIntegers)
+    this.program.loadUniformInteger(gl, name, this._uniformIntegers[name]);
+
+  for (name in this._uniformFloats)
+    this.program.loadUniformFloat(gl, name, this._uniformFloats[name]);
+
+  for (name in this._uniformMatrices)
+    this.program.loadUniformMatrix(gl, name, this._uniformMatrices[name]);
+
+  for (name in this._uniformTextures) {
+    texture = this._uniformTextures[name];
+
+    texture.bind();
+    texture.update();
+
+    this.program.loadUniformi(gl, name, i++);
+  }
+};
+
+EZ3.ShaderMaterial.prototype.setIntegerUniform = function(name, value) {
+  this._uniformIntegers[name] = value;
+};
+
+EZ3.ShaderMaterial.prototype.setFloatUniform = function(name, value) {
+  this._uniformFloats[name] = value;
+};
+
+EZ3.ShaderMaterial.prototype.setUniformMatrix = function(name, value) {
+  this._uniformMatrices[name] = value;
+};
+
+EZ3.ShaderMaterial.prototype.setTextureUniform = function(name, value) {
+  this._uniformTextures[name] = value;
+};
+
+EZ3.ShaderMaterial.prototype.getUniform = function(name) {
+  if (this._uniformIntegers[name])
+    return this._uniformIntegers[name];
+  else if(this._uniformFloats[name])
+    return this._uniformFloat[name];
+  else if(this._uniformMatrices[name])
+    return this._uniformMatrices[name];
+  else
+    return this._uniformTextures[name];
+};
 
 /**
  * @class AstroidalEllipsoid
@@ -6838,49 +6928,21 @@ EZ3.IndexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
 EZ3.IndexBuffer.prototype.constructor = EZ3.IndexBuffer;
 
 EZ3.IndexBuffer.prototype.bind = function(gl) {
-  if(!this._id)
-    this._id = gl.createBuffer();
-
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._id);
+  EZ3.Buffer.prototype.bind.call(this, gl, gl.ELEMENT_ARRAY_BUFFER);
 };
 
 EZ3.IndexBuffer.prototype.update = function(gl, extension) {
-  var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
-  var length;
-  var UintArray;
-  var offset;
-  var array;
   var bytes;
-  var k;
 
   if(this.need32Bits) {
-    if(extension.elementIndexUInt) {
+    if(extension.elementIndexUInt)
       bytes = 4;
-      UintArray = Uint32Array;
-    } else
+    else
       return;
-  } else {
+  } else
     bytes = 2;
-    UintArray = Uint16Array;
-  }
 
-  length = bytes * this.data.length;
-
-  if((length !== this.length) || (usage !== this.usage)) {
-    this.usage = usage;
-    this.length = length;
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new UintArray(this.data), usage);
-  } else {
-    if(this.ranges.length) {
-      for(k = 0; k < this.ranges.length; k++) {
-        offset = bytes * this.ranges[k].left;
-        array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
-        gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, offset, new UintArray(array));
-      }
-    } else {
-      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, new UintArray(this.data));
-    }
-  }
+  EZ3.Buffer.prototype.update.call(this, gl, gl.ELEMENT_ARRAY_BUFFER, bytes);
 };
 
 EZ3.IndexBuffer.prototype.getType = function(gl, extension) {
@@ -6895,8 +6957,8 @@ EZ3.IndexBuffer.prototype.getType = function(gl, extension) {
 EZ3.VertexBuffer = function(data, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
 
-  this._stride = 0;
   this._attributes = {};
+  this._stride = 0;
 };
 
 EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
@@ -6914,17 +6976,13 @@ EZ3.VertexBuffer.prototype.validate = function(gl, attributes) {
 
 EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
   var type = gl.FLOAT;
-  var stride = this._stride;
   var normalized;
   var offset;
   var layout;
   var size;
   var k;
 
-  if (!this._id)
-    this._id = gl.createBuffer();
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, this._id);
+  EZ3.Buffer.prototype.bind.call(this, gl, gl.ARRAY_BUFFER);
 
   for (k in this._attributes) {
     layout = attributes[k];
@@ -6938,37 +6996,17 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
           gl.enableVertexAttribArray(layout);
           state.attribute[layout] = true;
         }
-        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+        gl.vertexAttribPointer(layout, size, type, normalized, this._stride, offset);
       } else {
         gl.enableVertexAttribArray(layout);
-        gl.vertexAttribPointer(layout, size, type, normalized, stride, offset);
+        gl.vertexAttribPointer(layout, size, type, normalized, this._stride, offset);
       }
     }
   }
 };
 
 EZ3.VertexBuffer.prototype.update = function(gl) {
-  var bytes = 4;
-  var length = bytes * this.data.length;
-  var usage = (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW;
-  var offset;
-  var array;
-  var k;
-
-  if ((length !== this.length) || (usage !== this.usage)) {
-    this.usage = usage;
-    this.length = length;
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.data), usage);
-  } else {
-    if (this.ranges.length) {
-      for (k = 0; k < this.ranges.length; k++) {
-        offset = bytes * this.ranges[k].left;
-        array = this.data.slice(this.ranges[k].left, this.ranges[k].right);
-        gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(array));
-      }
-    } else
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(this.data));
-  }
+  EZ3.Buffer.prototype.update.call(this, gl, gl.ARRAY_BUFFER, 4);
 };
 
 EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
@@ -6978,6 +7016,127 @@ EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
   }
 };
 
-EZ3.VertexBuffer.prototype.getAttribute = function(name) {
-  return this._attributes[name];
+/**
+ * @class Cubemap
+ * @extends Texture
+ */
+
+EZ3.Cubemap = function(px, nx, py, ny, pz, nz, generateMipmaps) {
+  EZ3.Texture.call(this, generateMipmaps);
+
+  this._images = [];
+  this.setImage(EZ3.Cubemap.POSITIVE_X, px);
+  this.setImage(EZ3.Cubemap.NEGATIVE_X, nx);
+  this.setImage(EZ3.Cubemap.POSITIVE_Y, py);
+  this.setImage(EZ3.Cubemap.NEGATIVE_Y, ny);
+  this.setImage(EZ3.Cubemap.POSITIVE_Z, pz);
+  this.setImage(EZ3.Cubemap.NEGATIVE_Z, nz);
 };
+
+EZ3.Cubemap.prototype = Object.create(EZ3.Texture.prototype);
+EZ3.Cubemap.prototype.contructor = EZ3.Cubemap;
+
+EZ3.Cubemap.prototype.bind = function(gl, state, unit) {
+  EZ3.Texture.prototype.bind.call(this, gl, gl.TEXTURE_CUBE_MAP, state, unit);
+};
+
+EZ3.Cubemap.prototype.update = function(gl) {
+  var k;
+
+  if (this.dirty) {
+    for(k = 0; k < 6; k++)
+      EZ3.Texture.prototype._updateImage.call(this, gl, gl.TEXTURE_CUBE_MAP_POSITIVE_X + k, this._images[k]);
+
+    EZ3.Texture.prototype._updateMipmaps.call(this, gl);
+
+    this.dirty = false;
+  }
+
+  EZ3.Texture.prototype._updateParameters.call(this, gl, gl.TEXTURE_CUBE_MAP);
+  EZ3.Texture.prototype._updatePixelStore.call(this, gl);
+};
+
+EZ3.Cubemap.prototype.setImage = function(target, image) {
+  if (image instanceof EZ3.Image)
+    this._images[target] = image;
+};
+
+EZ3.Cubemap.POSITIVE_X = 0;
+EZ3.Cubemap.NEGATIVE_X = 1;
+EZ3.Cubemap.POSITIVE_Y = 2;
+EZ3.Cubemap.NEGATIVE_Y = 3;
+EZ3.Cubemap.POSITIVE_Z = 4;
+EZ3.Cubemap.NEGATIVE_Z = 5;
+
+/**
+ * @class Texture2D
+ * @extends Texture
+ */
+
+EZ3.Texture2D = function(image, generateMipmaps) {
+  EZ3.Texture.call(this, generateMipmaps);
+
+  this.image = image;
+};
+
+EZ3.Texture2D.prototype = Object.create(EZ3.Texture.prototype);
+EZ3.Texture2D.prototype.constructor = EZ3.Texture2D;
+
+EZ3.Texture2D.prototype.bind = function(gl, state, unit) {
+  EZ3.Texture.prototype.bind.call(this, gl, gl.TEXTURE_2D, state, unit);
+};
+
+EZ3.Texture2D.prototype.update = function(gl) {
+  if (this.dirty) {
+    EZ3.Texture.prototype._updateImage.call(this, gl, gl.TEXTURE_2D, this.image);
+    EZ3.Texture.prototype._updateMipmaps.call(this, gl);
+
+    this.dirty = false;
+  }
+
+  EZ3.Texture.prototype._updateParameters.call(this, gl, gl.TEXTURE_2D);
+  EZ3.Texture.prototype._updatePixelStore.call(this, gl);
+};
+
+/**
+ * @class TargetCubemap
+ * @extends Cubemap
+ */
+
+ EZ3.TargetCubemap = function(resolution, target) {
+   EZ3.Cubemap.call(this,
+     new EZ3.Image(resolution.x, resolution.y, target, null),
+     new EZ3.Image(resolution.x, resolution.y, target, null),
+     new EZ3.Image(resolution.x, resolution.y, target, null),
+     new EZ3.Image(resolution.x, resolution.y, target, null),
+     new EZ3.Image(resolution.x, resolution.y, target, null),
+     new EZ3.Image(resolution.x, resolution.y, target, null),
+     false
+   );
+ };
+
+ EZ3.TargetCubemap.prototype = Object.create(EZ3.Cubemap.prototype);
+ EZ3.TargetCubemap.prototype.constructor = EZ3.TargetCubemap;
+
+ EZ3.TargetCubemap.prototype.attachToFramebuffer = function(gl, attachment) {
+   // TODO
+ };
+
+/**
+ * @class TargetTexture2D
+ * @extends Texture2D
+ */
+
+ EZ3.TargetTexture2D = function(resolution, format) {
+   EZ3.Texture2D.call(this, new EZ3.Image(resolution.x, resolution.y, format, null), false);
+ };
+
+ EZ3.TargetTexture2D.prototype = Object.create(EZ3.Texture2D.prototype);
+ EZ3.TargetTexture2D.prototype.constructor = EZ3.TargetTexture2D;
+
+ EZ3.TargetTexture2D.prototype.attachToFramebuffer = function(gl, attachment) {
+   if(this._cache.framebufferAttachment !== attachment) {
+     this._cache.framebufferAttachment = attachment;
+     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl[attachment], gl.TEXTURE_2D, this._id, 0);
+   }
+ };

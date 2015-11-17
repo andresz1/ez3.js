@@ -2,19 +2,15 @@
  * @class Framebuffer
  */
 
- EZ3.Framebuffer = function(resolution, texture) {
+ EZ3.Framebuffer = function(resolution, renderbuffer, texture) {
   this._id = null;
   this._cache = {};
+  this._renderbuffer = renderbuffer;
+  this.resolution = resolution;
 
-  if(resolution instanceof EZ3.Vector2)
-    this.resolution = resolution;
-  else
-    this.resolution = null;
-
-  if(texture instanceof EZ3.TargetTexture2D || texture instanceof EZ3.TargetCubemap)
-    this.texture = texture;
-  else
-    this.texture = null;
+  this.texture = texture;
+  this.texture.wrapS = EZ3.Texture.CLAMP_TO_EDGE;
+  this.texture.wrapT = EZ3.Texture.CLAMP_TO_EDGE;
 
   this.dirty = true;
 };
@@ -28,15 +24,19 @@ EZ3.Framebuffer.prototype.bind = function(gl) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, this._id);
 };
 
-EZ3.Framebuffer.prototype.update = function(gl, attachment) {
+EZ3.Framebuffer.prototype.update = function(gl, textureAttachment) {
   if(this.dirty) {
     this.texture.bind(gl);
+    this.texture.update(gl);
+    this.texture.attachToFramebuffer(gl, textureAttachment);
 
-    if(this.texture.dirty) {
-      this.texture.update(gl);
-      this.texture.dirty = false;
-    }
+    this._renderbuffer.bind(gl);
+    this._renderbuffer.update(gl);
+    this._renderbuffer.attachToFramebuffer(gl);
+
+    if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
+      console.warn('EZ3.Framebuffer.update: update is not completed.');
+
+    this.dirty = false;
   }
-
-  this.texture.attachToFramebuffer(gl, attachment);
 };
