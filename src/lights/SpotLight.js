@@ -28,8 +28,10 @@ EZ3.SpotLight.prototype.updateUniforms = function(gl, state, program, i) {
   program.loadUniformFloat(gl, prefix + 'direction', direction);
   program.loadUniformFloat(gl, prefix + 'cutoff', this.cutoff);
 
-  this.depthFramebuffer.texture.bind(gl, state, 4);
-  program.loadUniformInteger(gl, 'shadowSampler', 4);
+  if(state.activeShadowReceiver) {
+    this.depthFramebuffer.texture.bind(gl, state);
+    program.loadUniformInteger(gl, 'uShadowSampler', state.usedTextureSlots++);
+  }
 };
 
 Object.defineProperty(EZ3.SpotLight.prototype, 'view', {
