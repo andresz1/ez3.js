@@ -61,35 +61,42 @@ EZ3.Texture.prototype._updateParameters = function(gl, target) {
   }
 };
 
-EZ3.Texture.prototype.bind = function(gl, target, state, unit) {
+EZ3.Texture.prototype.bind = function(gl, target, state) {
   var slot;
+  var maxSlots;
 
   if (!this._id)
     this._id = gl.createTexture();
 
-  if(state) {
-    slot = gl.TEXTURE0 + unit;
+  if(state instanceof EZ3.State) {
+    maxSlots = state.maxTextureSlots;
 
-    if (state.currentTextureSlot !== slot) {
-      gl.activeTexture(slot);
-      state.currentTextureSlot = slot;
-    }
+    if(state.usedTextureSlots < maxSlots + 1) {
 
-    if (!state.texture[slot]) {
-      state.texture[slot] = {
-        id: this._id,
-        target: target
-      };
-      gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
-    } else {
-      if (state.texture[slot].id !== this._id || state.texture[slot].target !== target) {
-        state.texture[slot].id = this._id;
-        state.texture[slot].target = target;
-        gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+      slot = gl.TEXTURE0 + state.usedTextureSlots;
+
+      if (state.currentTextureSlot !== slot) {
+        gl.activeTexture(slot);
+        state.currentTextureSlot = slot;
       }
-    }
+
+      if (!state.texture[slot]) {
+        state.texture[slot] = {
+          id: this._id,
+          target: target
+        };
+        gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+      } else {
+        if (state.texture[slot].id !== this._id || state.texture[slot].target !== target) {
+          state.texture[slot].id = this._id;
+          state.texture[slot].target = target;
+          gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
+        }
+      }
+    } else
+      console.warn('EZ3.Texture.bind: not available enough texture slots. Max slots available: ', maxSlots + 1);
   } else
-      gl.bindTexture(target, this._id);
+    gl.bindTexture(target, this._id);
 };
 
 EZ3.Texture.LINEAR = 'LINEAR';
