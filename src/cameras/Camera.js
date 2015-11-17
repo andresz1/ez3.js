@@ -15,11 +15,11 @@ EZ3.Camera = function(position, target, up, mode, filter) {
   this.aspectRatio = 1.0;
 
   this.planes = {};
-  this.planes.left = -10.0;
-  this.planes.right = 10.0;
-  this.planes.bottom = -10.0;
-  this.planes.top = 10.0;
-  this.planes.near = 0.1;
+  this.planes.left = -100.0;
+  this.planes.right = 100.0;
+  this.planes.bottom = -100.0;
+  this.planes.top = 100.0;
+  this.planes.near = 0.01;
   this.planes.far = 1000.0;
 
   this.look = new EZ3.Vector3(0, 0, -1);
@@ -104,6 +104,11 @@ Object.defineProperty(EZ3.Camera.prototype, 'view', {
 
 Object.defineProperty(EZ3.Camera.prototype, 'projection', {
   get: function() {
+    var dx;
+    var dy;
+    var cx;
+    var cy;
+
     if (this.mode === EZ3.Camera.PERSPECTIVE)
       return new EZ3.Matrix4().perspective(
         this.fov,
@@ -111,15 +116,15 @@ Object.defineProperty(EZ3.Camera.prototype, 'projection', {
         this.planes.near,
         this.planes.far
       );
-    else
-      return new EZ3.Matrix4().ortho(
-        this.planes.left,
-        this.planes.right,
-        this.planes.bottom,
-        this.planes.top,
-        this.planes.near,
-        this.planes.far
-      );
+    else {
+
+      dx = ( this.planes.right - this.planes.left ) / 2;
+      dy = ( this.planes.top - this.planes.bottom ) / 2;
+      cx = ( this.planes.right + this.planes.left ) / 2;
+      cy = ( this.planes.top + this.planes.bottom ) / 2;
+
+      return new EZ3.Matrix4().orthographic(cx - dx, cx + dx, cy + dy, cy - dy, this.planes.near, this.planes.far);
+    }
   }
 });
 
