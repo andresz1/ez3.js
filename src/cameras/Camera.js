@@ -7,32 +7,32 @@ EZ3.Camera = function(position, target, up, mode, filter) {
 
   this._filterBuffer = [];
   this._filter = filter || true;
+  this._filterWeight = 0.75;
+  this._filterBufferSize = 10;
   this._rotationAngles = new EZ3.Vector2();
-  this._mode = mode || EZ3.Camera.PERSPECTIVE;
-
-  this.planes = {};
-  this.planes.near = 0.1;
-  this.planes.far = 1000.0;
 
   this.fov = 70.0;
   this.aspectRatio = 1.0;
+
+  this.planes = {};
+  this.planes.left = -10.0;
+  this.planes.right = 10.0;
+  this.planes.bottom = -10.0;
+  this.planes.top = 10.0;
+  this.planes.near = 0.1;
+  this.planes.far = 1000.0;
+
   this.look = new EZ3.Vector3(0, 0, -1);
   this.right = new EZ3.Vector3(1, 0, 0);
+  this.up = up || new EZ3.Vector3(0, 1, 0);
 
-  if (position instanceof EZ3.Vector3)
-    this.position = position;
-  else
-    this.position = new EZ3.Vector3(5, 5, 5);
+  this.target = target || new EZ3.Vector3();
+  this.position = position || new EZ3.Vector3(0, 0, 0);
 
-  if (target instanceof EZ3.Vector3)
-    this.target = target;
-  else
-    this.target = new EZ3.Vector3();
+  this.mode = mode || EZ3.Camera.PERSPECTIVE;
 
-  if (up instanceof EZ3.Vector3)
-    this.up = up;
-  else
-    this.up = new EZ3.Vector3(0, 1, 0);
+  this.moveSpeed = 50.0;
+  this.rotationSpeed = 300.0;
 
   this._setupRotationAngles();
 };
@@ -43,7 +43,10 @@ EZ3.Camera.prototype._setupRotationAngles = function() {
   var yaw;
   var pitch;
 
-  this.look = new EZ3.Vector3().sub(this.position, this.target).normalize();
+  this.look = new EZ3.Vector3().sub(this.position, this.target);
+
+  if(!this.look.testZero())
+    this.look.normalize();
 
   yaw = EZ3.Math.toDegrees(Math.atan2(this.look.z, this.look.x) + EZ3.Math.PI);
   pitch = EZ3.Math.toDegrees(Math.asin(this.look.y));
@@ -60,20 +63,20 @@ EZ3.Camera.prototype._filterMoves = function(dx, dy) {
   var k;
 
   if (!this._filterBuffer.length)
-    for (k = 0; k < EZ3.Camera.FILTER_BUFFER_SIZE; ++k)
+    for (k = 0; k < this._filterBufferSize; ++k)
       this._filterBuffer.push(new EZ3.Vector2(dx, dy));
 
-  for (k = EZ3.Camera.FILTER_BUFFER_SIZE - 1; k > 0; k--)
+  for (k = this._filterBufferSize - 1; k > 0; k--)
     this._filterBuffer[k] = this._filterBuffer[k - 1];
 
   this._filterBuffer[0] = new EZ3.Vector2(dx, dy);
 
-  for (k = 0; k < EZ3.Camera.FILTER_BUFFER_SIZE; k++) {
+  for (k = 0; k < this._filterBufferSize; k++) {
     averageX += this._filterBuffer[k].x * currentWeight;
     averageY += this._filterBuffer[k].y * currentWeight;
     averageTotal += currentWeight;
 
-    currentWeight *= EZ3.Camera.FILTER_WEIGHT;
+    currentWeight *= this._filterWeight;
   }
 
   return new EZ3.Vector2(averageX, averageY).scale(1.0 / averageTotal);
@@ -83,8 +86,8 @@ EZ3.Camera.prototype.rotate = function(dx, dy) {
   var rx;
   var ry;
 
-  this._rotationAngles.x -= dx * EZ3.Camera.ROTATION_SPEED;
-  this._rotationAngles.y += dy * EZ3.Camera.ROTATION_SPEED;
+  this._rotationAngles.x -= dx * this.rotationSpeed;
+  this._rotationAngles.y += dy * this.rotationSpeed;
 
   if (this._filter) {
     rx = this._rotationAngles.x;
@@ -95,14 +98,13 @@ EZ3.Camera.prototype.rotate = function(dx, dy) {
 
 Object.defineProperty(EZ3.Camera.prototype, 'view', {
   get: function() {
-    this._update();
     return new EZ3.Matrix4().lookAt(this.position, this.target, this.up);
   }
 });
 
 Object.defineProperty(EZ3.Camera.prototype, 'projection', {
   get: function() {
-    if (this._mode === EZ3.Camera.PERSPECTIVE)
+    if (this.mode === EZ3.Camera.PERSPECTIVE)
       return new EZ3.Matrix4().perspective(
         this.fov,
         this.aspectRatio,
@@ -123,7 +125,3 @@ Object.defineProperty(EZ3.Camera.prototype, 'projection', {
 
 EZ3.Camera.PERSPECTIVE = 0;
 EZ3.Camera.ORTHOGRAPHIC = 1;
-EZ3.Camera.MOVE_SPEED = 50;
-EZ3.Camera.ROTATION_SPEED = 300;
-EZ3.Camera.FILTER_WEIGHT = 0.75;
-EZ3.Camera.FILTER_BUFFER_SIZE = 10;

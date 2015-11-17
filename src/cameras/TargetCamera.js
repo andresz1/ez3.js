@@ -12,7 +12,7 @@ EZ3.TargetCamera = function(position, target, up, mode, filter) {
 EZ3.TargetCamera.prototype = Object.create(EZ3.Camera.prototype);
 EZ3.TargetCamera.prototype.constructor = EZ3.TargetCamera;
 
-EZ3.TargetCamera.prototype._update = function() {
+EZ3.TargetCamera.prototype.update = function() {
   var rx = EZ3.Math.toRadians(this._rotationAngles.x);
   var ry = EZ3.Math.toRadians(this._rotationAngles.y);
   var matrix = new EZ3.Matrix4().yawPitchRoll(rx, ry, 0);
@@ -36,8 +36,8 @@ EZ3.TargetCamera.prototype.pan = function(dx, dy) {
   var right;
   var vector;
 
-  rx = dx * EZ3.Camera.MOVE_SPEED;
-  ry = -dy * EZ3.Camera.MOVE_SPEED;
+  rx = dx * this.moveSpeed;
+  ry = -dy * this.moveSpeed;
 
   right = new EZ3.Vector3().copy(this.right).scale(rx);
   up = new EZ3.Vector3().copy(this.up).scale(ry);
