@@ -256,8 +256,8 @@ EZ3.Matrix3.prototype.normalFromMat4 = function(m) {
 EZ3.Matrix3.prototype.identity = function() {
   this.elements = [
     1.0, 0.0, 0.0,
-    1.0, 1.0, 0.0,
-    1.0, 0.0, 1.0
+    0.0, 1.0, 0.0,
+    0.0, 0.0, 1.0
   ];
 
   return this;

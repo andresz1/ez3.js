@@ -376,51 +376,33 @@ EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
   return this;
 };
 
-EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
-  var rl = 1 / (right - left);
-  var tb = 1 / (top - bottom);
-  var nf = 1 / (near - far);
+EZ3.Matrix4.prototype.orthographic = function(left, right, top, bottom, near, far) {
+  var w = right - left;
+  var h = top - bottom;
+  var p = far - near;
 
-  this.elements[0] = (near * 2) * rl;
-  this.elements[1] = 0;
-  this.elements[2] = 0;
-  this.elements[3] = 0;
-  this.elements[4] = 0;
-  this.elements[5] = (near * 2) * tb;
-  this.elements[6] = 0;
-  this.elements[7] = 0;
-  this.elements[8] = (right + left) * rl;
-  this.elements[9] = (top + bottom) * tb;
-  this.elements[10] = (far + near) * nf;
-  this.elements[11] = -1;
-  this.elements[12] = 0;
-  this.elements[13] = 0;
-  this.elements[14] = (far * near * 2) * nf;
-  this.elements[15] = 0;
+  var x = (right + left) / w;
+  var y = (top + bottom) / h;
+  var z = (far + near) / p;
 
-  return this;
-};
-
-EZ3.Matrix4.prototype.ortho = function(left, right, bottom, top, near, far) {
-  var lr = 1.0 / (left - right);
-  var bt = 1.0 / (bottom - top);
-  var nf = 1.0 / (near - far);
-
-  this.elements[0] = -2.0 * lr;
+  this.elements[0] = 2.0 / w;
   this.elements[1] = 0.0;
   this.elements[2] = 0.0;
   this.elements[3] = 0.0;
+
   this.elements[4] = 0.0;
-  this.elements[5] = -2.0 * bt;
+  this.elements[5] = 2.0 / h;
   this.elements[6] = 0.0;
   this.elements[7] = 0.0;
+
   this.elements[8] = 0.0;
   this.elements[9] = 0.0;
-  this.elements[10] = 2.0 * nf;
+  this.elements[10] = -2.0 / p;
   this.elements[11] = 0.0;
-  this.elements[12] = (left + right) * lr;
-  this.elements[13] = (top + bottom) * bt;
-  this.elements[14] = (far + near) * nf;
+
+  this.elements[12] = -x;
+  this.elements[13] = -y;
+  this.elements[14] = -z;
   this.elements[15] = 1.0;
 
   return this;
