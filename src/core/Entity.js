@@ -61,7 +61,8 @@ EZ3.Entity.prototype.updateWorld = function() {
   }
 
   if(positionDirty || rotationDirty || scaleDirty) {
-    this.model.fromRotationTranslation(this.rotation, this.position);
+    this.model.setFromQuaternion(this.rotation);
+    this.model.translate(this.position);
     this.model.scale(this.scale);
   }
 
