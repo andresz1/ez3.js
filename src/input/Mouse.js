@@ -2,12 +2,12 @@
  * @class Mouse
  */
 
-EZ3.Mouse = function(domElement) {
+EZ3.Mouse = function(domElement, bounds) {
   this._domElement = domElement;
-  this._device = EZ3.Device;
+  this._bounds = bounds;
 
   this.enabled = false;
-  this.pointer = new EZ3.MousePointer(domElement);
+  this.pointer = new EZ3.MousePointer();
   this.onPress = new EZ3.Signal();
   this.onMove = new EZ3.Signal();
   this.onUp = new EZ3.Signal();
@@ -18,11 +18,11 @@ EZ3.Mouse = function(domElement) {
 EZ3.Mouse.prototype.constructor = EZ3.Mouse;
 
 EZ3.Mouse.prototype._processMousePress = function(event) {
-  this.pointer.processPress(event, this.onPress, this.onMove);
+  this.pointer.processPress(event, this._domElement, this._bounds, this.onPress, this.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseMove = function(event) {
-  this.pointer.processMove(event, this.onMove);
+  this.pointer.processMove(event, this._domElement, this._bounds, this.onMove);
 };
 
 EZ3.Mouse.prototype._processMouseUp = function(event) {
@@ -34,8 +34,10 @@ EZ3.Mouse.prototype._processMouseWheel = function(event) {
 };
 
 EZ3.Mouse.prototype._processMouseLockChange = function() {
+  var device = EZ3.Device;
+
   if (this.pointer.locked) {
-    document.removeEventListener(this._device.pointerLockChange, this._onMouseLockChange, true);
+    document.removeEventListener(device.pointerLockChange, this._onMouseLockChange, true);
 
     delete this._onMouseLockChange;
   }
@@ -43,29 +45,33 @@ EZ3.Mouse.prototype._processMouseLockChange = function() {
   this.pointer.processLockChange(this.onLockChange);
 };
 
-EZ3.Mouse.prototype.lock = function() {
+EZ3.Mouse.prototype.requestPointerLock = function() {
+  var device = EZ3.Device;
   var that;
 
-  if (this._device.requestPointerLock && !this.pointer.locked) {
+  if (device.requestPointerLock && !this.pointer.locked) {
     that = this;
 
     this._onMouseLockChange = function(event) {
       that._processMouseLockChange(event);
     };
 
-    document.addEventListener(this._device.pointerLockChange, this._onMouseLockChange, true);
+    document.addEventListener(device.pointerLockChange, this._onMouseLockChange, true);
 
-    this._domElement[this._device.requestPointerLock]();
+    this._domElement[device.requestPointerLock]();
   }
 };
 
-EZ3.Mouse.prototype.unlock = function() {
-  if (this._device.cancelPointerLock && this.pointer.locked)
-    document[this._device.cancelPointerLock]();
+EZ3.Mouse.prototype.exitPointerLock = function() {
+  var device = EZ3.Device;
+
+  if (device.exitPointerLock && this.pointer.locked)
+    document[device.exitPointerLock]();
 };
 
 EZ3.Mouse.prototype.enable = function() {
   var that = this;
+  var device = EZ3.Device;
 
   this.enabled = true;
 
@@ -81,30 +87,37 @@ EZ3.Mouse.prototype.enable = function() {
     that._processMouseUp(event);
   };
 
-  this._onMouseWheel = function(event) {
-    that._processMouseWheel(event);
-  };
-
   this._domElement.addEventListener('mousedown', this._onMousePress, true);
   this._domElement.addEventListener('mousemove', this._onMouseMove, true);
   this._domElement.addEventListener('mouseup', this._onMouseUp, true);
-  this._domElement.addEventListener('mousewheel', this._onMouseWheel, true);
-  this._domElement.addEventListener('DOMMouseScroll', this._onMouseWheel, true);
+
+  if (device.wheel) {
+    this._onMouseWheel = function(event) {
+      that._processMouseWheel(event);
+    };
+
+    this._domElement.addEventListener(device.wheel, this._onMouseWheel, true);
+  }
 };
 
 EZ3.Mouse.prototype.disable = function() {
+  var device = EZ3.Device;
+
   this.enabled = false;
 
   this._domElement.removeEventListener('mousedown', this._onMouserDown, true);
   this._domElement.removeEventListener('mousemove', this._onMouseMove, true);
   this._domElement.removeEventListener('mouseup', this._onMouseUp, true);
-  this._domElement.removeEventListener('mousewheel', this._onMouseWheel, true);
-  this._domElement.removeEventListener('DOMMouseScroll', this._onMouseWheel, true);
 
   delete this._onMousePress;
   delete this._onMouseMove;
   delete this._onMouseUp;
-  delete this._onMouseWheel;
+
+  if (device.wheel) {
+    this._domElement.removeEventListener(device.wheel, this._onMouseWheel, true);
+
+    delete this._onMouseWheel;
+  }
 };
 
 EZ3.Mouse.LEFT_BUTTON = 0;

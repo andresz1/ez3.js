@@ -11,13 +11,13 @@ EZ3.Device = function() {
   this.touchDown = null;
   this.touchMove = null;
   this.touchUp = null;
-  this.scroll = null;
+  this.wheel = null;
   this.requestFullScreen = null;
-  this.cancelFullScreen = null;
+  this.exitFullScreen = null;
   this.fullScreenChange = null;
   this.fullScreenError = null;
   this.requestPointerLock = null;
-  this.cancelPointerLock = null;
+  this.exitPointerLock = null;
   this.pointerLockChange = null;
   this.pointerLockError = null;
 };
@@ -95,22 +95,22 @@ EZ3.Device._check = function() {
   function checkFullScreen() {
     if (document.fullscreenEnabled) {
       that.requestFullScreen = 'requestFullscreen';
-      that.cancelFullScreen = 'exitFullscreen';
+      that.exitFullScreen = 'exitFullscreen';
       that.fullScreenChange = 'fullscreenchange';
       that.fullScreenError = 'fullscreenerror';
     } else if (document.webkitFullscreenEnabled) {
       that.requestFullScreen = 'webkitRequestFullscreen';
-      that.cancelFullScreen = 'webkitExitFullscreen';
+      that.exitFullScreen = 'webkitExitFullscreen';
       that.fullScreenChange = 'webkitfullscreenchange';
       that.fullScreenError = 'webkitfullscreenerror';
     } else if (document.mozFullScreenEnabled) {
       that.requestFullScreen = 'mozRequestFullscreen';
-      that.cancelFullScreen = 'mozCancelFullScreen';
+      that.exitFullScreen = 'mozCancelFullScreen';
       that.fullScreenChange = 'mozfullscreenchange';
       that.fullScreenError = 'mozfullscreenerror';
     } else if (document.msFullscreenEnabled) {
       that.requestFullScreen = 'msRequestFullscreen';
-      that.cancelFullScreen = 'msExitFullscreen';
+      that.exitFullScreen = 'msExitFullscreen';
       that.fullScreenChange = 'MSFullscreenChange';
       that.fullScreenError = 'MSFullscreenError';
     }
@@ -119,17 +119,17 @@ EZ3.Device._check = function() {
   function checkPointerLock() {
     if ('pointerLockElement' in document) {
       that.requestPointerLock = 'requestPointerLock';
-      that.cancelPointerLock = 'exitPointerLock';
+      that.exitPointerLock = 'exitPointerLock';
       that.pointerLockChange = 'pointerlockchange';
       that.pointerLockCancel = 'pointerlockerror';
     } else if ('webkitPointerLockElement' in document) {
       that.requestPointerLock = 'webkitRequestPointerLock';
-      that.cancelPointerLock = 'webkitExitPointerLock';
+      that.exitPointerLock = 'webkitExitPointerLock';
       that.pointerLockChange = 'webkitpointerlockchange';
       that.pointerLockCancel = 'webkitpointerlockerror';
     } else if ('mozPointerLockElement' in document) {
       that.requestPointerLock = 'mozRequestPointerLock';
-      that.cancelPointerLock = 'mozExitPointerLock';
+      that.exitPointerLock = 'mozExitPointerLock';
       that.pointerLockChange = 'mozpointerlockchange';
       that.pointerLockCancel = 'mozpointerlockerror';
     }

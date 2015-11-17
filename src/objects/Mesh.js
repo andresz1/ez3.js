@@ -10,8 +10,8 @@ EZ3.Mesh = function(geometry, material) {
   this.normal = new EZ3.Matrix3();
   this.shadow = new EZ3.Matrix4();
 
-  this.geometry = geometry;
-  this.material = material;
+  this.geometry = geometry || new EZ3.Geometry();
+  this.material = material || new EZ3.MeshMaterial();
 };
 
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);

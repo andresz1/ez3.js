@@ -2,9 +2,10 @@
  * @class Touch
  */
 
-EZ3.Touch = function(domElement) {
+EZ3.Touch = function(domElement, bounds) {
   this._device = EZ3.Device;
   this._domElement = domElement;
+  this._bounds = bounds;
   this._pointers = [];
 
   this.enabled = false;
@@ -15,8 +16,10 @@ EZ3.Touch = function(domElement) {
 
 EZ3.Touch.prototype.constructor = EZ3.Touch;
 
-EZ3.Touch.prototype._searchPointerIndex = function(id) {
-  for (var i = 0; i < this._pointers.length; i++)
+EZ3.Touch.prototype._getPointerIndex = function(id) {
+  var i;
+
+  for (i = 0; i < this._pointers.length; i++)
     if (id === this._pointers[i].id)
       return i;
 
@@ -24,51 +27,63 @@ EZ3.Touch.prototype._searchPointerIndex = function(id) {
 };
 
 EZ3.Touch.prototype._processTouchPress = function(event) {
+  var touch;
+  var i;
+  var j;
+
   event.preventDefault();
 
-  for (var i = 0; i < event.changedTouches.length; i++) {
-    var found = false;
+  for (i = 0; i < event.changedTouches.length; i++) {
+    touch = null;
 
-    for (var j = 0; j < EZ3.Touch.MAX_NUM_OF_POINTERS; j++) {
+    for (j = 0; j < EZ3.Touch.MAX_NUM_OF_POINTERS; j++) {
       if (!this._pointers[j]) {
-        this._pointers[j] = new EZ3.TouchPointer(this._domElement, j, event.changedTouches[i].identifier);
-        found = true;
+        touch = event.changedTouches[i];
+        this._pointers[j] = new EZ3.TouchPointer(j, touch .identifier);
         break;
       } else if (this._pointers[j].isUp()) {
-        this._pointers[j].id = event.changedTouches[i].identifier;
-        found = true;
+        touch = event.changedTouches[i];
+        this._pointers[j].id = touch.identifier;
         break;
       }
     }
 
-    if (found)
-      this._pointers[j].processPress(event.changedTouches[i], this.onPress, this.onMove);
+    if (touch)
+      this._pointers[j].processPress(touch, this._domElement, this._bounds, this.onPress, this.onMove);
   }
 };
 
 EZ3.Touch.prototype._processTouchMove = function(event) {
+  var i;
+  var j;
+
   event.preventDefault();
 
-  for (var i = 0; i < event.changedTouches.length; i++) {
-    var j = this._searchPointerIndex(event.changedTouches[i].identifier);
+  for (i = 0; i < event.changedTouches.length; i++) {
+    j = this._getPointerIndex(event.changedTouches[i].identifier);
     if (j >= 0)
-      this._pointers[j].processMove(event.changedTouches[i], this.onMove);
+      this._pointers[j].processMove(event.changedTouches[i], this._domElement, this._bounds, this.onMove);
   }
 };
 
 EZ3.Touch.prototype._processTouchUp = function(event) {
+  var i;
+  var j;
+
   event.preventDefault();
 
-  for (var i = 0; i < event.changedTouches.length; i++) {
-    var j = this._searchPointerIndex(event.changedTouches[i].identifier);
+  for (i = 0; i < event.changedTouches.length; i++) {
+    j = this._getPointerIndex(event.changedTouches[i].identifier);
     if (j >= 0)
       this._pointers[j].processUp(this.onUp);
   }
 };
 
 EZ3.Touch.prototype.enable = function() {
+  var that;
+
   if (this._device.touchDown) {
-    var that = this;
+    that = this;
 
     this.enabled = true;
 
@@ -106,7 +121,7 @@ EZ3.Touch.prototype.disable = function() {
 
 EZ3.Touch.prototype.getPointer = function(code) {
   if (!this._pointers[code])
-    this._pointers[code] = new EZ3.TouchPointer(this._domElement, code);
+    this._pointers[code] = new EZ3.TouchPointer(code);
 
   return this._pointers[code];
 };

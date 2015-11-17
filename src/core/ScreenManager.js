@@ -2,19 +2,19 @@
  * @class ScreenManager
  */
 
-EZ3.ScreenManager = function(canvas, renderer, time, input) {
+EZ3.ScreenManager = function(canvas, bounds, renderer, time, input) {
   this._screens = [];
 
   this.canvas = canvas;
-  this.bounds = canvas.getBoundingClientRect();
+  this.bounds = bounds;
   this.renderer = renderer;
   this.time = time;
   this.input = input;
-
   this.fullScreeneded = false;
 };
 
-EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
+EZ3.ScreenManager.prototype._addScreenEventListeners = function(screen) {
+  var device = EZ3.Device;
   var inputs = {
     keyboard: {
       onKeyPress: 'onKeyPress',
@@ -33,7 +33,6 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
       onUp: 'onTouchUp'
     }
   };
-  var device = EZ3.Device;
   var events;
   var i;
   var j;
@@ -42,8 +41,8 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
     events = inputs[i];
 
     for (j in events) {
-      if (screen[events[j]] !== EZ3.Screen.prototype[events[j]])
-        screen.input[i][j].add(screen[events[j]], screen);
+      if (screen[events[j]])
+        this.input[i][j].add(screen[events[j]], screen);
     }
   }
 
@@ -51,11 +50,9 @@ EZ3.ScreenManager.prototype._addEventListeners = function(screen) {
     device.onResize.add(screen.onResize, screen);
 };
 
-EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
-  var inputs, events;
-  var i, j;
-
-  inputs = {
+EZ3.ScreenManager.prototype._removeScreenEventListeners = function(screen) {
+  var device = EZ3.Device;
+  var inputs = {
     keyboard: [
       'onKeyPress',
       'onKeyDown',
@@ -72,13 +69,18 @@ EZ3.ScreenManager.prototype._removeEventListeners = function(screen) {
       'onUp'
     ]
   };
+  var events;
+  var i;
+  var j;
 
   for (i in inputs) {
     events = inputs[i];
 
     for (j = 0; j < events.length; j++)
-      screen.input[i][events[j]].remove(screen[events[j]], screen);
+      screen.input[i][events[j]].removeAll(screen);
   }
+
+  device.onResize.removeAll(screen);
 };
 
 EZ3.ScreenManager.prototype._processFullScreenChange = function() {
@@ -93,22 +95,35 @@ EZ3.ScreenManager.prototype._processFullScreenChange = function() {
 };
 
 EZ3.ScreenManager.prototype.add = function(screen) {
-  if (screen instanceof EZ3.Screen && !this.get(screen.id)) {
+  var onComplete;
+
+  if (!this.get(screen.id)) {
     screen.manager = this;
-    screen.input = this.input;
 
-    if (screen.preload) {
-      screen.preload();
-      screen.loader.onComplete.add(screen.create, screen);
-      screen.loader.onComplete.add(function() {
-        this._addEventListeners(screen);
+    if (screen.load) {
+      screen.load();
+
+      if (screen.onLoadProgress)
+        screen.requests.onProgress.add(screen.onLoadProgress, screen);
+
+      onComplete = function(assets, failed, loaded) {
+        if (screen.onLoadProgress)
+          screen.requests.onProgress.remove(screen.onLoadProgress, screen);
+
+        screen.requests.onComplete.remove(onComplete, this);
+
+        screen.create.call(screen, assets, failed, loaded);
+
+        this._addScreenEventListeners(screen);
         this._screens.unshift(screen);
-      }, this);
+      };
 
-      screen.loader.start();
+      screen.requests.onComplete.add(onComplete, this);
+
+      screen.requests.send();
     } else {
       screen.create();
-      this._addEventListeners(screen);
+      this._addScreenEventListeners(screen);
       this._screens.unshift(screen);
     }
 
@@ -129,7 +144,7 @@ EZ3.ScreenManager.prototype.remove = function(id) {
 
   for (i = 0; i < this._screens.length; i++) {
     if (this._screens[i].id === id) {
-      this._removeEventListeners(this._screens[i]);
+      this._removeScreenEventListeners(this._screens[i]);
       return this._screens.splice(i, 1);
     }
   }
@@ -150,14 +165,11 @@ EZ3.ScreenManager.prototype.update = function() {
   }
 };
 
-EZ3.ScreenManager.prototype.fullScreen = function() {
+EZ3.ScreenManager.prototype.requestFullScreen = function() {
   var device = EZ3.Device;
   var that;
 
-  console.log('x');
-
   if (device.requestFullScreen && !this.fullScreened) {
-    console.log('x1');
     that = this;
 
     this._onFullScreenChange = function(event) {
@@ -169,9 +181,9 @@ EZ3.ScreenManager.prototype.fullScreen = function() {
   }
 };
 
-EZ3.ScreenManager.prototype.windowed = function() {
+EZ3.ScreenManager.prototype.exitFullScreen = function() {
   var device = EZ3.Device;
 
-  if (device.cancelFullScreen && this.fullScreened)
-    this.canvas[device.cancelFullScreen]();
+  if (device.exitFullScreen && this.fullScreened)
+    document[device.exitFullScreen]();
 };

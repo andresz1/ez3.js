@@ -18,12 +18,14 @@ EZ3.Engine = function(canvas, options) {
 };
 
 EZ3.Engine.prototype._init = function(canvas, options) {
+  var bounds = canvas.getBoundingClientRect();
+
   this._animationFrame = new EZ3.AnimationFrame(false);
   this._renderer = new EZ3.Renderer(canvas, options);
 
   this.time = new EZ3.Time();
-  this.input = new EZ3.InputManager(canvas);
-  this.screens = new EZ3.ScreenManager(canvas, this._renderer, this.time, this.input);
+  this.input = new EZ3.InputManager(canvas, bounds);
+  this.screens = new EZ3.ScreenManager(canvas, bounds, this._renderer, this.time, this.input);
 
   this._renderer.initContext();
   this.time.start();

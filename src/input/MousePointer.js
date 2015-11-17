@@ -3,8 +3,8 @@
  * @extends Pointer
  */
 
-EZ3.MousePointer = function(domElement) {
-  EZ3.Pointer.call(this, domElement);
+EZ3.MousePointer = function() {
+  EZ3.Pointer.call(this);
 
   this._buttons = [];
 
@@ -16,20 +16,20 @@ EZ3.MousePointer = function(domElement) {
 EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
 EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
 
-EZ3.MousePointer.prototype.processPress = function(event, onPress, onMove) {
+EZ3.MousePointer.prototype.processPress = function(event, domElement, bounds, onPress, onMove) {
   if (!this._buttons[event.button])
     this._buttons[event.button] = new EZ3.Switch(event.button);
 
   this._buttons[event.button].processPress();
-  EZ3.Pointer.prototype.processPress.call(this, event);
+  EZ3.Pointer.prototype.processPress.call(this, event, domElement, bounds);
 
   onPress.dispatch(this._buttons[event.button]);
   onMove.dispatch(this);
 };
 
-EZ3.MousePointer.prototype.processMove = function(event, onMove) {
+EZ3.MousePointer.prototype.processMove = function(event, domElement, bounds, onMove) {
   if (!this.locked)
-    EZ3.Pointer.prototype.processMove.call(this, event);
+    EZ3.Pointer.prototype.processMove.call(this, event, domElement, bounds);
   else {
     this.movement.x = event.movementX || event.mozMovementX || 0;
     this.movement.y = event.movementY || event.mozMovementY || 0;

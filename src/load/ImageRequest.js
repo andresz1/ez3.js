@@ -29,9 +29,9 @@ EZ3.ImageRequest.prototype._processLoad = function(image, onLoad) {
   onLoad(this.url, this.response);
 };
 
-EZ3.ImageRequest.prototype._processError = function(event, onError) {
+EZ3.ImageRequest.prototype._processError = function(onError) {
   this._removeEventListeners();
-  onError(this.url, event);
+  onError(this.url);
 };
 
 EZ3.ImageRequest.prototype._addEventListeners = function(onLoad, onError) {
@@ -41,8 +41,8 @@ EZ3.ImageRequest.prototype._addEventListeners = function(onLoad, onError) {
     that._processLoad(this, onLoad);
   };
 
-  this._onError = function(event) {
-    that._processError(event, onError);
+  this._onError = function() {
+    that._processError(onError);
   };
 
   this._request.addEventListener('load', this._onLoad, false);

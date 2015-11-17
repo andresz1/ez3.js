@@ -20,7 +20,7 @@ EZ3.MeshMaterial = function() {
   this.refractive = false;
 
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
-  this.specularReflection = EZ3.MeshMaterial.PHONG;
+  this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
   this.shadowCaster = false;
   this.softShadows = false;

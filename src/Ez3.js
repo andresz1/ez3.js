@@ -10,3 +10,7 @@ EZ3.extends = function(destination, source) {
     if (source.hasOwnProperty(k))
       destination[k] = source[k];
 };
+
+EZ3.toFileName = function(url) {
+  return url.split('/').pop();
+};
