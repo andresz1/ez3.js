@@ -113,3 +113,8 @@ EZ3.RequestManager.prototype.send = function() {
   for (url in this._requests)
     this._requests[url].send(this._processLoad.bind(this), this._processError.bind(this));
 };
+
+EZ3.RequestManager.prototype.file = EZ3.RequestManager.prototype.addFileRequest;
+EZ3.RequestManager.prototype.image = EZ3.RequestManager.prototype.addImageRequest;
+EZ3.RequestManager.prototype.entity = EZ3.RequestManager.prototype.addEntityRequest;
+EZ3.RequestManager.prototype.start = EZ3.RequestManager.prototype.send;

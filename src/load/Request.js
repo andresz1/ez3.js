@@ -2,9 +2,9 @@
  * @class Request
  */
 
-EZ3.Request = function(url, response, crossOrigin) {
+EZ3.Request = function(url, asset, crossOrigin) {
   this.url = url;
-  this.response = response;
+  this.asset = asset;
   this.crossOrigin = crossOrigin || false;
   this.cached = true;
 };

@@ -245,7 +245,7 @@ EZ3.Vector3.prototype.testEqual = function(v) {
     if (v instanceof EZ3.Vector3)
       return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
     else {
-      console.warn('EZ3.Vector3.testEqual: parameter is not s EZ3.Vector3.', v);
+      //console.warn('EZ3.Vector3.testEqual: parameter is not s EZ3.Vector3.', v);
       return false;
     }
   } else

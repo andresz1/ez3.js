@@ -206,11 +206,12 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   for (i = 0; i < meshes.common.length; i++) {
     mesh = meshes.common[i];
 
-    mesh.updateEssentialBuffers();
+    mesh.updatePrimitiveData();
+    mesh.updateLinearData();
 
     if (!lights.empty) {
-      mesh.updateIlluminationBuffers();
       mesh.updateNormal();
+      mesh.updateNormalData();
     }
 
     mesh.material.updateProgram(gl, this.state, lights);

@@ -9,7 +9,7 @@ EZ3.Buffer = function(data, dynamic) {
 
   this.data = data || [];
   this.dynamic = dynamic || false;
-  this.dirty = true;
+  this.needUpdate = true;
 };
 
 EZ3.Buffer.prototype.constructor = EZ3.Buffer;
@@ -40,13 +40,14 @@ EZ3.Buffer.prototype.update = function(gl, target, bytes) {
   if ((this._cache.length !== length) || (this._cache.dynamic !== this.dynamic)) {
     this._cache.length = length;
     this._cache.dynamic =  this.dynamic;
+    this._ranges = [];
 
     gl.bufferData(target, new ArrayType(this.data), (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW);
   } else {
     if (this._ranges.length) {
-      for (k = 0; k < this._ranges.length; k++) {
-        offset = bytes * this._ranges[k].left;
-        data = this.data.slice(this._ranges[k].left, this._ranges[k].right);
+      for (k = 0; k < this._ranges.length; k += 2) {
+        offset = bytes * this._ranges[k];
+        data = this.data.slice(this._ranges[k], this._ranges[k + 1]);
         gl.bufferSubData(target, offset, new ArrayType(data));
       }
 
@@ -56,7 +57,6 @@ EZ3.Buffer.prototype.update = function(gl, target, bytes) {
   }
 };
 
-EZ3.Buffer.prototype.addRange = function(range) {
-  if (range instanceof EZ3.VertexBufferAttribute)
-    this._ranges.push(range);
+EZ3.Buffer.prototype.addUpdateRange = function(left, right) {
+    this._ranges.push(left, right);
 };

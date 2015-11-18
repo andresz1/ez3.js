@@ -226,10 +226,16 @@ void main() {
 	vec3 specular = vec3(0.0, 0.0, 0.0);
 	vec3 v = normalize(uEyePosition - vPosition);
 
-	#ifdef NORMAL_MAP
-		vec3 n = pertubNormal(-v);
+	#ifdef FLAT
+		vec3 fdx = dFdx(vPosition);
+		vec3 fdy = dFdy(vPosition);
+		vec3 n = normalize(cross(fdx, fdy));
 	#else
 		vec3 n = vNormal;
+	#endif
+
+	#ifdef NORMAL_MAP
+		n = pertubNormal(-v);
 	#endif
 
 	#if MAX_POINT_LIGHTS > 0

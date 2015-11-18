@@ -7,8 +7,6 @@ EZ3.Mesh = function(geometry, material) {
   EZ3.Entity.call(this);
 
   this.normal = new EZ3.Matrix3();
-  this.shadow = new EZ3.Matrix4();
-
   this.geometry = geometry || new EZ3.Geometry();
   this.material = material || new EZ3.MeshMaterial();
 };
@@ -16,22 +14,26 @@ EZ3.Mesh = function(geometry, material) {
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 
-EZ3.Mesh.prototype.updateEssentialBuffers = function() {
-  if (this.geometry.dirty) {
+EZ3.Mesh.prototype.updatePrimitiveData = function(){
+  if (this.geometry.needGenerate) {
     this.geometry.generate();
-    this.geometry.dirty = false;
+    this.geometry.linearDataNeedGenerate = true;
+    this.geometry.normalDataNeedGenerate = false;
   }
-
-  if (this.material.fill === EZ3.Material.WIREFRAME && !this.geometry.buffers.get('line'))
-    this.geometry.processLinearIndices();
 };
 
-EZ3.Mesh.prototype.updateIlluminationBuffers = function() {
-  if (!this.geometry.buffers.get('normal'))
-    this.geometry.processNormals();
+EZ3.Mesh.prototype.updateNormalData = function() {
+  if (this.geometry.normalDataNeedGenerate) {
+    this.geometry.generateNormalData();
+    this.geometry.normalDataNeedGenerate = false;
+  }
+};
 
-  if (this.material.bumpMap instanceof EZ3.Texture && !this.geometry.buffers.get('tangent'))
-    this.geometry.processTangentsAndBitangents();
+EZ3.Mesh.prototype.updateLinearData = function() {
+  if (this.material.fill === EZ3.Material.WIREFRAME && this.geometry.linearDataNeedGenerate) {
+    this.geometry.generateLinearData();
+    this.geometry.linearDataNeedGenerate = false;
+  }
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {

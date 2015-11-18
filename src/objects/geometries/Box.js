@@ -1,138 +1,101 @@
 /**
  * @class Box
- * @extends Geometry
+ * @extends Primitive
  */
 
 EZ3.Box = function(dimensions, resolution) {
-  EZ3.Geometry.call(this);
+  EZ3.Primitive.call(this);
 
-  if (dimensions instanceof EZ3.Vector3)
-    this.dimensions = dimensions;
-  else
-    this.dimensions = new EZ3.Vector3(1, 1, 1);
+  this._cache = {};
 
-  if (resolution instanceof EZ3.Vector3)
-    this.resolution = resolution;
-  else
-    this.resolution = new EZ3.Vector3(1, 1, 1);
-
-  this.dirty = true;
+  this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
+  this.resolution = resolution || new EZ3.Vector3(1, 1, 1);
 };
 
-EZ3.Box.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Box.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Box.prototype.constructor = EZ3.Box;
 
 EZ3.Box.prototype.generate = function() {
+  var that = this;
   var uvs = [];
   var indices = [];
   var vertices = [];
-  var width = this.dimensions.x;
-  var height = this.dimensions.y;
-  var depth = this.dimensions.z;
-  var widthHalf = width * 0.5;
-  var depthHalf = depth * 0.5;
-  var heightHalf = height * 0.5;
-  var need32Bits = false;
-  var widthSegments;
-  var heightSegments;
-  var depthSegments;
-  var buffer;
-  var length;
+  var normals = [];
+  var widthHalf = this.dimensions.x * 0.5;
+  var heightHalf = this.dimensions.y * 0.5;
+  var depthHalf = this.dimensions.z * 0.5;
 
-  if (this.resolution !== undefined) {
-    widthSegments = this.resolution.x;
-    heightSegments = this.resolution.y;
-    depthSegments = this.resolution.z;
-  } else {
-    widthSegments = 1;
-    heightSegments = 1;
-    depthSegments = 1;
-  }
-
-  function buildPlane(u, v, udir, vdir, width, height, depth) {
-    var gridX = widthSegments;
-    var gridY = heightSegments;
+  function computeFace(u, v, udir, vdir, width, height, depth) {
+    var gridX = that.resolution.x;
+    var gridY = that.resolution.y;
     var widthHalf = width * 0.5;
     var heightHalf = height * 0.5;
     var offset = vertices.length / 3;
     var vector = new EZ3.Vector3();
+    var normal = new EZ3.Vector3();
     var segmentWidth;
     var segmentHeight;
     var a;
-    var b;
-    var c;
-    var d;
     var w;
-    var i;
-    var j;
+    var s;
+    var t;
 
-    if ((u === 'x' && v === 'y') || (u === 'y' && v === 'x')) {
-
+    if ((u === 'x' && v === 'y') || (u === 'y' && v === 'x'))
       w = 'z';
-
-    } else if ((u === 'x' && v === 'z') || (u === 'z' && v === 'x')) {
-
+    else if ((u === 'x' && v === 'z') || (u === 'z' && v === 'x')) {
       w = 'y';
-      gridY = depthSegments;
-
+      gridY = that.resolution.z;
     } else if ((u === 'z' && v === 'y') || (u === 'y' && v === 'z')) {
-
       w = 'x';
-      gridX = depthSegments;
-
+      gridX = that.resolution.z;
     }
+
+    normal[w] = (depth > 0) ? 1 : -1;
 
     segmentWidth = width / gridX;
     segmentHeight = height / gridY;
 
-    for (i = 0; i < gridY + 1; i++) {
-      for (j = 0; j < gridX + 1; j++) {
-        vector[u] = (j * segmentWidth - widthHalf) * udir;
-        vector[v] = (i * segmentHeight - heightHalf) * vdir;
+    for (s = 0; s < gridY + 1; s++) {
+      for (t = 0; t < gridX + 1; t++) {
+        vector[u] = (t * segmentWidth - widthHalf) * udir;
+        vector[v] = (s * segmentHeight - heightHalf) * vdir;
         vector[w] = depth;
 
-        uvs.push(j / gridX, i / gridY);
+        uvs.push(t / gridX, s / gridY);
         vertices.push(vector.x, vector.y, vector.z);
+        normals.push(normal.x, normal.y, normal.z);
       }
     }
 
-    for (i = 0; i < gridY; ++i) {
-      for (j = 0; j < gridX; ++j) {
+    for (s = 0; s < gridY; s++) {
+      for (t = 0; t < gridX; t++) {
+        a = offset + (s * (gridX + 1) + t);
+        w = offset + ((s + 1) * (gridX + 1) + (t + 1));
 
-        a = offset + (i * (gridX + 1) + j);
-        b = offset + (i * (gridX + 1) + (j + 1));
-        c = offset + ((i + 1) * (gridX + 1) + j);
-        d = offset + ((i + 1) * (gridX + 1) + (j + 1));
-
-        indices.push(a, d, b, a, c, d);
-
-        if (!need32Bits) {
-          length = indices.length;
-          need32Bits = need32Bits ||
-            (a > EZ3.Math.MAX_USHORT) ||
-            (b > EZ3.Math.MAX_USHORT) ||
-            (c > EZ3.Math.MAX_USHORT) ||
-            (d > EZ3.Math.MAX_USHORT);
-        }
+        indices.push(a, w, offset + (s * (gridX + 1) + (t + 1)));
+        indices.push(a, offset + ((s + 1) * (gridX + 1) + t), w);
       }
     }
   }
 
-  buildPlane('z', 'y', -1, -1, depth, height, +widthHalf);
-  buildPlane('z', 'y', +1, -1, depth, height, -widthHalf);
-  buildPlane('x', 'z', +1, +1, width, depth, +heightHalf);
-  buildPlane('x', 'z', +1, -1, width, depth, -heightHalf);
-  buildPlane('x', 'y', +1, -1, width, height, +depthHalf);
-  buildPlane('x', 'y', -1, -1, width, height, -depthHalf);
+  computeFace('z', 'y', -1, -1, this.dimensions.z, this.dimensions.y, widthHalf);
+  computeFace('z', 'y', 1, -1, this.dimensions.z, this.dimensions.y, -widthHalf);
+  computeFace('x', 'z', 1, 1, this.dimensions.x, this.dimensions.z, heightHalf);
+  computeFace('x', 'z', 1, -1, this.dimensions.x, this.dimensions.z, -heightHalf);
+  computeFace('x', 'y', 1, -1, this.dimensions.x, this.dimensions.y, depthHalf);
+  computeFace('x', 'y', -1, -1, this.dimensions.x, this.dimensions.y, -depthHalf);
 
-  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
-  this.buffers.add('triangle', buffer);
-
-  buffer = new EZ3.VertexBuffer(uvs, false);
-  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
-  this.buffers.add('uv', buffer);
-
-  buffer = new EZ3.VertexBuffer(vertices, false);
-  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
-  this.buffers.add('position', buffer);
+  this._setData(indices, vertices, normals, uvs);
 };
+
+Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
+  get: function() {
+    if (!this.dimensions.testEqual(this._cache.dimensions) || !this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.dimensions = this.dimensions.clone();
+      this._cache.resolution = this.resolution.clone();
+      return true;
+    }
+
+    return false;
+  }
+});

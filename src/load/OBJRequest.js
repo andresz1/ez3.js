@@ -288,38 +288,38 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
       fixedIndices = [];
       fixedVertices = [];
 
-      that.response.add(mesh);
+      that.asset.add(mesh);
 
       mesh = new EZ3.Mesh(new EZ3.Geometry(), new EZ3.MeshMaterial());
     }
   }
 
   function processMaterials() {
-    var loader = new EZ3.Loader();
+    var load = new EZ3.RequestManager();
     var tokens = that.url.split('/');
     var baseUrl = that.url.substr(0, that.url.length - tokens[tokens.length - 1].length);
     var files = [];
     var i;
 
     for (i = 0; i < libraries.length; i++)
-      files.push(loader.add(new EZ3.DataRequest(baseUrl + libraries[i])));
+      files.push(load.file(baseUrl + libraries[i]));
 
-    loader.onComplete.add(function() {
+    load.onComplete.add(function() {
       for (i = 0; i < files.length; i++)
-        processMaterial(baseUrl, files[i].data, loader);
+        processMaterial(baseUrl, files[i].data, load);
 
-      loader.onComplete.removeAll();
-      loader.onComplete.add(function() {
-        onLoad(that.url, that.response);
+      load.onComplete.removeAll();
+      load.onComplete.add(function() {
+        onLoad(that.url, that.asset);
       });
 
-      loader.start();
+      load.start();
     });
 
-    loader.start();
+    load.start();
   }
 
-  function processMaterial(baseUrl, data, loader) {
+  function processMaterial(baseUrl, data, load) {
     var lines = data.split('\n');
     var line;
     var key;
@@ -359,7 +359,7 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
     }
 
     function processDiffuseMap(url) {
-      var texture = new EZ3.Texture2D(loader.add(new EZ3.ImageRequest(baseUrl + url)));
+      var texture = new EZ3.Texture2D(load.image(baseUrl + url, that.crossOrigin));
       var i;
 
       for (i = 0; i < currents.length; i++)
@@ -446,15 +446,16 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
 
 EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
   var that = this;
-  var loader = new EZ3.Loader();
-  var file = loader.add(new EZ3.DataRequest(this.url, this.crossOrigin));
+  var load = new EZ3.RequestManager();
 
-  loader.onComplete.add(function(error) {
-    if (error)
-      onError(that.url, true);
+  load.file(this.url, this.crossOrigin);
 
-    that._parse(file.data, onLoad);
+  load.onComplete.add(function(assets, failed) {
+    if (failed)
+      return onError(that.url, true);
+
+    that._parse(assets.get(that.url).data, onLoad);
   });
 
-  loader.start();
+  load.start();
 };

@@ -10,6 +10,8 @@ EZ3.MeshMaterial = function() {
   this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
   this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
 
+  this.shading = EZ3.MeshMaterial.SMOOTH;
+
   this.normalMap = null;
   this.diffuseMap = null;
   this.emissiveMap = null;
@@ -43,6 +45,9 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
   defines.push('MAX_POINT_LIGHTS ' + lights.point.length);
   defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
   defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
+
+  if(this.shading === EZ3.MeshMaterial.FLAT)
+    defines.push('FLAT');
 
   if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR)
     defines.push('OREN_NAYAR');
@@ -139,6 +144,9 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
     this.program.loadUniformFloat(gl, 'uRoughness', this.roughnessFactor);
   }
 };
+
+EZ3.MeshMaterial.FLAT = 0;
+EZ3.MeshMaterial.SMOOTH = 1;
 
 EZ3.MeshMaterial.LAMBERT = 0;
 EZ3.MeshMaterial.OREN_NAYAR = 1;

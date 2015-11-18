@@ -149,7 +149,7 @@ EZ3.Vector2.prototype.testEqual = function(v) {
   if(v instanceof EZ3.Vector2)
     return (this.x === v.x) && (this.y === v.y);
   else {
-    console.error('EZ3.Vector2.testEqual: parameter is not s EZ3.Vector2.', v);
+    //console.error('EZ3.Vector2.testEqual: parameter is not s EZ3.Vector2.', v);
     return false;
   }
 };

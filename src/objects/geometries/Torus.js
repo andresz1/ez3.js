@@ -1,109 +1,91 @@
 /**
  * @class Torus
- * @extends Geometry
+ * @extends Primitive
  */
 
 EZ3.Torus = function(radiuses, resolution) {
-  EZ3.Geometry.call(this);
+  EZ3.Primitive.call(this);
 
-  if (radiuses !== undefined) {
-    if (radiuses instanceof EZ3.Vector2)
-      this.radiuses = radiuses;
-    else
-      this.radiuses = new EZ3.Vector2(0.5, 1.0);
-  }
+  this._cache = {};
 
-  if (resolution !== undefined) {
-    if (resolution instanceof EZ3.Vector2)
-      this.resolution = resolution;
-    else
-      this.resolution = new EZ3.Vector2(5, 5);
-  }
-
-  this.dirty = true;
+  this.radiuses = radiuses || new EZ3.Vector2(7, 3);
+  this.resolution = resolution || new EZ3.Vector2(5, 5);
 };
 
-EZ3.Torus.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Torus.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Torus.prototype.constructor = EZ3.Torus;
 
 EZ3.Torus.prototype.generate = function() {
-  var uvs = [];
   var indices = [];
   var vertices = [];
+  var normals = [];
+  var uvs = [];
   var vertex = new EZ3.Vector3();
-  var need32Bits = false;
-  var buffer;
-  var length;
-  var cosS;
-  var cosR;
-  var sinS;
-  var sinR;
+  var center = new EZ3.Vector3();
   var rho;
   var phi;
-  var a;
-  var b;
-  var c;
-  var d;
+  var cosr;
+  var sinr;
+  var cosp;
   var u;
   var v;
   var s;
   var t;
-  var r;
 
-  for (s = 0; s < this.resolution.x; ++s) {
-    for (r = 0; r < this.resolution.y; ++r) {
-      u = s / (this.resolution.x - 1);
-      v = r / (this.resolution.y - 1);
+  for (s = 0; s < this.resolution.x; s++) {
+    u = s / (this.resolution.x - 1);
+
+    for (t = 0; t < this.resolution.y; t++) {
+      v = t / (this.resolution.y - 1);
 
       rho = EZ3.Math.DOUBLE_PI * u;
       phi = EZ3.Math.DOUBLE_PI * v;
 
-      cosS = Math.cos(rho);
-      cosR = Math.cos(phi);
-      sinS = Math.sin(rho);
-      sinR = Math.sin(phi);
+      cosr = Math.cos(rho);
+      sinr = Math.sin(rho);
+      cosp = Math.cos(phi);
 
-      vertex.x = (this.radiuses.x + this.radiuses.y * cosR) * cosS;
-      vertex.y = (this.radiuses.y * sinR);
-      vertex.z = (this.radiuses.x + this.radiuses.y * cosR) * sinS;
+      center.x = this.radiuses.x * cosr;
+      center.z = this.radiuses.x * sinr;
 
-      uvs.push(u);
-      uvs.push(v);
+      vertex.x = (this.radiuses.x + this.radiuses.y * cosp) * cosr;
+      vertex.y = (this.radiuses.y * Math.sin(phi));
+      vertex.z = (this.radiuses.x + this.radiuses.y * cosp) * sinr;
 
-      vertices.push(vertex.x);
-      vertices.push(vertex.y);
-      vertices.push(vertex.z);
+      vertices.push(vertex.x, vertex.y, vertex.z);
+
+      vertex.sub(center);
+
+      if (!vertex.testZero())
+        vertex.normalize();
+
+      normals.push(vertex.x, vertex.y, vertex.z);
+
+      uvs.push(u, v);
     }
   }
 
   for (s = 0; s < this.resolution.x - 1; ++s) {
     for (t = 0; t < this.resolution.y - 1; ++t) {
-      a = s * this.resolution.y + t;
-      b = s * this.resolution.y + (t + 1);
-      c = (s + 1) * this.resolution.y + t;
-      d = (s + 1) * this.resolution.y + (t + 1);
+      u = s * this.resolution.y + t;
+      v = (s + 1) * this.resolution.y + (t + 1);
 
-      if (!need32Bits) {
-        length = indices.length;
-        need32Bits = need32Bits ||
-          (a > EZ3.Math.MAX_USHORT) ||
-          (b > EZ3.Math.MAX_USHORT) ||
-          (c > EZ3.Math.MAX_USHORT) ||
-          (d > EZ3.Math.MAX_USHORT);
-      }
-
-      indices.push(a, b, d, a, d, c);
+      indices.push(u, s * this.resolution.y + (t + 1), v);
+      indices.push(u, v, (s + 1) * this.resolution.y + t);
     }
   }
 
-  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
-  this.buffers.add('triangle', buffer);
-
-  buffer = new EZ3.VertexBuffer(uvs, false);
-  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
-  this.buffers.add('uv', buffer);
-
-  buffer = new EZ3.VertexBuffer(vertices, false);
-  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
-  this.buffers.add('position', buffer);
+  this._setData(indices, vertices, normals, uvs);
 };
+
+Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
+  get: function() {
+    if (!this.radiuses.testEqual(this._cache.radiuses) || !this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.radiuses = this.radiuses.clone();
+      this._cache.resolution = this.resolution.clone();
+      return true;
+    }
+
+    return false;
+  }
+});

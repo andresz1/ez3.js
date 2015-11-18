@@ -15,9 +15,9 @@ EZ3.FileRequest.prototype.constructor = EZ3.FileRequest;
 EZ3.FileRequest.prototype._processLoad = function(data, onLoad) {
   this._removeEventListeners();
 
-  this.response.data = data.response;
+  this.asset.data = data.response;
 
-  onLoad(this.url, this.response);
+  onLoad(this.url, this.asset);
 };
 
 EZ3.FileRequest.prototype._processError = function(onError) {

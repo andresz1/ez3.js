@@ -100,17 +100,17 @@ EZ3.ScreenManager.prototype.add = function(screen) {
   if (!this.get(screen.id)) {
     screen.manager = this;
 
-    if (screen.load) {
-      screen.load();
+    if (screen.preload) {
+      screen.preload();
 
       if (screen.onLoadProgress)
-        screen.requests.onProgress.add(screen.onLoadProgress, screen);
+        screen.load.onProgress.add(screen.onLoadProgress, screen);
 
       onComplete = function(assets, failed, loaded) {
         if (screen.onLoadProgress)
-          screen.requests.onProgress.remove(screen.onLoadProgress, screen);
+          screen.load.onProgress.remove(screen.onLoadProgress, screen);
 
-        screen.requests.onComplete.remove(onComplete, this);
+        screen.load.onComplete.remove(onComplete, this);
 
         screen.create.call(screen, assets, failed, loaded);
 
@@ -118,9 +118,9 @@ EZ3.ScreenManager.prototype.add = function(screen) {
         this._screens.unshift(screen);
       };
 
-      screen.requests.onComplete.add(onComplete, this);
+      screen.load.onComplete.add(onComplete, this);
 
-      screen.requests.send();
+      screen.load.start();
     } else {
       screen.create();
       this._addScreenEventListeners(screen);

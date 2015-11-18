@@ -23,22 +23,22 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, inde
     for (k in this._vertex) {
       buffer = this._vertex[k];
 
-      if (buffer.validate(gl, attributes) && buffer.dirty) {
+      if (buffer.isValid(gl, attributes) && buffer.needUpdate) {
         buffer.bind(gl, attributes);
         buffer.update(gl);
-        buffer.dirty = false;
+        buffer.needUpdate = false;
       }
     }
   } else {
     for (k in this._vertex) {
       buffer = this._vertex[k];
 
-      if (buffer.validate(gl, attributes)) {
+      if (buffer.isValid(gl, attributes)) {
         buffer.bind(gl, attributes, state);
 
-        if (buffer.dirty) {
+        if (buffer.needUpdate) {
           buffer.update(gl);
-          buffer.dirty = false;
+          buffer.needUpdate = false;
         }
       }
     }
@@ -47,9 +47,9 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, inde
   if (index) {
     index.bind(gl);
 
-    if (index.dirty) {
+    if (index.needUpdate) {
       index.update(gl, extension);
-      index.dirty = false;
+      index.needUpdate = false;
     }
   }
 };

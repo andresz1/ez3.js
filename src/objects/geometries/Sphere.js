@@ -1,92 +1,81 @@
 /**
  * @class Sphere
- * @extends Geometry
+ * @extends Primitive
  */
 
 EZ3.Sphere = function(radius, resolution) {
-  EZ3.Geometry.call(this);
+  EZ3.Primitive.call(this);
 
-  this.radius = radius;
+  this._cache = {};
 
-  if (resolution instanceof EZ3.Vector2)
-    this.resolution = resolution;
-  else
-    this.resolution = new EZ3.Vector2(5, 5);
-
-  this.dirty = true;
+  this.radius = radius || 5;
+  this.resolution = resolution || new EZ3.Vector2(6, 6);
 };
 
-EZ3.Sphere.prototype = Object.create(EZ3.Geometry.prototype);
+EZ3.Sphere.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Sphere.prototype.constructor = EZ3.Sphere;
 
 EZ3.Sphere.prototype.generate = function() {
-  var vertex = new EZ3.Vector3();
-  var uvs = [];
   var indices = [];
   var vertices = [];
-  var need32Bits = false;
-  var buffer;
-  var length;
+  var normals = [];
+  var uvs = [];
+  var vertex = new EZ3.Vector3();
   var phi;
   var rho;
-  var a;
-  var b;
-  var c;
-  var d;
+  var sinr;
   var u;
   var v;
   var s;
   var t;
 
   for (s = 0; s < this.resolution.x; s++) {
+    u = s / (this.resolution.x - 1);
+
     for (t = 0; t < this.resolution.y; t++) {
-      u = s / (this.resolution.x - 1);
       v = t / (this.resolution.y - 1);
 
       phi = EZ3.Math.DOUBLE_PI * u;
       rho = EZ3.Math.PI * v;
 
-      vertex.x = (this.radius * Math.cos(phi) * Math.sin(rho));
-      vertex.y = (this.radius * Math.sin(rho - EZ3.Math.HALF_PI));
-      vertex.z = (this.radius * Math.sin(phi) * Math.sin(rho));
+      sinr = Math.sin(rho);
 
-      uvs.push(u);
-      uvs.push(v);
+      vertex.x = this.radius * Math.cos(phi) * sinr;
+      vertex.y = this.radius * Math.sin(rho - EZ3.Math.HALF_PI);
+      vertex.z = this.radius * Math.sin(phi) * sinr;
 
-      vertices.push(vertex.x);
-      vertices.push(vertex.y);
-      vertices.push(vertex.z);
+      vertices.push(vertex.x, vertex.y, vertex.z);
+
+      if (!vertex.testZero())
+        vertex.normalize();
+
+      normals.push(vertex.x, vertex.y, vertex.z);
+
+      uvs.push(u, v);
     }
   }
 
   for (s = 0; s < this.resolution.x - 1; ++s) {
     for (t = 0; t < this.resolution.y - 1; ++t) {
-      a = s * this.resolution.y + t;
-      b = s * this.resolution.y + (t + 1);
-      c = (s + 1) * this.resolution.y + t;
-      d = (s + 1) * this.resolution.y + (t + 1);
+      u = s * this.resolution.y + t;
+      v = (s + 1) * this.resolution.y + (t + 1);
 
-      if (!need32Bits) {
-        length = indices.length;
-        need32Bits = need32Bits ||
-          (a > EZ3.Math.MAX_USHORT) ||
-          (b > EZ3.Math.MAX_USHORT) ||
-          (c > EZ3.Math.MAX_USHORT) ||
-          (d > EZ3.Math.MAX_USHORT);
-      }
-
-      indices.push(a, b, d, a, d, c);
+      indices.push(u, s * this.resolution.y + (t + 1), v);
+      indices.push(u, v, (s + 1) * this.resolution.y + t);
     }
   }
 
-  buffer = new EZ3.IndexBuffer(indices, false, need32Bits);
-  this.buffers.add('triangle', buffer);
-
-  buffer = new EZ3.VertexBuffer(uvs, false);
-  buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
-  this.buffers.add('uv', buffer);
-
-  buffer = new EZ3.VertexBuffer(vertices, false);
-  buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
-  this.buffers.add('position', buffer);
+  this._setData(indices, vertices, normals, uvs);
 };
+
+Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
+  get: function() {
+    if (this._cache.radius !== this.radius || !this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.radius = this.radius;
+      this._cache.resolution = this.resolution.clone();
+      return true;
+    }
+
+    return false;
+  }
+});

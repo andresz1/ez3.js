@@ -20,13 +20,13 @@ EZ3.ImageRequest.prototype._processLoad = function(image, onLoad) {
   canvas.height = image.height;
   context.drawImage(image, 0, 0);
 
-  this.response.width = image.width;
-  this.response.height = image.height;
-  this.response.data = new Uint8Array(context.getImageData(0, 0, image.width, image.height).data);
+  this.asset.width = image.width;
+  this.asset.height = image.height;
+  this.asset.data = new Uint8Array(context.getImageData(0, 0, image.width, image.height).data);
 
   this._removeEventListeners();
 
-  onLoad(this.url, this.response);
+  onLoad(this.url, this.asset);
 };
 
 EZ3.ImageRequest.prototype._processError = function(onError) {

@@ -13,7 +13,7 @@ EZ3.VertexBuffer = function(data, dynamic) {
 EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
 EZ3.VertexBuffer.prototype.constructor = EZ3.VertexBuffer;
 
-EZ3.VertexBuffer.prototype.validate = function(gl, attributes) {
+EZ3.VertexBuffer.prototype.isValid = function(gl, attributes) {
   var k;
 
   for (k in this._attributes)
@@ -40,8 +40,8 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
     normalized = this._attributes[k].normalized;
 
     if (layout >= 0) {
-      if(state) {
-        if(!state.attribute[layout]) {
+      if (state) {
+        if (!state.attribute[layout]) {
           gl.enableVertexAttribArray(layout);
           state.attribute[layout] = true;
         }
@@ -59,8 +59,6 @@ EZ3.VertexBuffer.prototype.update = function(gl) {
 };
 
 EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
-  if (attribute instanceof EZ3.VertexBufferAttribute) {
-    this._stride += 4 * attribute.size;
-    this._attributes[name] = attribute;
-  }
+  this._stride += 4 * attribute.size;
+  this._attributes[name] = attribute;
 };
