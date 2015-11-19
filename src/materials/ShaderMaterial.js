@@ -28,7 +28,7 @@ EZ3.ShaderMaterial.prototype.updateProgram = function(gl, state) {
   }
 };
 
-EZ3.ShaderMaterial.prototype.updateUniforms = function(gl) {
+EZ3.ShaderMaterial.prototype.updateUniforms = function(gl, state) {
   var i = 0;
   var name;
   var texture;
@@ -45,18 +45,18 @@ EZ3.ShaderMaterial.prototype.updateUniforms = function(gl) {
   for (name in this._uniformTextures) {
     texture = this._uniformTextures[name];
 
-    texture.bind();
-    texture.update();
+    texture.bind(gl, state);
+    texture.update(gl);
 
-    this.program.loadUniformi(gl, name, i++);
+    this.program.loadUniformInteger(gl, name, i++);
   }
 };
 
-EZ3.ShaderMaterial.prototype.setIntegerUniform = function(name, value) {
+EZ3.ShaderMaterial.prototype.setUniformInteger = function(name, value) {
   this._uniformIntegers[name] = value;
 };
 
-EZ3.ShaderMaterial.prototype.setFloatUniform = function(name, value) {
+EZ3.ShaderMaterial.prototype.setUniformFloat = function(name, value) {
   this._uniformFloats[name] = value;
 };
 
@@ -64,7 +64,7 @@ EZ3.ShaderMaterial.prototype.setUniformMatrix = function(name, value) {
   this._uniformMatrices[name] = value;
 };
 
-EZ3.ShaderMaterial.prototype.setTextureUniform = function(name, value) {
+EZ3.ShaderMaterial.prototype.setUniformTexture = function(name, value) {
   this._uniformTextures[name] = value;
 };
 
