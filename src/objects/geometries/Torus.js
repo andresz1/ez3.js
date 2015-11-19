@@ -3,7 +3,7 @@
  * @extends Primitive
  */
 
-EZ3.Torus = function(radiuses, resolution) {
+EZ3.Torus = function(resolution, radiuses) {
   EZ3.Primitive.call(this);
 
   this._cache = {};

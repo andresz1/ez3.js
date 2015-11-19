@@ -3,7 +3,7 @@
  * @extends Primitive
  */
 
-EZ3.Sphere = function(radius, resolution) {
+EZ3.Sphere = function(resolution, radius) {
   EZ3.Primitive.call(this);
 
   this._cache = {};
