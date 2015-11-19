@@ -6,7 +6,7 @@
 EZ3.SpotLight = function() {
   EZ3.Light.call(this);
 
-  this.cutoff = 0.8;
+  this.cutoff = 0.4;
   this._camera = null;
   this.target = new EZ3.Vector3();
   this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
