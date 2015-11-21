@@ -38,6 +38,10 @@ EZ3.Entity.prototype.remove = function(child) {
     this.children.splice(position, 1);
 };
 
+EZ3.Entity.prototype.lookAt = function(target, up) {
+  this.rotation.fromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
+};
+
 EZ3.Entity.prototype.updateWorld = function() {
   var positionDirty;
   var rotationDirty;
@@ -45,31 +49,31 @@ EZ3.Entity.prototype.updateWorld = function() {
   var modelDirty;
   var parentWorldDirty;
 
-  if(this._cache.position.testDiff(this.position)) {
+  if (this._cache.position.testDiff(this.position)) {
     this._cache.position = this.position.clone();
     positionDirty = true;
   }
 
-  if(this._cache.rotation.testDiff(this.rotation)) {
+  if (this._cache.rotation.testDiff(this.rotation)) {
     this._cache.rotation = this.rotation.clone();
     rotationDirty = true;
   }
 
-  if(this._cache.scale.testDiff(this.scale)) {
+  if (this._cache.scale.testDiff(this.scale)) {
     this._cache.scale = this.scale.clone();
     scaleDirty = true;
   }
 
-  if(positionDirty || rotationDirty || scaleDirty) {
+  if (positionDirty || rotationDirty || scaleDirty) {
     this.model.setFromQuaternion(this.rotation);
-    this.model.translate(this.position);
+    this.model.setPosition(this.position);
     this.model.scale(this.scale);
   }
 
   if (!this.parent) {
     modelDirty = this._cache.model.testDiff(this.model);
 
-    if(modelDirty) {
+    if (modelDirty) {
       this.world = this.model.clone();
       this._cache.model = this.model.clone();
     }
@@ -77,12 +81,12 @@ EZ3.Entity.prototype.updateWorld = function() {
     modelDirty = this._cache.model.testDiff(this.model);
     parentWorldDirty = this._cache.parentWorld.testDiff(this.parent.world);
 
-    if(parentWorldDirty || modelDirty) {
+    if (parentWorldDirty || modelDirty) {
 
-      if(modelDirty)
+      if (modelDirty)
         this._cache.model = this.model.clone();
 
-      if(parentWorldDirty)
+      if (parentWorldDirty)
         this._cache.parentWorld = this.parent.world.clone();
 
       this.world.mul(this.parent.world, this.model);

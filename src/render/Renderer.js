@@ -174,11 +174,10 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     directional: [],
     spot: []
   };
+  var found = false;
   var entity;
   var mesh;
   var i;
-
-  camera.update();
 
   entities.push(scene);
 
@@ -193,12 +192,20 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
       lights.spot.push(entity);
     else if (entity instanceof EZ3.Mesh)
       meshes.common.push(entity);
+    else if (entity === camera)
+      found = true;
 
     for (i = entity.children.length - 1; i >= 0; i--)
       entities.push(entity.children[i]);
 
     entity.updateWorld();
   }
+
+  if (!found)
+    camera.updateWorld();
+
+  camera.updateView();
+  camera.updateProjection();
 
   if (lights.point.length || lights.directional.length || lights.spot.length)
     lights.empty = false;

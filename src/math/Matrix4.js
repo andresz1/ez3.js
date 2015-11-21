@@ -79,40 +79,74 @@ EZ3.Matrix4.prototype.transpose = function(m) {
   return this;
 };
 
-EZ3.Matrix4.prototype.invert = function(m) {
+EZ3.Matrix4.prototype.inverse = function(m) {
   var te = this.elements;
-		var me = m.elements;
+  var me = m.elements || this.elements;
 
-		var n11 = me[ 0 ], n12 = me[ 4 ], n13 = me[ 8 ], n14 = me[ 12 ];
-		var n21 = me[ 1 ], n22 = me[ 5 ], n23 = me[ 9 ], n24 = me[ 13 ];
-		var n31 = me[ 2 ], n32 = me[ 6 ], n33 = me[ 10 ], n34 = me[ 14 ];
-		var n41 = me[ 3 ], n42 = me[ 7 ], n43 = me[ 11 ], n44 = me[ 15 ];
+  var n11 = me[0];
+  var n12 = me[4];
+  var n13 = me[8];
+  var n14 = me[12];
+  var n21 = me[1];
+  var n22 = me[5];
+  var n23 = me[9];
+  var n24 = me[13];
+  var n31 = me[2];
+  var n32 = me[6];
+  var n33 = me[10];
+  var n34 = me[14];
+  var n41 = me[3];
+  var n42 = me[7];
+  var n43 = me[11];
+  var n44 = me[15];
 
-		te[ 0 ] = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44;
-		te[ 4 ] = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44;
-		te[ 8 ] = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44;
-		te[ 12 ] = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
-		te[ 1 ] = n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44;
-		te[ 5 ] = n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44;
-		te[ 9 ] = n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44;
-		te[ 13 ] = n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34;
-		te[ 2 ] = n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44;
-		te[ 6 ] = n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44;
-		te[ 10 ] = n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44;
-		te[ 14 ] = n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34;
-		te[ 3 ] = n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43;
-		te[ 7 ] = n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43;
-		te[ 11 ] = n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43;
-		te[ 15 ] = n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33;
+  te[0] = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44;
+  te[4] = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44;
+  te[8] = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44;
+  te[12] = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+  te[1] = n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44;
+  te[5] = n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44;
+  te[9] = n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44;
+  te[13] = n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34;
+  te[2] = n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44;
+  te[6] = n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44;
+  te[10] = n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44;
+  te[14] = n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34;
+  te[3] = n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43;
+  te[7] = n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43;
+  te[11] = n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43;
+  te[15] = n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33;
 
-		var det = n11 * te[ 0 ] + n21 * te[ 4 ] + n31 * te[ 8 ] + n41 * te[ 12 ];
+  var det = n11 * te[0] + n21 * te[4] + n31 * te[8] + n41 * te[12];
 
-    if(!det) {
-      console.warn('Dicks');
-      return this.identity;
-    }
+  if (!det)
+    return this.identity;
 
-    this.scale( 1 / det );
+  this.multiplyScalar(1 / det);
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.multiplyScalar = function(s) {
+
+  var te = this.elements;
+
+  te[0] *= s;
+  te[4] *= s;
+  te[8] *= s;
+  te[12] *= s;
+  te[1] *= s;
+  te[5] *= s;
+  te[9] *= s;
+  te[13] *= s;
+  te[2] *= s;
+  te[6] *= s;
+  te[10] *= s;
+  te[14] *= s;
+  te[3] *= s;
+  te[7] *= s;
+  te[11] *= s;
+  te[15] *= s;
 
   return this;
 
@@ -215,6 +249,19 @@ EZ3.Matrix4.prototype.mul = function(m2, m1) {
   this.elements[13] = a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31;
   this.elements[14] = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32;
   this.elements[15] = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33;
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.setPosition = function(v, m) {
+  var em = (m instanceof EZ3.Matrix4) ? m.elements : this.elements;
+  var x = v.x;
+  var y = v.y;
+  var z = v.z;
+
+  em[12] = x;
+  em[13] = y;
+  em[14] = z;
 
   return this;
 };
@@ -409,107 +456,38 @@ EZ3.Matrix4.prototype.orthographic = function(left, right, top, bottom, near, fa
 };
 
 EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
-  var len;
-  var x0;
-  var x1;
-  var x2;
-  var y0;
-  var y1;
-  var y2;
-  var z0;
-  var z1;
-  var z2;
-  var upx;
-  var upy;
-  var upz;
-  var eyex;
-  var eyey;
-  var eyez;
-  var centerx;
-  var centery;
-  var centerz;
+  var te = this.elements;
+  var x = new EZ3.Vector3();
+  var y = new EZ3.Vector3();
+  var z = new EZ3.Vector3();
 
-  upx = up.x;
-  upy = up.y;
-  upz = up.z;
+  z.sub(eye, center).normalize();
 
-  eyex = eye.x;
-  eyey = eye.y;
-  eyez = eye.z;
+  if (z.length() === 0)
+    z.z = 1;
 
-  centerx = center.x;
-  centery = center.y;
-  centerz = center.z;
+  x.cross(up, z).normalize();
 
-  if (Math.abs(eyex - centerx) < 0.000001 &&
-    Math.abs(eyey - centery) < 0.000001 &&
-    Math.abs(eyez - centerz) < 0.000001) {
-    return this.identity();
+  if (x.length() === 0) {
+    z.x += 0.0001;
+    x.cross(up, z).normalize();
   }
 
-  z0 = eyex - centerx;
-  z1 = eyey - centery;
-  z2 = eyez - centerz;
+  y.cross(z, x);
 
-  len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
-
-  z0 *= len;
-  z1 *= len;
-  z2 *= len;
-
-  x0 = upy * z2 - upz * z1;
-  x1 = upz * z0 - upx * z2;
-  x2 = upx * z1 - upy * z0;
-
-  len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
-
-  if (!len) {
-    x0 = 0;
-    x1 = 0;
-    x2 = 0;
-  } else {
-    len = 1 / len;
-    x0 *= len;
-    x1 *= len;
-    x2 *= len;
-  }
-
-  y0 = z1 * x2 - z2 * x1;
-  y1 = z2 * x0 - z0 * x2;
-  y2 = z0 * x1 - z1 * x0;
-
-  len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
-
-  if (!len) {
-    y0 = 0;
-    y1 = 0;
-    y2 = 0;
-  } else {
-    len = 1 / len;
-    y0 *= len;
-    y1 *= len;
-    y2 *= len;
-  }
-
-  this.elements[0] = x0;
-  this.elements[1] = y0;
-  this.elements[2] = z0;
-  this.elements[3] = 0;
-  this.elements[4] = x1;
-  this.elements[5] = y1;
-  this.elements[6] = z1;
-  this.elements[7] = 0;
-  this.elements[8] = x2;
-  this.elements[9] = y2;
-  this.elements[10] = z2;
-  this.elements[11] = 0;
-  this.elements[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
-  this.elements[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
-  this.elements[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
-  this.elements[15] = 1;
+  te[0] = x.x;
+  te[1] = y.x;
+  te[2] = z.x;
+  te[4] = x.y;
+  te[5] = y.y;
+  te[6] = z.y;
+  te[8] = x.z;
+  te[9] = y.z;
+  te[10] = z.z;
 
   return this;
 };
+
 
 EZ3.Matrix4.prototype.identity = function() {
   this.elements = [
@@ -530,21 +508,21 @@ EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
   var sinRoll = Math.sin(roll);
 
   this.elements[0] = cosYaw * cosRoll + sinYaw * sinPitch * sinRoll;
-	this.elements[1] = sinRoll * cosPitch;
-	this.elements[2] = -sinYaw * cosRoll + cosYaw * sinPitch * sinRoll;
-	this.elements[3] = 0.0;
-	this.elements[4] = -cosYaw * sinRoll + sinYaw * sinPitch * cosRoll;
-	this.elements[5] = cosRoll * cosPitch;
-	this.elements[6] = sinRoll * sinYaw + cosYaw * sinPitch * cosRoll;
-	this.elements[7] = 0.0;
-	this.elements[8] = sinYaw * cosPitch;
-	this.elements[9] = -sinPitch;
-	this.elements[10] = cosYaw * cosPitch;
-	this.elements[11] = 0.0;
-	this.elements[12] = 0.0;
-	this.elements[13] = 0.0;
-	this.elements[14] = 0.0;
-	this.elements[15] = 1.0;
+  this.elements[1] = sinRoll * cosPitch;
+  this.elements[2] = -sinYaw * cosRoll + cosYaw * sinPitch * sinRoll;
+  this.elements[3] = 0.0;
+  this.elements[4] = -cosYaw * sinRoll + sinYaw * sinPitch * cosRoll;
+  this.elements[5] = cosRoll * cosPitch;
+  this.elements[6] = sinRoll * sinYaw + cosYaw * sinPitch * cosRoll;
+  this.elements[7] = 0.0;
+  this.elements[8] = sinYaw * cosPitch;
+  this.elements[9] = -sinPitch;
+  this.elements[10] = cosYaw * cosPitch;
+  this.elements[11] = 0.0;
+  this.elements[12] = 0.0;
+  this.elements[13] = 0.0;
+  this.elements[14] = 0.0;
+  this.elements[15] = 1.0;
 
   return this;
 };
@@ -612,24 +590,24 @@ EZ3.Matrix4.prototype.toMat3 = function(m) {
 };
 
 EZ3.Matrix4.prototype.testEqual = function(m) {
-  if(m) {
-    if(m instanceof EZ3.Matrix4) {
+  if (m) {
+    if (m instanceof EZ3.Matrix4) {
       return m.elements[0] === this.elements[0] &&
-             m.elements[1] === this.elements[1] &&
-             m.elements[2] === this.elements[2] &&
-             m.elements[3] === this.elements[3] &&
-             m.elements[4] === this.elements[4] &&
-             m.elements[5] === this.elements[5] &&
-             m.elements[6] === this.elements[6] &&
-             m.elements[7] === this.elements[7] &&
-             m.elements[8] === this.elements[8] &&
-             m.elements[9] === this.elements[9] &&
-             m.elements[10] === this.elements[10] &&
-             m.elements[11] === this.elements[11] &&
-             m.elements[12] === this.elements[12] &&
-             m.elements[13] === this.elements[13] &&
-             m.elements[14] === this.elements[14] &&
-             m.elements[15] === this.elements[15];
+        m.elements[1] === this.elements[1] &&
+        m.elements[2] === this.elements[2] &&
+        m.elements[3] === this.elements[3] &&
+        m.elements[4] === this.elements[4] &&
+        m.elements[5] === this.elements[5] &&
+        m.elements[6] === this.elements[6] &&
+        m.elements[7] === this.elements[7] &&
+        m.elements[8] === this.elements[8] &&
+        m.elements[9] === this.elements[9] &&
+        m.elements[10] === this.elements[10] &&
+        m.elements[11] === this.elements[11] &&
+        m.elements[12] === this.elements[12] &&
+        m.elements[13] === this.elements[13] &&
+        m.elements[14] === this.elements[14] &&
+        m.elements[15] === this.elements[15];
     } else {
       console.warn('EZ3.Matrix4.testEqual: parameter is not a EZ3.Matrix4.', m);
       return false;
@@ -639,8 +617,8 @@ EZ3.Matrix4.prototype.testEqual = function(m) {
 };
 
 EZ3.Matrix4.prototype.testDiff = function(m) {
-  if(m) {
-    if(m instanceof EZ3.Matrix4) {
+  if (m) {
+    if (m instanceof EZ3.Matrix4) {
       return !this.testEqual(m);
     } else
       console.warn('EZ3.Matrix4.testDiff: parameter is not a EZ3.Matrix4.', m);

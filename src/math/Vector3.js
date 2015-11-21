@@ -198,8 +198,9 @@ EZ3.Vector3.prototype.normalize = function(v) {
       this.z = v.z;
 
       return this;
-    } /*else
-      console.warn('EZ3.Vector3.normalize: length is zero.', v);*/
+    }
+    /*else
+         console.warn('EZ3.Vector3.normalize: length is zero.', v);*/
   } else {
     l = this.length();
 
@@ -207,10 +208,18 @@ EZ3.Vector3.prototype.normalize = function(v) {
       this.scale(1.0 / l);
 
       return this;
-    } else
-      console.warn('EZ3.Vector3.normalize: length is zero.', this);
+    }
   }
 };
+
+EZ3.Vector3.prototype.fromPositionMatrix = function(m) {
+  this.x = m.elements[12];
+  this.y = m.elements[13];
+  this.z = m.elements[14];
+
+  return this;
+};
+
 
 EZ3.Vector3.prototype.invert = function(v) {
   if (v instanceof EZ3.Vector3) {
@@ -241,7 +250,7 @@ EZ3.Vector3.prototype.toArray = function() {
 };
 
 EZ3.Vector3.prototype.testEqual = function(v) {
-  if(v) {
+  if (v) {
     if (v instanceof EZ3.Vector3)
       return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
     else {
@@ -267,7 +276,7 @@ EZ3.Vector3.prototype.testZero = function(v) {
 };
 
 EZ3.Vector3.prototype.testDiff = function(v) {
-  if(v) {
+  if (v) {
     if (v instanceof EZ3.Vector3)
       return !this.testEqual(v);
     else {
