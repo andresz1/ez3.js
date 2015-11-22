@@ -500,12 +500,12 @@ EZ3.Matrix4.prototype.identity = function() {
 };
 
 EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
-  var cosYaw = Math.cos(yaw);
-  var sinYaw = Math.sin(yaw);
-  var cosPitch = Math.cos(pitch);
-  var sinPitch = Math.sin(pitch);
-  var cosRoll = Math.cos(roll);
-  var sinRoll = Math.sin(roll);
+  var cosYaw = Math.cos(EZ3.Math.toRadians(yaw));
+  var sinYaw = Math.sin(EZ3.Math.toRadians(yaw));
+  var cosPitch = Math.cos(EZ3.Math.toRadians(pitch));
+  var sinPitch = Math.sin(EZ3.Math.toRadians(pitch));
+  var cosRoll = Math.cos(EZ3.Math.toRadians(roll));
+  var sinRoll = Math.sin(EZ3.Math.toRadians(roll));
 
   this.elements[0] = cosYaw * cosRoll + sinYaw * sinPitch * sinRoll;
   this.elements[1] = sinRoll * cosPitch;

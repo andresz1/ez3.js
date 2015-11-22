@@ -34,7 +34,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   if (!lights.empty)
     program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
 
-  this.state.activeShadowReceiver = mesh.material.shadowReceiver;
+  this.state.activeShadowReceiver = mesh.shadowReceiver;
 
   for (i = 0; i < lights.spot.length; i++)
     lights.spot[i].updateUniforms(gl, this.state, program, i);
@@ -56,6 +56,7 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var lightWVP = new EZ3.Matrix4();
   var position = new EZ3.Vector2();
   var lightVP = new EZ3.Matrix4();
+  var view = new EZ3.Matrix4().lookAt(new EZ3.Vector3(20, 20, 20), new EZ3.Vector3(0,0,0), new EZ3.Vector3(0,1,0));
   var framebuffer;
   var program;
   var fragment;
@@ -99,7 +100,7 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
       this.state.frontFaceCulling = true;
     }
 
-    lightVP.mul(light.projection, light.view);
+    lightVP.mul(light.projection, view);
 
     for (j = 0; j < shadowCasters.length; j++) {
       mesh = shadowCasters[j];
@@ -228,7 +229,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     else
       meshes.opaque.push(mesh);
 
-    if (mesh.material.shadowCaster)
+    if (mesh.shadowCaster)
       meshes.shadowCasters.push(mesh);
   }
 

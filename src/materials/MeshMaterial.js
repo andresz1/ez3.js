@@ -24,9 +24,6 @@ EZ3.MeshMaterial = function() {
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
   this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
-  this.shadowCaster = false;
-  this.shadowReceiver = false;
-
   this.albedoFactor = 7.0;
   this.fresnelFactor = 0.0;
   this.refractFactor = 1.0;
