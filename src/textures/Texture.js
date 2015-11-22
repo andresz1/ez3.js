@@ -18,6 +18,8 @@ EZ3.Texture = function(generateMipmaps) {
 EZ3.Texture.prototype._updateImage = function(gl, target, image) {
   var format = gl[image.format];
 
+  console.log(image.format);
+
   if (!EZ3.Math.isPowerOfTwo(image.width) || !EZ3.Math.isPowerOfTwo(image.height))
     image.toPowerOfTwo();
 

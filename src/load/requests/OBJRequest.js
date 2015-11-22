@@ -10,10 +10,77 @@ EZ3.OBJRequest = function(url, crossOrigin) {
 EZ3.OBJRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.OBJRequest.prototype.constructor = EZ3.OBJRequest;
 
-EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
+EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests) {
   var that = this;
-  var mesh = new EZ3.Mesh(new EZ3.Geometry(), new EZ3.MeshMaterial());
-  var lines = data.split('\n');
+  var currents;
+
+  function processColor(color) {
+    var values = color.split(' ');
+
+    return new EZ3.Vector3(parseFloat(values[0]), parseFloat(values[1]), parseFloat(values[2]));
+  }
+
+  function processDiffuse(color) {
+    var diffuse = processColor(color);
+    var i;
+
+    for (i = 0; i < currents.length; i++)
+      currents[i].diffuse = diffuse;
+  }
+
+  function processSpecular(color) {
+    var specular = processColor(color);
+    var i;
+
+    for (i = 0; i < currents.length; i++)
+      currents[i].specular = specular;
+  }
+
+  function processDiffuseMap(url) {
+    var texture = new EZ3.Texture2D(requests.addImageRequest(baseUrl + url, that.crossOrigin));
+    var i;
+
+    for (i = 0; i < currents.length; i++)
+      currents[i].diffuseMap = texture;
+  }
+
+  function init() {
+    var lines = data.split('\n');
+    var line;
+    var key;
+    var value;
+    var i;
+    var j;
+
+    for (i = 0; i < lines.length; i++) {
+      line = lines[i].trim();
+
+      j = line.indexOf(' ');
+
+      key = (j >= 0) ? line.substring(0, j) : line;
+      key = key.toLowerCase();
+
+      value = (j >= 0) ? line.substring(j + 1) : '';
+      value = value.trim();
+
+      if (key === 'newmtl')
+        currents = materials[value];
+      else if (currents) {
+        if (key === 'kd')
+          processDiffuse(value);
+        else if (key === 'ks')
+          processSpecular(value);
+        else if (key === 'map_kd')
+          processDiffuseMap(value);
+      }
+    }
+  }
+
+  init();
+};
+
+EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
+  var that = this;
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -22,11 +89,6 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
   var fixedVertices = [];
   var fixedNormals = [];
   var fixedUvs = [];
-  var materials = [];
-  var libraries = [];
-  var line;
-  var result;
-  var i;
 
   function triangulate(face) {
     var data = [];
@@ -257,7 +319,7 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
     }
   }
 
-  function processMesh() {
+  function processMesh(mesh) {
     var buffer;
 
     if (fixedIndices.length) {
@@ -290,172 +352,99 @@ EZ3.OBJRequest.prototype._parse = function(data, onLoad) {
 
       that.asset.add(mesh);
 
-      mesh = new EZ3.Mesh(new EZ3.Geometry(), new EZ3.MeshMaterial());
+      return new EZ3.Mesh();
     }
+
+    return mesh;
   }
 
-  function processMaterials() {
-    var load = new EZ3.RequestManager();
-    var tokens = that.url.split('/');
-    var baseUrl = that.url.substr(0, that.url.length - tokens[tokens.length - 1].length);
+  function processLibraries(libraries, materials) {
+    var requests = new EZ3.RequestManager();
+    var baseUrl = EZ3.toBaseUrl(that.url);
     var files = [];
     var i;
 
     for (i = 0; i < libraries.length; i++)
-      files.push(load.file(baseUrl + libraries[i]));
+      files.push(requests.file(baseUrl + libraries[i]));
 
-    load.onComplete.add(function() {
+    requests.onComplete.add(function() {
       for (i = 0; i < files.length; i++)
-        processMaterial(baseUrl, files[i].data, load);
+        that._parseMTL(baseUrl, files[i].data, materials, requests);
 
-      load.onComplete.removeAll();
-      load.onComplete.add(function() {
+      requests.onComplete.removeAll();
+      requests.onComplete.add(function() {
         onLoad(that.url, that.asset);
       });
 
-      load.start();
+      requests.start();
     });
 
-    load.start();
+    requests.start();
   }
 
-  function processMaterial(baseUrl, data, load) {
+  function init() {
+    var mesh = new EZ3.Mesh();
+    var libraries = [];
+    var materials = [];
     var lines = data.split('\n');
     var line;
-    var key;
-    var value;
-    var currents;
+    var result;
     var i;
-    var j;
-
-    function processColor(color) {
-      var values = color.split(' ');
-
-      return new EZ3.Vector3(parseFloat(values[0]), parseFloat(values[1]), parseFloat(values[2]));
-    }
-
-    function processEmissive(color) {
-      var emissive = processColor(color);
-      var i;
-
-      for (i = 0; i < currents.length; i++)
-        currents[i].emissive = emissive;
-    }
-
-    function processDiffuse(color) {
-      var diffuse = processColor(color);
-      var i;
-
-      for (i = 0; i < currents.length; i++)
-        currents[i].diffuse = diffuse;
-    }
-
-    function processSpecular(color) {
-      var specular = processColor(color);
-      var i;
-
-      for (i = 0; i < currents.length; i++)
-        currents[i].specular = specular;
-    }
-
-    function processDiffuseMap(url) {
-      var texture = new EZ3.Texture2D(load.image(baseUrl + url, that.crossOrigin));
-      var i;
-
-      for (i = 0; i < currents.length; i++)
-        currents[i].diffuseMap = texture;
-    }
 
     for (i = 0; i < lines.length; i++) {
-      line = lines[i].trim();
+      line = lines[i].trim().replace(/ +(?= )/g, '');
 
-      j = line.indexOf(' ');
+      if (line.length === 0 || line.charAt(0) === '#')
+        continue;
+      else if ((result = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+        processVertex(result);
+      else if ((result = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+        processNormal(result);
+      else if ((result = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+        processUv(result);
+      else if ((result = /f\s(([+-]?\d+\s){2,}[+-]?\d+)/.exec(line)))
+        processFace1(triangulate(result[1]));
+      else if ((result = /f\s(([+-]?\d+\/[+-]?\d+\s){2,}[+-]?\d+\/[+-]?\d+)/.exec(line)))
+        processFace2(triangulate(result[1]));
+      else if ((result = /f\s((([+-]?\d+\/[+-]?\d+\/[+-]?\d+\s){2,})[+-]?\d+\/[+-]?\d+\/[+-]?\d+)/.exec(line)))
+        processFace3(triangulate(result[1]));
+      else if ((result = /f\s(([+-]?\d+\/\/[+-]?\d+\s){2,}[+-]?\d+\/\/[+-]?\d+)/.exec(line)))
+        processFace4(triangulate(result[1]));
+      else if (/^mtllib/.test(line))
+        libraries.push(line.substring(7).trim());
+      else if (/^o/.test(line) || /^g/.test(line)) {
+        mesh = processMesh(mesh);
+        mesh.name = line.substring(2).trim();
+      } else if (/^usemtl/.test(line)) {
+        mesh = processMesh(mesh);
+        mesh.material.name = line.substring(7).trim();
 
-      key = (j >= 0) ? line.substring(0, j) : line;
-      key = key.toLowerCase();
+        if (!materials[mesh.material.name])
+          materials[mesh.material.name] = [];
 
-      value = (j >= 0) ? line.substring(j + 1) : '';
-      value = value.trim();
-
-      if (key === 'newmtl') {
-        currents = materials[value];
-      } else if (key === 'ka') {
-        processEmissive(value);
-      } else if (key === 'kd') {
-        processDiffuse(value);
-      } else if (key === 'ks') {
-        processSpecular(value);
-      } else if (key === 'ns') {
-
-      } else if (key === 'd') {
-
-      } else if (key === 'map_ka') {
-
-      } else if (key === 'map_kd') {
-        processDiffuseMap(value);
-      } else if (key === 'map_ks') {
-
-      } else if (key === 'map_ns') {
-
-      } else if (key === 'map_bump') {
-
-      } else if (key === 'map_d') {
-
+        materials[mesh.material.name].push(mesh.material);
       }
     }
+
+    processMesh(mesh);
+    processLibraries(libraries, materials);
   }
 
-  for (i = 0; i < lines.length; i++) {
-    line = lines[i].trim().replace(/ +(?= )/g, '');
-
-    if (line.length === 0 || line.charAt(0) === '#')
-      continue;
-    else if ((result = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
-      processVertex(result);
-    else if ((result = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
-      processNormal(result);
-    else if ((result = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
-      processUv(result);
-    else if ((result = /f\s(([+-]?\d+\s){2,}[+-]?\d+)/.exec(line)))
-      processFace1(triangulate(result[1]));
-    else if ((result = /f\s(([+-]?\d+\/[+-]?\d+\s){2,}[+-]?\d+\/[+-]?\d+)/.exec(line)))
-      processFace2(triangulate(result[1]));
-    else if ((result = /f\s((([+-]?\d+\/[+-]?\d+\/[+-]?\d+\s){2,})[+-]?\d+\/[+-]?\d+\/[+-]?\d+)/.exec(line)))
-      processFace3(triangulate(result[1]));
-    else if ((result = /f\s(([+-]?\d+\/\/[+-]?\d+\s){2,}[+-]?\d+\/\/[+-]?\d+)/.exec(line)))
-      processFace4(triangulate(result[1]));
-    else if (/^mtllib/.test(line))
-      libraries.push(line.substring(7).trim());
-    else if (/^o/.test(line) || /^g/.test(line)) {
-      processMesh();
-      mesh.name = line.substring(2).trim();
-    } else if (/^usemtl/.test(line)) {
-      processMesh();
-      mesh.material.name = line.substring(7).trim();
-
-      if (!materials[mesh.material.name])
-        materials[mesh.material.name] = [];
-
-      materials[mesh.material.name].push(mesh.material);
-    }
-  }
-
-  processMesh();
-  processMaterials();
+  init();
 };
 
 EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
   var that = this;
-  var load = new EZ3.RequestManager();
+  var requests = new EZ3.RequestManager();
 
-  load.file(this.url, this.crossOrigin);
+  requests.addFileRequest(this.url, this.crossOrigin);
 
-  load.onComplete.add(function(assets, failed) {
+  requests.onComplete.add(function(assets, failed) {
     if (failed)
       return onError(that.url, true);
 
-    that._parse(assets.get(that.url).data, onLoad);
+    that._parseOBJ(assets.get(that.url).data, onLoad);
   });
 
-  load.start();
+  requests.send();
 };
