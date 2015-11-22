@@ -21,10 +21,7 @@ EZ3.TargetControl.prototype = Object.create(EZ3.Control.prototype);
 EZ3.TargetControl.prototype.constructor = EZ3.TargetControl;
 
 EZ3.TargetControl.prototype.update = function() {
-  var radiansYaw = EZ3.Math.toRadians(this.yaw);
-  var radiansPitch = EZ3.Math.toRadians(this.pitch);
-  var radiansRoll = EZ3.Math.toRadians(this.roll);
-  var matrix = new EZ3.Matrix4().yawPitchRoll(radiansYaw, radiansPitch, radiansRoll);
+  var matrix = new EZ3.Matrix4().yawPitchRoll(this.yaw, this.pitch, this.roll);
   var vector = new EZ3.Vector4(0, 0, -1, 0).mulMat4(matrix).toVec3();
 
   this.distance = new EZ3.Vector3().sub(this.entity.position, this.target).length();

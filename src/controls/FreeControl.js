@@ -21,10 +21,7 @@ EZ3.FreeControl.prototype = Object.create(EZ3.Control.prototype);
 EZ3.FreeControl.prototype.constructor = EZ3.FreeControl;
 
 EZ3.FreeControl.prototype.update = function() {
-  var radiansYaw = EZ3.Math.toRadians(this.yaw);
-  var radiansPitch = EZ3.Math.toRadians(this.pitch);
-  var radiansRoll = EZ3.Math.toRadians(this.roll);
-  var matrix = new EZ3.Matrix4().yawPitchRoll(radiansYaw, radiansPitch, radiansRoll);
+  var matrix = new EZ3.Matrix4().yawPitchRoll(this.yaw, this.pitch, this.roll);
 
   this.up = new EZ3.Vector4(0.0, 1.0, 0.0, 0.0).mulMat4(matrix).toVec3();
   this.look = new EZ3.Vector4(0.0, 0.0, 1.0, 0.0).mulMat4(matrix).toVec3();
