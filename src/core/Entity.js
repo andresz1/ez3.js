@@ -39,7 +39,20 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.lookAt = function(target, up) {
-  this.rotation.fromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
+  var build = false;
+
+  if(target.testDiff(this._cache.target)) {
+    this._cache.target = target.clone();
+    build = true;
+  }
+
+  if(up.testDiff(this._cache.up)) {
+    this._cache.up = up.clone();
+    build = true;
+  }
+
+  if(build)
+    this.rotation.fromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
 };
 
 EZ3.Entity.prototype.updateWorld = function() {
