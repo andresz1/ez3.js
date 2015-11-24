@@ -6,7 +6,7 @@
 EZ3.DirectionalLight = function() {
   EZ3.Light.call(this);
 
-  this._camera = new EZ3.TargetCamera();
+  this._camera = new EZ3.OrthographicCamera(-30.0, 30.0, 30.0, -30.0, 0.01, 1000.0);
 
   this.target = new EZ3.Vector3();
   this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
@@ -56,15 +56,13 @@ EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, program, i) 
 
 Object.defineProperty(EZ3.DirectionalLight.prototype, 'view', {
   get: function() {
-    this._camera.target = this.target.clone();
-    this._camera.position = this.position.clone();
-    return this._camera.view;
+    return new EZ3.Matrix4().lookAt(this.position, this.target, new EZ3.Vector3(0,1,0));
   }
 });
 
 Object.defineProperty(EZ3.DirectionalLight.prototype, 'projection', {
   get: function() {
-    this._camera.mode = EZ3.Camera.ORTHOGRAPHIC;
+    this._camera.updateProjection();
     return this._camera.projection;
   }
 });
