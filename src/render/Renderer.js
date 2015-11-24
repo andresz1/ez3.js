@@ -34,7 +34,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   if (!lights.empty)
     program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
 
-  this.state.activeShadowReceiver = mesh.shadowReceiver;
+  this.state.activeShadowReceiver = mesh.material.shadowReceiver;
 
   for (i = 0; i < lights.spot.length; i++)
     lights.spot[i].updateUniforms(gl, this.state, program, i);
@@ -53,10 +53,8 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
 
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
-  var lightWVP = new EZ3.Matrix4();
   var position = new EZ3.Vector2();
-  var lightVP = new EZ3.Matrix4();
-  var view = new EZ3.Matrix4().lookAt(new EZ3.Vector3(20, 20, 20), new EZ3.Vector3(0,0,0), new EZ3.Vector3(0,1,0));
+  var modelView = new EZ3.Matrix4();
   var framebuffer;
   var program;
   var fragment;
@@ -65,6 +63,19 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var mesh;
   var i;
   var j;
+
+  if (!this.state.frontFaceCulling) {
+    if (!this.state.faceCulling) {
+      gl.enable(gl.CULL_FACE);
+      this.state.faceCulling = true;
+    }
+
+    gl.cullFace(gl.FRONT);
+    this.state.frontFaceCulling = true;
+
+    if (this.state.backFaceCulling)
+      this.state.backFaceCulling = false;
+  }
 
   if (!this.state.programs.depth) {
     vertex = EZ3.ShaderLibrary.depth.vertex;
@@ -85,29 +96,16 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
     framebuffer.update(gl);
 
     this.viewport(position, framebuffer.resolution);
+
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    if (!this.state.frontFaceCulling) {
-      if (this.state.backFaceCulling)
-        this.state.backFaceCulling = false;
-
-      if (!this.state.faceCulling) {
-        gl.enable(gl.CULL_FACE);
-        this.state.faceCulling = true;
-      }
-
-      gl.cullFace(gl.FRONT);
-      this.state.frontFaceCulling = true;
-    }
-
-    lightVP.mul(light.projection, view);
 
     for (j = 0; j < shadowCasters.length; j++) {
       mesh = shadowCasters[j];
 
-      lightWVP.mul(lightVP, mesh.world);
+      modelView.mul(light.view, mesh.world);
 
-      program.loadUniformMatrix(gl, 'uLightWVP', lightWVP);
+      program.loadUniformMatrix(gl, 'uModelView', modelView);
+      program.loadUniformMatrix(gl, 'uProjection', light.projection);
 
       mesh.render(gl, program.attributes, this.state, this.extension);
     }
@@ -229,7 +227,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     else
       meshes.opaque.push(mesh);
 
-    if (mesh.shadowCaster)
+    if (mesh.material.shadowCaster)
       meshes.shadowCasters.push(mesh);
   }
 
