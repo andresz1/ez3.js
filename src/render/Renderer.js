@@ -34,7 +34,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   if (!lights.empty)
     program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
 
-  this.state.activeShadowReceiver = mesh.material.shadowReceiver;
+  this.state.activeShadowReceiver = mesh.shadowReceiver;
 
   for (i = 0; i < lights.spot.length; i++)
     lights.spot[i].updateUniforms(gl, this.state, program, i);
@@ -55,7 +55,6 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
   var position = new EZ3.Vector2();
   var modelView = new EZ3.Matrix4();
-  var framebuffer;
   var program;
   var fragment;
   var vertex;
@@ -89,15 +88,17 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
   for (i = 0; i < lights.length; i++) {
     light = lights[i];
-    framebuffer = light.depthFramebuffer;
 
-    framebuffer.bind(gl);
+    light.depthFramebuffer.bind(gl);
 
-    framebuffer.update(gl);
+    light.depthFramebuffer.update(gl);
 
-    this.viewport(position, framebuffer.resolution);
+    this.viewport(position, light.depthFramebuffer.resolution);
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    light.updateView();
+    light.updateProjection();
 
     for (j = 0; j < shadowCasters.length; j++) {
       mesh = shadowCasters[j];
@@ -185,9 +186,10 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
     if (entity instanceof EZ3.PointLight)
       lights.point.push(entity);
-    else if (entity instanceof EZ3.DirectionalLight)
+    else if (entity instanceof EZ3.DirectionalLight) {
+      entity.lookAt(entity.target, new EZ3.Vector3(0, 1, 0));
       lights.directional.push(entity);
-    else if (entity instanceof EZ3.SpotLight)
+    } else if (entity instanceof EZ3.SpotLight)
       lights.spot.push(entity);
     else if (entity instanceof EZ3.Mesh)
       meshes.common.push(entity);
@@ -196,6 +198,18 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
     for (i = entity.children.length - 1; i >= 0; i--)
       entities.push(entity.children[i]);
+
+    /*if(entity instanceof EZ3.Mesh) {
+      if(entity.geometry instanceof EZ3.Torus)
+        console.log('Torus');
+      else if(entity.geometry instanceof EZ3.Sphere)
+        console.log('Sphere');
+      else if(entity.geometry instanceof EZ3.Plane)
+        console.log('Plane');
+    } else if(entity instanceof EZ3.Camera)
+        console.log('Camera');
+      else if(entity instanceof EZ3.Light)
+        console.log('Light');*/
 
     entity.updateWorld();
   }
@@ -220,6 +234,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
       mesh.updateNormalData();
     }
 
+    this.state.activeShadowReceiver = mesh.shadowReceiver;
     mesh.material.updateProgram(gl, this.state, lights);
 
     if (mesh.material.transparent)
@@ -227,7 +242,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     else
       meshes.opaque.push(mesh);
 
-    if (mesh.material.shadowCaster)
+    if (mesh.shadowCaster)
       meshes.shadowCasters.push(mesh);
   }
 
