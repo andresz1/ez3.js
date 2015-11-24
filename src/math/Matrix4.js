@@ -478,12 +478,19 @@ EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
   te[0] = x.x;
   te[1] = y.x;
   te[2] = z.x;
+  te[3] = 0.0;
   te[4] = x.y;
   te[5] = y.y;
   te[6] = z.y;
+  te[7] = 0.0;
   te[8] = x.z;
   te[9] = y.z;
   te[10] = z.z;
+  te[11] = 0.0;
+  te[12] = -x.dot(eye);
+  te[13] = -y.dot(eye);
+  te[14] = -z.dot(eye);
+  te[15] = 1.0;
 
   return this;
 };
