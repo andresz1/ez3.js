@@ -1,18 +1,19 @@
 /**
  * @class DirectionalLight
  * @extends Light
+ * @extends OrthographicCamera
  */
 
 EZ3.DirectionalLight = function() {
   EZ3.Light.call(this);
-
-  this._camera = new EZ3.OrthographicCamera(-30.0, 30.0, 30.0, -30.0, 0.01, 1000.0);
+  EZ3.OrthographicCamera.call(this, -30.0, 30.0, 30.0, -30.0, 0.01, 1000.0);
 
   this.target = new EZ3.Vector3();
   this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
 EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.extends(EZ3.DirectionalLight.prototype, EZ3.OrthographicCamera.prototype);
 EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
 
 EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, program, i) {
@@ -53,16 +54,3 @@ EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, program, i) 
     program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
   }
 };
-
-Object.defineProperty(EZ3.DirectionalLight.prototype, 'view', {
-  get: function() {
-    return new EZ3.Matrix4().lookAt(this.position, this.target, new EZ3.Vector3(0,1,0));
-  }
-});
-
-Object.defineProperty(EZ3.DirectionalLight.prototype, 'projection', {
-  get: function() {
-    this._camera.updateProjection();
-    return this._camera.projection;
-  }
-});

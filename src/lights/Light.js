@@ -3,8 +3,6 @@
  */
 
 EZ3.Light = function() {
-  EZ3.Entity.call(this);
-
   this.shadowBias = -0.0002;
   this.shadowDarkness = 0.5;
 
