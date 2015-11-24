@@ -3,12 +3,12 @@
  * @extends Primitive
  */
 
-EZ3.Torus = function(resolution, radiuses) {
+EZ3.Torus = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
   this._cache = {};
 
-  this.radiuses = radiuses || new EZ3.Vector2(7, 3);
+  this.radiouses = radiouses || new EZ3.Vector2(7, 3);
   this.resolution = resolution || new EZ3.Vector2(5, 5);
 };
 
@@ -45,12 +45,12 @@ EZ3.Torus.prototype.generate = function() {
       sinr = Math.sin(rho);
       cosp = Math.cos(phi);
 
-      center.x = this.radiuses.x * cosr;
-      center.z = this.radiuses.x * sinr;
+      center.x = this.radiouses.x * cosr;
+      center.z = this.radiouses.x * sinr;
 
-      vertex.x = (this.radiuses.x + this.radiuses.y * cosp) * cosr;
-      vertex.y = (this.radiuses.y * Math.sin(phi));
-      vertex.z = (this.radiuses.x + this.radiuses.y * cosp) * sinr;
+      vertex.x = (this.radiouses.x + this.radiouses.y * cosp) * cosr;
+      vertex.y = (this.radiouses.y * Math.sin(phi));
+      vertex.z = (this.radiouses.x + this.radiouses.y * cosp) * sinr;
 
       vertices.push(vertex.x, vertex.y, vertex.z);
 
@@ -80,8 +80,8 @@ EZ3.Torus.prototype.generate = function() {
 
 Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
   get: function() {
-    if (!this.radiuses.testEqual(this._cache.radiuses) || !this.resolution.testEqual(this._cache.resolution)) {
-      this._cache.radiuses = this.radiuses.clone();
+    if (!this.radiouses.testEqual(this._cache.radiouses) || !this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.radiouses = this.radiouses.clone();
       this._cache.resolution = this.resolution.clone();
       return true;
     }

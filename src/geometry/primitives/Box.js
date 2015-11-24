@@ -3,7 +3,7 @@
  * @extends Primitive
  */
 
-EZ3.Box = function(dimensions, resolution) {
+EZ3.Box = function(resolution, dimensions) {
   EZ3.Primitive.call(this);
 
   this._cache = {};

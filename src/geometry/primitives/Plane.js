@@ -1,5 +1,5 @@
 /**
- * @class Grid
+ * @class Plane
  * @extends Primitive
  */
 

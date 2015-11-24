@@ -3,12 +3,12 @@
  * @extends Primitive
  */
 
-EZ3.AstroidalEllipsoid = function(radiuses, resolution) {
+EZ3.AstroidalEllipsoid = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
   this._cache = {};
 
-  this.radiuses = radiuses || new EZ3.Vector3(90, 90, 90);
+  this.radiouses = radiouses || new EZ3.Vector3(90, 90, 90);
   this.resolution = resolution || new EZ3.Vector2(150, 150);
 };
 
@@ -40,15 +40,15 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
 
       cosr = Math.pow(Math.cos(rho), 3.0);
 
-      vertex.x = (this.radiuses.x * cosr * Math.pow(Math.cos(phi), 3.0));
-      vertex.y = (this.radiuses.y * Math.pow(Math.sin(rho), 3.0));
-      vertex.z = (this.radiuses.z * cosr * Math.pow(Math.sin(phi), 3.0));
+      vertex.x = (this.radiouses.x * cosr * Math.pow(Math.cos(phi), 3.0));
+      vertex.y = (this.radiouses.y * Math.pow(Math.sin(rho), 3.0));
+      vertex.z = (this.radiouses.z * cosr * Math.pow(Math.sin(phi), 3.0));
 
       vertices.push(vertex.x, vertex.y, vertex.z);
 
-      vertex.x /= this.radiuses.x;
-      vertex.y /= this.radiuses.y;
-      vertex.z /= this.radiuses.z;
+      vertex.x /= this.radiouses.x;
+      vertex.y /= this.radiouses.y;
+      vertex.z /= this.radiouses.z;
 
       if (!vertex.testZero())
         vertex.normalize();
@@ -74,8 +74,8 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
 
 Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'needGenerate', {
   get: function() {
-    if (!this.radiuses.testEqual(this._cache.radiuses) || !this.resolution.testEqual(this._cache.resolution)) {
-      this._cache.radiuses = this.radiuses.clone();
+    if (!this.radiouses.testEqual(this._cache.radiouses) || !this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.radiouses = this.radiouses.clone();
       this._cache.resolution = this.resolution.clone();
       return true;
     }
