@@ -4,7 +4,7 @@
  */
 
  EZ3.TargetTexture2D = function(size, format) {
-   EZ3.Texture2D.call(this, new EZ3.Image(size.x, size.y, format, null));
+   EZ3.Texture2D.call(this, new EZ3.Image(size.x, size.y, format, null), false);
  };
 
  EZ3.TargetTexture2D.prototype = Object.create(EZ3.Texture2D.prototype);

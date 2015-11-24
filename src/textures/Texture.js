@@ -6,7 +6,7 @@ EZ3.Texture = function(generateMipmaps) {
   this._id = null;
   this._cache = {};
 
-  this.generateMipmaps = (generateMipmaps) ? generateMipmaps : false;
+  this.generateMipmaps = (generateMipmaps === undefined)? true : generateMipmaps;
   this.wrapS = EZ3.Texture.REPEAT;
   this.wrapT = EZ3.Texture.REPEAT;
   this.magFilter = EZ3.Texture.LINEAR;
@@ -17,8 +17,6 @@ EZ3.Texture = function(generateMipmaps) {
 
 EZ3.Texture.prototype._updateImage = function(gl, target, image) {
   var format = gl[image.format];
-
-  console.log(image.format);
 
   if (!EZ3.Math.isPowerOfTwo(image.width) || !EZ3.Math.isPowerOfTwo(image.height))
     image.toPowerOfTwo();
