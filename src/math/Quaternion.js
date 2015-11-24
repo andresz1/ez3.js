@@ -276,7 +276,7 @@ EZ3.Quaternion.prototype.copy = function(q) {
 };
 
 EZ3.Quaternion.prototype.clone = function() {
-  return new EZ3.Quaternion(this.w, this.x, this.y, this.z);
+  return new EZ3.Quaternion(this.x, this.y, this.z, this.w);
 };
 
 EZ3.Quaternion.prototype.toString = function() {
