@@ -51,6 +51,9 @@ EZ3.Entity.prototype.lookAt = function(target, up) {
     build = true;
   }
 
+  if(this.position.testDiff(this._cache.position))
+    build = true;
+
   if(build)
     this.rotation.fromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
 };
