@@ -6,7 +6,7 @@ EZ3.Texture = function(generateMipmaps) {
   this._id = null;
   this._cache = {};
 
-  this.generateMipmaps = (generateMipmaps) ? true : false;
+  this.generateMipmaps = (generateMipmaps) ? generateMipmaps : false;
   this.wrapS = EZ3.Texture.REPEAT;
   this.wrapT = EZ3.Texture.REPEAT;
   this.magFilter = EZ3.Texture.LINEAR;
