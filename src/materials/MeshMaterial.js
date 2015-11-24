@@ -21,9 +21,6 @@ EZ3.MeshMaterial = function() {
   this.reflective = false;
   this.refractive = false;
 
-  this.shadowCaster = false;
-  this.shadowReceiver = false;
-
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
   this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
@@ -80,7 +77,7 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
       defines.push('REFRACTION');
   }
 
-  if(this.shadowReceiver)
+  if(state.activeShadowReceiver)
     defines.push('SHADOW_MAP');
 
   id += defines.join('.');
