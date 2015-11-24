@@ -6,9 +6,9 @@
   this._id = null;
   this._cache = {};
   this._renderbuffer = renderbuffer;
-  this.resolution = resolution;
 
   this.texture = texture;
+  this.resolution = resolution;
   this.texture.wrapS = EZ3.Texture.CLAMP_TO_EDGE;
   this.texture.wrapT = EZ3.Texture.CLAMP_TO_EDGE;
 
@@ -24,7 +24,7 @@ EZ3.Framebuffer.prototype.bind = function(gl) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, this._id);
 };
 
-EZ3.Framebuffer.prototype.update = function(gl, textureAttachment) {
+EZ3.Framebuffer.prototype.update = function(gl, textureAttachment, renderbufferAttachment) {
   if(this.dirty) {
     this.texture.bind(gl);
     this.texture.update(gl);
@@ -32,7 +32,7 @@ EZ3.Framebuffer.prototype.update = function(gl, textureAttachment) {
 
     this._renderbuffer.bind(gl);
     this._renderbuffer.update(gl);
-    this._renderbuffer.attachToFramebuffer(gl);
+    this._renderbuffer.attachToFramebuffer(gl, renderbufferAttachment);
 
     if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
       console.warn('EZ3.Framebuffer.update: update is not completed.');
