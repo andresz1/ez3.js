@@ -55,7 +55,7 @@ EZ3.RequestManager.prototype._processProgress = function(url, asset) {
   }
 };
 
-EZ3.RequestManager.prototype.addFileRequest = function(url, crossOrigin) {
+EZ3.RequestManager.prototype.addFileRequest = function(url, crossOrigin, responseType) {
   var cache = EZ3.Cache;
   var file = cache.get(url);
 
@@ -65,7 +65,7 @@ EZ3.RequestManager.prototype.addFileRequest = function(url, crossOrigin) {
   }
 
   if(!this._requests[url]) {
-    this._requests[url] = new EZ3.FileRequest(url, crossOrigin);
+    this._requests[url] = new EZ3.FileRequest(url, crossOrigin, responseType);
     this.toSend++;
   }
 
@@ -82,7 +82,13 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, crossOrigin) {
   }
 
   if(!this._requests[url]) {
-    this._requests[url] = new EZ3.ImageRequest(url, crossOrigin);
+    var extension = EZ3.toFileExtension(url);
+
+    if (extension === 'tga')
+      this._requests[url] = new EZ3.TGARequest(url, crossOrigin);
+    else
+      this._requests[url] = new EZ3.ImageRequest(url, crossOrigin);
+
     this.toSend++;
   }
 
@@ -91,7 +97,15 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, crossOrigin) {
 
 EZ3.RequestManager.prototype.addEntityRequest = function(url, crossOrigin) {
   if(!this._requests[url]) {
-    this._requests[url] = new EZ3.OBJRequest(url, crossOrigin);
+    var extension = EZ3.toFileExtension(url);
+
+    if (extension === 'obj')
+      this._requests[url] = new EZ3.OBJRequest(url, crossOrigin);
+    else if (extension === 'md2')
+      this._requests[url] = new EZ3.MD2Request(url, crossOrigin);
+    else
+      return;
+
     this.toSend++;
   }
 

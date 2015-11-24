@@ -14,3 +14,13 @@ EZ3.extends = function(destination, source) {
 EZ3.toFileName = function(url) {
   return url.split('/').pop();
 };
+
+EZ3.toFileExtension = function(url) {
+  return url.split('/').pop().split('.').pop();
+};
+
+EZ3.toBaseUrl = function(url) {
+  var tokens = url.split('/');
+
+  return url.substr(0, url.length - tokens[tokens.length - 1].length);
+};

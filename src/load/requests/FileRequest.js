@@ -3,10 +3,12 @@
  * @extends Request
  */
 
-EZ3.FileRequest = function(url, crossOrigin) {
+EZ3.FileRequest = function(url, crossOrigin, responseType) {
   EZ3.Request.call(this, url, new EZ3.File(), crossOrigin);
 
   this._request = new XMLHttpRequest();
+
+  this.responseType = responseType;
 };
 
 EZ3.FileRequest.prototype = Object.create(EZ3.Request.prototype);
@@ -55,6 +57,9 @@ EZ3.FileRequest.prototype.send = function(onLoad, onError) {
 
   if (this.crossOrigin)
     this._request.crossOrigin = this.crossOrigin;
+
+  if (this.responseType)
+    this._request.responseType = this.responseType;
 
   this._request.send(null);
 };
