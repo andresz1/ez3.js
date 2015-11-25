@@ -1,7 +1,5 @@
 precision highp float;
 
-#extension GL_OES_standard_derivatives : enable
-
 struct PointLight {
 	vec3 position;
 	vec3 diffuse;
@@ -24,6 +22,8 @@ struct SpotLight {
 	vec3 diffuse;
 	vec3 specular;
 	mat4 shadow;
+	float shadowBias;
+	float shadowDarkness;
 };
 
 uniform vec3 uEmissive;
@@ -164,6 +164,8 @@ varying vec2 vUv;
 #endif
 
 #ifdef NORMAL_MAP
+	#extension GL_OES_standard_derivatives : enable
+
 	vec3 pertubNormal(in vec3 v) {
 		vec3 q0 = dFdx(v);
 		vec3 q1 = dFdy(v);
@@ -209,13 +211,20 @@ varying vec2 vUv;
 			float depth = unpackDepth(texture2D(shadowSampler, shadowCoordinates.xy));
 			return (depth < shadowCoordinates.z + light.shadowBias) ? light.shadowDarkness : 1.0;
 		} else
-			return 1.0;
+				return 1.0;
 	}
 #endif
 
 #if (MAX_SPOT_LIGHTS > 0) && defined(SHADOW_MAP)
 	float spotShadow(const in SpotLight light, const in sampler2D shadowSampler) {
-		return 1.0;
+		vec4 lightCoordinates = light.shadow * vec4(vPosition, 1.0);
+		vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
+
+		if(isBounded(shadowCoordinates.xy) && shadowCoordinates.z <= 1.0) {
+			float depth = unpackDepth(texture2D(shadowSampler, shadowCoordinates.xy));
+			return (depth < shadowCoordinates.z + light.shadowBias) ? light.shadowDarkness : 1.0;
+		} else
+				return 1.0;
 	}
 #endif
 

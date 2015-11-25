@@ -9,9 +9,15 @@ EZ3.State = function() {
   this.texture = {};
   this.maxTextureSlots = 0;
   this.usedTextureSlots = 0;
+  this.textureArraySlots = [];
   this.currentTextureSlot = null;
 
   this.attribute = {};
+
+  this.hasLights = false;
+  this.maxSpotLights = 0;
+  this.maxPointLights = 0;
+  this.maxDirectionalLights = 0;
 
   this.depthTest = false;
   this.faceCulling = false;
