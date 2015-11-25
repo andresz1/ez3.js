@@ -144,5 +144,16 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
   }
 };
 
+EZ3.GLSLProgram.prototype.loadUniformSamplerArray = function(gl, name, data) {
+  var location = this.uniforms[name];
+
+  if(location) {
+    if(data instanceof Array && this._cache[name] !== data.toString()) {
+      this._cache[name] = data.toString();
+      gl.uniform1iv(location, data);
+    }
+  }
+};
+
 EZ3.GLSLProgram.VERTEX = 0;
 EZ3.GLSLProgram.FRAGMENT = 1;
