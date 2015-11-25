@@ -34,14 +34,14 @@ EZ3.MeshMaterial = function() {
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
-EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights) {
+EZ3.MeshMaterial.prototype.updateProgram = function(gl, state) {
   var id = EZ3.Material.MESH;
   var defines = [];
   var prefix = '#define ';
 
-  defines.push('MAX_POINT_LIGHTS ' + lights.point.length);
-  defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
-  defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
+  defines.push('MAX_POINT_LIGHTS ' + state.maxPointLights);
+  defines.push('MAX_DIRECTIONAL_LIGHTS ' + state.maxDirectionalLights);
+  defines.push('MAX_SPOT_LIGHTS ' + state.maxSpotLights);
 
   if(this.shading === EZ3.MeshMaterial.FLAT)
     defines.push('FLAT');
