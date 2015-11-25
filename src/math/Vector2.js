@@ -169,10 +169,15 @@ EZ3.Vector2.prototype.testZero = function(v) {
 };
 
 EZ3.Vector2.prototype.testDiff = function(v) {
-  if(v instanceof EZ3.Vector2)
-    return !this.testEqual(v);
-  else
-    console.error('EZ3.Vector2.testDiff: not EZ3.Vector2 given.', v);
+  if (v) {
+    if (v instanceof EZ3.Vector2)
+      return !this.testEqual(v);
+    else {
+      console.warn('EZ3.Vector2.testDiff: parameter is not a EZ3.Vector3.', v);
+      return true;
+    }
+  } else
+    return true;
 };
 
 EZ3.Vector2.prototype.toString = function() {
