@@ -534,6 +534,81 @@ EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
   return this;
 };
 
+EZ3.Matrix4.prototype.determinant = function() {
+  var te = this.elements;
+  var n11 = te[0];
+	var n21 = te[1];
+  var n31 = te[2];
+  var n41 = te[3];
+  var n12 = te[4];
+  var n22 = te[5];
+  var n32 = te[6];
+  var n42 = te[7];
+  var n13 = te[8];
+  var n23 = te[9];
+  var n33 = te[10];
+  var n43 = te[11];
+  var n14 = te[12];
+  var n24 = te[13];
+  var n34 = te[14];
+  var n44 = te[15];
+
+  return (
+    n41 * (n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34) +
+		n42 * (n11 * n23 * n34 - n11 * n24 * n33 + n14 * n21 * n33 - n13 * n21 * n34 + n13 * n24 * n31 - n14 * n23 * n31) +
+		n43 * (n11 * n24 * n32 - n11 * n22 * n34 - n14 * n21 * n32 + n12 * n21 * n34 + n14 * n22 * n31 - n12 * n24 * n31) +
+		n44 * (-n13 * n22 * n31 - n11 * n23 * n32 + n11 * n22 * n33 + n13 * n21 * n32 - n12 * n21 * n33 + n12 * n23 * n31)
+  );
+};
+
+EZ3.Matrix4.prototype.compose = function(position, rotation, scale) {
+  this.setFromQuaternion(rotation);
+  this.setPosition(position);
+  this.scale(scale);
+
+  return this;
+};
+
+EZ3.Matrix4.prototype.decompose = function(position, rotation, scale) {
+  var vector = new EZ3.Vector3();
+  var te = this.elements;
+  var matrix;
+  var iSX;
+  var iSY;
+  var iSZ;
+
+  scale.x = vector.set(te[0], te[1], te[2]).length();
+  scale.y = vector.set(te[4], te[5], te[6]).length();
+  scale.z = vector.set(te[8], te[9], te[10]).length();
+
+  position.set(te[12], te[13], te[14]);
+
+  if(this.determinant() < 0)
+    scale.x = -scale.x;
+
+  matrix = new EZ3.Matrix4(this.elements);
+
+  iSX = 1.0 / scale.x;
+  iSY = 1.0 / scale.y;
+  iSZ = 1.0 / scale.z;
+
+  matrix.elements[0] *= iSX;
+  matrix.elements[1] *= iSX;
+  matrix.elements[2] *= iSX;
+
+  matrix.elements[4] *= iSY;
+  matrix.elements[5] *= iSY;
+  matrix.elements[6] *= iSY;
+
+  matrix.elements[8] *= iSZ;
+  matrix.elements[9] *= iSZ;
+  matrix.elements[10] *= iSZ;
+
+  rotation.fromRotationMatrix(matrix);
+
+  return this;
+};
+
 EZ3.Matrix4.prototype.clone = function() {
   return new EZ3.Matrix4(this.toArray());
 };

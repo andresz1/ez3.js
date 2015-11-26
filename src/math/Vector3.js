@@ -161,10 +161,12 @@ EZ3.Vector3.prototype.mulQuaternion = function(q) {
   var x = this.x;
   var y = this.y;
   var z = this.z;
+  
   var qx = q.x;
   var qy = q.y;
   var qz = q.z;
   var qw = q.w;
+
   var ix = qw * x + qy * z - qz * y;
   var iy = qw * y + qz * x - qx * z;
   var iz = qw * z + qx * y - qy * x;
