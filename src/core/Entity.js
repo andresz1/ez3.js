@@ -80,11 +80,8 @@ EZ3.Entity.prototype.updateWorld = function() {
     scaleDirty = true;
   }
 
-  if (positionDirty || rotationDirty || scaleDirty) {
-    this.model.setFromQuaternion(this.rotation);
-    this.model.setPosition(this.position);
-    this.model.scale(this.scale);
-  }
+  if (positionDirty || rotationDirty || scaleDirty)
+    this.model.compose(this.position, this.rotation, this.scale);
 
   if (!this.parent) {
     modelDirty = this._cache.model.testDiff(this.model);
@@ -108,4 +105,43 @@ EZ3.Entity.prototype.updateWorld = function() {
       this.world.mul(this.parent.world, this.model);
     }
   }
+};
+
+EZ3.Entity.prototype.worldPosition = function(optionalTarget) {
+  var rotation = new EZ3.Quaternion();
+  var position = optionalTarget || new EZ3.Vector3();
+  var scale = new EZ3.Vector3();
+
+  this.world.decompose(position, rotation, scale);
+
+  return position;
+};
+
+EZ3.Entity.prototype.worldRotation = function(optionalTarget) {
+  var rotation = optionalTarget || new EZ3.Quaternion();
+  var position = new EZ3.Vector3();
+  var scale = new EZ3.Vector3();
+
+  this.world.decompose(position, rotation, scale);
+
+  return rotation;
+};
+
+EZ3.Entity.prototype.worldScale = function(optionalTarget) {
+  var rotation = new EZ3.Quaternion();
+  var position = new EZ3.Vector3();
+  var scale = optionalTarget || new EZ3.Vector3();
+
+  this.world.decompose(position, rotation, scale);
+
+  return scale;
+};
+
+EZ3.Entity.prototype.worldDirection = function(optionalTarget) {
+  var rotation = new EZ3.Quaternion();
+  var direction = optionalTarget || new EZ3.Vector3(0, 0, 1);
+
+  this.worldRotation(rotation);
+
+  return direction.mulQuaternion(rotation);
 };
