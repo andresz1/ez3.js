@@ -203,13 +203,11 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
     if (entity instanceof EZ3.PointLight)
       lights.point.push(entity);
-    else if (entity instanceof EZ3.DirectionalLight) {
-      entity.lookAt(entity.target, new EZ3.Vector3(0, 1, 0));
+    else if (entity instanceof EZ3.DirectionalLight)
       lights.directional.push(entity);
-    } else if (entity instanceof EZ3.SpotLight) {
-      entity.lookAt(entity.target, new EZ3.Vector3(0, 1, 0));
+    else if (entity instanceof EZ3.SpotLight)
       lights.spot.push(entity);
-    } else if (entity instanceof EZ3.Mesh)
+    else if (entity instanceof EZ3.Mesh)
       meshes.common.push(entity);
     else if (entity === camera)
       found = true;
@@ -251,9 +249,14 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   }
 
   if (meshes.shadowCasters.length) {
-    this._renderDepth(lights.spot, meshes.shadowCasters);
-    this._renderDepth(lights.point, meshes.shadowCasters);
-    this._renderDepth(lights.directional, meshes.shadowCasters);
+    if(this.state.maxSpotLights)
+      this._renderDepth(lights.spot, meshes.shadowCasters);
+
+    if(this.state.maxPointLights)
+      this._renderDepth(lights.point, meshes.shadowCasters);
+
+    if(this.state.maxDirectionalLights)
+      this._renderDepth(lights.directional, meshes.shadowCasters);
 
     this._defaultFramebuffer();
     this.viewport(new EZ3.Vector2(), new EZ3.Vector2(this.canvas.width, this.canvas.height));
