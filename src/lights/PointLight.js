@@ -19,4 +19,8 @@ EZ3.PointLight.prototype.updateUniforms = function(gl, state, program, i) {
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
 
   program.loadUniformFloat(gl, prefix + 'position', this.position);
+
+  if(state.activeShadowReceiver) {
+    // TODO
+  }
 };

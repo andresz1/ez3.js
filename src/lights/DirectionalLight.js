@@ -8,7 +8,6 @@ EZ3.DirectionalLight = function() {
   EZ3.Light.call(this);
   EZ3.OrthographicCamera.call(this, -60.0, 60.0, 60.0, -60.0, 0.01, 2000.0);
 
-  this.target = new EZ3.Vector3();
   this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
@@ -18,7 +17,7 @@ EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
 
 EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, program, i) {
   var prefix = 'uDirectionalLights[' + i + '].';
-  var direction = new EZ3.Vector3().sub(this.position, this.target);
+  var direction = this.worldDirection();
   var viewProjection;
   var shadow;
   var bias;
@@ -43,15 +42,11 @@ EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, program, i) 
 
     this.depthFramebuffer.texture.bind(gl, state);
 
-    if(state.maxDirectionalLights === 1)
-      program.loadUniformInteger(gl, 'uDirectionalShadowSampler[0]', state.usedTextureSlots++);
-    else {
-      state.textureArraySlots.push(state.usedTextureSlots++);
+    state.textureArraySlots.push(state.usedTextureSlots++);
 
-      if(i === state.maxDirectionalLights - 1) {
-        program.loadUniformSamplerArray(gl, 'uDirectionalShadowSampler[0]', state.textureArraySlots);
-        state.textureArraySlots = [];
-      }
+    if(i === state.maxDirectionalLights - 1) {
+      program.loadUniformSamplerArray(gl, 'uDirectionalShadowSampler[0]', state.textureArraySlots);
+      state.textureArraySlots = [];
     }
   }
 };
