@@ -20,14 +20,10 @@ EZ3.Framebuffer.prototype.bind = function(gl) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, this._id);
 };
 
-EZ3.Framebuffer.prototype.update = function(gl, textureAttachment, renderbufferAttachment) {
+EZ3.Framebuffer.prototype.update = function(gl) {
   this.texture.bind(gl);
   this.texture.update(gl);
-  this.texture.attachToFramebuffer(gl, textureAttachment);
-
-  this._renderbuffer.bind(gl);
-  this._renderbuffer.update(gl);
-  this._renderbuffer.attachToFramebuffer(gl, renderbufferAttachment);
+  this.texture.attach(gl);
 
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
     console.warn('EZ3.Framebuffer.update: update is not completed.');
