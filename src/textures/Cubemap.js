@@ -18,8 +18,8 @@ EZ3.Cubemap = function(px, nx, py, ny, pz, nz, generateMipmaps) {
 EZ3.Cubemap.prototype = Object.create(EZ3.Texture.prototype);
 EZ3.Cubemap.prototype.contructor = EZ3.Cubemap;
 
-EZ3.Cubemap.prototype.bind = function(gl, state, unit) {
-  EZ3.Texture.prototype.bind.call(this, gl, gl.TEXTURE_CUBE_MAP, state, unit);
+EZ3.Cubemap.prototype.bind = function(gl, state) {
+  EZ3.Texture.prototype.bind.call(this, gl, gl.TEXTURE_CUBE_MAP, state);
 };
 
 EZ3.Cubemap.prototype.update = function(gl) {

@@ -13,6 +13,7 @@ EZ3.Entity = function() {
   this.position = new EZ3.Vector3(0, 0, 0);
   this.rotation = new EZ3.Quaternion(0, 0, 0, 1);
 
+  // Quitar caching inicial
   this._cache.world = this.world.clone();
   this._cache.model = this.model.clone();
   this._cache.scale = this.scale.clone();
@@ -39,6 +40,7 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.lookAt = function(target, up) {
+  // Poner parametros opcionales
   var build = false;
 
   if(target.testDiff(this._cache.target)) {
