@@ -54,16 +54,30 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
     this.state.usedTextureSlots = 0;
 };
 
-EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
+EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, projection) {
   var gl = this.context;
   var modelView = new EZ3.Matrix4();
+
+  modelView.mul(view, mesh.world);
+
+  program.loadUniformMatrix(gl, 'uModelView', modelView);
+  program.loadUniformMatrix(gl, 'uProjection', projection);
+
+  mesh.render(gl, program.attributes, this.state, this.extension);
+};
+
+EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
+  var gl = this.context;
+  var up;
+  var view;
+  var target;
   var program;
   var fragment;
   var vertex;
   var light;
-  var mesh;
   var i;
   var j;
+  var k;
 
   if (!this.state.frontFaceCulling) {
     if (!this.state.faceCulling) {
@@ -91,6 +105,8 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   for (i = 0; i < lights.length; i++) {
     light = lights[i];
 
+    light.updateProjection();
+
     light.depthFramebuffer.bind(gl);
 
     light.depthFramebuffer.update(gl);
@@ -99,24 +115,50 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
     this.clear();
 
-    if(light instanceof EZ3.DirectionalLight || light instanceof EZ3.SpotLight) {
+    if (light instanceof EZ3.PointLight) {
 
-      light.updateView();
-      light.updateProjection();
+      if (!up)
+        up = new EZ3.Vector3();
 
-      for (j = 0; j < shadowCasters.length; j++) {
-        mesh = shadowCasters[j];
+      if (!view)
+        view = new EZ3.Matrix4();
 
-        modelView.mul(light.view, mesh.world);
+      if (!target)
+        target = new EZ3.Vector3();
 
-        program.loadUniformMatrix(gl, 'uModelView', modelView);
-        program.loadUniformMatrix(gl, 'uProjection', light.projection);
+      for (j = 0; j < 6; j++) {
 
-        mesh.render(gl, program.attributes, this.state, this.extension);
+        if (j === EZ3.Cubemap.POSITIVE_X) {
+          up.set(0.0, -1.0, 0.0);
+          target.set(1.0, 0.0, 0.0);
+        } else if (j === EZ3.Cubemap.NEGATIVE_X) {
+          up.set(0.0, -1.0, 0.0);
+          target.set(-1.0, 0.0, 0.0);
+        } else if (j === EZ3.Cubemap.POSITIVE_Y) {
+          up.set();
+          target.set();
+        } else if (j === EZ3.Cubemap.NEGATIVE_Y) {
+          up.set();
+          target.set();
+        } else if (j === EZ3.Cubemap.POSITIVE_Z) {
+          up.set();
+          target.set();
+        } else if (j === EZ3.Cubemap.NEGATIVE_Z) {
+          up.set();
+          target.set();
+        }
+
+        view.lookAt(light.position, target, up);
+        light.depthFramebuffer.texture.attach(gl, j);
+
+        for (k = 0; k < shadowCasters.length; ++k)
+          this._renderShadowCaster(shadowCasters[k], program, view, light.projection);
       }
-
     } else {
-      // PointLight Case
+      light.updateView();
+
+      for (k = 0; k < shadowCasters.length; ++k)
+        this._renderShadowCaster(shadowCasters[k], program, light.view, light.projection);
     }
   }
 };
@@ -163,7 +205,7 @@ EZ3.Renderer.prototype.initContext = function() {
 EZ3.Renderer.prototype.clear = function(color) {
   var gl = this.context;
 
-  if(color instanceof EZ3.Vector4)
+  if (color instanceof EZ3.Vector4)
     gl.clearColor(color.x, color.y, color.z, color.w);
   else
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -249,13 +291,13 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   }
 
   if (meshes.shadowCasters.length) {
-    if(this.state.maxSpotLights)
+    if (this.state.maxSpotLights)
       this._renderDepth(lights.spot, meshes.shadowCasters);
 
-    if(this.state.maxPointLights)
+    if (this.state.maxPointLights)
       this._renderDepth(lights.point, meshes.shadowCasters);
 
-    if(this.state.maxDirectionalLights)
+    if (this.state.maxDirectionalLights)
       this._renderDepth(lights.directional, meshes.shadowCasters);
 
     this._defaultFramebuffer();
