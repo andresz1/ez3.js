@@ -47,7 +47,7 @@ EZ3.SpotLight.prototype.updateUniforms = function(gl, state, program, i) {
 
     state.textureArraySlots.push(state.usedTextureSlots++);
 
-    if(i === state.maxSpotLights - 1) {
+    if(i === state.maxPointLights - 1) {
       program.loadUniformSamplerArray(gl, 'uSpotShadowSampler[0]', state.textureArraySlots);
       state.textureArraySlots = [];
     }

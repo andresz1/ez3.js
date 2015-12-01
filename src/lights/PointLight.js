@@ -5,8 +5,10 @@
  */
 
 EZ3.PointLight = function() {
-  EZ3.PerspectiveCamera.call(this, 50.0, 1.0, 0.1, 2000.0);
+  EZ3.PerspectiveCamera.call(this, 70.0, 1.0, 0.01, 2000.0);
   EZ3.Light.call(this);
+
+  this.depthFramebuffer = new EZ3.CubeDepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
 EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);
@@ -21,6 +23,17 @@ EZ3.PointLight.prototype.updateUniforms = function(gl, state, program, i) {
   program.loadUniformFloat(gl, prefix + 'position', this.position);
 
   if(state.activeShadowReceiver) {
-    // TODO
+    program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
+
+    program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
+
+    this.depthFramebuffer.texture.bind(gl, state);
+
+    state.textureArraySlots.push(state.usedTextureSlots++);
+
+    if(i === state.maxSpotLights - 1) {
+      program.loadUniformSamplerArray(gl, 'uPointShadowSampler[0]', state.textureArraySlots);
+      state.textureArraySlots = [];
+    }
   }
 };
