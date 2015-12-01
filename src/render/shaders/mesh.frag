@@ -4,6 +4,8 @@ struct PointLight {
 	vec3 position;
 	vec3 diffuse;
 	vec3 specular;
+	float shadowBias;
+	float shadowDarkness;
 };
 
 struct DirectionalLight {
@@ -97,135 +99,143 @@ varying vec2 vUv;
 #endif
 
 #ifdef LAMBERT
-	float lambert(in vec3 s, in vec3 n) {
-		return max(dot(s, n), 0.0);
-	}
+float lambert(in vec3 s, in vec3 n) {
+	return max(dot(s, n), 0.0);
+}
 #endif
 
 #ifdef OREN_NAYAR
-	float orenNayar(in vec3 v, in vec3 s, in vec3 n) {
-		float PI = acos(-1.0);
+float orenNayar(in vec3 v, in vec3 s, in vec3 n) {
+	float PI = acos(-1.0);
 
-		float SdotV = dot(s, v);
-		float SdotN = dot(s, n);
-		float NdotV = dot(n, v);
+	float SdotV = dot(s, v);
+	float SdotN = dot(s, n);
+	float NdotV = dot(n, v);
 
-		float S = SdotV - SdotN * NdotV;
-		float T = mix(1.0, max(SdotN, NdotV), step(0.0, S));
-		float sigma2 = uRoughness * uRoughness;
+	float S = SdotV - SdotN * NdotV;
+	float T = mix(1.0, max(SdotN, NdotV), step(0.0, S));
+	float sigma2 = uRoughness * uRoughness;
 
-		float A = 1.0 + sigma2 * (uAlbedo / (sigma2 + 0.13) + 0.5 / (sigma2 + 0.33));
-		float B = 0.45 * sigma2 / (sigma2 + 0.09);
+	float A = 1.0 + sigma2 * (uAlbedo / (sigma2 + 0.13) + 0.5 / (sigma2 + 0.33));
+	float B = 0.45 * sigma2 / (sigma2 + 0.09);
 
-		return uAlbedo * max(0.0, SdotN) * (A + B * S / T) / PI;
-	}
+	return uAlbedo * max(0.0, SdotN) * (A + B * S / T) / PI;
+}
 #endif
 
 #ifdef PHONG
-	float phong(in vec3 v, in vec3 s, in vec3 n) {
-		return pow(max(dot(reflect(-s, n), v), 0.0), uShininess);
-	}
+float phong(in vec3 v, in vec3 s, in vec3 n) {
+	return pow(max(dot(reflect(-s, n), v), 0.0), uShininess);
+}
 #endif
 
 #ifdef BLINN_PHONG
-	float blinnPhong(in vec3 v, in vec3 s, in vec3 n) {
-		return pow(max(dot(normalize(s + v), n), 0.0), uShininess);
-	}
+float blinnPhong(in vec3 v, in vec3 s, in vec3 n) {
+	return pow(max(dot(normalize(s + v), n), 0.0), uShininess);
+}
 #endif
 
 #ifdef COOK_TORRANCE
-	float beckmannDistribution(in float NdotH, in float roughness) {
-		float PI = acos(-1.0);
-		float cos2Beta = NdotH * NdotH;
-		float tan2Beta = (cos2Beta - 1.0) / cos2Beta;
-		float div =  PI * roughness * roughness * cos2Beta * cos2Beta;
-		return exp(tan2Beta / (roughness * roughness)) / div;
-	}
+float beckmannDistribution(in float NdotH, in float roughness) {
+	float PI = acos(-1.0);
+	float cos2Beta = NdotH * NdotH;
+	float tan2Beta = (cos2Beta - 1.0) / cos2Beta;
+	float div =  PI * roughness * roughness * cos2Beta * cos2Beta;
+	return exp(tan2Beta / (roughness * roughness)) / div;
+}
 
-	float cookTorrance(in vec3 v, in vec3 s, in vec3 n) {
-		vec3 h = normalize(s + v);
+float cookTorrance(in vec3 v, in vec3 s, in vec3 n) {
+	vec3 h = normalize(s + v);
 
-		float VdotN = max(dot(v, n), 0.000001);
-		float SdotN = max(dot(s, n), 0.000001);
-		float VdotH = max(dot(v, h), 0.000001);
-		float SdotH = max(dot(s, h), 0.000001);
-		float NdotH = max(dot(n, h), 0.000001);
+	float VdotN = max(dot(v, n), 0.000001);
+	float SdotN = max(dot(s, n), 0.000001);
+	float VdotH = max(dot(v, h), 0.000001);
+	float SdotH = max(dot(s, h), 0.000001);
+	float NdotH = max(dot(n, h), 0.000001);
 
-		float G1 = (2.0 * NdotH * VdotN) / VdotH;
-		float G2 = (2.0 * NdotH * SdotN) / SdotH;
-		float G = min(1.0, min(G1, G2));
+	float G1 = (2.0 * NdotH * VdotN) / VdotH;
+	float G2 = (2.0 * NdotH * SdotN) / SdotH;
+	float G = min(1.0, min(G1, G2));
 
-		float D = beckmannDistribution(NdotH, uRoughness);
-		float F = pow(1.0 - VdotN, uFresnel);
-		float PI = acos(-1.0);
+	float D = beckmannDistribution(NdotH, uRoughness);
+	float F = pow(1.0 - VdotN, uFresnel);
+	float PI = acos(-1.0);
 
-	  return  G * F * D / max(PI * VdotN, 0.0);
-	}
+  return  G * F * D / max(PI * VdotN, 0.0);
+}
 #endif
 
 #ifdef NORMAL_MAP
-	#extension GL_OES_standard_derivatives : enable
+#extension GL_OES_standard_derivatives : enable
 
-	vec3 pertubNormal(in vec3 v) {
-		vec3 q0 = dFdx(v);
-		vec3 q1 = dFdy(v);
+vec3 pertubNormal(in vec3 v) {
+	vec3 q0 = dFdx(v);
+	vec3 q1 = dFdy(v);
 
-		vec2 st0 = dFdx(vUv);
-		vec2 st1 = dFdy(vUv);
+	vec2 st0 = dFdx(vUv);
+	vec2 st1 = dFdy(vUv);
 
-		vec3 s = normalize(q0 * st1.t - q1 * st0.t);
-		vec3 t = normalize(-q0 * st1.s + q1 * st0.s);
-		vec3 n = normalize(vNormal);
+	vec3 s = normalize(q0 * st1.t - q1 * st0.t);
+	vec3 t = normalize(-q0 * st1.s + q1 * st0.s);
+	vec3 n = normalize(vNormal);
 
-		vec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;
+	vec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;
 
-		return normalize(mat3(s, t, n) * d);
-	}
+	return normalize(mat3(s, t, n) * d);
+}
 #endif
 
 #ifdef SHADOW_MAP
-	bool isBounded(in vec2 coordinates) {
-		bool xBounded = (coordinates.x >= 0.0 && coordinates.x <= 1.0) ? true : false;
-		bool yBounded = (coordinates.y >= 0.0 && coordinates.y <= 1.0) ? true : false;
+bool isBounded(in vec2 coordinates) {
+	bool xBounded = (coordinates.x >= 0.0 && coordinates.x <= 1.0) ? true : false;
+	bool yBounded = (coordinates.y >= 0.0 && coordinates.y <= 1.0) ? true : false;
 
-		return xBounded && yBounded;
-	}
+	return xBounded && yBounded;
+}
 
-	float unpackDepth(in vec4 color) {
-		return dot(color, vec4(1.0 / (256.0 * 256.0 * 256.0), 1.0 / (256.0 * 256.0), 1.0 / 256.0, 1.0 ));
-	}
+float unpackDepth(in vec4 color) {
+	return dot(color, vec4(1.0 / (256.0 * 256.0 * 256.0), 1.0 / (256.0 * 256.0), 1.0 / 256.0, 1.0 ));
+}
 #endif
 
 #if (MAX_POINT_LIGHTS > 0) && defined(SHADOW_MAP)
-	float pointShadow(const in PointLight light, const in samplerCube shadowSampler) {
-		return 1.0;
-	}
+float pointShadow(const in PointLight light, const in samplerCube shadowSampler) {
+	vec3 directionToLight = vPosition - light.position;
+	float depth = length(directionToLight);
+
+	depth = clamp(depth, 0.0, 1.0);
+	directionToLight.y = 1.0 - directionToLight.y;
+
+	float shadow = unpackDepth(textureCube(shadowSampler, directionToLight)) + light.shadowBias;
+
+	return (depth > shadow) ? light.shadowDarkness : 1.0;
+}
 #endif
 
 #if (MAX_DIRECTIONAL_LIGHTS > 0) && defined(SHADOW_MAP)
-	float directionalShadow(const in DirectionalLight light, const in sampler2D shadowSampler) {
-		vec4 lightCoordinates = light.shadow * vec4(vPosition, 1.0);
-		vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
+float directionalShadow(const in DirectionalLight light, const in sampler2D shadowSampler) {
+	vec4 lightCoordinates = light.shadow * vec4(vPosition, 1.0);
+	vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
 
-		if(isBounded(shadowCoordinates.xy) && shadowCoordinates.z <= 1.0) {
-			float depth = unpackDepth(texture2D(shadowSampler, shadowCoordinates.xy));
-			return (depth < shadowCoordinates.z + light.shadowBias) ? light.shadowDarkness : 1.0;
-		} else
-				return 1.0;
-	}
+	if(isBounded(shadowCoordinates.xy) && shadowCoordinates.z <= 1.0) {
+		float depth = unpackDepth(texture2D(shadowSampler, shadowCoordinates.xy));
+		return (depth < shadowCoordinates.z + light.shadowBias) ? light.shadowDarkness : 1.0;
+	} else
+			return 1.0;
+}
 #endif
 
 #if (MAX_SPOT_LIGHTS > 0) && defined(SHADOW_MAP)
-	float spotShadow(const in SpotLight light, const in sampler2D shadowSampler) {
-		vec4 lightCoordinates = light.shadow * vec4(vPosition, 1.0);
-		vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
+float spotShadow(const in SpotLight light, const in sampler2D shadowSampler) {
+	vec4 lightCoordinates = light.shadow * vec4(vPosition, 1.0);
+	vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
 
-		if(isBounded(shadowCoordinates.xy) && shadowCoordinates.z <= 1.0) {
-			float depth = unpackDepth(texture2D(shadowSampler, shadowCoordinates.xy));
-			return (depth < shadowCoordinates.z + light.shadowBias) ? light.shadowDarkness : 1.0;
-		} else
-				return 1.0;
-	}
+	if(isBounded(shadowCoordinates.xy) && shadowCoordinates.z <= 1.0) {
+		float depth = unpackDepth(texture2D(shadowSampler, shadowCoordinates.xy));
+		return (depth < shadowCoordinates.z + light.shadowBias) ? light.shadowDarkness : 1.0;
+	} else
+			return 1.0;
+}
 #endif
 
 void main() {

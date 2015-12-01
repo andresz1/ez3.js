@@ -68,6 +68,7 @@ EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, proje
 
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
+  var color = new EZ3.Vector4(1.0);
   var up;
   var view;
   var target;
@@ -113,7 +114,7 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
     this.viewport(new EZ3.Vector2(), light.depthFramebuffer.size);
 
-    this.clear();
+    this.clear(color);
 
     if (light instanceof EZ3.PointLight) {
 
@@ -127,6 +128,8 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
         target = new EZ3.Vector3();
 
       for (j = 0; j < 6; j++) {
+        light.depthFramebuffer.texture.attach(gl, j);
+        this.clear(color);
 
         if (j === EZ3.Cubemap.POSITIVE_X) {
           up.set(0.0, -1.0, 0.0);
@@ -135,21 +138,20 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
           up.set(0.0, -1.0, 0.0);
           target.set(-1.0, 0.0, 0.0);
         } else if (j === EZ3.Cubemap.POSITIVE_Y) {
-          up.set();
-          target.set();
+          up.set(0.0, 0.0, -1.0);
+          target.set(0.0, 1.0, 0.0);
         } else if (j === EZ3.Cubemap.NEGATIVE_Y) {
-          up.set();
-          target.set();
+          up.set(0.0, 0.0, 1.0);
+          target.set(0.0, -1.0, 0.0);
         } else if (j === EZ3.Cubemap.POSITIVE_Z) {
-          up.set();
-          target.set();
+          up.set(0.0, -1.0, 0.0);
+          target.set(0.0, 0.0, 1.0);
         } else if (j === EZ3.Cubemap.NEGATIVE_Z) {
-          up.set();
-          target.set();
+          up.set(0.0, -1.0, 0.0);
+          target.set(0.0, 0.0, -1.0);
         }
 
         view.lookAt(light.position, target, up);
-        light.depthFramebuffer.texture.attach(gl, j);
 
         for (k = 0; k < shadowCasters.length; ++k)
           this._renderShadowCaster(shadowCasters[k], program, view, light.projection);
