@@ -6,12 +6,12 @@
 EZ3.OrthographicCamera = function(left, right, top, bottom, near, far) {
   EZ3.Camera.call(this);
 
-  this.left = (left === undefined) ? -25 : left;
-  this.right = (right === undefined) ? 25 : right;
-  this.top = (top === undefined) ? 25 : top;
-  this.bottom = (bottom === undefined) ? -25 : bottom;
-  this.near = (near === undefined) ? 0.1 : near;
-  this.far = (far === undefined) ? 2000 : far;
+  this.left = (left !== undefined) ? left : -25;
+  this.right = (right !== undefined) ? right : 25;
+  this.top = (top !== undefined) ? top : 25;
+  this.bottom = (bottom !== undefined) ? bottom : -25;
+  this.near = (near !== undefined) ? near : 0.1;
+  this.far = (far !== undefined) ? far : 2000;
 };
 
 EZ3.OrthographicCamera.prototype = Object.create(EZ3.Camera.prototype);

@@ -35,7 +35,7 @@ EZ3.CameraControl.prototype.lookAt = function(target, up) {
 };
 
 EZ3.CameraControl.prototype.rotate = function(dx, dy, speed) {
-  speed = (speed === undefined) ? 1 : speed;
+  speed = (speed !== undefined) ? speed : 1;
 
   this.yaw -= dx * speed;
   this.pitch += dy * speed;

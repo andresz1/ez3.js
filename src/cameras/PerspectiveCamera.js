@@ -6,10 +6,10 @@
 EZ3.PerspectiveCamera = function(fov, aspect, near, far) {
   EZ3.Camera.call(this);
 
-  this.fov = (fov === undefined) ? 70 : fov;
-  this.aspect = (aspect === undefined) ? 1 : aspect;
-  this.near = (near === undefined) ? 0.1 : near;
-  this.far = (far === undefined) ? 2000 : far;
+  this.fov = (fov !== undefined) ? fov : 70;
+  this.aspect = (aspect !== undefined) ? aspect : 1;
+  this.near = (near !== undefined) ? near : 0.1;
+  this.far = (far !== undefined) ? far : 2000;
 };
 
 EZ3.PerspectiveCamera.prototype = Object.create(EZ3.Camera.prototype);

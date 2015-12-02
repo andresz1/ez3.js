@@ -39,7 +39,7 @@ EZ3.TargetControl.prototype.pan = function(dx, dy, speed) {
   var right;
   var vector;
 
-  speed = (speed === undefined) ? 50 : speed;
+  speed = (speed !== undefined) ? speed : 1;
 
   rx = dx * speed;
   ry = -dy * speed;
