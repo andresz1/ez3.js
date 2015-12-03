@@ -80,17 +80,13 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var j;
   var k;
 
-  if (!this.state.frontFaceCulling) {
-    if (!this.state.faceCulling) {
+  if (this.state.faceCulling !== EZ3.Material.FRONT) {
+    if (this.state.faceCulling === EZ3.Material.NONE)
       gl.enable(gl.CULL_FACE);
-      this.state.faceCulling = true;
-    }
 
     gl.cullFace(gl.FRONT);
-    this.state.frontFaceCulling = true;
 
-    if (this.state.backFaceCulling)
-      this.state.backFaceCulling = false;
+    this.faceCulling = EZ3.Material.FRONT;
   }
 
   if (!this.state.programs.depth) {
