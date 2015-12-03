@@ -44,4 +44,14 @@ EZ3.Image.prototype.toPowerOfTwo = function() {
   return this;
 };
 
+EZ3.Image.prototype.download = function() {
+  var a = document.createElement('a');
+  a.href = this.getCanvas().toDataURL();
+  console.log(a.href);
+  a.download = 'output.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
+
 EZ3.Image.RGBA = 'RGBA';
