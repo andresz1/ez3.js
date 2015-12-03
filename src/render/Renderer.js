@@ -69,13 +69,12 @@ EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, proje
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
   var color = new EZ3.Vector4(1.0);
-  var up;
-  var view;
-  var target;
   var program;
   var fragment;
   var vertex;
+  var origin;
   var light;
+  var view;
   var i;
   var j;
   var k;
@@ -114,53 +113,43 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
     this.viewport(new EZ3.Vector2(), light.depthFramebuffer.size);
 
-    this.clear(color);
-
     if (light instanceof EZ3.PointLight) {
 
-      if (!up)
-        up = new EZ3.Vector3();
-
-      if (!view)
-        view = new EZ3.Matrix4();
-
-      if (!target)
-        target = new EZ3.Vector3();
+      view = new EZ3.Matrix4();
+      origin = new EZ3.Vector3();
 
       for (j = 0; j < 6; j++) {
+
+        if (j === EZ3.Cubemap.POSITIVE_X)
+          view.lookAt(origin, new EZ3.Vector3(1, 0, 0), new EZ3.Vector3(0, -1, 0));
+        else if (j === EZ3.Cubemap.NEGATIVE_X)
+          view.lookAt(origin, new EZ3.Vector3(-1, 0, 0), new EZ3.Vector3(0, -1, 0));
+        else if (j === EZ3.Cubemap.POSITIVE_Y)
+          view.lookAt(origin, new EZ3.Vector3(0, 1, 0), new EZ3.Vector3(0, 0, 1));
+        else if (j === EZ3.Cubemap.NEGATIVE_Y)
+          view.lookAt(origin, new EZ3.Vector3(0, -1, 0), new EZ3.Vector3(0, 0, -1));
+        else if (j === EZ3.Cubemap.POSITIVE_Z)
+          view.lookAt(origin, new EZ3.Vector3(0, 0, 1), new EZ3.Vector3(0, -1, 0));
+        else if (j === EZ3.Cubemap.NEGATIVE_Z)
+          view.lookAt(origin, new EZ3.Vector3(0, 0, -1), new EZ3.Vector3(0, -1, 0));
+
+        view.mul(light.world);
         light.depthFramebuffer.texture.attach(gl, j);
+
         this.clear(color);
 
-        if (j === EZ3.Cubemap.POSITIVE_X) {
-          up.set(0.0, -1.0, 0.0);
-          target.set(1.0, 0.0, 0.0);
-        } else if (j === EZ3.Cubemap.NEGATIVE_X) {
-          up.set(0.0, -1.0, 0.0);
-          target.set(-1.0, 0.0, 0.0);
-        } else if (j === EZ3.Cubemap.POSITIVE_Y) {
-          up.set(0.0, 0.0, -1.0);
-          target.set(0.0, 1.0, 0.0);
-        } else if (j === EZ3.Cubemap.NEGATIVE_Y) {
-          up.set(0.0, 0.0, 1.0);
-          target.set(0.0, -1.0, 0.0);
-        } else if (j === EZ3.Cubemap.POSITIVE_Z) {
-          up.set(0.0, -1.0, 0.0);
-          target.set(0.0, 0.0, 1.0);
-        } else if (j === EZ3.Cubemap.NEGATIVE_Z) {
-          up.set(0.0, -1.0, 0.0);
-          target.set(0.0, 0.0, -1.0);
-        }
-
-        view.lookAt(light.position, target, up);
-
-        for (k = 0; k < shadowCasters.length; ++k)
+        for (k = 0; k < shadowCasters.length; k++)
           this._renderShadowCaster(shadowCasters[k], program, view, light.projection);
+
       }
     } else {
+
       light.updateView();
 
-      for (k = 0; k < shadowCasters.length; ++k)
-        this._renderShadowCaster(shadowCasters[k], program, light.view, light.projection);
+      this.clear(color);
+
+      for (j = 0; j < shadowCasters.length; j++)
+        this._renderShadowCaster(shadowCasters[j], program, light.view, light.projection);
     }
   }
 };

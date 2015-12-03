@@ -206,9 +206,9 @@ float pointShadow(const in PointLight light, const in samplerCube shadowSampler)
 	depth = clamp(depth, 0.0, 1.0);
 	directionToLight.y = 1.0 - directionToLight.y;
 
-	float shadow = unpackDepth(textureCube(shadowSampler, directionToLight)) + light.shadowBias;
+	float shadow = unpackDepth(textureCube(shadowSampler, directionToLight));
 
-	return (depth > shadow) ? light.shadowDarkness : 1.0;
+	return (shadow + light.shadowBias < depth) ? light.shadowDarkness : 1.0;
 }
 #endif
 
