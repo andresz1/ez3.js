@@ -69,21 +69,13 @@ EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, proje
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
   var color = new EZ3.Vector4(1.0);
-<<<<<<< HEAD
-=======
   var view;
   var target;
->>>>>>> bb66c0cf4b0802ba88950fc268c664ce9ec2b0cd
   var program;
   var fragment;
   var vertex;
-  var origin;
   var light;
-<<<<<<< HEAD
-  var view;
-=======
   var up;
->>>>>>> bb66c0cf4b0802ba88950fc268c664ce9ec2b0cd
   var i;
   var j;
   var k;
