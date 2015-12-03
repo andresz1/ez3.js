@@ -69,27 +69,32 @@ EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, proje
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
   var color = new EZ3.Vector4(1.0);
+<<<<<<< HEAD
+=======
+  var view;
+  var target;
+>>>>>>> bb66c0cf4b0802ba88950fc268c664ce9ec2b0cd
   var program;
   var fragment;
   var vertex;
   var origin;
   var light;
+<<<<<<< HEAD
   var view;
+=======
+  var up;
+>>>>>>> bb66c0cf4b0802ba88950fc268c664ce9ec2b0cd
   var i;
   var j;
   var k;
 
-  if (!this.state.frontFaceCulling) {
-    if (!this.state.faceCulling) {
+  if (this.state.faceCulling !== EZ3.Material.FRONT) {
+    if (this.state.faceCulling === EZ3.Material.NONE)
       gl.enable(gl.CULL_FACE);
-      this.state.faceCulling = true;
-    }
 
     gl.cullFace(gl.FRONT);
-    this.state.frontFaceCulling = true;
 
-    if (this.state.backFaceCulling)
-      this.state.backFaceCulling = false;
+    this.faceCulling = EZ3.Material.FRONT;
   }
 
   if (!this.state.programs.depth) {
@@ -115,32 +120,42 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
     if (light instanceof EZ3.PointLight) {
 
+      up = new EZ3.Vector3();
       view = new EZ3.Matrix4();
-      origin = new EZ3.Vector3();
+      target = new EZ3.Vector3();
 
       for (j = 0; j < 6; j++) {
 
-        if (j === EZ3.Cubemap.POSITIVE_X)
-          view.lookAt(origin, new EZ3.Vector3(1, 0, 0), new EZ3.Vector3(0, -1, 0));
-        else if (j === EZ3.Cubemap.NEGATIVE_X)
-          view.lookAt(origin, new EZ3.Vector3(-1, 0, 0), new EZ3.Vector3(0, -1, 0));
-        else if (j === EZ3.Cubemap.POSITIVE_Y)
-          view.lookAt(origin, new EZ3.Vector3(0, 1, 0), new EZ3.Vector3(0, 0, 1));
-        else if (j === EZ3.Cubemap.NEGATIVE_Y)
-          view.lookAt(origin, new EZ3.Vector3(0, -1, 0), new EZ3.Vector3(0, 0, -1));
-        else if (j === EZ3.Cubemap.POSITIVE_Z)
-          view.lookAt(origin, new EZ3.Vector3(0, 0, 1), new EZ3.Vector3(0, -1, 0));
-        else if (j === EZ3.Cubemap.NEGATIVE_Z)
-          view.lookAt(origin, new EZ3.Vector3(0, 0, -1), new EZ3.Vector3(0, -1, 0));
+        if (j === EZ3.Cubemap.POSITIVE_X) {
+          target.set(1, 0, 0);
+          up.set(0, -1, 0);
+        } else if (j === EZ3.Cubemap.NEGATIVE_X) {
+          target.set(-1, 0, 0);
+          up.set(0, -1, 0);
+        } else if (j === EZ3.Cubemap.POSITIVE_Y) {
+          target.set(0, 1, 0);
+          up.set(0, 0, 1);
+        } else if (j === EZ3.Cubemap.NEGATIVE_Y) {
+          target.set(0, -1, 0);
+          up.set(0, 0, -1);
+        } else if (j === EZ3.Cubemap.POSITIVE_Z) {
+          target.set(0, 0, 1);
+          up.set(0, -1, 0);
+        } else if (j === EZ3.Cubemap.NEGATIVE_Z) {
+          target.set(0, 0, -1);
+          up.set(0, -1, 0);
+        }
 
-        view.mul(light.world);
+        view.lookAt(light.position, new EZ3.Vector3().add(target, light.position), new EZ3.Vector3(0, 1, 0));
+        //view.lookAt(new EZ3.Vector3(), target, up);
+        //view.mul(new EZ3.Matrix4().translate(light.position.clone().invert()));
+
         light.depthFramebuffer.texture.attach(gl, j);
 
         this.clear(color);
 
-        for (k = 0; k < shadowCasters.length; k++)
+        for (k = 0; k < shadowCasters.length; ++k)
           this._renderShadowCaster(shadowCasters[k], program, view, light.projection);
-
       }
     } else {
 

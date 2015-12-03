@@ -7,10 +7,11 @@ EZ3.Material = function(id) {
 
   this.program = null;
   this.fill = EZ3.Material.SOLID;
-  this.transparent = false;
+
   this.depthTest = true;
-  this.backFaceCulling = true;
-  this.frontFaceCulling = false;
+  this.faceCulling = EZ3.Material.BACK;
+  this.transparent = false;
+  this.opacity = 1;
 };
 
 EZ3.Material.prototype.updateStates = function(gl, state) {
@@ -25,27 +26,27 @@ EZ3.Material.prototype.updateStates = function(gl, state) {
     state.depthTest = false;
   }
 
-  if (this.backFaceCulling) {
-    if (!state.faceCulling) {
+  if (this.faceCulling === EZ3.Material.BACK) {
+    if (state.faceCulling === EZ3.Material.NONE) {
       gl.enable(gl.CULL_FACE);
-      state.faceCulling = true;
-    }
-    if (!state.backFaceCulling) {
       gl.cullFace(gl.BACK);
-      state.backFaceCulling = true;
     }
-  } else if (this.frontFaceCulling) {
-    if (!state.faceCulling) {
+    else if (state.faceCulling === EZ3.Material.FRONT)
+      gl.cullFace(gl.BACK);
+
+    state.faceCulling = EZ3.Material.BACK;
+  } else if (this.faceCulling === EZ3.Material.FRONT) {
+    if (state.faceCulling === EZ3.Material.NONE) {
       gl.enable(gl.CULL_FACE);
-      state.faceCulling = true;
-    }
-    if (!state.frontFaceCulling) {
       gl.cullFace(gl.FRONT);
-      state.frontFaceCulling = true;
     }
-  } else if (state.faceCulling) {
+    else if (state.faceCulling === EZ3.Material.BACK)
+      gl.cullFace(gl.FRONT);
+
+    state.faceCulling = EZ3.Material.FRONT;
+  } else if (state.faceCulling !== EZ3.Material.NONE) {
     gl.disable(gl.CULL_FACE);
-    state.faceCulling = false;
+    state.faceCulling = EZ3.Material.NONE;
   }
 };
 
@@ -54,3 +55,7 @@ EZ3.Material.SHADER = 'SHADER.';
 EZ3.Material.SOLID = 0;
 EZ3.Material.POINTS = 1;
 EZ3.Material.WIREFRAME = 2;
+
+EZ3.Material.NONE = 0;
+EZ3.Material.BACK = 1;
+EZ3.Material.FRONT = 2;
