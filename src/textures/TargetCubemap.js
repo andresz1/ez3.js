@@ -23,9 +23,5 @@
  EZ3.TargetCubemap.prototype.attach = function(gl, face) {
    var index = face || 0;
 
-   if(this._cache.attachment !== this.attachment || this._cache.target !== index) {
-     this._cache.target = index;
-     this._cache.attachment = this.attachment;
-     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl[this.attachment], gl.TEXTURE_CUBE_MAP_POSITIVE_X + index, this._id, 0);
-   }
+   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl[this.attachment], gl.TEXTURE_CUBE_MAP_POSITIVE_X + index, this._id, 0);
  };

@@ -196,19 +196,40 @@ bool isBounded(in vec2 coordinates) {
 float unpackDepth(in vec4 color) {
 	return dot(color, vec4(1.0 / (256.0 * 256.0 * 256.0), 1.0 / (256.0 * 256.0), 1.0 / 256.0, 1.0 ));
 }
+
+float distanceToLight(const vec3 vector) {
+	float near = 0.01;
+	float far = 2000.0;
+	vec3 absVector = abs(vector);
+	float localZComp = max(absVector.x, max(absVector.y, absVector.z));
+	float normZComp = ((far + near) / (far - near)) - ((2.0 * far * near) / (far - near) / localZComp);
+
+	return (normZComp + 1.0) * 0.5;
+}
 #endif
 
 #if (MAX_POINT_LIGHTS > 0) && defined(SHADOW_MAP)
 float pointShadow(const in PointLight light, const in samplerCube shadowSampler) {
+	/*vec3 lightDirection = vPosition - light.position;
+	vec3 lookUpVector = vec3(lightDirection.x, -lightDirection.y, lightDirection.z);
+	float dist = unpackDepth(textureCube(shadowSampler, lookUpVector));
+
+	return (dist < distanceToLight(lookUpVector)) ? light.shadowDarkness : 1.0;*/
+
 	vec3 directionToLight = vPosition - light.position;
 	float depth = length(directionToLight);
 
 	depth = clamp(depth, 0.0, 1.0);
-	directionToLight.y = 1.0 - directionToLight.y;
+
+	// directionToLight.y = 1.0 - directionToLight.y;
 
 	float shadow = unpackDepth(textureCube(shadowSampler, directionToLight)) + light.shadowBias;
 
-	return (depth > shadow) ? light.shadowDarkness : 1.0;
+	if(depth > shadow) {
+		return light.shadowDarkness;
+	}
+
+	return 1.0;
 }
 #endif
 

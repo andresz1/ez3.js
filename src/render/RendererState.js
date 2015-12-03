@@ -20,9 +20,7 @@ EZ3.State = function() {
   this.maxDirectionalLights = 0;
 
   this.depthTest = false;
-  this.faceCulling = false;
-  this.backFaceCulling = false;
-  this.frontFaceCulling = false;
+  this.faceCulling = EZ3.Material.NONE;
   this.activeShadowReceiver = false;
 };
 

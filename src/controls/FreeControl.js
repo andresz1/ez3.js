@@ -19,7 +19,7 @@ EZ3.FreeControl.prototype.rotate = function(dx, dy, speed) {
 
   this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat4(matrix).toVec3();
   this.look = new EZ3.Vector4(0, 0, 1, 0).mulMat4(matrix).toVec3();
-  this.right = new EZ3.Vector4(1, 0, 0, 0).mulMat4(matrix).toVec3();
+  this.right = new EZ3.Vector4(-1, 0, 0, 0).mulMat4(matrix).toVec3();
 
   this.target = new EZ3.Vector3().add(this.entity.position, this.look);
 
