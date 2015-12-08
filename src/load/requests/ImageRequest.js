@@ -3,8 +3,8 @@
  * @extends Request
  */
 
-EZ3.ImageRequest = function(url, crossOrigin) {
-  EZ3.Request.call(this, url, new EZ3.Image(), crossOrigin);
+EZ3.ImageRequest = function(url, crossOrigin, cached) {
+  EZ3.Request.call(this, url, new EZ3.Image(), cached, crossOrigin);
 
   this._request = new Image();
 };
@@ -26,7 +26,7 @@ EZ3.ImageRequest.prototype._processLoad = function(image, onLoad) {
 
   this._removeEventListeners();
 
-  onLoad(this.url, this.asset);
+  onLoad(this.url, this.asset, this.cached);
 };
 
 EZ3.ImageRequest.prototype._processError = function(onError) {

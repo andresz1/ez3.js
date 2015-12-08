@@ -32,11 +32,8 @@ uniform vec3 uEmissive;
 uniform vec3 uDiffuse;
 uniform vec3 uSpecular;
 uniform float uShininess;
+uniform float uOpacity;
 uniform vec3 uEyePosition;
-
-varying vec3 vPosition;
-varying vec3 vNormal;
-varying vec2 vUv;
 
 #if MAX_POINT_LIGHTS > 0
   uniform PointLight uPointLights[MAX_POINT_LIGHTS];
@@ -97,6 +94,10 @@ varying vec2 vUv;
 	uniform float uAlbedo;
 	uniform float uRoughness;
 #endif
+
+varying vec3 vPosition;
+varying vec3 vNormal;
+varying vec2 vUv;
 
 #ifdef LAMBERT
 float lambert(in vec3 s, in vec3 n) {
@@ -409,5 +410,5 @@ void main() {
 		diffuse *= textureCube(uEnvironmentSampler, refraction).rgb;
 	#endif
 
-	gl_FragColor = vec4(emissive + diffuse + specular, 1.0);
+	gl_FragColor = vec4(emissive + diffuse + specular, uOpacity);
 }

@@ -24,11 +24,16 @@ EZ3.MeshMaterial = function() {
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
   this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
+  this.opacity = 1.0;
+
   this.albedoFactor = 7.0;
   this.fresnelFactor = 0.0;
   this.refractFactor = 1.0;
   this.roughnessFactor = 0.2;
   this.shininessFactor = 180.1;
+
+  this.morphTarget = false;
+  this.tick = 0;
 };
 
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
@@ -42,6 +47,9 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state) {
   defines.push('MAX_POINT_LIGHTS ' + state.maxPointLights);
   defines.push('MAX_DIRECTIONAL_LIGHTS ' + state.maxDirectionalLights);
   defines.push('MAX_SPOT_LIGHTS ' + state.maxSpotLights);
+
+  if(this.morphTarget)
+    defines.push('MORPH_TARGET');
 
   if(this.shading === EZ3.MeshMaterial.FLAT)
     defines.push('FLAT');
@@ -99,6 +107,17 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
   this.program.loadUniformFloat(gl, 'uDiffuse', this.diffuse);
   this.program.loadUniformFloat(gl, 'uSpecular', this.specular);
   this.program.loadUniformFloat(gl, 'uShininess', this.shininessFactor);
+  this.program.loadUniformFloat(gl, 'uOpacity', this.opacity);
+
+  if (this.morphTarget) {
+    this.program.loadUniformFloat(gl, 'uInfluence1', this.tick);
+    this.program.loadUniformFloat(gl, 'uInfluence2', 1 - this.tick);
+
+    this.tick += 0.01;
+
+    if (this.tick >= 1)
+      this.tick = 0;
+  }
 
   if (this.emissiveMap instanceof EZ3.Texture2D) {
     this.emissiveMap.bind(gl, state);

@@ -3,8 +3,8 @@
  * @extends Request
  */
 
-EZ3.FileRequest = function(url, crossOrigin, responseType) {
-  EZ3.Request.call(this, url, new EZ3.File(), crossOrigin);
+EZ3.FileRequest = function(url, cached, crossOrigin, responseType) {
+  EZ3.Request.call(this, url, new EZ3.File(), cached, crossOrigin);
 
   this._request = new XMLHttpRequest();
 
@@ -19,7 +19,7 @@ EZ3.FileRequest.prototype._processLoad = function(data, onLoad) {
 
   this.asset.data = data.response;
 
-  onLoad(this.url, this.asset);
+  onLoad(this.url, this.asset, this.cached);
 };
 
 EZ3.FileRequest.prototype._processError = function(onError) {

@@ -161,7 +161,7 @@ EZ3.Vector3.prototype.mulQuaternion = function(q) {
   var x = this.x;
   var y = this.y;
   var z = this.z;
-  
+
   var qx = q.x;
   var qy = q.y;
   var qz = q.z;
@@ -222,6 +222,19 @@ EZ3.Vector3.prototype.fromPositionMatrix = function(m) {
   return this;
 };
 
+EZ3.Vector3.prototype.fromViewProjectionMatrix = function(m) {
+  var e = m.elements;
+  var x = this.x;
+  var y = this.y;
+  var z = this.z;
+  var d = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]);
+
+  this.x = (e[0] * x + e[4] * y + e[8] * z + e[12]) * d;
+  this.y = (e[1] * x + e[5] * y + e[9] * z + e[13]) * d;
+  this.z = (e[2] * x + e[6] * y + e[10] * z + e[14]) * d;
+
+  return this;
+};
 
 EZ3.Vector3.prototype.invert = function(v) {
   if (v instanceof EZ3.Vector3) {
