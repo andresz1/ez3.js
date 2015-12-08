@@ -9,49 +9,49 @@ EZ3.Material = function(id) {
   this.fill = EZ3.Material.SOLID;
 
   this.depthTest = true;
-  this.faceCulling = EZ3.Material.BACK;
   this.transparent = false;
-  this.opacity = 1;
+  this.faceCulling = EZ3.Material.BACK;
+  this.blending = EZ3.Material.STANDARD_BLENDING;
 };
 
 EZ3.Material.prototype.updateStates = function(gl, state) {
-  if (this.depthTest) {
-    if (!state.depthTest) {
-      gl.enable(gl.DEPTH_TEST);
-      gl.depthFunc(gl.LEQUAL);
-      state.depthTest = true;
-    }
-  } else if (state.depthTest) {
-    gl.disable(gl.DEPTH_TEST);
-    state.depthTest = false;
-  }
+  if (this.depthTest)
+    state.enable(gl.DEPTH_TEST);
+  else
+    state.disable(gl.DEPTH_TEST);
 
-  if (this.faceCulling === EZ3.Material.BACK) {
-    if (state.faceCulling === EZ3.Material.NONE) {
-      gl.enable(gl.CULL_FACE);
-      gl.cullFace(gl.BACK);
-    }
-    else if (state.faceCulling === EZ3.Material.FRONT)
-      gl.cullFace(gl.BACK);
+  if (this.faceCulling !== EZ3.Material.NONE) {
+    state.enable(gl.CULL_FACE);
+    if(this.faceCulling === EZ3.Material.FRONT)
+      state.cullFace(gl.FRONT);
+    else
+      state.cullFace(gl.BACK);
+  } else
+    state.disable(gl.CULL_FACE);
 
-    state.faceCulling = EZ3.Material.BACK;
-  } else if (this.faceCulling === EZ3.Material.FRONT) {
-    if (state.faceCulling === EZ3.Material.NONE) {
-      gl.enable(gl.CULL_FACE);
-      gl.cullFace(gl.FRONT);
-    }
-    else if (state.faceCulling === EZ3.Material.BACK)
-      gl.cullFace(gl.FRONT);
+  if (this.transparent) {
+    state.enable(gl.BLEND);
 
-    state.faceCulling = EZ3.Material.FRONT;
-  } else if (state.faceCulling !== EZ3.Material.NONE) {
-    gl.disable(gl.CULL_FACE);
-    state.faceCulling = EZ3.Material.NONE;
-  }
+    if (this.blending === EZ3.Material.ADDITIVE_BLENDING) {
+      state.blendEquation(gl.FUNC_ADD);
+      state.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    } else if (this.blending === EZ3.Material.SUBTRACTIVE_BLENDING) {
+      state.blendEquation(gl.FUNC_ADD);
+      state.blendFunc(gl.ZERO, gl.ONE_MINUS_SRC_COLOR);
+    } else if (this.blending === EZ3.Material.MULTIPLICATIVE_BLENDING) {
+      state.blendEquation(gl.FUNC_ADD);
+      state.blendFunc(gl.ZERO, gl.SRC_COLOR);
+    } else {
+      state.blendEquation(gl.FUNC_ADD);
+      state.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    }
+  } else
+    state.disable(gl.BLEND);
 };
 
 EZ3.Material.MESH = 'MESH.';
 EZ3.Material.SHADER = 'SHADER.';
+
 EZ3.Material.SOLID = 0;
 EZ3.Material.POINTS = 1;
 EZ3.Material.WIREFRAME = 2;
@@ -59,3 +59,8 @@ EZ3.Material.WIREFRAME = 2;
 EZ3.Material.NONE = 0;
 EZ3.Material.BACK = 1;
 EZ3.Material.FRONT = 2;
+
+EZ3.Material.STANDARD_BLENDING = 0;
+EZ3.Material.ADDITIVE_BLENDING = 1;
+EZ3.Material.SUBTRACTIVE_BLENDING = 2;
+EZ3.Material.MULTIPLICATIVE_BLENDING = 3;

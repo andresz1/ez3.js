@@ -69,7 +69,7 @@ EZ3.Texture.prototype.bind = function(gl, target, state) {
   if (!this._id)
     this._id = gl.createTexture();
 
-  if(state instanceof EZ3.State) {
+  if(state instanceof EZ3.RendererState) {
     maxSlots = state.maxTextureSlots;
 
     if(state.usedTextureSlots < maxSlots + 1) {

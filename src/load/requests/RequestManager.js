@@ -14,10 +14,10 @@ EZ3.RequestManager = function() {
   this.onProgress = new EZ3.Signal();
 };
 
-EZ3.RequestManager.prototype._processLoad = function(url, asset) {
+EZ3.RequestManager.prototype._processLoad = function(url, asset, cached) {
   var cache;
 
-  if (asset instanceof EZ3.File) {
+  if (asset instanceof EZ3.File && cached) {
     cache = EZ3.Cache;
     cache.add(url, asset);
   }
@@ -55,7 +55,7 @@ EZ3.RequestManager.prototype._processProgress = function(url, asset) {
   }
 };
 
-EZ3.RequestManager.prototype.addFileRequest = function(url, crossOrigin, responseType) {
+EZ3.RequestManager.prototype.addFileRequest = function(url, cached, crossOrigin, responseType) {
   var cache = EZ3.Cache;
   var file = cache.get(url);
 
@@ -65,14 +65,14 @@ EZ3.RequestManager.prototype.addFileRequest = function(url, crossOrigin, respons
   }
 
   if(!this._requests[url]) {
-    this._requests[url] = new EZ3.FileRequest(url, crossOrigin, responseType);
+    this._requests[url] = new EZ3.FileRequest(url, cached, crossOrigin, responseType);
     this.toSend++;
   }
 
   return this._requests[url].asset;
 };
 
-EZ3.RequestManager.prototype.addImageRequest = function(url, crossOrigin) {
+EZ3.RequestManager.prototype.addImageRequest = function(url, cached, crossOrigin) {
   var cache = EZ3.Cache;
   var image = cache.get(url);
 
@@ -85,9 +85,9 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, crossOrigin) {
     var extension = EZ3.toFileExtension(url);
 
     if (extension === 'tga')
-      this._requests[url] = new EZ3.TGARequest(url, crossOrigin);
+      this._requests[url] = new EZ3.TGARequest(url, cached, crossOrigin);
     else
-      this._requests[url] = new EZ3.ImageRequest(url, crossOrigin);
+      this._requests[url] = new EZ3.ImageRequest(url, cached, crossOrigin);
 
     this.toSend++;
   }
@@ -95,14 +95,14 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, crossOrigin) {
   return this._requests[url].asset;
 };
 
-EZ3.RequestManager.prototype.addEntityRequest = function(url, crossOrigin) {
+EZ3.RequestManager.prototype.addEntityRequest = function(url, cached, crossOrigin) {
   if(!this._requests[url]) {
     var extension = EZ3.toFileExtension(url);
 
     if (extension === 'obj')
-      this._requests[url] = new EZ3.OBJRequest(url, crossOrigin);
-    else if (extension === 'md2')
-      this._requests[url] = new EZ3.MD2Request(url, crossOrigin);
+      this._requests[url] = new EZ3.OBJRequest(url, cached, crossOrigin);
+    else if (extension === 'mdl')
+      this._requests[url] = new EZ3.MDLRequest(url, cached, crossOrigin);
     else
       return;
 

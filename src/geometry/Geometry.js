@@ -97,7 +97,6 @@ EZ3.Geometry.prototype.generateNormalData = function() {
     vector1.sub(point2, point0);
 
     vector1.cross(vector0);
-
     weighted[indices[i]].add(vector1);
     weighted[indices[i + 1]].add(vector1);
     weighted[indices[i + 2]].add(vector1);

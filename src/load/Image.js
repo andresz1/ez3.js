@@ -54,4 +54,5 @@ EZ3.Image.prototype.download = function() {
   document.body.removeChild(a);
 };
 
+EZ3.Image.RGB = 'RGB';
 EZ3.Image.RGBA = 'RGBA';

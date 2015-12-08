@@ -3,8 +3,8 @@
  * @extends Request
  */
 
-EZ3.OBJRequest = function(url, crossOrigin) {
-  EZ3.Request.call(this, url, new EZ3.Entity(), crossOrigin);
+EZ3.OBJRequest = function(url, cached, crossOrigin) {
+  EZ3.Request.call(this, url, new EZ3.Entity(), cached, crossOrigin);
 };
 
 EZ3.OBJRequest.prototype = Object.create(EZ3.Request.prototype);
@@ -36,8 +36,25 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
       currents[i].specular = specular;
   }
 
+  function processTransparency(opacity, invert) {
+    var i;
+
+    opacity = parseFloat(opacity);
+
+    if (invert)
+      opacity = 1 - opacity;
+
+    if (opacity >= 1)
+      return;
+
+    for (i = 0; i < currents.length; i++) {
+      currents[i].transparent = true;
+      currents[i].opacity = opacity;
+    }
+  }
+
   function processDiffuseMap(url) {
-    var texture = new EZ3.Texture2D(requests.addImageRequest(baseUrl + url, that.crossOrigin));
+    var texture = new EZ3.Texture2D(requests.addImageRequest(baseUrl + url, that.cached, that.crossOrigin));
     var i;
 
     for (i = 0; i < currents.length; i++)
@@ -72,6 +89,10 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
           processSpecular(value);
         else if (key === 'map_kd')
           processDiffuseMap(value);
+        else if (key === 'd')
+          processTransparency(value);
+        else if (key === 'tr')
+          processTransparency(value, true);
       }
     }
   }
@@ -365,7 +386,7 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
     var i;
 
     for (i = 0; i < libraries.length; i++)
-      files.push(requests.file(baseUrl + libraries[i]));
+      files.push(requests.addFileRequest(baseUrl + libraries[i], that.cached, that.crossOrigin));
 
     requests.onComplete.add(function() {
       for (i = 0; i < files.length; i++)
