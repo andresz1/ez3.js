@@ -189,12 +189,13 @@ varying vec2 vUv;
 	}
 
 	#if (MAX_POINT_LIGHTS > 0)
-		float omnidirectionalShadow(in PointLight light, in samplerCube shadowSampler) {
-			vec3 direction = vPosition - light.position;
+		float omnidirectionalShadow(in vec3 lightPosition, in float shadowDarkness, in samplerCube shadowSampler) {
+			vec3 direction = vPosition - lightPosition;
+			direction.y = -direction.y;
 			float vertexDepth = clamp(length(direction), 0.0, 1.0);
 			float shadowMapDepth = unpack(textureCube(shadowSampler, direction));
 
-			return (vertexDepth > shadowMapDepth) ? light.shadowDarkness : 1.0;
+			return (vertexDepth > shadowMapDepth) ? shadowDarkness : 1.0;
 		}
 	#endif
 
@@ -247,11 +248,14 @@ float computeSpecularReflection(in vec3 v, in vec3 s, in vec3 n) {
 
 void main() {
 	float shadow = 1.0;
+
 	float diffuseReflection;
 	float specularReflection;
+
 	vec3 emissive = uEmissive;
 	vec3 diffuse = vec3(0.0);
 	vec3 specular = vec3(0.0);
+
 	vec3 v = normalize(uEyePosition - vPosition);
 
 	#ifdef FLAT
@@ -277,7 +281,10 @@ void main() {
 				specularReflection = computeSpecularReflection(v, s, n);
 
 				#ifdef SHADOW_MAP
-					shadow = omnidirectionalShadow(uPointLights[i], uPointShadowSampler[i]);
+					vec3 lightPosition = uPointLights[i].position;
+					float shadowDarkness = uPointLights[i].shadowDarkness;
+
+					shadow = omnidirectionalShadow(lightPosition, shadowDarkness, uPointShadowSampler[i]);
 				#endif
 
 				diffuse += uPointLights[i].diffuse * uDiffuse * diffuseReflection * shadow;

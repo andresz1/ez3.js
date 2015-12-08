@@ -146,15 +146,12 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
         view.lookAt(origin, target, up);
         view.mul(new EZ3.Matrix4().setPosition(light.position.clone().invert()));
 
-        projection = light.projection.clone();
-        projection.scale(new EZ3.Vector3(1, -1, 1));
-
         light.depthFramebuffer.texture.attach(gl, j);
 
         this.clear(color);
 
         for (k = 0; k < shadowCasters.length; k++)
-          this._renderShadowCaster(shadowCasters[k], program, view, projection);
+          this._renderShadowCaster(shadowCasters[k], program, view, light.projection);
       }
     } else {
 
