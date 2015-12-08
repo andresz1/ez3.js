@@ -19,7 +19,7 @@ EZ3.Texture2D.prototype.bind = function(gl, state) {
 EZ3.Texture2D.prototype.update = function(gl) {
   if (this.dirty) {
     EZ3.Texture.prototype._updateImage.call(this, gl, gl.TEXTURE_2D, this.image);
-    EZ3.Texture.prototype._updateMipmaps.call(this, gl);
+    EZ3.Texture.prototype._updateMipmaps.call(this, gl, gl.TEXTURE_2D);
 
     this.dirty = false;
   }

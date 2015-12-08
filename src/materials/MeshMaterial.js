@@ -24,11 +24,12 @@ EZ3.MeshMaterial = function() {
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
   this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
 
-  this.albedoFactor = 7.0;
-  this.fresnelFactor = 0.0;
-  this.refractFactor = 1.0;
-  this.roughnessFactor = 0.2;
+  this.albedo = 3.0;
+  this.fresnel = 0.0;
+  this.refractiveIndex = 1.0;
   this.shininessFactor = 180.1;
+  this.diffuseRoughness = 0.2;
+  this.specularRoughness = 0.2;
 };
 
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
@@ -132,13 +133,13 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
     this.program.loadUniformFloat(gl, 'uRefractFactor', this.refractFactor);
 
   if(this.diffuseReflection === EZ3.MeshMaterial.OREN_NAYAR) {
-    this.program.loadUniformFloat(gl, 'uAlbedo', this.albedoFactor);
-    this.program.loadUniformFloat(gl, 'uRoughness', this.roughnessFactor);
+    this.program.loadUniformFloat(gl, 'uAlbedo', this.albedo);
+    this.program.loadUniformFloat(gl, 'uDiffuseRoughness', this.diffuseRoughness);
   }
 
   if(this.specularReflection === EZ3.MeshMaterial.COOK_TORRANCE) {
-    this.program.loadUniformFloat(gl, 'uFresnel', this.fresnelFactor);
-    this.program.loadUniformFloat(gl, 'uRoughness', this.roughnessFactor);
+    this.program.loadUniformFloat(gl, 'uFresnel', this.fresnel);
+    this.program.loadUniformFloat(gl, 'uSpecularRoughness', this.specularRoughness);
   }
 };
 

@@ -6,7 +6,7 @@ EZ3.Texture = function(generateMipmaps) {
   this._id = null;
   this._cache = {};
 
-  this.generateMipmaps = (generateMipmaps === undefined)? true : generateMipmaps;
+  this.generateMipmaps = (generateMipmaps === undefined) ? true : generateMipmaps;
   this.wrapS = EZ3.Texture.REPEAT;
   this.wrapT = EZ3.Texture.REPEAT;
   this.magFilter = EZ3.Texture.LINEAR;
@@ -24,12 +24,13 @@ EZ3.Texture.prototype._updateImage = function(gl, target, image) {
   gl.texImage2D(target, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, image.data);
 };
 
-EZ3.Texture.prototype._updateMipmaps = function(gl) {
+EZ3.Texture.prototype._updateMipmaps = function(gl, target) {
   if (!this.generateMipmaps) {
     this.magFilter = EZ3.Texture.LINEAR;
     this.minFilter = EZ3.Texture.LINEAR;
-  } else
-    gl.generateMipmap(gl.TEXTURE_2D);
+  } else {
+    gl.generateMipmap(target);
+  }
 };
 
 EZ3.Texture.prototype._updatePixelStore = function(gl) {

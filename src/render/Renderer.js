@@ -69,7 +69,9 @@ EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, proje
 EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
   var gl = this.context;
   var color = new EZ3.Vector4(1.0);
+  var origin;
   var view;
+  var projection;
   var target;
   var program;
   var fragment;
@@ -113,6 +115,7 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
       up = new EZ3.Vector3();
       view = new EZ3.Matrix4();
+      origin = new EZ3.Vector3();
       target = new EZ3.Vector3();
 
       for (j = 0; j < 6; j++) {
@@ -144,17 +147,18 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
             break;
         }
 
-        view.lookAt(light.position, target.add(light.position.clone()), new EZ3.Vector3(0, 1, 0));
+        view.lookAt(origin, target, up);
+        view.mul(new EZ3.Matrix4().setPosition(light.position.clone().invert()));
 
-        //view.lookAt(new EZ3.Vector3(), target, up);
-        //view.mul(new EZ3.Matrix4().translate(light.position.clone().invert()));
+        projection = light.projection.clone();
+        projection.scale(new EZ3.Vector3(1, -1, 1));
 
         light.depthFramebuffer.texture.attach(gl, j);
 
         this.clear(color);
 
-        for (k = 0; k < shadowCasters.length; ++k)
-          this._renderShadowCaster(shadowCasters[k], program, view, light.projection);
+        for (k = 0; k < shadowCasters.length; k++)
+          this._renderShadowCaster(shadowCasters[k], program, view, projection);
       }
     } else {
 
