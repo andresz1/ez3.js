@@ -13,8 +13,5 @@
  EZ3.TargetTexture2D.prototype.constructor = EZ3.TargetTexture2D;
 
  EZ3.TargetTexture2D.prototype.attach = function(gl) {
-   if(this._cache.attachment !== this.attachment) {
-     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl[this.attachment], gl.TEXTURE_2D, this._id, 0);
-     this._cache.attachment = this.attachment.slice();
-   }
+   gl.framebufferTexture2D(gl.FRAMEBUFFER, this.attachment, gl.TEXTURE_2D, this._id, 0);
  };

@@ -3,14 +3,14 @@
  * @extends Cubemap
  */
 
- EZ3.TargetCubemap = function(size, target, attachment) {
+ EZ3.TargetCubemap = function(size, format, attachment) {
    EZ3.Cubemap.call(this,
-     new EZ3.Image(size.x, size.y, target, null),
-     new EZ3.Image(size.x, size.y, target, null),
-     new EZ3.Image(size.x, size.y, target, null),
-     new EZ3.Image(size.x, size.y, target, null),
-     new EZ3.Image(size.x, size.y, target, null),
-     new EZ3.Image(size.x, size.y, target, null),
+     new EZ3.Image(size.x, size.y, format, null),
+     new EZ3.Image(size.x, size.y, format, null),
+     new EZ3.Image(size.x, size.y, format, null),
+     new EZ3.Image(size.x, size.y, format, null),
+     new EZ3.Image(size.x, size.y, format, null),
+     new EZ3.Image(size.x, size.y, format, null),
      false
    );
 
@@ -23,5 +23,5 @@
  EZ3.TargetCubemap.prototype.attach = function(gl, face) {
    var index = face || 0;
 
-   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl[this.attachment], gl.TEXTURE_CUBE_MAP_POSITIVE_X + index, this._id, 0);
+   gl.framebufferTexture2D(gl.FRAMEBUFFER, this.attachment, gl.TEXTURE_CUBE_MAP_POSITIVE_X + index, this._id, 0);
  };

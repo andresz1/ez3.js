@@ -7,10 +7,10 @@ EZ3.Material = function(id) {
 
   this.program = null;
   this.fill = EZ3.Material.SOLID;
-
+  this.visible = true;
   this.depthTest = true;
   this.transparent = false;
-  this.faceCulling = EZ3.Material.BACK;
+  this.faceCulling = EZ3.Material.BACK_CULLING;
   this.blending = EZ3.Material.STANDARD_BLENDING;
 };
 
@@ -49,16 +49,13 @@ EZ3.Material.prototype.updateStates = function(gl, state) {
     state.disable(gl.BLEND);
 };
 
-EZ3.Material.MESH = 'MESH.';
-EZ3.Material.SHADER = 'SHADER.';
-
 EZ3.Material.SOLID = 0;
 EZ3.Material.POINTS = 1;
 EZ3.Material.WIREFRAME = 2;
 
-EZ3.Material.NONE = 0;
-EZ3.Material.BACK = 1;
-EZ3.Material.FRONT = 2;
+EZ3.Material.NO_CULLING = 0;
+EZ3.Material.BACK_CULLING = 1;
+EZ3.Material.FRONT_CULLING = 2;
 
 EZ3.Material.STANDARD_BLENDING = 0;
 EZ3.Material.ADDITIVE_BLENDING = 1;

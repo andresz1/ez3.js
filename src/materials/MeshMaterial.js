@@ -27,10 +27,11 @@ EZ3.MeshMaterial = function() {
   this.albedo = 3.0;
   this.fresnel = 0.0;
   this.opacity = 1.0;
+  this.shininess = 180;
   this.refractiveIndex = 1.0;
-  this.shininessFactor = 180.1;
   this.diffuseRoughness = 0.2;
   this.specularRoughness = 0.2;
+
   this.morphTarget = false;
   this.tick = 0;
 };
@@ -38,14 +39,14 @@ EZ3.MeshMaterial = function() {
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
-EZ3.MeshMaterial.prototype.updateProgram = function(gl, state) {
-  var id = EZ3.Material.MESH;
+EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights, shadowReceiver) {
+  var id = 'MESH.';
   var defines = [];
   var prefix = '#define ';
 
-  defines.push('MAX_POINT_LIGHTS ' + state.maxPointLights);
-  defines.push('MAX_DIRECTIONAL_LIGHTS ' + state.maxDirectionalLights);
-  defines.push('MAX_SPOT_LIGHTS ' + state.maxSpotLights);
+  defines.push('MAX_POINT_LIGHTS ' + lights.point.length);
+  defines.push('MAX_DIRECTIONAL_LIGHTS ' + lights.directional.length);
+  defines.push('MAX_SPOT_LIGHTS ' + lights.spot.length);
 
   if(this.morphTarget)
     defines.push('MORPH_TARGET');
@@ -84,7 +85,7 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state) {
       defines.push('REFRACTION');
   }
 
-  if(state.activeShadowReceiver)
+  if(shadowReceiver)
     defines.push('SHADOW_MAP');
 
   id += defines.join('.');
@@ -92,20 +93,15 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state) {
 
   if (this._id !== id) {
     this._id = id;
-
-    if (!state.programs[id]) {
-      this.program = new EZ3.GLSLProgram(gl, EZ3.ShaderLibrary.mesh.vertex, EZ3.ShaderLibrary.mesh.fragment, prefix);
-      state.programs[id] = this.program;
-    } else
-      this.program = state.programs[id];
+    this.program = state.createProgram(id, EZ3.ShaderLibrary.mesh.vertex, EZ3.ShaderLibrary.mesh.fragment, prefix);
   }
 };
 
-EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
+EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state, capabilities) {
   this.program.loadUniformFloat(gl, 'uEmissive', this.emissive);
   this.program.loadUniformFloat(gl, 'uDiffuse', this.diffuse);
   this.program.loadUniformFloat(gl, 'uSpecular', this.specular);
-  this.program.loadUniformFloat(gl, 'uShininess', this.shininessFactor);
+  this.program.loadUniformFloat(gl, 'uShininess', this.shininess);
   this.program.loadUniformFloat(gl, 'uOpacity', this.opacity);
 
   if (this.morphTarget) {
@@ -119,28 +115,28 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state) {
   }
 
   if (this.emissiveMap instanceof EZ3.Texture2D) {
-    this.emissiveMap.bind(gl, state);
+    this.emissiveMap.bind(gl, state, capabilities);
     this.emissiveMap.update(gl);
 
     this.program.loadUniformInteger(gl, 'uEmissiveSampler', state.usedTextureSlots++);
   }
 
   if (this.diffuseMap instanceof EZ3.Texture2D) {
-    this.diffuseMap.bind(gl, state);
+    this.diffuseMap.bind(gl, state, capabilities);
     this.diffuseMap.update(gl);
 
     this.program.loadUniformInteger(gl, 'uDiffuseSampler', state.usedTextureSlots++);
   }
 
   if (this.normalMap instanceof EZ3.Texture2D) {
-    this.normalMap.bind(gl, state);
+    this.normalMap.bind(gl, state, capabilities);
     this.normalMap.update(gl);
 
     this.program.loadUniformInteger(gl, 'uNormalSampler', state.usedTextureSlots++);
   }
 
   if(this.environmentMap instanceof EZ3.Cubemap) {
-    this.environmentMap.bind(gl, state);
+    this.environmentMap.bind(gl, state, capabilities);
     this.environmentMap.update(gl);
 
     this.program.loadUniformInteger(gl, 'uEnvironmentSampler', state.usedTextureSlots++);

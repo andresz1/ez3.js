@@ -12,11 +12,35 @@ EZ3.Texture = function(generateMipmaps) {
   this.magFilter = EZ3.Texture.LINEAR;
   this.minFilter = EZ3.Texture.LINEAR_MIPMAP_LINEAR;
   this.flipY = false;
-  this.dirty = true;
+  this.needUpdate = true;
+};
+
+EZ3.Texture.prototype._getGLFilter = function(gl, filter) {
+  if (filter === EZ3.Texture.LINEAR)
+    return gl.LINEAR;
+  else if (filter === EZ3.Texture.NEAREST)
+    return gl.NEAREST;
+  else if (filter === EZ3.Texture.LINEAR_MIPMAP_LINEAR)
+    return gl.LINEAR_MIPMAP_LINEAR;
+  else if (filter === EZ3.Texture.NEAREST_MIPMAP_NEAREST)
+    return gl.NEAREST_MIPMAP_NEAREST;
+  else if (filter === EZ3.Texture.NEAREST_MIPMAP_LINEAR)
+    return gl.NEAREST_MIPMAP_LINEAR;
+  else
+    return gl.LINEAR_MIPMAP_NEAREST;
+};
+
+EZ3.Texture.prototype._getGLWrap = function(gl, wrap) {
+  if (wrap === EZ3.Texture.CLAMP_TO_EDGE)
+    return gl.CLAMP_TO_EDGE;
+  else if (wrap  === EZ3.Texture.REPEAT)
+    return gl.REPEAT;
+  else
+    return gl.MIRRORED_REPEAT;
 };
 
 EZ3.Texture.prototype._updateImage = function(gl, target, image) {
-  var format = gl[image.format];
+  var format = image.getGLFormat(gl);
 
   if (!EZ3.Math.isPowerOfTwo(image.width) || !EZ3.Math.isPowerOfTwo(image.height))
     image.toPowerOfTwo();
@@ -42,70 +66,48 @@ EZ3.Texture.prototype._updatePixelStore = function(gl) {
 
 EZ3.Texture.prototype._updateParameters = function(gl, target) {
   if (this._cache.wrapS !== this.wrapS) {
-    gl.texParameteri(target, gl.TEXTURE_WRAP_S, gl[this.wrapS]);
+    gl.texParameteri(target, gl.TEXTURE_WRAP_S, this._getGLWrap(gl, this.wrapS));
     this._cache.wrapS = this.wrapS;
   }
 
   if (this._cache.wrapT !== this.wrapT) {
-    gl.texParameteri(target, gl.TEXTURE_WRAP_T, gl[this.wrapT]);
+    gl.texParameteri(target, gl.TEXTURE_WRAP_T, this._getGLWrap(gl, this.wrapT));
     this._cache.wrapT = this.wrapT;
   }
 
   if (this._cache.magFilter !== this.magFilter) {
-    gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, gl[this.magFilter]);
+    gl.texParameteri(target, gl.TEXTURE_MAG_FILTER, this._getGLFilter(gl, this.magFilter));
     this._cache.magFilter = this.magFilter;
   }
 
   if (this._cache.minFilter !== this.minFilter) {
-    gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, gl[this.minFilter]);
+    gl.texParameteri(target, gl.TEXTURE_MIN_FILTER, this._getGLFilter(gl, this.minFilter));
     this._cache.minFilter = this.minFilter;
   }
 };
 
-EZ3.Texture.prototype.bind = function(gl, target, state) {
-  var slot;
-  var maxSlots;
-
+EZ3.Texture.prototype.bind = function(gl, state, capabilities, target) {
   if (!this._id)
     this._id = gl.createTexture();
 
-  if(state instanceof EZ3.RendererState) {
-    maxSlots = state.maxTextureSlots;
-
-    if(state.usedTextureSlots < maxSlots + 1) {
-
-      slot = gl.TEXTURE0 + state.usedTextureSlots;
-
-      if (state.currentTextureSlot !== slot) {
-        gl.activeTexture(slot);
-        state.currentTextureSlot = slot;
-      }
-
-      if (!state.texture[slot]) {
-        state.texture[slot] = {
-          id: this._id,
-          target: target
-        };
-        gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
-      } else {
-        if (state.texture[slot].id !== this._id || state.texture[slot].target !== target) {
-          state.texture[slot].id = this._id;
-          state.texture[slot].target = target;
-          gl.bindTexture(state.texture[slot].target, state.texture[slot].id);
-        }
-      }
-    } else
-      console.warn('EZ3.Texture.bind: not available enough texture slots. Max slots available: ', maxSlots + 1);
+  if(state && capabilities) {
+    if(state.usedTextureSlots < capabilities.maxTextureSlots + 1)
+      state.bindTexture(target, this._id);
+    else
+      console.warn('EZ3.Texture.bind: not available enough texture slots.');
   } else
     gl.bindTexture(target, this._id);
 };
 
-EZ3.Texture.LINEAR = 'LINEAR';
-EZ3.Texture.NEAREST = 'NEAREST';
-EZ3.Texture.LINEAR_MIPMAP_LINEAR = 'LINEAR_MIPMAP_LINEAR';
-EZ3.Texture.NEAREST_MIPMAP_NEAREST = 'NEAREST_MIPMAP_NEAREST';
-EZ3.Texture.NEAREST_MIPMAP_LINEAR = 'NEAREST_MIPMAP_LINEAR';
-EZ3.Texture.LINEAR_MIPMAP_NEAREST = 'LINEAR_MIPMAP_NEAREST';
-EZ3.Texture.CLAMP_TO_EDGE = 'CLAMP_TO_EDGE';
-EZ3.Texture.REPEAT = 'REPEAT';
-EZ3.Texture.MIRRORED_REPEAT = 'MIRRORED_REPEAT';
+EZ3.Texture.LINEAR = 1;
+EZ3.Texture.NEAREST = 2;
+EZ3.Texture.LINEAR_MIPMAP_LINEAR = 3;
+EZ3.Texture.NEAREST_MIPMAP_NEAREST = 4;
+EZ3.Texture.NEAREST_MIPMAP_LINEAR = 5;
+EZ3.Texture.LINEAR_MIPMAP_NEAREST = 6;
+
+EZ3.Texture.CLAMP_TO_EDGE = 1;
+EZ3.Texture.REPEAT = 2;
+EZ3.Texture.MIRRORED_REPEAT = 3;
+
+EZ3.Texture.COLOR_ATTACHMENT0 = 1;

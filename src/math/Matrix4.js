@@ -400,7 +400,7 @@ EZ3.Matrix4.prototype.fromRotationTranslation = function(q, v) {
 };
 
 EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
-  var f = 1.0 / Math.tan(fovy / 2.0);
+  var f = 1.0 / Math.tan(EZ3.Math.toRadians(fovy / 2.0));
   var nf = 1.0 / (near - far);
 
   this.elements[0] = f / aspect;

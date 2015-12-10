@@ -14,6 +14,13 @@ EZ3.Image = function(width, height, format, data) {
 EZ3.Image.prototype = Object.create(EZ3.File.prototype);
 EZ3.Image.prototype.constructor = EZ3.Image;
 
+EZ3.Image.prototype.getGLFormat = function(gl) {
+  if (this.format === EZ3.Image.RGB)
+    return gl.RGB;
+  else
+    return gl.RGBA;
+};
+
 EZ3.Image.prototype.getCanvas = function() {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
@@ -46,9 +53,10 @@ EZ3.Image.prototype.toPowerOfTwo = function() {
 
 EZ3.Image.prototype.download = function() {
   var a = document.createElement('a');
+
   a.href = this.getCanvas().toDataURL();
-  console.log(a.href);
   a.download = 'output.png';
+
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -56,3 +64,6 @@ EZ3.Image.prototype.download = function() {
 
 EZ3.Image.RGB = 'RGB';
 EZ3.Image.RGBA = 'RGBA';
+
+EZ3.Image.RGB_FORMAT = 1;
+EZ3.Image.RGBA_FORMAT = 2;

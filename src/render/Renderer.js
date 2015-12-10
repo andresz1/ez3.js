@@ -3,11 +3,12 @@
  */
 
 EZ3.Renderer = function(canvas, options) {
-  this.context = null;
-  this.extension = null;
   this.canvas = canvas;
   this.options = options;
+  this.context = null;
   this.state = null;
+  this.extensions = null;
+  this.capabilities = null;
 };
 
 EZ3.Renderer.prototype._processContextLost = function(event) {
@@ -18,11 +19,13 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   var gl = this.context;
   var program = mesh.material.program;
   var modelView = new EZ3.Matrix4();
+  var light;
   var i;
 
-  program.bind(gl);
+  this.state.bindProgram(program);
+
   mesh.material.updateStates(gl, this.state);
-  mesh.material.updateUniforms(gl, this.state);
+  mesh.material.updateUniforms(gl, this.state, this.capabilities);
 
   modelView.mul(camera.view, mesh.world);
 
@@ -30,31 +33,29 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   program.loadUniformMatrix(gl, 'uModel', mesh.world);
   program.loadUniformMatrix(gl, 'uModelView', modelView);
   program.loadUniformMatrix(gl, 'uProjection', camera.projection);
+  program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
 
-  if (this.state.hasLights) {
-    mesh.updateNormal();
-    mesh.updateNormalData();
-    program.loadUniformMatrix(gl, 'uNormal', mesh.normal);
+  for (i = 0; i < lights.spot.length; i++) {
+    light = lights.spot[i];
+    light.updateUniforms(gl, this.state, this.capabilities, program, i, mesh.shadowReceiver, lights.spot.length);
   }
 
-  this.state.activeShadowReceiver = mesh.shadowReceiver;
+  for (i = 0; i < lights.point.length; i++) {
+    light = lights.point[i];
+    light.updateUniforms(gl, this.state, this.capabilities, program, i, mesh.shadowReceiver, lights.point.length);
+  }
 
-  for (i = 0; i < lights.spot.length; i++)
-    lights.spot[i].updateUniforms(gl, this.state, program, i);
+  for (i = 0; i < lights.directional.length; i++) {
+    light = lights.directional[i];
+    light.updateUniforms(gl, this.state, this.capabilities, program, i, mesh.shadowReceiver, lights.directional.length);
+  }
 
-  for (i = 0; i < lights.point.length; i++)
-    lights.point[i].updateUniforms(gl, this.state, program, i);
+  mesh.render(gl, program.attributes, this.state, this.extensions);
 
-  for (i = 0; i < lights.directional.length; i++)
-    lights.directional[i].updateUniforms(gl, this.state, program, i);
-
-  mesh.render(gl, program.attributes, this.state, this.extension);
-
-  if (this.state.usedTextureSlots)
-    this.state.usedTextureSlots = 0;
+  this.state.usedTextureSlots = 0;
 };
 
-EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, projection) {
+EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, view, projection) {
   var gl = this.context;
   var modelView = new EZ3.Matrix4();
 
@@ -63,24 +64,91 @@ EZ3.Renderer.prototype._renderShadowCaster = function(mesh, program, view, proje
   program.loadUniformMatrix(gl, 'uModelView', modelView);
   program.loadUniformMatrix(gl, 'uProjection', projection);
 
-  mesh.render(gl, program.attributes, this.state, this.extension);
+  mesh.render(gl, program.attributes, this.state, this.extensions);
 };
 
-EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
+EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, lights) {
   var gl = this.context;
-  var color = new EZ3.Vector4(1.0);
-  var origin;
-  var view;
-  var projection;
-  var target;
-  var program;
-  var fragment;
-  var vertex;
+  var target = new EZ3.Vector3();
+  var up = new EZ3.Vector3();
+  var view = new EZ3.Matrix4();
+  var position;
   var light;
-  var up;
   var i;
   var j;
   var k;
+
+  for (i = 0; i < lights.length; i++) {
+    light = lights[i];
+    position = light.worldPosition();
+
+    light.depthFramebuffer.bind(gl, this.state);
+    light.depthFramebuffer.update(gl);
+
+    for (j = 0; j < 6; j++) {
+      switch (j) {
+        case EZ3.Cubemap.POSITIVE_X:
+          target.set(1, 0, 0);
+          up.set(0, -1, 0);
+          break;
+        case EZ3.Cubemap.NEGATIVE_X:
+          target.set(-1, 0, 0);
+          up.set(0, -1, 0);
+          break;
+        case EZ3.Cubemap.POSITIVE_Y:
+          target.set(0, 1, 0);
+          up.set(0, 0, 1);
+          break;
+        case EZ3.Cubemap.NEGATIVE_Y:
+          target.set(0, -1, 0);
+          up.set(0, 0, -1);
+          break;
+        case EZ3.Cubemap.POSITIVE_Z:
+          target.set(0, 0, 1);
+          up.set(0, -1, 0);
+          break;
+        case EZ3.Cubemap.NEGATIVE_Z:
+          target.set(0, 0, -1);
+          up.set(0, -1, 0);
+          break;
+      }
+
+      view.lookAt(position, target.add(position.clone()), up);
+
+      light.depthFramebuffer.texture.attach(gl, j);
+
+      this.clear();
+
+      for (k = 0; k < meshes.length; k++)
+        this._renderMeshDepth(program, meshes[k], view, light.projection);
+    }
+  }
+};
+
+EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, lights) {
+  var gl = this.context;
+  var light;
+  var i;
+  var j;
+
+  for (i = 0; i < lights.length; i++) {
+    light = lights[i];
+
+    light.depthFramebuffer.bind(gl, this.state);
+    light.depthFramebuffer.update(gl);
+
+    this.clear();
+
+    for (j = 0; j < meshes.length; j++)
+      this._renderMeshDepth(program, meshes[j], light.view, light.projection);
+  }
+};
+
+EZ3.Renderer.prototype._renderDepth = function(meshes, lights) {
+  var gl = this.context;
+  var vertex;
+  var fragment;
+  var program;
 
   this.state.disable(gl.BLEND);
   this.state.enable(gl.CULL_FACE);
@@ -94,81 +162,15 @@ EZ3.Renderer.prototype._renderDepth = function(lights, shadowCasters) {
 
   program = this.state.programs.depth;
 
-  program.bind(gl);
+  this.state.bindProgram(program);
 
-  for (i = 0; i < lights.length; i++) {
-    light = lights[i];
+  this._renderDirectionalDepth(program, meshes, lights.directional);
+  this._renderDirectionalDepth(program, meshes, lights.spot);
+  this._renderOmnidirectionalDepth(program, meshes, lights.point);
 
-    light.updateProjection();
+  EZ3.Framebuffer.unbind(gl);
 
-    light.depthFramebuffer.bind(gl);
-
-    light.depthFramebuffer.update(gl);
-
-    this.viewport(new EZ3.Vector2(), light.depthFramebuffer.size);
-
-    if (light instanceof EZ3.PointLight) {
-
-      up = new EZ3.Vector3();
-      view = new EZ3.Matrix4();
-      origin = new EZ3.Vector3();
-      target = new EZ3.Vector3();
-
-      for (j = 0; j < 6; j++) {
-
-        switch (j) {
-          case EZ3.Cubemap.POSITIVE_X:
-            target.set(1, 0, 0);
-            up.set(0, -1, 0);
-            break;
-          case EZ3.Cubemap.NEGATIVE_X:
-            target.set(-1, 0, 0);
-            up.set(0, -1, 0);
-            break;
-          case EZ3.Cubemap.POSITIVE_Y:
-            target.set(0, 1, 0);
-            up.set(0, 0, 1);
-            break;
-          case EZ3.Cubemap.NEGATIVE_Y:
-            target.set(0, -1, 0);
-            up.set(0, 0, -1);
-            break;
-          case EZ3.Cubemap.POSITIVE_Z:
-            target.set(0, 0, 1);
-            up.set(0, -1, 0);
-            break;
-          case EZ3.Cubemap.NEGATIVE_Z:
-            target.set(0, 0, -1);
-            up.set(0, -1, 0);
-            break;
-        }
-
-        view.lookAt(origin, target, up);
-        view.mul(new EZ3.Matrix4().setPosition(light.position.clone().invert()));
-
-        light.depthFramebuffer.texture.attach(gl, j);
-
-        this.clear(color);
-
-        for (k = 0; k < shadowCasters.length; k++)
-          this._renderShadowCaster(shadowCasters[k], program, view, light.projection);
-      }
-    } else {
-
-      light.updateView();
-
-      this.clear(color);
-
-      for (j = 0; j < shadowCasters.length; j++)
-        this._renderShadowCaster(shadowCasters[j], program, light.view, light.projection);
-    }
-  }
-};
-
-EZ3.Renderer.prototype._defaultFramebuffer = function() {
-  var gl = this.context;
-
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  this.viewport(new EZ3.Vector2(), new EZ3.Vector2(this.canvas.width, this.canvas.height));
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -186,16 +188,18 @@ EZ3.Renderer.prototype.initContext = function() {
       this.context = this.canvas.getContext(names[i], this.options);
     } catch (e) {}
 
-    if (this.context) {
-      this.state = new EZ3.RendererState(this.context);
-      this.state.maxTextureSlots = this.context.getParameter(this.context.MAX_TEXTURE_IMAGE_UNITS) - 1;
-      this.extension = new EZ3.RendererExtensions(this.context);
+    if (this.context)
       break;
-    }
   }
 
   if (!this.context)
     throw new Error('Unable to initialize WebGL with selected options.');
+
+  this.state = new EZ3.RendererState(this.context);
+  this.extensions = new EZ3.RendererExtensions(this.context);
+  this.capabilities = new EZ3.RendererCapabilities(this.context);
+
+  this.clearColor();
 
   this._onContextLost = function(event) {
     that._processContextLost(event);
@@ -204,26 +208,27 @@ EZ3.Renderer.prototype.initContext = function() {
   this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
 };
 
-EZ3.Renderer.prototype.clear = function(color) {
+EZ3.Renderer.prototype.clear = function() {
   var gl = this.context;
-
-  if (color instanceof EZ3.Vector4)
-    gl.clearColor(color.x, color.y, color.z, color.w);
-  else
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
   gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
 };
 
-EZ3.Renderer.prototype.viewport = function(position, size) {
+EZ3.Renderer.prototype.clearColor = function(color) {
   var gl = this.context;
 
-  gl.viewport(position.x, position.y, size.x, size.y);
+  if (color)
+    gl.clearColor(color.x, color.y, color.z, color.w);
+  else
+    gl.clearColor(0, 0, 0, 1);
+};
+
+EZ3.Renderer.prototype.viewport = function(position, size) {
+  this.state.viewport(position, size);
 };
 
 EZ3.Renderer.prototype.render = function(scene, camera) {
   var gl = this.context;
-  var entities = [];
   var meshes = {
     common: [],
     opaque: [],
@@ -233,43 +238,34 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
   var lights = {
     point: [],
     directional: [],
-    spot: []
+    spot: [],
+    empty: true
   };
-  var viewProjection;
-  var entity;
   var mesh;
   var depth;
+  var viewProjection;
   var i;
 
-  function painterSort(a, b) {
-    if (a.depth !== b.depth)
-      return a.depth - b.depth;
-  }
+  scene.updateWorldTraverse();
 
-  function reversePainterSort(a, b) {
-    if (a.depth !== b.depth)
-      return b.depth - a.depth;
-  }
+  scene.traverse(function(entity) {
+    if (entity instanceof EZ3.Light) {
+      lights.empty = false;
 
-  entities.push(scene);
+      entity.updateProjection();
 
-  while (entities.length) {
-    entity = entities.pop();
-
-    if (entity instanceof EZ3.PointLight)
-      lights.point.push(entity);
-    else if (entity instanceof EZ3.DirectionalLight)
-      lights.directional.push(entity);
-    else if (entity instanceof EZ3.SpotLight)
-      lights.spot.push(entity);
-    else if (entity instanceof EZ3.Mesh)
+      if (entity instanceof EZ3.PointLight)
+        lights.point.push(entity);
+      else if (entity instanceof EZ3.DirectionalLight) {
+        entity.updateView();
+        lights.directional.push(entity);
+      } else if (entity instanceof EZ3.SpotLight) {
+        entity.updateView();
+        lights.spot.push(entity);
+      }
+    } else if (entity instanceof EZ3.Mesh && entity.material.visible)
       meshes.common.push(entity);
-
-    for (i = entity.children.length - 1; i >= 0; i--)
-      entities.push(entity.children[i]);
-
-    entity.updateWorld();
-  }
+  });
 
   if (!camera.parent)
     camera.updateWorld();
@@ -279,21 +275,19 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
   viewProjection = new EZ3.Matrix4().mul(camera.projection, camera.view);
 
-  this.state.maxSpotLights = lights.spot.length;
-  this.state.maxPointLights = lights.point.length;
-  this.state.maxDirectionalLights = lights.directional.length;
-  this.state.hasLights = lights.point.length || lights.directional.length || lights.spot.length;
-
   for (i = 0; i < meshes.common.length; i++) {
     mesh = meshes.common[i];
-    depth = new EZ3.Vector3().fromPositionMatrix(mesh.world).fromViewProjectionMatrix(viewProjection);
+    depth = new EZ3.Vector3().fromPositionMatrix(mesh.world).fromViewProjectionMatrix(viewProjection).z;
 
     mesh.updatePrimitiveData();
     mesh.updateLinearData();
 
-    this.state.activeShadowReceiver = mesh.shadowReceiver;
+    if (!lights.empty) {
+      mesh.updateNormal();
+      mesh.updateNormalData();
+    }
 
-    mesh.material.updateProgram(gl, this.state);
+    mesh.material.updateProgram(gl, this.state, lights, mesh.shadowReceiver);
 
     if (mesh.material.transparent)
       meshes.transparent.push({
@@ -310,22 +304,18 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
       meshes.shadowCasters.push(mesh);
   }
 
-  if (meshes.shadowCasters.length) {
-    if (this.state.maxSpotLights)
-      this._renderDepth(lights.spot, meshes.shadowCasters);
+  meshes.opaque.sort(function(a, b) {
+    if (a.depth !== b.depth)
+      return a.depth - b.depth;
+  });
 
-    if (this.state.maxPointLights)
-      this._renderDepth(lights.point, meshes.shadowCasters);
+  meshes.transparent.sort(function(a, b) {
+    if (a.depth !== b.depth)
+      return b.depth - a.depth;
+  });
 
-    if (this.state.maxDirectionalLights)
-      this._renderDepth(lights.directional, meshes.shadowCasters);
-
-    this._defaultFramebuffer();
-    this.viewport(new EZ3.Vector2(), new EZ3.Vector2(this.canvas.width, this.canvas.height));
-  }
-
-  meshes.opaque.sort(painterSort);
-  meshes.transparent.sort(reversePainterSort);
+  if (meshes.shadowCasters.length && !lights.empty)
+    this._renderDepth(meshes.shadowCasters, lights);
 
   for (i = 0; i < meshes.opaque.length; i++)
     this._renderMesh(meshes.opaque[i].mesh, camera, lights);

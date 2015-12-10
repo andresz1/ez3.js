@@ -5,24 +5,19 @@
 EZ3.RendererState = function(context) {
   this._context = context;
   this._states = {};
+  this._blendEquation = {};
+  this._blendFunc = {};
+  this._textureSlots = {};
+  this._attributeLayouts = {};
+  this._viewport = {};
+  this._program = null;
+  this._cullFace = null;
+  this._depthFunc = null;
+  this._textureSlot = null;
 
   this.programs = {};
-  this.currentProgram = null;
-
-  this.texture = {};
-  this.maxTextureSlots = 0;
   this.usedTextureSlots = 0;
   this.textureArraySlots = [];
-  this.currentTextureSlot = null;
-
-  this.attribute = {};
-
-  this.hasLights = false;
-  this.maxSpotLights = 0;
-  this.maxPointLights = 0;
-  this.maxDirectionalLights = 0;
-
-  this.activeShadowReceiver = false;
 };
 
 EZ3.RendererState.prototype.constructor = EZ3.State;
@@ -45,6 +40,87 @@ EZ3.RendererState.prototype.disable = function(state) {
 
     gl.disable(state);
   }
+};
+
+EZ3.RendererState.prototype.enableVertexAttribArray = function(layout) {
+  var gl = this._context;
+
+  if (!this._attributeLayouts[layout]) {
+    gl.enableVertexAttribArray(layout);
+    this._attributeLayouts[layout] = true;
+  }
+};
+
+EZ3.RendererState.prototype.createProgram = function(id, vertex, fragment, prefix) {
+  var gl = this._context;
+
+  if (!this.programs[id])
+    this.programs[id] = new EZ3.GLSLProgram(gl, vertex, fragment, prefix);
+
+  return this.programs[id];
+};
+
+EZ3.RendererState.prototype.bindProgram = function(program) {
+  var gl = this._context;
+
+  if (this._program !== program) {
+    this._program = program;
+
+    program.bind(gl);
+  }
+};
+
+EZ3.RendererState.prototype.bindTexture = function(target, id) {
+  var gl = this._context;
+  var slot = gl.TEXTURE0 + this.usedTextureSlots;
+  var changed;
+
+  if (this._textureSlot !== slot) {
+    gl.activeTexture(slot);
+    this._textureSlot = slot;
+  }
+
+  if (!this._textureSlots[slot]) {
+    this._textureSlots[slot] = {
+      id: id,
+      target: target
+    };
+
+    gl.bindTexture(target, id);
+  } else {
+    changed = false;
+
+    if (this._textureSlots[slot].id !== id) {
+      this._textureSlots[slot].id = id;
+      changed = true;
+    }
+
+    if (this._textureSlots[slot].target !== target) {
+      this._textureSlots[slot].target = target;
+      changed = true;
+    }
+
+    if (changed)
+      gl.bindTexture(target, id);
+  }
+};
+
+EZ3.RendererState.prototype.viewport = function(position, size) {
+  var gl = this._context;
+  var changed = false;
+
+  if (position.testDiff(this._viewport.position)) {
+    this._viewport.position = position.clone();
+    changed = true;
+  }
+
+  if (size.testDiff(this._viewport.size)) {
+    this._viewport.size = size.clone();
+    changed = true;
+  }
+
+  if (changed)
+    gl.viewport(position.x, position.y, size.x, size.y);
 };
 
 EZ3.RendererState.prototype.depthFunc = function(func) {
@@ -73,13 +149,13 @@ EZ3.RendererState.prototype.blendEquation = function(modeRGB, modeAlpha) {
 
   modeAlpha = (modeAlpha !== undefined) ? modeAlpha : modeRGB;
 
-  if (this._modeRGB !== modeRGB) {
-    this._modeRGB = modeRGB;
+  if (this._blendEquation.modeRGB !== modeRGB) {
+    this._blendEquation.modeRGB = modeRGB;
     changed = true;
   }
 
-  if (this._modeAlpha !== modeAlpha) {
-    this._modeAlpha = modeAlpha;
+  if (this._blendEquation.modeAlpha !== modeAlpha) {
+    this._blendEquation.modeAlpha = modeAlpha;
     changed = true;
   }
 
@@ -94,23 +170,23 @@ EZ3.RendererState.prototype.blendFunc = function(srcRGB, dstRGB, srcAlpha, dstAl
   srcAlpha = (srcAlpha !== undefined) ? srcAlpha : srcRGB;
   dstAlpha = (dstAlpha !== undefined) ? dstAlpha : dstRGB;
 
-  if (this._srcRGB !== srcRGB) {
-    this._srcRGB = srcRGB;
+  if (this._blendFunc.srcRGB !== srcRGB) {
+    this._blendFunc.srcRGB = srcRGB;
     changed = true;
   }
 
-  if (this._dstRGB !== dstRGB) {
-    this._dstRGB = dstRGB;
+  if (this._blendFunc.dstRGB !== dstRGB) {
+    this._blendFunc.dstRGB = dstRGB;
     changed = true;
   }
 
-  if (this._srcAlpha !== srcAlpha) {
-    this._srcAlpha = srcAlpha;
+  if (this._blendFunc.srcAlpha !== srcAlpha) {
+    this._blendFunc.srcAlpha = srcAlpha;
     changed = true;
   }
 
-  if (this._dstAlpha !== dstAlpha) {
-    this._dstAlpha = dstAlpha;
+  if (this._blendFunc.dstAlpha !== dstAlpha) {
+    this._blendFunc.dstAlpha = dstAlpha;
     changed = true;
   }
 

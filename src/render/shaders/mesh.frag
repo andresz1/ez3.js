@@ -191,7 +191,6 @@ varying vec2 vUv;
 	#if (MAX_POINT_LIGHTS > 0)
 		float omnidirectionalShadow(in vec3 lightPosition, in float shadowDarkness, in samplerCube shadowSampler) {
 			vec3 direction = vPosition - lightPosition;
-			direction.y = -direction.y;
 			float vertexDepth = clamp(length(direction), 0.0, 1.0);
 			float shadowMapDepth = unpack(textureCube(shadowSampler, direction));
 
@@ -308,7 +307,7 @@ void main() {
 					float shadowBias = uDirectionalLights[i].shadowBias;
 					float shadowDarkness = uDirectionalLights[i].shadowDarkness;
 
-					shadow = directionalShadow(shadowMatrix, shadowBias, shadowDarkness, uPointShadowSampler[i]);
+					shadow = directionalShadow(shadowMatrix, shadowBias, shadowDarkness, uDirectionalShadowSampler[i]);
 				#endif
 
 				diffuse += uDirectionalLights[i].diffuse * uDiffuse * diffuseReflection * shadow;
@@ -335,7 +334,7 @@ void main() {
 						float shadowBias = uSpotLights[i].shadowBias;
 						float shadowDarkness = uSpotLights[i].shadowDarkness;
 
-						shadow = directionalShadow(shadowMatrix, shadowBias, shadowDarkness, uPointShadowSampler[i]);
+						shadow = directionalShadow(shadowMatrix, shadowBias, shadowDarkness, uSpotShadowSampler[i]);
 					#endif
 
 					diffuse += uDirectionalLights[i].diffuse * uDiffuse * diffuseReflection * shadow;

@@ -16,7 +16,7 @@ EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
 EZ3.extends(EZ3.SpotLight.prototype, EZ3.OrthographicCamera.prototype);
 EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
 
-EZ3.SpotLight.prototype.updateUniforms = function(gl, state, program, i) {
+EZ3.SpotLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
   var prefix = 'uSpotLights[' + i + '].';
   var direction = this.worldDirection();
   var viewProjection;
@@ -32,22 +32,20 @@ EZ3.SpotLight.prototype.updateUniforms = function(gl, state, program, i) {
   program.loadUniformFloat(gl, prefix + 'direction', direction);
   program.loadUniformFloat(gl, prefix + 'cutoff', this.cutoff);
 
-  if(state.activeShadowReceiver) {
+  if(shadowReceiver) {
     bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
     viewProjection = new EZ3.Matrix4().mul(this.projection, this.view);
     shadow = new EZ3.Matrix4().mul(bias, viewProjection);
 
     program.loadUniformMatrix(gl, prefix + 'shadow', shadow);
-
     program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
-
     program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
 
-    this.depthFramebuffer.texture.bind(gl, state);
+    this.depthFramebuffer.texture.bind(gl, state, capabilities);
 
     state.textureArraySlots.push(state.usedTextureSlots++);
 
-    if(i === state.maxPointLights - 1) {
+    if(i === length - 1) {
       program.loadUniformSamplerArray(gl, 'uSpotShadowSampler[0]', state.textureArraySlots);
       state.textureArraySlots = [];
     }

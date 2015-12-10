@@ -10,15 +10,15 @@ EZ3.ArrayBuffer = function() {
 
 EZ3.ArrayBuffer.prototype.constructor = EZ3.ArrayBuffer;
 
-EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, index) {
+EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extensions, index) {
   var buffer;
   var k;
 
-  if (extension.vertexArrayObject) {
+  if (extensions.vertexArrayObject) {
     if (!this._id)
-      this._id = extension.vertexArrayObject.createVertexArrayOES();
+      this._id = extensions.vertexArrayObject.createVertexArrayOES();
 
-    extension.vertexArrayObject.bindVertexArrayOES(this._id);
+    extensions.vertexArrayObject.bindVertexArrayOES(this._id);
 
     for (k in this._vertex) {
       buffer = this._vertex[k];
@@ -48,7 +48,7 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extension, inde
     index.bind(gl);
 
     if (index.needUpdate) {
-      index.update(gl, extension);
+      index.update(gl, extensions);
       index.needUpdate = false;
     }
   }

@@ -43,20 +43,20 @@ EZ3.Entity.prototype.lookAt = function(target, up) {
   // Poner parametros opcionales
   var build = false;
 
-  if(target.testDiff(this._cache.target)) {
+  if (target.testDiff(this._cache.target)) {
     this._cache.target = target.clone();
     build = true;
   }
 
-  if(up.testDiff(this._cache.up)) {
+  if (up.testDiff(this._cache.up)) {
     this._cache.up = up.clone();
     build = true;
   }
 
-  if(this.position.testDiff(this._cache.position))
+  if (this.position.testDiff(this._cache.position))
     build = true;
 
-  if(build)
+  if (build)
     this.rotation.fromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
 };
 
@@ -107,6 +107,29 @@ EZ3.Entity.prototype.updateWorld = function() {
       this.world.mul(this.parent.world, this.model);
     }
   }
+};
+
+EZ3.Entity.prototype.traverse = function(callback) {
+  var entities = [];
+  var entity;
+  var i;
+
+  entities.push(this);
+
+  while (entities.length) {
+    entity = entities.pop();
+
+    callback(entity);
+
+    for (i = entity.children.length - 1; i >= 0; i--)
+      entities.push(entity.children[i]);
+  }
+};
+
+EZ3.Entity.prototype.updateWorldTraverse = function() {
+  this.traverse(function(entity) {
+    entity.updateWorld();
+  });
 };
 
 EZ3.Entity.prototype.worldPosition = function(optionalTarget) {

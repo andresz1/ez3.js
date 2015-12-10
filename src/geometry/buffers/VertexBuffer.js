@@ -40,16 +40,11 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
     normalized = this._attributes[k].normalized;
 
     if (layout >= 0) {
-      if (state) {
-        if (!state.attribute[layout]) {
-          gl.enableVertexAttribArray(layout);
-          state.attribute[layout] = true;
-        }
-        gl.vertexAttribPointer(layout, size, type, normalized, this._stride, offset);
-      } else {
+      if (state)
+        state.enableVertexAttribArray(layout);
+      else
         gl.enableVertexAttribArray(layout);
-        gl.vertexAttribPointer(layout, size, type, normalized, this._stride, offset);
-      }
+      gl.vertexAttribPointer(layout, size, type, normalized, this._stride, offset);
     }
   }
 };

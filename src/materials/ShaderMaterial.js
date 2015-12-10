@@ -4,7 +4,7 @@
  */
 
 EZ3.ShaderMaterial = function(id, vertex, fragment) {
-  EZ3.Material.call(this, EZ3.Material.SHADER + id);
+  EZ3.Material.call(this, 'SHADER.' + id);
 
   this._vertex = vertex;
   this._fragment = fragment;
@@ -18,18 +18,11 @@ EZ3.ShaderMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.ShaderMaterial.prototype.constructor = EZ3.Material;
 
 EZ3.ShaderMaterial.prototype.updateProgram = function(gl, state) {
-  if (!this.program) {
-    if(state.programs[this._id])
-      this.program = state.programs[this._id];
-    else {
-      this.program = new EZ3.GLSLProgram(gl, this._vertex, this._fragment);
-      state.programs[this._id] = this.program;
-    }
-  }
+  if (!this.program)
+    this.program = state.createProgram(this._id, this._vertex, this._fragment);
 };
 
-EZ3.ShaderMaterial.prototype.updateUniforms = function(gl, state) {
-  var i = 0;
+EZ3.ShaderMaterial.prototype.updateUniforms = function(gl, state, capabilities) {
   var name;
   var texture;
 
@@ -45,10 +38,10 @@ EZ3.ShaderMaterial.prototype.updateUniforms = function(gl, state) {
   for (name in this._uniformTextures) {
     texture = this._uniformTextures[name];
 
-    texture.bind(gl, state);
+    texture.bind(gl, state, capabilities);
     texture.update(gl);
 
-    this.program.loadUniformInteger(gl, name, i++);
+    this.program.loadUniformInteger(gl, name, state.usedTextureSlots++);
   }
 };
 

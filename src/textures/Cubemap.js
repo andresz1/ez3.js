@@ -18,20 +18,20 @@ EZ3.Cubemap = function(px, nx, py, ny, pz, nz, generateMipmaps) {
 EZ3.Cubemap.prototype = Object.create(EZ3.Texture.prototype);
 EZ3.Cubemap.prototype.contructor = EZ3.Cubemap;
 
-EZ3.Cubemap.prototype.bind = function(gl, state) {
-  EZ3.Texture.prototype.bind.call(this, gl, gl.TEXTURE_CUBE_MAP, state);
+EZ3.Cubemap.prototype.bind = function(gl, state, capabilities) {
+  EZ3.Texture.prototype.bind.call(this, gl,  state, capabilities, gl.TEXTURE_CUBE_MAP);
 };
 
 EZ3.Cubemap.prototype.update = function(gl) {
   var k;
 
-  if (this.dirty) {
+  if (this.needUpdate) {
     for(k = 0; k < 6; k++)
       EZ3.Texture.prototype._updateImage.call(this, gl, gl.TEXTURE_CUBE_MAP_POSITIVE_X + k, this._images[k]);
 
     EZ3.Texture.prototype._updateMipmaps.call(this, gl, gl.TEXTURE_CUBE_MAP);
 
-    this.dirty = false;
+    this.needUpdate = false;
   }
 
   EZ3.Texture.prototype._updateParameters.call(this, gl, gl.TEXTURE_CUBE_MAP);
@@ -39,8 +39,7 @@ EZ3.Cubemap.prototype.update = function(gl) {
 };
 
 EZ3.Cubemap.prototype.setImage = function(target, image) {
-  if (image instanceof EZ3.Image)
-    this._images[target] = image;
+  this._images[target] = image;
 };
 
 EZ3.Cubemap.POSITIVE_X = 0;

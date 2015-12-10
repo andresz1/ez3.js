@@ -255,9 +255,6 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
     var mesh = new EZ3.Mesh();
     var buffer;
 
-
-    console.log(frames);
-
     buffer = new EZ3.IndexBuffer(indices, false, true);
     mesh.geometry.buffers.add('triangle', buffer);
 
@@ -269,6 +266,7 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
     buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
     mesh.geometry.buffers.add('uv', buffer);
 
+    /*
     buffer = new EZ3.VertexBuffer(frames[53].vertices);
     buffer.addAttribute('morph1', new EZ3.VertexBufferAttribute(3));
     mesh.geometry.buffers.add('morph1', buffer);
@@ -277,13 +275,8 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
     buffer.addAttribute('morph2', new EZ3.VertexBufferAttribute(3));
     mesh.geometry.buffers.add('morph2', buffer);
 
-
     mesh.material.morphTarget = true;
-
-    // mesh.material.emissive.set(0.6, 0.6, 0.6);
-   //mesh.material.fill = EZ3.Material.WIREFRAME;
-
-   //skins[0].image.download();
+    */
 
     mesh.material.diffuse.set(0.9, 0.9, 0.9);
     mesh.material.diffuseMap = skins[0];
