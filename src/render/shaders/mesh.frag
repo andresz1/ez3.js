@@ -337,8 +337,8 @@ void main() {
 						shadow = directionalShadow(shadowMatrix, shadowBias, shadowDarkness, uSpotShadowSampler[i]);
 					#endif
 
-					diffuse += uDirectionalLights[i].diffuse * uDiffuse * diffuseReflection * shadow;
-					specular += uDirectionalLights[i].specular * uSpecular * specularReflection * shadow;
+					diffuse += uSpotLights[i].diffuse * uDiffuse * diffuseReflection * shadow;
+					specular += uSpotLights[i].specular * uSpecular * specularReflection * shadow;
 				}
 			}
 	  }
