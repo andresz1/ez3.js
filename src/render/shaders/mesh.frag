@@ -190,25 +190,25 @@ varying vec2 vUv;
 	}
 
 	#if (MAX_POINT_LIGHTS > 0)
-		float omnidirectionalShadow(in vec3 lightPosition, in float shadowBias, in float shadowDarkness, in samplerCube shadowSampler) {
+		float omnidirectionalShadow(in vec3 lightPosition, in float bias, in float darkness, in samplerCube sampler) {
 			vec3 direction = vPosition - lightPosition;
 			float vertexDepth = clamp(length(direction), 0.0, 1.0);
-			float shadowMapDepth = unpack(textureCube(shadowSampler, direction)) + shadowBias;
+			float shadowMapDepth = unpack(textureCube(sampler, direction)) + bias;
 
-			return (vertexDepth > shadowMapDepth) ? shadowDarkness : 1.0;
+			return (vertexDepth > shadowMapDepth) ? darkness : 1.0;
 		}
 	#endif
 
 	#if (MAX_DIRECTIONAL_LIGHTS > 0) || (MAX_SPOT_LIGHTS > 0)
-		float directionalShadow(in mat4 shadowMatrix, in float shadowBias, in float shadowDarkness, in sampler2D shadowSampler) {
+		float directionalShadow(in mat4 shadowMatrix, in float bias, in float darkness, in sampler2D sampler) {
 			vec4 lightCoordinates = shadowMatrix * vec4(vPosition, 1.0);
 			vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
 
 			if(isBounded(shadowCoordinates.x) && isBounded(shadowCoordinates.y) && isBounded(shadowCoordinates.z)) {
-				float shadowMapDepth = unpack(texture2D(shadowSampler, shadowCoordinates.xy)) + shadowBias;
+				float shadowMapDepth = unpack(texture2D(sampler, shadowCoordinates.xy)) + bias;
 				float vertexDepth = shadowCoordinates.z;
 
-				return (vertexDepth > shadowMapDepth) ? shadowDarkness : 1.0;
+				return (vertexDepth > shadowMapDepth) ? darkness : 1.0;
 			}
 
 			return 1.0;
