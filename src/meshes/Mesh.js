@@ -56,7 +56,7 @@ EZ3.Mesh.prototype.render = function(gl, attributes, state, extensions) {
     mode = gl.TRIANGLES;
   }
 
-  if (buffer) {
+  if (index) {
     this.geometry.buffers.bind(gl, attributes, state, extensions, index);
     gl.drawElements(mode, buffer.data.length, buffer.getGLType(gl, extensions), 0);
   } else {
