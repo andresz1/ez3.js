@@ -6,7 +6,7 @@
 
 EZ3.DirectionalLight = function() {
   EZ3.Light.call(this);
-  EZ3.OrthographicCamera.call(this, -60.0, 60.0, 60.0, -60.0, 0.01, 2000.0);
+  EZ3.OrthographicCamera.call(this, -100.0, 100.0, 100.0, -100.0, 1.0, 5000.0);
 
   this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };

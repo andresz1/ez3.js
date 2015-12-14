@@ -151,8 +151,9 @@ EZ3.Renderer.prototype._renderDepth = function(meshes, lights) {
   var program;
 
   this.state.disable(gl.BLEND);
+
   this.state.enable(gl.CULL_FACE);
-  this.state.disable(gl.FRONT);
+  this.state.cullFace(gl.FRONT);
 
   if (!this.state.programs.depth) {
     vertex = EZ3.ShaderLibrary.depth.vertex;

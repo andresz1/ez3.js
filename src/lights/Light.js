@@ -3,7 +3,7 @@
  */
 
 EZ3.Light = function() {
-  this.shadowBias = -0.0002;
+  this.shadowBias = 0.00005;
   this.shadowDarkness = 0.5;
 
   this.diffuse = new EZ3.Vector3(1.0, 1.0, 1.0);

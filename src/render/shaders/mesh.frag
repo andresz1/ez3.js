@@ -185,14 +185,15 @@ varying vec2 vUv;
 	}
 
 	float unpack(in vec4 color) {
-		return dot(color, vec4(1.0 / (256.0 * 256.0 * 256.0), 1.0 / (256.0 * 256.0), 1.0 / 256.0, 1.0 ));
+		const vec4 bitShift = vec4(1.0 / (255.0 * 255.0 * 255.0), 1.0 / (255.0 * 255.0), 1.0 / 255.0, 1.0);
+	  return dot(color, bitShift);
 	}
 
 	#if (MAX_POINT_LIGHTS > 0)
-		float omnidirectionalShadow(in vec3 lightPosition, in float shadowDarkness, in samplerCube shadowSampler) {
+		float omnidirectionalShadow(in vec3 lightPosition, in float shadowBias, in float shadowDarkness, in samplerCube shadowSampler) {
 			vec3 direction = vPosition - lightPosition;
 			float vertexDepth = clamp(length(direction), 0.0, 1.0);
-			float shadowMapDepth = unpack(textureCube(shadowSampler, direction));
+			float shadowMapDepth = unpack(textureCube(shadowSampler, direction)) + shadowBias;
 
 			return (vertexDepth > shadowMapDepth) ? shadowDarkness : 1.0;
 		}
@@ -204,8 +205,10 @@ varying vec2 vUv;
 			vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
 
 			if(isBounded(shadowCoordinates.x) && isBounded(shadowCoordinates.y) && isBounded(shadowCoordinates.z)) {
-				float depth = unpack(texture2D(shadowSampler, shadowCoordinates.xy));
-				return (depth < shadowCoordinates.z + shadowBias) ? shadowDarkness : 1.0;
+				float shadowMapDepth = unpack(texture2D(shadowSampler, shadowCoordinates.xy)) + shadowBias;
+				float vertexDepth = shadowCoordinates.z;
+
+				return (vertexDepth > shadowMapDepth) ? shadowDarkness : 1.0;
 			}
 
 			return 1.0;
@@ -281,9 +284,10 @@ void main() {
 
 				#ifdef SHADOW_MAP
 					vec3 lightPosition = uPointLights[i].position;
+					float shadowBias = uPointLights[i].shadowBias;
 					float shadowDarkness = uPointLights[i].shadowDarkness;
 
-					shadow = omnidirectionalShadow(lightPosition, shadowDarkness, uPointShadowSampler[i]);
+					shadow = omnidirectionalShadow(lightPosition, shadowBias, shadowDarkness, uPointShadowSampler[i]);
 				#endif
 
 				diffuse += uPointLights[i].diffuse * uDiffuse * diffuseReflection * shadow;
