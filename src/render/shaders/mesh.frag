@@ -205,8 +205,8 @@ varying vec2 vUv;
 			vec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;
 
 			if(isBounded(shadowCoordinates.x) && isBounded(shadowCoordinates.y) && isBounded(shadowCoordinates.z)) {
-				float shadowMapDepth = unpack(texture2D(sampler, shadowCoordinates.xy)) + bias;
 				float vertexDepth = shadowCoordinates.z;
+				float shadowMapDepth = unpack(texture2D(sampler, shadowCoordinates.xy)) + bias;
 
 				return (vertexDepth > shadowMapDepth) ? darkness : 1.0;
 			}
