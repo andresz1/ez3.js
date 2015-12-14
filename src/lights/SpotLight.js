@@ -6,14 +6,14 @@
 
 EZ3.SpotLight = function() {
   EZ3.Light.call(this);
-  EZ3.OrthographicCamera.call(this, -60.0, 60.0, 60.0, -60.0, 0.01, 2000.0);
+  EZ3.PerspectiveCamera.call(this, 60.0, 1.0, 1.0, 4000.0);
 
   this.cutoff = 0.9;
   this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
 EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
-EZ3.extends(EZ3.SpotLight.prototype, EZ3.OrthographicCamera.prototype);
+EZ3.extends(EZ3.SpotLight.prototype, EZ3.PerspectiveCamera.prototype);
 EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
 
 EZ3.SpotLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {

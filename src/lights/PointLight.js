@@ -5,10 +5,10 @@
  */
 
 EZ3.PointLight = function() {
-  EZ3.PerspectiveCamera.call(this, 90.0, 1.0, 0.1, 4000.0);
   EZ3.Light.call(this);
+  EZ3.PerspectiveCamera.call(this, 90.0, 1.0, 1.0, 5000.0);
 
-  this.depthFramebuffer = new EZ3.DepthCubeFramebuffer(new EZ3.Vector2(1024, 1024));
+  this.depthFramebuffer = new EZ3.DepthCubeFramebuffer(new EZ3.Vector2(512, 512));
 };
 
 EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);

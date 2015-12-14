@@ -399,28 +399,31 @@ EZ3.Matrix4.prototype.fromRotationTranslation = function(q, v) {
   return this;
 };
 
+EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
+  var te = this.elements;
+	var x = 2 * near / ( right - left );
+	var y = 2 * near / ( top - bottom );
+
+	var a = ( right + left ) / ( right - left );
+	var b = ( top + bottom ) / ( top - bottom );
+	var c = - ( far + near ) / ( far - near );
+	var d = - 2 * far * near / ( far - near );
+
+	te[ 0 ] = x;	te[ 4 ] = 0;	te[ 8 ] = a;	te[ 12 ] = 0;
+	te[ 1 ] = 0;	te[ 5 ] = y;	te[ 9 ] = b;	te[ 13 ] = 0;
+	te[ 2 ] = 0;	te[ 6 ] = 0;	te[ 10 ] = c;	te[ 14 ] = d;
+	te[ 3 ] = 0;	te[ 7 ] = 0;	te[ 11 ] = - 1;	te[ 15 ] = 0;
+
+	return this;
+};
+
 EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
-  var f = 1.0 / Math.tan(EZ3.Math.toRadians(fovy / 2.0));
-  var nf = 1.0 / (near - far);
+  var ymax = near * Math.tan(EZ3.Math.toRadians(fovy * 0.5));
+  var ymin = -ymax;
+  var xmax = ymax * aspect;
+  var xmin = ymin * aspect;
 
-  this.elements[0] = f / aspect;
-  this.elements[1] = 0;
-  this.elements[2] = 0;
-  this.elements[3] = 0;
-  this.elements[4] = 0;
-  this.elements[5] = f;
-  this.elements[6] = 0;
-  this.elements[7] = 0;
-  this.elements[8] = 0;
-  this.elements[9] = 0;
-  this.elements[10] = (far + near) * nf;
-  this.elements[11] = -1;
-  this.elements[12] = 0;
-  this.elements[13] = 0;
-  this.elements[14] = (2 * far * near) * nf;
-  this.elements[15] = 0;
-
-  return this;
+  return this.frustum(xmin, xmax, ymin, ymax, near, far);
 };
 
 EZ3.Matrix4.prototype.orthographic = function(left, right, top, bottom, near, far) {
