@@ -3,56 +3,67 @@
  */
 
 EZ3.Quaternion = function(x, y, z, w) {
-  this.x = x || 0;
-  this.y = y || 0;
-  this.z = z || 0;
-  this.w = (w !== undefined) ? w : 1.0;
+  this._x = (x !== undefined) ? x : 0;
+  this._y = (y !== undefined) ? y : 0;
+  this._z = (z !== undefined) ? z : 0;
+  this._w = (w !== undefined) ? w : 1.0;
+
+  this.onChange = new EZ3.Signal();
 };
 
 EZ3.Quaternion.prototype.constructor = EZ3.Quaternion;
 
 EZ3.Quaternion.prototype.add = function(q1, q2) {
   if (q2 instanceof EZ3.Quaternion) {
-    this.w = q1.w + q2.w;
-    this.x = q1.x + q2.x;
-    this.y = q1.y + q2.y;
-    this.z = q1.z + q2.z;
+    this._w = q1.w + q2.w;
+    this._x = q1.x + q2.x;
+    this._y = q1.y + q2.y;
+    this._z = q1.z + q2.z;
   } else {
-    this.w += q1.w;
-    this.x += q1.x;
-    this.y += q1.y;
-    this.z += q1.z;
+    this._w += q1.w;
+    this._x += q1.x;
+    this._y += q1.y;
+    this._z += q1.z;
   }
+
+  this.onChange.dispatch();
+
   return this;
 };
 
 EZ3.Quaternion.prototype.sub = function(q1, q2) {
   if (q2 instanceof EZ3.Quaternion) {
-    this.w = q1.w - q2.w;
-    this.x = q1.x - q2.x;
-    this.y = q1.y - q2.y;
-    this.z = q1.z - q2.z;
+    this._w = q1.w - q2.w;
+    this._x = q1.x - q2.x;
+    this._y = q1.y - q2.y;
+    this._z = q1.z - q2.z;
   } else {
-    this.w -= q1.w;
-    this.x -= q1.x;
-    this.y -= q1.y;
-    this.z -= q1.z;
+    this._w -= q1.w;
+    this._x -= q1.x;
+    this._y -= q1.y;
+    this._z -= q1.z;
   }
+
+  this.onChange.dispatch();
+
   return this;
 };
 
 EZ3.Quaternion.prototype.scale = function(s, q) {
   if (q instanceof EZ3.Quaternion) {
-    this.x = q.x * s;
-    this.y = q.y * s;
-    this.z = q.z * s;
-    this.w = q.w * s;
+    this._x = q.x * s;
+    this._y = q.y * s;
+    this._z = q.z * s;
+    this._w = q.w * s;
   } else {
-    this.x *= s;
-    this.y *= s;
-    this.z *= s;
-    this.w *= s;
+    this._x *= s;
+    this._y *= s;
+    this._z *= s;
+    this._w *= s;
   }
+
+  this.onChange.dispatch();
+
   return this;
 };
 
@@ -77,16 +88,18 @@ EZ3.Quaternion.prototype.mul = function(q1, q2) {
     bz = q2.z;
     bw = q2.w;
   } else {
-    bx = this.x;
-    by = this.y;
-    bz = this.z;
-    bw = this.w;
+    bx = this._x;
+    by = this._y;
+    bz = this._z;
+    bw = this._w;
   }
 
-  this.x = ax * bw + aw * bx + ay * bz - az * by;
-  this.y = ay * bw + aw * by + az * bx - ax * bz;
-  this.z = az * bw + aw * bz + ax * by - ay * bx;
-  this.w = aw * bw - ax * bx - ay * by - az * bz;
+  this._x = ax * bw + aw * bx + ay * bz - az * by;
+  this._y = ay * bw + aw * by + az * bx - ax * bz;
+  this._z = az * bw + aw * bz + ax * by - ay * bx;
+  this._w = aw * bw - ax * bx - ay * by - az * bz;
+
+  this.onChange.dispatch();
 
   return this;
 };
@@ -105,59 +118,65 @@ EZ3.Quaternion.prototype.normalize = function(q) {
       len = 1.0 / len;
       q.scale(len);
 
-      this.x = q.x;
-      this.y = q.y;
-      this.z = q.z;
-      this.w = q.w;
+      this._x = q.x;
+      this._y = q.y;
+      this._z = q.z;
+      this._w = q.w;
     } else
       console.log('EZ3.Quaterion Error: Quaternion Length is Zero\n\n');
 
   } else {
-    x2 = this.x * this.x;
-    y2 = this.y * this.y;
-    z2 = this.z * this.z;
-    s2 = this.w * this.w;
+    x2 = this._x * this._x;
+    y2 = this._y * this._y;
+    z2 = this._z * this._z;
+    s2 = this._w * this._w;
 
     len = Math.sqrt(s2 + x2 + y2 + z2);
 
     if (len > 0.0) {
       len = 1.0 / len;
-      this.scale(len);
+      this._scale(len);
     } else
       console.log('EZ3.Quaterion Error: Quaternion Length is Zero\n\n');
   }
+
+  this.onChange.dispatch();
+
   return this;
 };
 
 EZ3.Quaternion.prototype.invert = function(q) {
   if (q instanceof EZ3.Quaternion) {
-    this.x = -q.x;
-    this.y = -q.y;
-    this.z = -q.z;
-    this.w = q.w;
+    this._x = -q.x;
+    this._y = -q.y;
+    this._z = -q.z;
+    this._w = q.w;
   } else {
-    this.x = -this.x;
-    this.y = -this.y;
-    this.z = -this.z;
-    this.w = this.w;
+    this._x = -this._x;
+    this._y = -this._y;
+    this._z = -this._z;
+    this._w = this._w;
   }
+
+  this.onChange.dispatch();
+
   return this;
 };
 
 EZ3.Quaternion.prototype.length = function() {
-  var x2 = this.x * this.x;
-  var y2 = this.y * this.y;
-  var z2 = this.z * this.z;
-  var s2 = this.w * this.w;
+  var x2 = this._x * this._x;
+  var y2 = this._y * this._y;
+  var z2 = this._z * this._z;
+  var s2 = this._w * this._w;
 
   return Math.sqrt(s2 + x2 + y2 + z2);
 };
 
 EZ3.Quaternion.prototype.testDiff = function(q) {
-  var dx = (this.x !== q.x);
-  var dy = (this.y !== q.y);
-  var dz = (this.z !== q.z);
-  var dw = (this.w !== q.w);
+  var dx = (this._x !== q.x);
+  var dy = (this._y !== q.y);
+  var dz = (this._z !== q.z);
+  var dw = (this._w !== q.w);
 
   return (dx || dy || dz || dw);
 };
@@ -165,57 +184,109 @@ EZ3.Quaternion.prototype.testDiff = function(q) {
 EZ3.Quaternion.prototype.fromAxisAngle = function(axis, angle) {
   var sin2 = Math.sin(0.5 * angle);
 
-  this.x = sin2 * axis.x;
-  this.y = sin2 * axis.y;
-  this.z = sin2 * axis.z;
-  this.w = Math.cos(0.5 * angle);
+  this._x = sin2 * axis.x;
+  this._y = sin2 * axis.y;
+  this._z = sin2 * axis.z;
+  this._w = Math.cos(0.5 * angle);
+
+  this.onChange.dispatch();
 
   return this;
 };
 
 EZ3.Quaternion.prototype.fromRotationMatrix = function(m) {
   var te = m.elements;
-  var  m11 = te[0];
-  var  m12 = te[4];
-  var  m13 = te[8];
-  var  m21 = te[1];
-  var  m22 = te[5];
-  var  m23 = te[9];
-  var  m31 = te[2];
-  var  m32 = te[6];
-  var  m33 = te[10];
+  var m11 = te[0];
+  var m12 = te[4];
+  var m13 = te[8];
+  var m21 = te[1];
+  var m22 = te[5];
+  var m23 = te[9];
+  var m31 = te[2];
+  var m32 = te[6];
+  var m33 = te[10];
   var trace = m11 + m22 + m33;
   var s;
 
   if (trace > 0) {
     s = 0.5 / Math.sqrt(trace + 1.0);
 
-    this.w = 0.25 / s;
-    this.x = (m32 - m23) * s;
-    this.y = (m13 - m31) * s;
-    this.z = (m21 - m12) * s;
+    this._w = 0.25 / s;
+    this._x = (m32 - m23) * s;
+    this._y = (m13 - m31) * s;
+    this._z = (m21 - m12) * s;
   } else if (m11 > m22 && m11 > m33) {
     s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
 
-    this.w = (m32 - m23) / s;
-    this.x = 0.25 * s;
-    this.y = (m12 + m21) / s;
-    this.z = (m13 + m31) / s;
+    this._w = (m32 - m23) / s;
+    this._x = 0.25 * s;
+    this._y = (m12 + m21) / s;
+    this._z = (m13 + m31) / s;
   } else if (m22 > m33) {
     s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
 
-    this.w = (m13 - m31) / s;
-    this.x = (m12 + m21) / s;
-    this.y = 0.25 * s;
-    this.z = (m23 + m32) / s;
+    this._w = (m13 - m31) / s;
+    this._x = (m12 + m21) / s;
+    this._y = 0.25 * s;
+    this._z = (m23 + m32) / s;
   } else {
     s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
 
-    this.w = (m21 - m12) / s;
-    this.x = (m13 + m31) / s;
-    this.y = (m23 + m32) / s;
-    this.z = 0.25 * s;
+    this._w = (m21 - m12) / s;
+    this._x = (m13 + m31) / s;
+    this._y = (m23 + m32) / s;
+    this._z = 0.25 * s;
   }
+
+  this.onChange.dispatch();
+
+  return this;
+};
+
+EZ3.Quaternion.prototype.setFromEuler = function(euler, update) {
+  var c1 = Math.cos(euler.x / 2);
+  var c2 = Math.cos(euler.y / 2);
+  var c3 = Math.cos(euler.z / 2);
+  var s1 = Math.sin(euler.x / 2);
+  var s2 = Math.sin(euler.y / 2);
+  var s3 = Math.sin(euler.z / 2);
+
+  var order = euler.order;
+
+  if (order === EZ3.Euler.XYZ) {
+    this._x = s1 * c2 * c3 + c1 * s2 * s3;
+    this._y = c1 * s2 * c3 - s1 * c2 * s3;
+    this._z = c1 * c2 * s3 + s1 * s2 * c3;
+    this._w = c1 * c2 * c3 - s1 * s2 * s3;
+  } else if (order === EZ3.Euler.YXZ) {
+    this._x = s1 * c2 * c3 + c1 * s2 * s3;
+    this._y = c1 * s2 * c3 - s1 * c2 * s3;
+    this._z = c1 * c2 * s3 - s1 * s2 * c3;
+    this._w = c1 * c2 * c3 + s1 * s2 * s3;
+  } else if (order === EZ3.Euler.ZXY) {
+    this._x = s1 * c2 * c3 - c1 * s2 * s3;
+    this._y = c1 * s2 * c3 + s1 * c2 * s3;
+    this._z = c1 * c2 * s3 + s1 * s2 * c3;
+    this._w = c1 * c2 * c3 - s1 * s2 * s3;
+  } else if (order === EZ3.Euler.ZYX) {
+    this._x = s1 * c2 * c3 - c1 * s2 * s3;
+    this._y = c1 * s2 * c3 + s1 * c2 * s3;
+    this._z = c1 * c2 * s3 - s1 * s2 * c3;
+    this._w = c1 * c2 * c3 + s1 * s2 * s3;
+  } else if (order === EZ3.Euler.YZX) {
+    this._x = s1 * c2 * c3 + c1 * s2 * s3;
+    this._y = c1 * s2 * c3 + s1 * c2 * s3;
+    this._z = c1 * c2 * s3 - s1 * s2 * c3;
+    this._w = c1 * c2 * c3 - s1 * s2 * s3;
+  } else if (order === EZ3.Euler.XZY) {
+    this._x = s1 * c2 * c3 - c1 * s2 * s3;
+    this._y = c1 * s2 * c3 - s1 * c2 * s3;
+    this._z = c1 * c2 * s3 + s1 * s2 * c3;
+    this._w = c1 * c2 * c3 + s1 * s2 * s3;
+  }
+
+  if(update)
+    this.onChange.dispatch();
 
   return this;
 };
@@ -243,15 +314,15 @@ EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
     wx2 = 2.0 * q.w * q.x;
     xx2 = 2.0 * q.x * q.x;
   } else {
-    yy2 = 2.0 * this.y * this.y;
-    xy2 = 2.0 * this.x * this.y;
-    xz2 = 2.0 * this.x * this.z;
-    yz2 = 2.0 * this.y * this.z;
-    zz2 = 2.0 * this.z * this.z;
-    wz2 = 2.0 * this.w * this.z;
-    wy2 = 2.0 * this.w * this.y;
-    wx2 = 2.0 * this.w * this.x;
-    xx2 = 2.0 * this.x * this.x;
+    yy2 = 2.0 * this._y * this._y;
+    xy2 = 2.0 * this._x * this._y;
+    xz2 = 2.0 * this._x * this._z;
+    yz2 = 2.0 * this._y * this._z;
+    zz2 = 2.0 * this._z * this._z;
+    wz2 = 2.0 * this._w * this._z;
+    wy2 = 2.0 * this._w * this._y;
+    wx2 = 2.0 * this._w * this._x;
+    xx2 = 2.0 * this._x * this._x;
   }
 
   matrix.elements[0] = -yy2 - zz2 + 1.0;
@@ -268,25 +339,69 @@ EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
 };
 
 EZ3.Quaternion.prototype.copy = function(q) {
-  this.x = q.x;
-  this.y = q.y;
-  this.z = q.z;
-  this.w = q.w;
+  this._x = q.x;
+  this._y = q.y;
+  this._z = q.z;
+  this._w = q.w;
+
+  this.onChange.dispatch();
+
   return this;
 };
 
 EZ3.Quaternion.prototype.clone = function() {
-  return new EZ3.Quaternion(this.x, this.y, this.z, this.w);
+  return new EZ3.Quaternion(this._x, this._y, this._z, this._w);
 };
 
 EZ3.Quaternion.prototype.toString = function() {
-  var x = this.x.toFixed(4);
-  var y = this.y.toFixed(4);
-  var z = this.z.toFixed(4);
-  var w = this.w.toFixed(4);
+  var x = this._x.toFixed(4);
+  var y = this._y.toFixed(4);
+  var z = this._z.toFixed(4);
+  var w = this._w.toFixed(4);
 
   return 'Quaternion[' + x + ', ' + y + ', ' + z + ', ' + w + ' ]';
 };
 
-EZ3.Quaternion.NORMAL = 1.0;
-EZ3.Quaternion.INVERSE = -1.0;
+Object.defineProperty(EZ3.Quaternion.prototype, 'x', {
+  get: function() {
+    return this._x;
+  },
+  set: function(x) {
+    this._x = x;
+
+    this.onChange.dispatch();
+  }
+});
+
+Object.defineProperty(EZ3.Quaternion.prototype, 'y', {
+  get: function() {
+    return this._y;
+  },
+  set: function(y) {
+    this._y = y;
+
+    this.onChange.dispatch();
+  }
+});
+
+Object.defineProperty(EZ3.Quaternion.prototype, 'z', {
+  get: function() {
+    return this._z;
+  },
+  set: function(z) {
+    this._z = z;
+
+    this.onChange.dispatch();
+  }
+});
+
+Object.defineProperty(EZ3.Quaternion.prototype, 'w', {
+  get: function() {
+    return this._w;
+  },
+  set: function(w) {
+    this._w = w;
+
+    this.onChange.dispatch();
+  }
+});
