@@ -3,12 +3,10 @@
  */
 
 EZ3.Signal = function() {
-  var that;
+  var that = this;
 
   this._bindings = [];
   this._prevParams = null;
-
-  that = this;
 
   this.dispatch = function() {
     EZ3.Signal.prototype.dispatch.apply(that, arguments);
@@ -20,15 +18,22 @@ EZ3.Signal.prototype.memorize = false;
 EZ3.Signal.prototype.active = true;
 
 EZ3.Signal.prototype._registerListener = function(listener, isOnce, listenerContext, priority) {
-  var prevIndex, binding;
-
-  prevIndex = this._indexOfListener(listener, listenerContext);
+  var prevIndex = this._indexOfListener(listener, listenerContext);
+  var binding;
+  var warning;
 
   if (prevIndex !== -1) {
     binding = this._bindings[prevIndex];
 
-    if (binding.isOnce !== isOnce)
-      throw new Error('You cannot add' + (isOnce ? '' : 'Once') + '() then add' + (!isOnce ? '' : 'Once') + '() the same listener without removing the relationship first.');
+    if (binding.isOnce !== isOnce) {
+      warning = 'You cannot add';
+      warning += isOnce ? '' : 'Once';
+      warning += '() then add';
+      warning += !isOnce ? '' : 'Once';
+      warning += '() the same listener without removing the relationship first.';
+
+      console.warn(warning);
+    }
   } else {
     binding = new EZ3.SignalBinding(this, listener, isOnce, listenerContext, priority);
     this._addBinding(binding);
@@ -41,9 +46,7 @@ EZ3.Signal.prototype._registerListener = function(listener, isOnce, listenerCont
 };
 
 EZ3.Signal.prototype._addBinding = function(binding) {
-  var n;
-
-  n = this._bindings.length;
+  var n = this._bindings.length;
 
   do {
     --n;
@@ -53,9 +56,8 @@ EZ3.Signal.prototype._addBinding = function(binding) {
 };
 
 EZ3.Signal.prototype._indexOfListener = function(listener, context) {
-  var n, cur;
-
-  n = this._bindings.length;
+  var n = this._bindings.length;
+  var cur;
 
   while (n--) {
     cur = this._bindings[n];
@@ -80,9 +82,7 @@ EZ3.Signal.prototype.addOnce = function(listener, listenerContext, priority) {
 };
 
 EZ3.Signal.prototype.remove = function(listener, context) {
-  var i;
-
-  i = this._indexOfListener(listener, context);
+  var i = this._indexOfListener(listener, context);
 
   if (i !== -1) {
     this._bindings[i]._destroy();
@@ -93,9 +93,7 @@ EZ3.Signal.prototype.remove = function(listener, context) {
 };
 
 EZ3.Signal.prototype.removeAll = function(context) {
-  var n;
-
-  n = this._bindings.length;
+  var n = this._bindings.length;
 
   if (context) {
     while (n--) {
@@ -121,7 +119,9 @@ EZ3.Signal.prototype.halt = function() {
 };
 
 EZ3.Signal.prototype.dispatch = function(params) {
-  var paramsArr, n, bindings;
+  var paramsArr;
+  var bindings;
+  var n;
 
   if (!this.active)
     return;

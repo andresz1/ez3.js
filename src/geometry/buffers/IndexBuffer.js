@@ -3,10 +3,10 @@
  * @extends Buffer
  */
 
-EZ3.IndexBuffer = function(data, dynamic, need32Bits) {
+EZ3.IndexBuffer = function(data, need32Bits, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
 
-  this.need32Bits = need32Bits || false;
+  this.need32Bits = (need32Bits !== undefined) ? need32Bits : false;
 };
 
 EZ3.IndexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
@@ -30,6 +30,9 @@ EZ3.IndexBuffer.prototype.update = function(gl, extension) {
   EZ3.Buffer.prototype.update.call(this, gl, gl.ELEMENT_ARRAY_BUFFER, bytes);
 };
 
-EZ3.IndexBuffer.prototype.getType = function(gl, extension) {
-  return (extension.elementIndexUInt && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
+EZ3.IndexBuffer.prototype.getGLType = function(gl, extensions) {
+  return (extensions.elementIndexUInt && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
 };
+
+EZ3.IndexBuffer.TRIANGULAR = 1;
+EZ3.IndexBuffer.LINEAR = 2;

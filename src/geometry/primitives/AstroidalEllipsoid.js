@@ -69,17 +69,26 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
     }
   }
 
-  this._setData(indices, vertices, normals, uvs);
+  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.addPositionBuffer(vertices);
+  this.buffers.addNormalBuffer(normals);
+  this.buffers.addUvBuffer(uvs);
 };
 
 Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'needGenerate', {
   get: function() {
-    if (!this.radiouses.testEqual(this._cache.radiouses) || !this.resolution.testEqual(this._cache.resolution)) {
+    var changed = false;
+
+    if (!this.radiouses.testEqual(this._cache.radiouses)) {
       this._cache.radiouses = this.radiouses.clone();
-      this._cache.resolution = this.resolution.clone();
-      return true;
+      changed = true;
     }
 
-    return false;
+    if (!this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.resolution = this.resolution.clone();
+      changed = true;
+    }
+
+    return changed;
   }
 });

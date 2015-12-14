@@ -65,17 +65,26 @@ EZ3.Sphere.prototype.generate = function() {
     }
   }
 
-  this._setData(indices, vertices, normals, uvs);
+  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.addPositionBuffer(vertices);
+  this.buffers.addNormalBuffer(normals);
+  this.buffers.addUvBuffer(uvs);
 };
 
 Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
   get: function() {
-    if (this._cache.radius !== this.radius || !this.resolution.testEqual(this._cache.resolution)) {
+    var changed = false;
+
+    if (this._cache.radius !== this.radius) {
       this._cache.radius = this.radius;
-      this._cache.resolution = this.resolution.clone();
-      return true;
+      changed = true;
     }
 
-    return false;
+    if (!this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.resolution = this.resolution.clone();
+      changed = true;
+    }
+
+    return changed;
   }
 });

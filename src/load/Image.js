@@ -15,7 +15,7 @@ EZ3.Image.prototype = Object.create(EZ3.File.prototype);
 EZ3.Image.prototype.constructor = EZ3.Image;
 
 EZ3.Image.prototype.getGLFormat = function(gl) {
-  if (this.format === EZ3.Image.RGB)
+  if (this.format === EZ3.Image.RGB_FORMAT)
     return gl.RGB;
   else
     return gl.RGBA;
@@ -61,9 +61,6 @@ EZ3.Image.prototype.download = function() {
   a.click();
   document.body.removeChild(a);
 };
-
-EZ3.Image.RGB = 'RGB';
-EZ3.Image.RGBA = 'RGBA';
 
 EZ3.Image.RGB_FORMAT = 1;
 EZ3.Image.RGBA_FORMAT = 2;

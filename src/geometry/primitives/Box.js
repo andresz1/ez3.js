@@ -85,17 +85,26 @@ EZ3.Box.prototype.generate = function() {
   computeFace('x', 'y', 1, -1, this.dimensions.x, this.dimensions.y, depthHalf);
   computeFace('x', 'y', -1, -1, this.dimensions.x, this.dimensions.y, -depthHalf);
 
-  this._setData(indices, vertices, normals, uvs);
+  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.addPositionBuffer(vertices);
+  this.buffers.addNormalBuffer(normals);
+  this.buffers.addUvBuffer(uvs);
 };
 
 Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
   get: function() {
-    if (!this.dimensions.testEqual(this._cache.dimensions) || !this.resolution.testEqual(this._cache.resolution)) {
+    var changed = false;
+
+    if (!this.dimensions.testEqual(this._cache.dimensions)) {
       this._cache.dimensions = this.dimensions.clone();
-      this._cache.resolution = this.resolution.clone();
-      return true;
+      changed = true;
     }
 
-    return false;
+    if (!this.resolution.testEqual(this._cache.resolution)) {
+      this._cache.resolution = this.resolution.clone();
+      changed = true;
+    }
+
+    return changed;
   }
 });

@@ -341,29 +341,17 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
   }
 
   function processMesh(mesh) {
-    var buffer;
-
     if (fixedIndices.length) {
-      buffer = new EZ3.IndexBuffer(fixedIndices, false, true);
-      mesh.geometry.buffers.add('triangle', buffer);
-
-      buffer = new EZ3.VertexBuffer(fixedVertices);
-      buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
-      mesh.geometry.buffers.add('position', buffer);
+      mesh.geometry.buffers.addTriangularBuffer(fixedIndices, (fixedVertices.length / 3) > EZ3.Math.MAX_USHORT);
+      mesh.geometry.buffers.addPositionBuffer(fixedVertices);
 
       if (fixedUvs.length) {
-        buffer = new EZ3.VertexBuffer(fixedUvs);
-        buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
-        mesh.geometry.buffers.add('uv', buffer);
-
+        mesh.geometry.buffers.addUvBuffer(fixedUvs);
         fixedUvs = [];
       }
 
       if (fixedNormals.length) {
-        buffer = new EZ3.VertexBuffer(fixedNormals);
-        buffer.addAttribute('normal', new EZ3.VertexBufferAttribute(3));
-        mesh.geometry.buffers.add('normal', buffer);
-
+        mesh.geometry.buffers.addNormalBuffer(fixedNormals);
         fixedNormals = [];
       }
 

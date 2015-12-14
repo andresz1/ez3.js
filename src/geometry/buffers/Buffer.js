@@ -23,6 +23,7 @@ EZ3.Buffer.prototype.bind = function(gl, target) {
 
 EZ3.Buffer.prototype.update = function(gl, target, bytes) {
   var length = bytes * this.data.length;
+  var changed = false;
   var ArrayType;
   var offset;
   var data;
@@ -37,9 +38,17 @@ EZ3.Buffer.prototype.update = function(gl, target, bytes) {
       ArrayType = Uint16Array;
   }
 
-  if ((this._cache.length !== length) || (this._cache.dynamic !== this.dynamic)) {
+  if (this._cache.length !== length) {
     this._cache.length = length;
+    changed = true;
+  }
+
+  if (this._cache.dynamic !== this.dynamic) {
     this._cache.dynamic =  this.dynamic;
+    changed = true;
+  }
+
+  if (changed) {
     this._ranges = [];
 
     gl.bufferData(target, new ArrayType(this.data), (this.dynamic) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW);

@@ -45,7 +45,10 @@ EZ3.Plane.prototype.generate = function() {
     }
   }
 
-  this._setData(indices, vertices, normals, uvs);
+  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.addPositionBuffer(vertices);
+  this.buffers.addNormalBuffer(normals);
+  this.buffers.addUvBuffer(uvs);
 };
 
 Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {

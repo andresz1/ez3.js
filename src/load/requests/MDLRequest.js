@@ -4,7 +4,7 @@
  */
 
 EZ3.MDLRequest = function(url, cached, crossOrigin) {
-  EZ3.Request.call(this, url, new EZ3.Entity(), cached, crossOrigin);
+  EZ3.Request.call(this, url, new EZ3.Mesh(), cached, crossOrigin);
 };
 
 EZ3.MDLRequest.prototype = Object.create(EZ3.Request.prototype);
@@ -252,38 +252,13 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
       uvs[j + 1] = (uvs[j + 1] + 0.5) / header.skinHeight;
     }
 
-    var mesh = new EZ3.Mesh();
-    var buffer;
+    that.asset.geometry.buffers.addTriangularBuffer(indices, (frames[0].vertices.length / 3) > EZ3.Math.MAX_USHORT);
+    that.asset.geometry.buffers.addPositionBuffer(frames[0].vertices);
+    that.asset.geometry.buffers.addUvBuffer(uvs);
 
-    buffer = new EZ3.IndexBuffer(indices, false, true);
-    mesh.geometry.buffers.add('triangle', buffer);
+    that.asset.material.diffuseMap = skins[0];
 
-    buffer = new EZ3.VertexBuffer(frames[0].vertices);
-    buffer.addAttribute('position', new EZ3.VertexBufferAttribute(3));
-    mesh.geometry.buffers.add('position', buffer);
-
-    buffer = new EZ3.VertexBuffer(uvs);
-    buffer.addAttribute('uv', new EZ3.VertexBufferAttribute(2));
-    mesh.geometry.buffers.add('uv', buffer);
-
-    /*
-    buffer = new EZ3.VertexBuffer(frames[53].vertices);
-    buffer.addAttribute('morph1', new EZ3.VertexBufferAttribute(3));
-    mesh.geometry.buffers.add('morph1', buffer);
-
-    buffer = new EZ3.VertexBuffer(frames[55].vertices);
-    buffer.addAttribute('morph2', new EZ3.VertexBufferAttribute(3));
-    mesh.geometry.buffers.add('morph2', buffer);
-
-    mesh.material.morphTarget = true;
-    */
-
-    mesh.material.diffuse.set(0.9, 0.9, 0.9);
-    mesh.material.diffuseMap = skins[0];
-
-    that.asset.add(mesh);
-
-    onLoad(that.url, that.asset, that.cached);
+    onLoad(that.url, that.asset);
   }
 
   init();
@@ -293,7 +268,7 @@ EZ3.MDLRequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();
 
-  requests.addFileRequest(this.url, true, this.crossOrigin, 'arraybuffer');
+  requests.addFileRequest(this.url, this.cached, this.crossOrigin, 'arraybuffer');
 
   requests.onComplete.add(function(assets, failed) {
     if (failed)

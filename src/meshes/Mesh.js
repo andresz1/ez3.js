@@ -17,25 +17,17 @@ EZ3.Mesh = function(geometry, material) {
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 
-EZ3.Mesh.prototype.updatePrimitiveData = function(){
-  if (this.geometry.needGenerate) {
-    this.geometry.generate();
-    this.geometry.linearDataNeedGenerate = true;
-    this.geometry.normalDataNeedGenerate = false;
-  }
-};
-
 EZ3.Mesh.prototype.updateNormalData = function() {
-  if (this.geometry.normalDataNeedGenerate) {
-    this.geometry.generateNormalData();
-    this.geometry.normalDataNeedGenerate = false;
+  if (this.geometry.normalDataNeedUpdate) {
+    this.geometry.computeNormalData();
+    this.geometry.normalDataNeedUpdate = false;
   }
 };
 
 EZ3.Mesh.prototype.updateLinearData = function() {
-  if (this.material.fill === EZ3.Material.WIREFRAME && this.geometry.linearDataNeedGenerate) {
-    this.geometry.generateLinearData();
-    this.geometry.linearDataNeedGenerate = false;
+  if (this.material.fill === EZ3.Material.WIREFRAME && this.geometry.linearDataNeedUpdate) {
+    this.geometry.computeLinearData();
+    this.geometry.linearDataNeedUpdate = false;
   }
 };
 
@@ -46,26 +38,29 @@ EZ3.Mesh.prototype.updateNormal = function() {
   }
 };
 
-EZ3.Mesh.prototype.render = function(gl, attributes, state, extension) {
+EZ3.Mesh.prototype.render = function(gl, attributes, state, extensions) {
   var mode;
+  var index;
   var buffer;
 
   if (this.material.fill === EZ3.Material.WIREFRAME) {
-    buffer = this.geometry.buffers.get('line');
+    index = EZ3.IndexBuffer.LINEAR;
+    buffer = this.geometry.buffers.getLinearBuffer();
     mode = gl.LINES;
   } else if (this.material.fill === EZ3.Material.POINTS) {
-    buffer = this.geometry.buffers.get('position');
+    buffer = this.geometry.buffers.getPositionBuffer();
     mode = gl.POINTS;
   } else {
-    buffer = this.geometry.buffers.get('triangle');
+    index = EZ3.IndexBuffer.TRIANGULAR;
+    buffer = this.geometry.buffers.getTriangularBuffer();
     mode = gl.TRIANGLES;
   }
 
-  if (buffer instanceof EZ3.IndexBuffer) {
-    this.geometry.buffers.bind(gl, attributes, state, extension, buffer);
-    gl.drawElements(mode, buffer.data.length, buffer.getType(gl, extension), 0);
-  } else if (buffer instanceof EZ3.VertexBuffer) {
-    this.geometry.buffers.bind(gl, attributes, state, extension);
+  if (buffer) {
+    this.geometry.buffers.bind(gl, attributes, state, extensions, index);
+    gl.drawElements(mode, buffer.data.length, buffer.getGLType(gl, extensions), 0);
+  } else {
+    this.geometry.buffers.bind(gl, attributes, state, extensions);
     gl.drawArrays(mode, 0, buffer.data.length / 3);
   }
 };

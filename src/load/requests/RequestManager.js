@@ -64,7 +64,7 @@ EZ3.RequestManager.prototype.addFileRequest = function(url, cached, crossOrigin,
     return file;
   }
 
-  if(!this._requests[url]) {
+  if (!this._requests[url]) {
     this._requests[url] = new EZ3.FileRequest(url, cached, crossOrigin, responseType);
     this.toSend++;
   }
@@ -81,7 +81,7 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, cached, crossOrigin
     return image;
   }
 
-  if(!this._requests[url]) {
+  if (!this._requests[url]) {
     var extension = EZ3.toFileExtension(url);
 
     if (extension === 'tga')
@@ -96,13 +96,17 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, cached, crossOrigin
 };
 
 EZ3.RequestManager.prototype.addEntityRequest = function(url, cached, crossOrigin) {
-  if(!this._requests[url]) {
+  if (!this._requests[url]) {
     var extension = EZ3.toFileExtension(url);
 
     if (extension === 'obj')
       this._requests[url] = new EZ3.OBJRequest(url, cached, crossOrigin);
+    else if (extension === 'off')
+      this._requests[url] = new EZ3.OFFRequest(url, cached, crossOrigin);
     else if (extension === 'mdl')
       this._requests[url] = new EZ3.MDLRequest(url, cached, crossOrigin);
+    else if (extension === 'md2')
+      this._requests[url] = new EZ3.MD2Request(url, cached, crossOrigin);
     else
       return;
 

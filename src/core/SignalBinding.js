@@ -4,7 +4,7 @@
 
 EZ3.SignalBinding = function(signal, listener, isOnce, listenerContext, priority) {
   this._signal = signal;
-  this._priority = priority || 0;
+  this._priority = (priority !== undefined) ? priority : 0;
 
   this.listener = listener;
   this.isOnce = isOnce;
@@ -21,7 +21,8 @@ EZ3.SignalBinding.prototype._destroy = function() {
 };
 
 EZ3.SignalBinding.prototype.execute = function(paramsArr) {
-  var handlerReturn, params;
+  var handlerReturn;
+  var params;
 
   if (this.active && !!this.listener) {
     params = this.params ? this.params.concat(paramsArr) : paramsArr;

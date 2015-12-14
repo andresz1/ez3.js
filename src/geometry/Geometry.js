@@ -5,35 +5,19 @@
 EZ3.Geometry = function() {
   this.buffers = new EZ3.ArrayBuffer();
 
-  this.linearDataNeedGenerate = true;
-  this.normalDataNeedGenerate = true;
+  this.linearDataNeedUpdate = true;
+  this.normalDataNeedUpdate  = true;
 };
 
-EZ3.Geometry.prototype._setNormalData = function(normals) {
-  var buffer = this.buffers.get('normal');
-
-  if (!buffer) {
-    buffer = new EZ3.VertexBuffer(normals, false);
-    buffer.addAttribute('normal', new EZ3.VertexBufferAttribute(3));
-    this.buffers.add('normal', buffer);
-  } else {
-    buffer.data = normals;
-    buffer.needUpdate = true;
-  }
-};
-
-EZ3.Geometry.prototype.generateLinearData = function() {
-  var triangles = this.buffers.get('triangle');
-  var dynamic;
+EZ3.Geometry.prototype.computeLinearData = function() {
+  var triangles = this.buffers.getTriangularBuffer();
   var need32Bits;
   var lines;
-  var buffer;
   var i;
 
   if (!triangles)
     return;
 
-  dynamic = triangles.dynamic;
   need32Bits = triangles.need32Bits;
   triangles = triangles.data;
   lines = [];
@@ -43,19 +27,12 @@ EZ3.Geometry.prototype.generateLinearData = function() {
     lines.push(triangles[i + 2], triangles[i + 1], triangles[i + 2]);
   }
 
-  buffer = this.buffers.get('line');
-
-  if (!buffer)
-    this.buffers.add('line', new EZ3.IndexBuffer(lines, dynamic, need32Bits));
-  else {
-    buffer.data = lines;
-    buffer.needUpdate = true;
-  }
+  this.buffers.addLinearBuffer(lines, need32Bits);
 };
 
-EZ3.Geometry.prototype.generateNormalData = function() {
-  var indices = this.buffers.get('triangle');
-  var vertices = this.buffers.get('position');
+EZ3.Geometry.prototype.computeNormalData = function() {
+  var indices = this.buffers.getTriangularBuffer();
+  var vertices = this.buffers.getPositionBuffer();
   var normals;
   var weighted;
   var point0;
@@ -109,5 +86,5 @@ EZ3.Geometry.prototype.generateNormalData = function() {
     normals.push(weighted[i].x, weighted[i].y, weighted[i].z);
   }
 
-  this._setNormalData(normals);
+  this.buffers.addNormalBuffer(normals);
 };

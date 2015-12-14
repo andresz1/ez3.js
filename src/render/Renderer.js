@@ -279,7 +279,9 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     mesh = meshes.common[i];
     depth = new EZ3.Vector3().fromPositionMatrix(mesh.world).fromViewProjectionMatrix(viewProjection).z;
 
-    mesh.updatePrimitiveData();
+    if (mesh.geometry instanceof EZ3.Primitive)
+      mesh.geometry.updateCommonData();
+
     mesh.updateLinearData();
 
     if (!lights.empty) {
