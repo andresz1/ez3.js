@@ -46,7 +46,7 @@ EZ3.Sphere.prototype.generate = function() {
 
       vertices.push(vertex.x, vertex.y, vertex.z);
 
-      if (!vertex.testZero())
+      if (!vertex.isZeroVector())
         vertex.normalize();
 
       normals.push(vertex.x, vertex.y, vertex.z);
@@ -80,7 +80,7 @@ Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
       changed = true;
     }
 
-    if (!this.resolution.testEqual(this._cache.resolution)) {
+    if (!this.resolution.isEqual(this._cache.resolution)) {
       this._cache.resolution = this.resolution.clone();
       changed = true;
     }

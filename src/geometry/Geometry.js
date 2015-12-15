@@ -80,7 +80,7 @@ EZ3.Geometry.prototype.computeNormalData = function() {
   }
 
   for (i = 0; i < weighted.length; i++) {
-    if (!weighted[i].testZero())
+    if (!weighted[i].isZeroVector())
       weighted[i].normalize();
 
     normals.push(weighted[i].x, weighted[i].y, weighted[i].z);

@@ -14,7 +14,7 @@ EZ3.Camera.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Camera.prototype.constructor = EZ3.Camera;
 
 EZ3.Camera.prototype.updateView = function() {
-  if(this._cache.world.testDiff(this.world)) {
+  if(this._cache.world.isDiff(this.world)) {
     this._cache.world = this.world.clone();
     this.view.inverse(this.world);
   }

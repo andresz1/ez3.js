@@ -278,7 +278,7 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
   for (i = 0; i < meshes.common.length; i++) {
     mesh = meshes.common[i];
-    depth = new EZ3.Vector3().fromPositionMatrix(mesh.world).fromViewProjectionMatrix(viewProjection).z;
+    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(viewProjection).z;
 
     if (mesh.geometry instanceof EZ3.Primitive)
       mesh.geometry.updateCommonData();

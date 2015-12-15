@@ -23,7 +23,7 @@ EZ3.SpotLight.prototype.updateUniforms = function(gl, state, capabilities, progr
   var shadow;
   var bias;
 
-  if(!direction.testZero())
+  if(!direction.isZeroVector())
     direction.normalize();
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);

@@ -109,12 +109,12 @@ EZ3.RendererState.prototype.viewport = function(position, size) {
   var gl = this._context;
   var changed = false;
 
-  if (position.testDiff(this._viewport.position)) {
+  if (position.isDiff(this._viewport.position)) {
     this._viewport.position = position.clone();
     changed = true;
   }
 
-  if (size.testDiff(this._viewport.size)) {
+  if (size.isDiff(this._viewport.size)) {
     this._viewport.size = size.clone();
     changed = true;
   }

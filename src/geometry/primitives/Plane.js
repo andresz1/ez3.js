@@ -53,7 +53,7 @@ EZ3.Plane.prototype.generate = function() {
 
 Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {
   get: function() {
-    if (!this.resolution.testEqual(this._cache.resolution)) {
+    if (!this.resolution.isEqual(this._cache.resolution)) {
       this._cache.resolution = this.resolution.clone();
       return true;
     }

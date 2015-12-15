@@ -27,7 +27,7 @@ EZ3.Matrix3.prototype.add = function(m1, m2) {
   var em1;
   var em2;
 
-  if (m2 instanceof EZ3.Matrix3) {
+  if (m2 !== undefined) {
     em1 = m1.elements;
     em2 = m2.elements;
   } else {
@@ -52,7 +52,7 @@ EZ3.Matrix3.prototype.sub = function(m1, m2) {
   var em1;
   var em2;
 
-  if (m2 instanceof EZ3.Matrix3) {
+  if (m2 !== undefined) {
     em1 = m1.elements;
     em2 = m2.elements;
   } else {
@@ -76,7 +76,7 @@ EZ3.Matrix3.prototype.sub = function(m1, m2) {
 EZ3.Matrix3.prototype.scale = function(s, m) {
   var em;
 
-  if(m instanceof EZ3.Matrix3)
+  if(m !== undefined)
    em = m.elements;
   else
    em = this.elements;
@@ -117,7 +117,7 @@ EZ3.Matrix3.prototype.mul = function(m1, m2) {
   var b7;
   var b8;
 
-  if (m2 instanceof EZ3.Matrix3) {
+  if (m2 !== undefined) {
     em2 = m2.elements;
 
     a0 = em1[0];
@@ -222,7 +222,7 @@ EZ3.Matrix3.prototype.setFromQuaternion = function(q) {
   return this;
 };
 
-EZ3.Matrix3.prototype.invert = function(m) {
+EZ3.Matrix3.prototype.inverse = function(m) {
   var e = m.elements;
   var det;
 
@@ -238,10 +238,8 @@ EZ3.Matrix3.prototype.invert = function(m) {
 
 	det = e[0] * this.elements[0] + e[1] * this.elements[3] + e[2] * this.elements[6];
 
-  if(det === 0) {
-    console.warn('EZ3.Matrix3.invert: cant invert matrix, determinant is zero.');
+  if(det === 0)
     return this.identity();
-  }
 
   this.scale(1.0 / det);
 
@@ -249,7 +247,7 @@ EZ3.Matrix3.prototype.invert = function(m) {
 };
 
 EZ3.Matrix3.prototype.normalFromMat4 = function(m) {
-  this.invert(m).transpose();
+  this.inverse(m).transpose();
   return this;
 };
 
@@ -289,8 +287,8 @@ EZ3.Matrix3.prototype.toString = function() {
     this.elements[8].toFixed(4) + '\n]';
 };
 
-EZ3.Matrix3.prototype.testEqual = function(m) {
-  if (m instanceof EZ3.Matrix3) {
+EZ3.Matrix3.prototype.isEqual = function(m) {
+  if (m !== undefined) {
     return m.elements[0] === this.elements[0] &&
       m.elements[1] === this.elements[1] &&
       m.elements[2] === this.elements[2] &&
@@ -304,12 +302,12 @@ EZ3.Matrix3.prototype.testEqual = function(m) {
     return false;
 };
 
-EZ3.Matrix3.prototype.testDiff = function(m) {
+EZ3.Matrix3.prototype.isDiff = function(m) {
   if(m) {
-    if(m instanceof EZ3.Matrix3) {
-      return !this.testEqual(m);
+    if(m !== undefined) {
+      return !this.isEqual(m);
     } else
-      console.warn('EZ3.Matrix3.testDiff: parameter is not a EZ3.Matrix3.', m);
+      return false;
   } else
     return true;
 };

@@ -95,12 +95,12 @@ Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
 
-    if (!this.dimensions.testEqual(this._cache.dimensions)) {
+    if (!this.dimensions.isEqual(this._cache.dimensions)) {
       this._cache.dimensions = this.dimensions.clone();
       changed = true;
     }
 
-    if (!this.resolution.testEqual(this._cache.resolution)) {
+    if (!this.resolution.isEqual(this._cache.resolution)) {
       this._cache.resolution = this.resolution.clone();
       changed = true;
     }

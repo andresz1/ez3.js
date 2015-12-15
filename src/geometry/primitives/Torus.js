@@ -56,7 +56,7 @@ EZ3.Torus.prototype.generate = function() {
 
       vertex.sub(center);
 
-      if (!vertex.testZero())
+      if (!vertex.isZeroVector())
         vertex.normalize();
 
       normals.push(vertex.x, vertex.y, vertex.z);
@@ -85,12 +85,12 @@ Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
 
-    if (!this.radiouses.testEqual(this._cache.radiouses)) {
+    if (!this.radiouses.isEqual(this._cache.radiouses)) {
       this._cache.radiouses = this.radiouses.clone();
       changed = true;
     }
 
-    if (!this.resolution.testEqual(this._cache.resolution)) {
+    if (!this.resolution.isEqual(this._cache.resolution)) {
       this._cache.resolution = this.resolution.clone();
       changed = true;
     }

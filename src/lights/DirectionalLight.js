@@ -22,7 +22,7 @@ EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, capabilities
   var shadow;
   var bias;
 
-  if (!direction.testZero())
+  if (!direction.isZeroVector())
     direction.normalize();
 
   EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
