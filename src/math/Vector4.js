@@ -235,17 +235,15 @@ EZ3.Vector4.prototype.testEqual = function(v) {
   var z;
   var w;
 
-  if (v instanceof EZ3.Vector4) {
+  if (v) {
     x = this.x === v.x;
     y = this.y === v.y;
     z = this.z === v.z;
     w = this.w === v.w;
 
     return x && y && z && w;
-  } else{
-    console.warn('EZ3.Vector4.testEqual: parameter is not s EZ3.Vector4.', v);
+  } else
     return false;
-  }
 };
 
 EZ3.Vector4.prototype.hasZero = function(v) {
@@ -291,15 +289,7 @@ EZ3.Vector4.prototype.testZero = function(v) {
 };
 
 EZ3.Vector4.prototype.testDiff = function(v) {
-  if(v) {
-    if(v instanceof EZ3.Vector4)
-      return !this.testEqual(v);
-    else {
-      console.warn('EZ3.Vector4.testDiff: parameter is not a EZ3.Vector4.', v);
-      return false;
-    }
-  } else
-    return true;
+  return !this.testEqual(v);
 };
 
 EZ3.Vector4.prototype.toString = function() {

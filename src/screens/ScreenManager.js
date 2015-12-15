@@ -2,7 +2,7 @@
  * @class ScreenManager
  */
 
-EZ3.ScreenManager = function(canvas, bounds, renderer, time, input) {
+EZ3.ScreenManager = function(canvas, bounds, renderer, time, input, screen) {
   this._screens = [];
 
   this.canvas = canvas;
@@ -10,7 +10,11 @@ EZ3.ScreenManager = function(canvas, bounds, renderer, time, input) {
   this.renderer = renderer;
   this.time = time;
   this.input = input;
+  this.clearColor = new EZ3.Vector4(0, 0, 0, 1);
   this.fullScreeneded = false;
+
+  if (screen)
+    this.add('default', screen);
 };
 
 EZ3.ScreenManager.prototype._addScreenEventListeners = function(screen) {
@@ -94,41 +98,59 @@ EZ3.ScreenManager.prototype._processFullScreenChange = function() {
   }
 };
 
-EZ3.ScreenManager.prototype.add = function(screen) {
+EZ3.ScreenManager.prototype.add = function(id, screen) {
+  var Screen;
   var onComplete;
 
-  if (!this.get(screen.id)) {
-    screen.manager = this;
+  if(!(screen instanceof EZ3.Screen)) {
+    if (typeof screen === 'function') {
+      Screen = screen;
+      screen = new Screen();
+    } else if (typeof screen !== 'object')
+      return;
 
-    if (screen.preload) {
-      screen.preload();
+    screen.load = new EZ3.RequestManager();
+    screen.scene = new EZ3.Scene();
+    screen.camera = null;
 
+    if (!screen.position)
+      screen.position = new EZ3.Vector2();
+
+    if (!screen.size)
+      screen.size = new EZ3.Vector2(this.canvas.width, this.canvas.height);
+  }
+
+  screen.id = id;
+  screen.manager = this;
+
+  if (screen.preload) {
+    screen.preload();
+
+    if (screen.onLoadProgress)
+      screen.load.onProgress.add(screen.onLoadProgress, screen);
+
+    onComplete = function(assets, failed, loaded) {
       if (screen.onLoadProgress)
-        screen.load.onProgress.add(screen.onLoadProgress, screen);
+        screen.load.onProgress.remove(screen.onLoadProgress, screen);
 
-      onComplete = function(assets, failed, loaded) {
-        if (screen.onLoadProgress)
-          screen.load.onProgress.remove(screen.onLoadProgress, screen);
+      screen.load.onComplete.remove(onComplete, this);
 
-        screen.load.onComplete.remove(onComplete, this);
+      screen.create.call(screen, assets, failed, loaded);
 
-        screen.create.call(screen, assets, failed, loaded);
-
-        this._addScreenEventListeners(screen);
-        this._screens.unshift(screen);
-      };
-
-      screen.load.onComplete.add(onComplete, this);
-
-      screen.load.start();
-    } else {
-      screen.create();
       this._addScreenEventListeners(screen);
       this._screens.unshift(screen);
-    }
+    };
 
-    return screen;
+    screen.load.onComplete.add(onComplete, this);
+
+    screen.load.start();
+  } else {
+    screen.create();
+    this._addScreenEventListeners(screen);
+    this._screens.unshift(screen);
   }
+
+  return screen;
 };
 
 EZ3.ScreenManager.prototype.get = function(id) {
@@ -154,13 +176,13 @@ EZ3.ScreenManager.prototype.update = function() {
   var screen;
   var i;
 
+  this.renderer.clearColor(this.clearColor);
   this.renderer.clear();
 
   for (i = 0; i < this._screens.length; i++) {
     screen = this._screens[i];
 
-    this.renderer.viewport(screen.position, screen.size);
-    this.renderer.render(screen.scene, screen.camera);
+    this.renderer.render(screen.position, screen.size, screen.scene, screen.camera);
     this._screens[i].update();
   }
 };

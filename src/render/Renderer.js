@@ -170,8 +170,6 @@ EZ3.Renderer.prototype._renderDepth = function(meshes, lights) {
   this._renderOmnidirectionalDepth(program, meshes, lights.point);
 
   EZ3.Framebuffer.unbind(gl);
-
-  this.viewport(new EZ3.Vector2(), new EZ3.Vector2(this.canvas.width, this.canvas.height));
 };
 
 EZ3.Renderer.prototype.initContext = function() {
@@ -200,7 +198,7 @@ EZ3.Renderer.prototype.initContext = function() {
   this.extensions = new EZ3.RendererExtensions(this.context);
   this.capabilities = new EZ3.RendererCapabilities(this.context);
 
-  this.clearColor();
+  this.context.clearColor(0, 0, 0, 1);
 
   this._onContextLost = function(event) {
     that._processContextLost(event);
@@ -209,26 +207,19 @@ EZ3.Renderer.prototype.initContext = function() {
   this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
 };
 
+EZ3.Renderer.prototype.clearColor = function(color) {
+  var gl = this.context;
+
+  gl.clearColor(color.x, color.y, color.z, color.w);
+};
+
 EZ3.Renderer.prototype.clear = function() {
   var gl = this.context;
 
   gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
 };
 
-EZ3.Renderer.prototype.clearColor = function(color) {
-  var gl = this.context;
-
-  if (color)
-    gl.clearColor(color.x, color.y, color.z, color.w);
-  else
-    gl.clearColor(0, 0, 0, 1);
-};
-
-EZ3.Renderer.prototype.viewport = function(position, size) {
-  this.state.viewport(position, size);
-};
-
-EZ3.Renderer.prototype.render = function(scene, camera) {
+EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
   var gl = this.context;
   var meshes = {
     common: [],
@@ -286,11 +277,11 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
     mesh.updateLinearData();
 
     if (!lights.empty) {
+      mesh.geometry.updateNormalData();
       mesh.updateNormal();
-      mesh.updateNormalData();
     }
 
-    mesh.material.updateProgram(gl, this.state, lights, mesh.shadowReceiver);
+    mesh.updateProgram(gl, this.state, lights);
 
     if (mesh.material.transparent)
       meshes.transparent.push({
@@ -319,6 +310,8 @@ EZ3.Renderer.prototype.render = function(scene, camera) {
 
   if (meshes.shadowCasters.length && !lights.empty)
     this._renderDepth(meshes.shadowCasters, lights);
+
+  this.state.viewport(position, size);
 
   for (i = 0; i < meshes.opaque.length; i++)
     this._renderMesh(meshes.opaque[i].mesh, camera, lights);

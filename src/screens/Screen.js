@@ -2,8 +2,7 @@
  * @class Screen
  */
 
-EZ3.Screen = function(id, position, size) {
-  this.id = id;
+EZ3.Screen = function(position, size) {
   this.position = position;
   this.size = size;
   this.load = new EZ3.RequestManager();

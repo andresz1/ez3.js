@@ -371,7 +371,7 @@ EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
     that.asset.data = processImageData(useGrey, header, result.pixelData, result.palettes);
     that.asset.width = header.width;
     that.asset.height = header.height;
-    
+
     onLoad(that.url, that.asset, that.cached);
   }
 

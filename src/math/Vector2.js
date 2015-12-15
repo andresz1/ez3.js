@@ -146,12 +146,10 @@ EZ3.Vector2.prototype.toArray = function() {
 };
 
 EZ3.Vector2.prototype.testEqual = function(v) {
-  if(v instanceof EZ3.Vector2)
+  if(v)
     return (this.x === v.x) && (this.y === v.y);
-  else {
-    //console.error('EZ3.Vector2.testEqual: parameter is not s EZ3.Vector2.', v);
+  else
     return false;
-  }
 };
 
 EZ3.Vector2.prototype.hasZero = function(v) {
@@ -169,15 +167,7 @@ EZ3.Vector2.prototype.testZero = function(v) {
 };
 
 EZ3.Vector2.prototype.testDiff = function(v) {
-  if (v) {
-    if (v instanceof EZ3.Vector2)
-      return !this.testEqual(v);
-    else {
-      console.warn('EZ3.Vector2.testDiff: parameter is not a EZ3.Vector3.', v);
-      return true;
-    }
-  } else
-    return true;
+  return !this.testEqual(v);
 };
 
 EZ3.Vector2.prototype.toString = function() {

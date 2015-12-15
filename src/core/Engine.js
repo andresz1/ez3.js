@@ -2,7 +2,7 @@
  * @class Engine
  */
 
-EZ3.Engine = function(canvas, options) {
+EZ3.Engine = function(canvas, screen, options) {
   this._animationFrame = null;
   this._renderer = null;
 
@@ -13,11 +13,12 @@ EZ3.Engine = function(canvas, options) {
 
   this.device.onReady(this._init, this, [
     canvas,
+    screen,
     options
   ]);
 };
 
-EZ3.Engine.prototype._init = function(canvas, options) {
+EZ3.Engine.prototype._init = function(canvas, screen, options) {
   var bounds = canvas.getBoundingClientRect();
 
   this._animationFrame = new EZ3.AnimationFrame(false);
@@ -25,7 +26,7 @@ EZ3.Engine.prototype._init = function(canvas, options) {
 
   this.time = new EZ3.Time();
   this.input = new EZ3.InputManager(canvas, bounds);
-  this.screens = new EZ3.ScreenManager(canvas, bounds, this._renderer, this.time, this.input);
+  this.screens = new EZ3.ScreenManager(canvas, bounds, this._renderer, this.time, this.input, screen);
 
   this._renderer.initContext();
   this.time.start();
