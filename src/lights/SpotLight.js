@@ -18,7 +18,7 @@ EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
 
 EZ3.SpotLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
   var prefix = 'uSpotLights[' + i + '].';
-  var direction = this.worldDirection();
+  var direction = this.getWorldDirection();
   var viewProjection;
   var shadow;
   var bias;

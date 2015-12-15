@@ -577,24 +577,22 @@ EZ3.Matrix4.prototype.compose = function(position, rotation, scale) {
   return this;
 };
 
-EZ3.Matrix4.prototype.decompose = function(position, rotation, scale) {
-  var vector = new EZ3.Vector3();
+EZ3.Matrix4.prototype.getPosition = function() {
   var te = this.elements;
-  var matrix;
+  var position = new EZ3.Vector3(te[12], te[13], te[14]);
+
+  return position;
+};
+
+EZ3.Matrix4.prototype.getRotation = function() {
+  var scale = this.getScale();
+  var matrix = new EZ3.Matrix4(this.elements);
   var iSX;
   var iSY;
   var iSZ;
 
-  scale.x = vector.set(te[0], te[1], te[2]).length();
-  scale.y = vector.set(te[4], te[5], te[6]).length();
-  scale.z = vector.set(te[8], te[9], te[10]).length();
-
-  position.set(te[12], te[13], te[14]);
-
-  if(this.determinant() < 0)
+  if(this.determinant() < 0.0)
     scale.x = -scale.x;
-
-  matrix = new EZ3.Matrix4(this.elements);
 
   iSX = 1.0 / scale.x;
   iSY = 1.0 / scale.y;
@@ -612,9 +610,19 @@ EZ3.Matrix4.prototype.decompose = function(position, rotation, scale) {
   matrix.elements[9] *= iSZ;
   matrix.elements[10] *= iSZ;
 
-  rotation.setFromRotationMatrix(matrix);
+  return new EZ3.Quaternion().setFromRotationMatrix(matrix);
+};
 
-  return this;
+EZ3.Matrix4.prototype.getScale = function() {
+  var te = this.elements;
+  var scale = new EZ3.Vector3();
+  var vector = new EZ3.Vector3();
+
+  scale.x = vector.set(te[0], te[1], te[2]).length();
+  scale.y = vector.set(te[4], te[5], te[6]).length();
+  scale.z = vector.set(te[8], te[9], te[10]).length();
+
+  return scale;
 };
 
 EZ3.Matrix4.prototype.clone = function() {

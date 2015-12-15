@@ -17,7 +17,7 @@ EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
 
 EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
   var prefix = 'uDirectionalLights[' + i + '].';
-  var direction = this.worldDirection();
+  var direction = this.getWorldDirection();
   var viewProjection;
   var shadow;
   var bias;

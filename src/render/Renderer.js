@@ -80,7 +80,7 @@ EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, l
 
   for (i = 0; i < lights.length; i++) {
     light = lights[i];
-    position = light.worldPosition();
+    position = light.getWorldPosition();
 
     light.depthFramebuffer.bind(gl, this.state);
     light.depthFramebuffer.update(gl);

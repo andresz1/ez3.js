@@ -97,13 +97,13 @@ EZ3.GLSLProgram.prototype.loadUniformInteger = function(gl, name, data) {
     if (typeof data === 'number' && this._cache[name] !== data) {
       gl.uniform1i(location, data);
       this._cache[name] = data;
-    } else if (data instanceof EZ3.Vector2 && !data.isEqual(this._cache[name])) {
+    } else if (data instanceof EZ3.Vector2 && data.isDiff(this._cache[name])) {
       gl.uniform2iv(location, data.toArray());
       this._cache[name] = data.clone();
-    } else if (data instanceof EZ3.Vector3 && !data.isEqual(this._cache[name])) {
+    } else if (data instanceof EZ3.Vector3 && data.isDiff(this._cache[name])) {
       gl.uniform3iv(location, data.toArray());
       this._cache[name] = data.clone();
-    } else if (data instanceof EZ3.Vector4 && !data.isEqual(this._cache[name])) {
+    } else if (data instanceof EZ3.Vector4 && data.isDiff(this._cache[name])) {
       gl.uniform4iv(location, data.toArray());
       this._cache[name] = data.clone();
     }
@@ -117,13 +117,13 @@ EZ3.GLSLProgram.prototype.loadUniformFloat = function(gl, name, data) {
     if (typeof data === 'number' && this._cache[name] !== data) {
       gl.uniform1f(location, data);
       this._cache[name] = data;
-    } else if (data instanceof EZ3.Vector2 && !data.isEqual(this._cache[name])) {
+    } else if (data instanceof EZ3.Vector2 && data.isDiff(this._cache[name])) {
       gl.uniform2fv(location, data.toArray());
       this._cache[name] = data.clone();
-    } else if (data instanceof EZ3.Vector3 && !data.isEqual(this._cache[name])) {
+    } else if (data instanceof EZ3.Vector3 && data.isDiff(this._cache[name])) {
       gl.uniform3fv(location, data.toArray());
       this._cache[name] = data.clone();
-    } else if (data instanceof EZ3.Vector4 && !data.isEqual(this._cache[name])) {
+    } else if (data instanceof EZ3.Vector4 && data.isDiff(this._cache[name])) {
       gl.uniform4fv(location, data.toArray());
       this._cache[name] = data.clone();
     }
@@ -134,10 +134,10 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
   var location = this.uniforms[name];
 
   if (location) {
-    if (data instanceof EZ3.Matrix3 && !data.isEqual(this._cache[name])) {
+    if (data instanceof EZ3.Matrix3 && data.isDiff(this._cache[name])) {
       gl.uniformMatrix3fv(location, false, data.toArray());
       this._cache[name] = data.clone();
-    } else if (data instanceof EZ3.Matrix4 && !data.isEqual(this._cache[name])) {
+    } else if (data instanceof EZ3.Matrix4 && data.isDiff(this._cache[name])) {
       gl.uniformMatrix4fv(location, false, data.toArray());
       this._cache[name] = data.clone();
     }

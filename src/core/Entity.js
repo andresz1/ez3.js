@@ -12,8 +12,8 @@ EZ3.Entity = function() {
   this.model = new EZ3.Matrix4();
   this.world = new EZ3.Matrix4();
   this.scale = new EZ3.Vector3(1, 1, 1);
-  this.position = new EZ3.Vector3();
   this.rotation = new EZ3.Euler();
+  this.position = new EZ3.Vector3();
   this.quaternion = new EZ3.Quaternion();
 
   this.rotation.onChange.add(function() {
@@ -23,14 +23,6 @@ EZ3.Entity = function() {
   this.quaternion.onChange.add(function() {
     that.rotation.setFromQuaternion(that.quaternion);
   });
-
-  // Quitar caching inicial
-  this._cache.world = this.world.clone();
-  this._cache.model = this.model.clone();
-  this._cache.scale = this.scale.clone();
-  this._cache.position = this.position.clone();
-  this._cache.quaternion = this.quaternion.clone();
-  this._cache.parentWorld = this.model.clone();
 };
 
 EZ3.Entity.prototype.add = function(child) {
@@ -72,23 +64,23 @@ EZ3.Entity.prototype.lookAt = function(target, up) {
 };
 
 EZ3.Entity.prototype.updateWorld = function() {
-  var positionDirty;
-  var quaternionDirty;
-  var scaleDirty;
-  var modelDirty;
-  var parentWorldDirty;
+  var scaleDirty = false;
+  var modelDirty = false;
+  var positionDirty = false;
+  var quaternionDirty = false;
+  var parentWorldDirty = false;
 
-  if (this._cache.position.isDiff(this.position)) {
+  if (this.position.isDiff(this._cache.position)) {
     this._cache.position = this.position.clone();
     positionDirty = true;
   }
 
-  if (this._cache.quaternion.isDiff(this.quaternion)) {
+  if(this.quaternion.isDiff(this._cache.quaternion)) {
     this._cache.quaternion = this.quaternion.clone();
     quaternionDirty = true;
   }
 
-  if (this._cache.scale.isDiff(this.scale)) {
+  if(this.scale.isDiff(this._cache.scale)) {
     this._cache.scale = this.scale.clone();
     scaleDirty = true;
   }
@@ -97,15 +89,15 @@ EZ3.Entity.prototype.updateWorld = function() {
     this.model.compose(this.position, this.quaternion, this.scale);
 
   if (!this.parent) {
-    modelDirty = this._cache.model.isDiff(this.model);
+    modelDirty = this.model.isDiff(this._cache.model);
 
     if (modelDirty) {
       this.world = this.model.clone();
       this._cache.model = this.model.clone();
     }
   } else {
-    modelDirty = this._cache.model.isDiff(this.model);
-    parentWorldDirty = this._cache.parentWorld.isDiff(this.parent.world);
+    modelDirty = this.model.isDiff(this._cache.model);
+    parentWorldDirty = this.parent.world.isDiff(this._cache.parentWorld);
 
     if (parentWorldDirty || modelDirty) {
 
@@ -143,41 +135,18 @@ EZ3.Entity.prototype.updateWorldTraverse = function() {
   });
 };
 
-EZ3.Entity.prototype.worldPosition = function(optionalTarget) {
-  var quaternion = new EZ3.Quaternion();
-  var position = optionalTarget || new EZ3.Vector3();
-  var scale = new EZ3.Vector3();
-
-  this.world.decompose(position, quaternion, scale);
-
-  return position;
+EZ3.Entity.prototype.getWorldPosition = function() {
+  return this.world.getPosition();
 };
 
-EZ3.Entity.prototype.worldRotation = function(optionalTarget) {
-  var quaternion = optionalTarget || new EZ3.Quaternion();
-  var position = new EZ3.Vector3();
-  var scale = new EZ3.Vector3();
-
-  this.world.decompose(position, quaternion, scale);
-
-  return quaternion;
+EZ3.Entity.prototype.getWorldRotation = function() {
+  return this.world.getRotation();
 };
 
-EZ3.Entity.prototype.worldScale = function(optionalTarget) {
-  var quaternion = new EZ3.Quaternion();
-  var position = new EZ3.Vector3();
-  var scale = optionalTarget || new EZ3.Vector3();
-
-  this.world.decompose(position, quaternion, scale);
-
-  return scale;
+EZ3.Entity.prototype.getWorldScale = function() {
+  return this.world.getScale();
 };
 
-EZ3.Entity.prototype.worldDirection = function(optionalTarget) {
-  var quaternion = new EZ3.Quaternion();
-  var direction = optionalTarget || new EZ3.Vector3(0, 0, 1);
-
-  this.worldRotation(quaternion);
-
-  return direction.mulQuaternion(quaternion);
+EZ3.Entity.prototype.getWorldDirection = function() {
+  return new EZ3.Vector3(0, 0, 1).mulQuaternion(this.getWorldRotation());
 };

@@ -195,12 +195,15 @@ EZ3.Quaternion.prototype.clone = function() {
 };
 
 EZ3.Quaternion.prototype.isDiff = function(q) {
-  var dx = (this._x !== q.x);
-  var dy = (this._y !== q.y);
-  var dz = (this._z !== q.z);
-  var dw = (this._w !== q.w);
+  if(q !== undefined) {
+    var dx = (this._x !== q.x);
+    var dy = (this._y !== q.y);
+    var dz = (this._z !== q.z);
+    var dw = (this._w !== q.w);
 
-  return (dx || dy || dz || dw);
+    return (dx || dy || dz || dw);
+  } else
+    return true;
 };
 
 EZ3.Quaternion.prototype.setFromAxisAngle = function(axis, angle) {

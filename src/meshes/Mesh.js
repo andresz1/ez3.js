@@ -27,7 +27,7 @@ EZ3.Mesh.prototype.updateLinearData = function() {
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
-  if (!this._cache.world.isEqual(this.world)) {
+  if (this.world.isDiff(this._cache.world)) {
     this.normal.normalFromMat4(this.world);
     this._cache.world = this.world.clone();
   }
