@@ -270,8 +270,16 @@ EZ3.Vector4.prototype.isDiff = function(v) {
     return false;
 };
 
+
 EZ3.Vector4.prototype.toArray = function() {
   return [this.x, this.y, this.z, this.w];
+};
+
+EZ3.Vector4.prototype.testDiff = function(v) {
+  if(v !== undefined)
+    return !this.testEqual(v);
+  else
+    return true;
 };
 
 EZ3.Vector4.prototype.toString = function() {

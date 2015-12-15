@@ -262,12 +262,9 @@ EZ3.Vector3.prototype.setFromViewProjectionMatrix = function(m) {
 };
 
 EZ3.Vector3.prototype.isEqual = function(v) {
-  if (v) {
-    if (v !== undefined)
-      return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
-    else
-      return false;
-  } else
+  if (v !== undefined)
+    return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
+  else
     return false;
 };
 

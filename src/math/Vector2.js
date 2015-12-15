@@ -144,9 +144,7 @@ EZ3.Vector2.prototype.clone = function() {
 
 EZ3.Vector2.prototype.isEqual = function(v) {
   if (v !== undefined)
-    return (this.x === v.x) && (this.y === v.y);
-  else
-    return false;
+   return (this.x === v.x) && (this.y === v.y);
 };
 
 EZ3.Vector2.prototype.isDiff = function(v) {

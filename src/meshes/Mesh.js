@@ -17,18 +17,13 @@ EZ3.Mesh = function(geometry, material) {
 EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Mesh.prototype.constructor = EZ3.Mesh;
 
-EZ3.Mesh.prototype.updateNormalData = function() {
-  if (this.geometry.normalDataNeedUpdate) {
-    this.geometry.computeNormalData();
-    this.geometry.normalDataNeedUpdate = false;
-  }
+EZ3.Mesh.prototype.updateProgram = function(gl, state, lights) {
+  this.material.updateProgram(gl, state, lights, this.shadowReceiver);
 };
 
 EZ3.Mesh.prototype.updateLinearData = function() {
-  if (this.material.fill === EZ3.Material.WIREFRAME && this.geometry.linearDataNeedUpdate) {
-    this.geometry.computeLinearData();
-    this.geometry.linearDataNeedUpdate = false;
-  }
+  if (this.material.fill === EZ3.Material.WIREFRAME)
+    this.geometry.updateLinearData();
 };
 
 EZ3.Mesh.prototype.updateNormal = function() {
