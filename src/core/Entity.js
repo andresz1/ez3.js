@@ -75,12 +75,12 @@ EZ3.Entity.prototype.updateWorld = function() {
     positionDirty = true;
   }
 
-  if(this.quaternion.isDiff(this._cache.quaternion)) {
+  if (this.quaternion.isDiff(this._cache.quaternion)) {
     this._cache.quaternion = this.quaternion.clone();
     quaternionDirty = true;
   }
 
-  if(this.scale.isDiff(this._cache.scale)) {
+  if (this.scale.isDiff(this._cache.scale)) {
     this._cache.scale = this.scale.clone();
     scaleDirty = true;
   }

@@ -385,18 +385,18 @@ EZ3.Matrix4.prototype.setFromQuaternion = function(q) {
 
 EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
   var te = this.elements;
-	var x = 2.0 * near / (right - left);
-	var y = 2.0 * near / (top - bottom);
+  var x = 2.0 * near / (right - left);
+  var y = 2.0 * near / (top - bottom);
 
-	var a = (right + left) / (right - left);
-	var b = (top + bottom) / (top - bottom);
-	var c = -(far + near) / (far - near);
-	var d = -2.0 * far * near / (far - near);
+  var a = (right + left) / (right - left);
+  var b = (top + bottom) / (top - bottom);
+  var c = -(far + near) / (far - near);
+  var d = -2.0 * far * near / (far - near);
 
-	te[0] = x;
-	te[1] = 0;
-	te[2] = 0;
-	te[3] = 0;
+  te[0] = x;
+  te[1] = 0;
+  te[2] = 0;
+  te[3] = 0;
 
   te[4] = 0;
   te[5] = y;
@@ -413,7 +413,7 @@ EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
   te[14] = d;
   te[15] = 0;
 
-	return this;
+  return this;
 };
 
 EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
@@ -545,7 +545,7 @@ EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
 EZ3.Matrix4.prototype.determinant = function() {
   var te = this.elements;
   var n11 = te[0];
-	var n21 = te[1];
+  var n21 = te[1];
   var n31 = te[2];
   var n41 = te[3];
   var n12 = te[4];
@@ -563,9 +563,9 @@ EZ3.Matrix4.prototype.determinant = function() {
 
   return (
     n41 * (n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34) +
-		n42 * (n11 * n23 * n34 - n11 * n24 * n33 + n14 * n21 * n33 - n13 * n21 * n34 + n13 * n24 * n31 - n14 * n23 * n31) +
-		n43 * (n11 * n24 * n32 - n11 * n22 * n34 - n14 * n21 * n32 + n12 * n21 * n34 + n14 * n22 * n31 - n12 * n24 * n31) +
-		n44 * (-n13 * n22 * n31 - n11 * n23 * n32 + n11 * n22 * n33 + n13 * n21 * n32 - n12 * n21 * n33 + n12 * n23 * n31)
+    n42 * (n11 * n23 * n34 - n11 * n24 * n33 + n14 * n21 * n33 - n13 * n21 * n34 + n13 * n24 * n31 - n14 * n23 * n31) +
+    n43 * (n11 * n24 * n32 - n11 * n22 * n34 - n14 * n21 * n32 + n12 * n21 * n34 + n14 * n22 * n31 - n12 * n24 * n31) +
+    n44 * (-n13 * n22 * n31 - n11 * n23 * n32 + n11 * n22 * n33 + n13 * n21 * n32 - n12 * n21 * n33 + n12 * n23 * n31)
   );
 };
 
@@ -591,7 +591,7 @@ EZ3.Matrix4.prototype.getRotation = function() {
   var iSY;
   var iSZ;
 
-  if(this.determinant() < 0.0)
+  if (this.determinant() < 0.0)
     scale.x = -scale.x;
 
   iSX = 1.0 / scale.x;
@@ -716,11 +716,8 @@ EZ3.Matrix4.prototype.isEqual = function(m) {
 };
 
 EZ3.Matrix4.prototype.isDiff = function(m) {
-  if (m) {
-    if (m !== undefined) {
-      return !this.isEqual(m);
-    } else
-      return false;
+  if (m !== undefined) {
+    return !this.isEqual(m);
   } else
     return true;
 };

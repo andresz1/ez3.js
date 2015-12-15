@@ -195,7 +195,7 @@ EZ3.Quaternion.prototype.clone = function() {
 };
 
 EZ3.Quaternion.prototype.isDiff = function(q) {
-  if(q !== undefined) {
+  if (q !== undefined) {
     var dx = (this._x !== q.x);
     var dy = (this._y !== q.y);
     var dz = (this._z !== q.z);
@@ -310,7 +310,7 @@ EZ3.Quaternion.prototype.setFromEuler = function(euler, update) {
     this._w = c1 * c2 * c3 + s1 * s2 * s3;
   }
 
-  if(update)
+  if (update)
     this.onChange.dispatch();
 
   return this;

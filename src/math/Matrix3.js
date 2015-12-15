@@ -76,10 +76,10 @@ EZ3.Matrix3.prototype.sub = function(m1, m2) {
 EZ3.Matrix3.prototype.scale = function(s, m) {
   var em;
 
-  if(m !== undefined)
-   em = m.elements;
+  if (m !== undefined)
+    em = m.elements;
   else
-   em = this.elements;
+    em = this.elements;
 
   this.elements[0] = em[0] * s;
   this.elements[1] = em[1] * s;
@@ -178,9 +178,15 @@ EZ3.Matrix3.prototype.transpose = function(m) {
   var e = (m !== undefined) ? m.elements : this.elements;
   var tmp;
 
-  tmp = e[1]; e[1] = e[3]; e[3] = tmp;
-	tmp = e[2]; e[2] = e[6]; e[6] = tmp;
-	tmp = e[5]; e[5] = e[7]; e[7] = tmp;
+  tmp = e[1];
+  e[1] = e[3];
+  e[3] = tmp;
+  tmp = e[2];
+  e[2] = e[6];
+  e[6] = tmp;
+  tmp = e[5];
+  e[5] = e[7];
+  e[7] = tmp;
 
   this.elements[0] = e[0];
   this.elements[1] = e[1];
@@ -227,18 +233,18 @@ EZ3.Matrix3.prototype.inverse = function(m) {
   var det;
 
   this.elements[0] = e[10] * e[5] - e[6] * e[9];
-	this.elements[1] = -e[10] * e[1] + e[2] * e[9];
-	this.elements[2] = e[6] * e[1] - e[2] * e[5];
-	this.elements[3] = -e[10] * e[4] + e[6] * e[8];
-	this.elements[4] = e[10] * e[0] - e[2] * e[8];
-	this.elements[5] = -e[6] * e[0] + e[2] * e[4];
-	this.elements[6] = e[9] * e[4] - e[5] * e[8];
-	this.elements[7] = -e[9] * e[0] + e[1] * e[8];
-	this.elements[8] = e[5] * e[0] - e[1] * e[4];
+  this.elements[1] = -e[10] * e[1] + e[2] * e[9];
+  this.elements[2] = e[6] * e[1] - e[2] * e[5];
+  this.elements[3] = -e[10] * e[4] + e[6] * e[8];
+  this.elements[4] = e[10] * e[0] - e[2] * e[8];
+  this.elements[5] = -e[6] * e[0] + e[2] * e[4];
+  this.elements[6] = e[9] * e[4] - e[5] * e[8];
+  this.elements[7] = -e[9] * e[0] + e[1] * e[8];
+  this.elements[8] = e[5] * e[0] - e[1] * e[4];
 
-	det = e[0] * this.elements[0] + e[1] * this.elements[3] + e[2] * this.elements[6];
+  det = e[0] * this.elements[0] + e[1] * this.elements[3] + e[2] * this.elements[6];
 
-  if(det === 0)
+  if (det === 0)
     return this.identity();
 
   this.scale(1.0 / det);
@@ -303,11 +309,8 @@ EZ3.Matrix3.prototype.isEqual = function(m) {
 };
 
 EZ3.Matrix3.prototype.isDiff = function(m) {
-  if(m) {
-    if(m !== undefined) {
-      return !this.isEqual(m);
-    } else
-      return false;
+  if (m !== undefined) {
+    return !this.isEqual(m);
   } else
     return true;
 };

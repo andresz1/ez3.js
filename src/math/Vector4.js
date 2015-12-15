@@ -71,7 +71,7 @@ EZ3.Vector4.prototype.scale = function(s, v) {
 };
 
 EZ3.Vector4.prototype.dot = function(v) {
-  if(v !== undefined)
+  if (v !== undefined)
     return v.x * this.x + v.y * this.y + v.z * this.z + v.w * this.w;
   else
     return -1;
@@ -128,7 +128,7 @@ EZ3.Vector4.prototype.mulMat4 = function(m, v) {
   var w;
   var e;
 
-  if(m !== undefined) {
+  if (m !== undefined) {
     e = m.elements;
 
     if (v !== undefined) {
@@ -264,22 +264,14 @@ EZ3.Vector4.prototype.isZeroVector = function(v) {
 };
 
 EZ3.Vector4.prototype.isDiff = function(v) {
-  if(v !== undefined)
+  if (v !== undefined)
     return !this.isEqual(v);
   else
-    return false;
+    return true;
 };
-
 
 EZ3.Vector4.prototype.toArray = function() {
   return [this.x, this.y, this.z, this.w];
-};
-
-EZ3.Vector4.prototype.testDiff = function(v) {
-  if(v !== undefined)
-    return !this.testEqual(v);
-  else
-    return true;
 };
 
 EZ3.Vector4.prototype.toString = function() {
