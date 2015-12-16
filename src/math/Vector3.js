@@ -127,7 +127,7 @@ EZ3.Vector3.prototype.cross = function(v1, v2) {
   return this;
 };
 
-EZ3.Vector3.prototype.mulMat3 = function(m, v) {
+EZ3.Vector3.prototype.mulMatrix3 = function(m, v) {
   var e;
   var x;
   var y;

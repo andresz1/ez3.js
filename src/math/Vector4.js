@@ -121,7 +121,7 @@ EZ3.Vector4.prototype.min = function(v1, v2) {
   return this;
 };
 
-EZ3.Vector4.prototype.mulMat4 = function(m, v) {
+EZ3.Vector4.prototype.mulMatrix4 = function(m, v) {
   var x;
   var y;
   var z;
