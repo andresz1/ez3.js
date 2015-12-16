@@ -294,6 +294,6 @@ EZ3.Vector3.prototype.toString = function() {
   return 'Vector3[' + x + ', ' + y + ', ' + z + ']';
 };
 
-EZ3.Vector3.prototype.toVec2 = function() {
+EZ3.Vector3.prototype.toVector2 = function() {
   return new EZ3.Vector2(this.x, this.y);
 };

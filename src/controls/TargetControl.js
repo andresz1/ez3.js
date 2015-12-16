@@ -17,7 +17,7 @@ EZ3.TargetControl.prototype.rotate = function(dx, dy, speed) {
   EZ3.CameraControl.prototype.rotate.call(this, dx, dy, speed);
 
   matrix = new EZ3.Matrix4().yawPitchRoll(this.yaw, this.pitch, this.roll);
-  vector = new EZ3.Vector4(0, 0, -1, 0).mulMat4(matrix).toVec3();
+  vector = new EZ3.Vector4(0, 0, -1, 0).mulMat4(matrix).toVector3();
 
   this.distance = new EZ3.Vector3().sub(this.entity.position, this.target).length();
   this.distance = Math.max(1, this.distance);
@@ -26,7 +26,7 @@ EZ3.TargetControl.prototype.rotate = function(dx, dy, speed) {
 
   this.entity.position = new EZ3.Vector3().add(this.target, vector);
   this.look = new EZ3.Vector3().sub(this.target, this.entity.position);
-  this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat4(matrix).toVec3();
+  this.up = new EZ3.Vector4(0, 1, 0, 0).mulMat4(matrix).toVector3();
   this.right = new EZ3.Vector3().cross(this.look.normalize(), this.up);
 
   this.entity.lookAt(this.target, this.up);

@@ -26,7 +26,7 @@ EZ3.Entity = function() {
 };
 
 EZ3.Entity.prototype.add = function(child) {
-  if (child instanceof EZ3.Entity) {
+  if (child) {
     if (child.parent)
       child.parent.remove(child);
 
@@ -43,23 +43,25 @@ EZ3.Entity.prototype.remove = function(child) {
 };
 
 EZ3.Entity.prototype.lookAt = function(target, up) {
-  // Poner parametros opcionales
-  var build = false;
+  var changed = false;
+
+  target = target || new EZ3.Vector3();
+  up = up || new EZ3.Vector3(0, 1, 0);
 
   if (target.isDiff(this._cache.target)) {
     this._cache.target = target.clone();
-    build = true;
+    changed = true;
   }
 
   if (up.isDiff(this._cache.up)) {
     this._cache.up = up.clone();
-    build = true;
+    changed = true;
   }
 
   if (this.position.isDiff(this._cache.position))
-    build = true;
+    changed = true;
 
-  if (build)
+  if (changed)
     this.quaternion.setFromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
 };
 

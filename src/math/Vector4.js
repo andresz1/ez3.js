@@ -283,10 +283,10 @@ EZ3.Vector4.prototype.toString = function() {
   return 'Vector4[' + x + ', ' + y + ', ' + z + ', ' + w + ']';
 };
 
-EZ3.Vector4.prototype.toVec2 = function() {
+EZ3.Vector4.prototype.toVector2 = function() {
   return new EZ3.Vector2(this.x, this.y);
 };
 
-EZ3.Vector4.prototype.toVec3 = function() {
+EZ3.Vector4.prototype.toVector3 = function() {
   return new EZ3.Vector3(this.x, this.y, this.z);
 };

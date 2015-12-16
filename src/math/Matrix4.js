@@ -677,7 +677,7 @@ EZ3.Matrix4.prototype.toString = function() {
     this.elements[15].toFixed(4) + '\n]';
 };
 
-EZ3.Matrix4.prototype.toMat3 = function(m) {
+EZ3.Matrix4.prototype.toMatrix3 = function(m) {
   var e = (m !== undefined) ? m.elements : this.elements;
   var matrix = new EZ3.Matrix3();
 
