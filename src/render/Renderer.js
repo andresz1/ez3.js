@@ -198,8 +198,6 @@ EZ3.Renderer.prototype.initContext = function() {
   this.extensions = new EZ3.RendererExtensions(this.context);
   this.capabilities = new EZ3.RendererCapabilities(this.context);
 
-  this.context.clearColor(0, 0, 0, 1);
-
   this._onContextLost = function(event) {
     that._processContextLost(event);
   };
