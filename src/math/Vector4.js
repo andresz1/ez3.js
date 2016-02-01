@@ -1,8 +1,35 @@
 /**
- * @class Vec4
+ * Representation of a 4D vector.
+ * @class EZ3.Vector4
+ * @constructor
+ * @param {Number} [x]
+ * @param {Number} [y]
+ * @param {Number} [z]
+ * @param {Number} [w]
  */
 
 EZ3.Vector4 = function(x, y, z, w) {
+  /**
+   * @property {Number} x
+   * @default 0
+   */
+
+  /**
+   * @property {Number} y
+   * @default 0
+   */
+
+  /**
+   * @property {Number} z
+   * @default 0
+   */
+
+  /**
+   * @property {Number} z
+   * @default 0
+   */
+
+
   if (typeof x === 'number') {
     this.x = x;
     this.y = (typeof y === 'number') ? y : x;
@@ -18,13 +45,12 @@ EZ3.Vector4 = function(x, y, z, w) {
 
 EZ3.Vector4.prototype.constructor = EZ3.Vector4;
 
-EZ3.Vector4.prototype.set = function(x, y, z, w) {
-  this.x = x;
-  this.y = y;
-  this.z = z;
-  this.w = w;
-};
-
+/**
+ * @method EZ3.Vector4#add
+ * @param {EZ3.Vector4} v1
+ * @param {EZ3.Vector4} [v2]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.add = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = v1.x + v2.x;
@@ -37,9 +63,16 @@ EZ3.Vector4.prototype.add = function(v1, v2) {
     this.z += v1.z;
     this.w += v1.w;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#sub
+ * @param {EZ3.Vector4} v1
+ * @param {EZ3.Vector4} [v2]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.sub = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = v1.x - v2.x;
@@ -52,9 +85,31 @@ EZ3.Vector4.prototype.sub = function(v1, v2) {
     this.z -= v1.z;
     this.w -= v1.w;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#set
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @param {Number} w
+ * @return {EZ3.Vector4}
+ */
+EZ3.Vector4.prototype.set = function(x, y, z, w) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  this.w = w;
+};
+
+/**
+ * @method EZ3.Vector4#scale
+ * @param {Number} s
+ * @param {EZ3.Vector4} [v]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.scale = function(s, v) {
   if (v !== undefined) {
     this.x = v.x * s;
@@ -67,9 +122,15 @@ EZ3.Vector4.prototype.scale = function(s, v) {
     this.z *= s;
     this.w *= s;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#dot
+ * @param {EZ3.Vector4} [v]
+ * @return {Number}
+ */
 EZ3.Vector4.prototype.dot = function(v) {
   if (v !== undefined)
     return v.x * this.x + v.y * this.y + v.z * this.z + v.w * this.w;
@@ -77,6 +138,12 @@ EZ3.Vector4.prototype.dot = function(v) {
     return -1;
 };
 
+/**
+ * @method EZ3.Vector4#max
+ * @param {EZ3.Vector4} v1
+ * @param {EZ3.Vector4} [v2]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.max = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = (v1.x > v2.x) ? v1.x : v2.x;
@@ -96,9 +163,16 @@ EZ3.Vector4.prototype.max = function(v1, v2) {
     if (this.w < v1.w)
       this.w = v1.w;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#min
+ * @param {EZ3.Vector4} v1
+ * @param {EZ3.Vector4} [v2]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.min = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = (v1.x < v2.x) ? v1.x : v2.x;
@@ -121,6 +195,12 @@ EZ3.Vector4.prototype.min = function(v1, v2) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#mulMatrix4
+ * @param {EZ3.Matrix4} m
+ * @param {EZ3.Vector4} [v]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.mulMatrix4 = function(m, v) {
   var x;
   var y;
@@ -157,10 +237,19 @@ EZ3.Vector4.prototype.mulMatrix4 = function(m, v) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#length
+ * @return {Number}
+ */
 EZ3.Vector4.prototype.length = function() {
   return Math.sqrt(this.dot(this));
 };
 
+/**
+ * @method EZ3.Vector4#normalize
+ * @param {EZ3.Vector4} [v]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.normalize = function(v) {
   var l;
 
@@ -198,6 +287,11 @@ EZ3.Vector4.prototype.normalize = function(v) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#negate
+ * @param {EZ3.Vector4} [v]
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.negate = function(v) {
   if (v !== undefined) {
     this.x = -v.x;
@@ -210,38 +304,49 @@ EZ3.Vector4.prototype.negate = function(v) {
     this.z = -this.z;
     this.w = -this.w;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#copy
+ * @param {EZ3.Vector4} v
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.copy = function(v) {
   this.x = v.x;
   this.y = v.y;
   this.z = v.z;
   this.w = v.w;
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector4#clone
+ * @return {EZ3.Vector4}
+ */
 EZ3.Vector4.prototype.clone = function() {
   return new EZ3.Vector4(this.x, this.y, this.z, this.w);
 };
 
+/**
+ * @method EZ3.Vector4#isEqual
+ * @param {EZ3.Vector4} v
+ * @return {Boolean}
+ */
 EZ3.Vector4.prototype.isEqual = function(v) {
-  var x;
-  var y;
-  var z;
-  var w;
-
-  if (v !== undefined) {
-    x = this.x === v.x;
-    y = this.y === v.y;
-    z = this.z === v.z;
-    w = this.w === v.w;
-
-    return x && y && z && w;
-  } else
+  if (v !== undefined)
+    return this.x === v.x && this.y === v.y && this.z === v.z && this.w === v.w;
+  else
     return false;
 };
 
+/**
+ * @method EZ3.Vector4#isZeroVector
+ * @param {EZ3.Vector4} [v]
+ * @return {Boolean}
+ */
 EZ3.Vector4.prototype.isZeroVector = function(v) {
   var ex;
   var ey;
@@ -263,17 +368,27 @@ EZ3.Vector4.prototype.isZeroVector = function(v) {
   return ex && ey && ez && ew;
 };
 
+/**
+ * @method EZ3.Vector4#isDiff
+ * @param {EZ3.Vector4} v
+ * @return {Boolean}
+ */
 EZ3.Vector4.prototype.isDiff = function(v) {
-  if (v !== undefined)
-    return !this.isEqual(v);
-  else
-    return true;
+  return !this.isEqual(v);
 };
 
+/**
+ * @method EZ3.Vector4#toArray
+ * @return {Number[]}
+ */
 EZ3.Vector4.prototype.toArray = function() {
   return [this.x, this.y, this.z, this.w];
 };
 
+/**
+ * @method EZ3.Vector4#toString
+ * @return {String}
+ */
 EZ3.Vector4.prototype.toString = function() {
   var x = this.x.toFixed(4);
   var y = this.y.toFixed(4);
@@ -283,10 +398,18 @@ EZ3.Vector4.prototype.toString = function() {
   return 'Vector4[' + x + ', ' + y + ', ' + z + ', ' + w + ']';
 };
 
+/**
+ * @method EZ3.Vector4#toVector2
+ * @return {EZ3.Vector2}
+ */
 EZ3.Vector4.prototype.toVector2 = function() {
   return new EZ3.Vector2(this.x, this.y);
 };
 
+/**
+ * @method EZ3.Vector4#toVector3
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector4.prototype.toVector3 = function() {
   return new EZ3.Vector3(this.x, this.y, this.z);
 };

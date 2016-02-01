@@ -1,9 +1,4 @@
 module.exports = {
-  'default': [
-    'shdrsconcat',
-    'depsconcat',
-    'uglify'
-  ],
   'debug': [
     'shdrsconcat',
     'depsconcat',
@@ -12,6 +7,8 @@ module.exports = {
   'release': [
     'shdrsconcat',
     'depsconcat',
-    'uglify'
-  ]
+    'uglify',
+    'yuidoc'
+  ],
+  'default': 'release'
 };

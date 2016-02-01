@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/load/requests/OBJRequest.js - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/load/requests/OBJRequest.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+ * @class OBJRequest
+ * @extends Request
+ */
+
+EZ3.OBJRequest = function(url, cached, crossOrigin) {
+  EZ3.Request.call(this, url, new EZ3.Entity(), cached, crossOrigin);
+};
+
+EZ3.OBJRequest.prototype = Object.create(EZ3.Request.prototype);
+EZ3.OBJRequest.prototype.constructor = EZ3.OBJRequest;
+
+EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests) {
+  var that = this;
+  var currents;
+
+  function processColor(color) {
+    var values = color.split(&#x27; &#x27;);
+
+    return new EZ3.Vector3(parseFloat(values[0]), parseFloat(values[1]), parseFloat(values[2]));
+  }
+
+  function processDiffuse(color) {
+    var diffuse = processColor(color);
+    var i;
+
+    for (i = 0; i &lt; currents.length; i++)
+      currents[i].diffuse = diffuse;
+  }
+
+  function processSpecular(color) {
+    var specular = processColor(color);
+    var i;
+
+    for (i = 0; i &lt; currents.length; i++)
+      currents[i].specular = specular;
+  }
+
+  function processTransparency(opacity, invert) {
+    var i;
+
+    opacity = parseFloat(opacity);
+
+    if (invert)
+      opacity = 1 - opacity;
+
+    if (opacity &gt;= 1)
+      return;
+
+    for (i = 0; i &lt; currents.length; i++) {
+      currents[i].transparent = true;
+      currents[i].opacity = opacity;
+    }
+  }
+
+  function processDiffuseMap(url) {
+    var texture = new EZ3.Texture2D(requests.addImageRequest(baseUrl + url, that.cached, that.crossOrigin));
+    var i;
+
+    for (i = 0; i &lt; currents.length; i++)
+      currents[i].diffuseMap = texture;
+  }
+
+  function init() {
+    var lines = data.split(&#x27;\n&#x27;);
+    var line;
+    var key;
+    var value;
+    var i;
+    var j;
+
+    for (i = 0; i &lt; lines.length; i++) {
+      line = lines[i].trim();
+
+      j = line.indexOf(&#x27; &#x27;);
+
+      key = (j &gt;= 0) ? line.substring(0, j) : line;
+      key = key.toLowerCase();
+
+      value = (j &gt;= 0) ? line.substring(j + 1) : &#x27;&#x27;;
+      value = value.trim();
+
+      if (key === &#x27;newmtl&#x27;)
+        currents = materials[value];
+      else if (currents) {
+        if (key === &#x27;kd&#x27;)
+          processDiffuse(value);
+        else if (key === &#x27;ks&#x27;)
+          processSpecular(value);
+        else if (key === &#x27;map_kd&#x27;)
+          processDiffuseMap(value);
+        else if (key === &#x27;d&#x27;)
+          processTransparency(value);
+        else if (key === &#x27;tr&#x27;)
+          processTransparency(value, true);
+      }
+    }
+  }
+
+  init();
+};
+
+EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
+  var that = this;
+  var indices = [];
+  var vertices = [];
+  var normals = [];
+  var uvs = [];
+  var fixedIndices = [];
+  var fixedVertices = [];
+  var fixedNormals = [];
+  var fixedUvs = [];
+
+  function triangulate(face) {
+    var data = [];
+    var i;
+
+    face = face.split(&#x27; &#x27;);
+
+    for (i = 1; i &lt; face.length - 1; i++)
+      data.push(face[0], face[i], face[i + 1]);
+
+    return data;
+  }
+
+  function processVertex(vertex) {
+    var i;
+
+    for (i = 1; i &lt; 4; i++)
+      vertices.push(parseFloat(vertex[i]));
+  }
+
+  function processNormal(normal) {
+    var i;
+
+    for (i = 1; i &lt; 4; i++)
+      normals.push(parseFloat(normal[i]));
+  }
+
+  function processUv(uv) {
+    var i;
+
+    for (i = 1; i &lt; 3; i++)
+      uvs.push(parseFloat(uv[i]));
+  }
+
+  function processVertexIndex(index) {
+    index = parseInt(index);
+
+    if (index &lt;= 0)
+      return vertices.length / 3 + index;
+
+    return index - 1;
+  }
+
+  function processNormalIndex(index) {
+    index = parseInt(index);
+
+    if (index &lt;= 0)
+      return normals.length / 3 + index;
+
+    return index - 1;
+  }
+
+  function processUvIndex(index) {
+    index = parseInt(index);
+
+    if (index &lt;= 0)
+      return uvs.length / 2 + index;
+
+    return index - 1;
+  }
+
+  function processFace1(face) {
+    var vertex;
+    var index;
+    var i;
+    var j;
+
+    for (i = 0; i &lt; face.length; i++) {
+      vertex = processVertexIndex(face[i]);
+
+      if (indices[vertex] === undefined) {
+        index = fixedVertices.length / 3;
+        indices[vertex] = index;
+
+        fixedIndices.push(index);
+
+        for (j = 0; j &lt; 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+      } else
+        fixedIndices.push(indices[vertex]);
+    }
+  }
+
+  function processFace2(face) {
+    var point;
+    var vertex;
+    var uv;
+    var index;
+    var count;
+    var i;
+    var j;
+
+    for (i = 0; i &lt; face.length; i++) {
+      point = face[i].split(&#x27;/&#x27;);
+
+      vertex = processVertexIndex(point[0]);
+      uv = processUvIndex(point[1]);
+
+      index = -1;
+      count = fixedVertices.length / 3;
+
+      if (!indices[vertex])
+        indices[vertex] = [];
+
+      for (j = 0; j &lt; indices[vertex].length; j++) {
+        if (indices[vertex][j].uv === uv) {
+          index = indices[vertex][j].index;
+          break;
+        }
+      }
+
+      if (index &gt;= 0)
+        fixedIndices.push(index);
+      else {
+        indices[vertex].push({
+          uv: uv,
+          index: count
+        });
+
+        fixedIndices.push(count);
+
+        for (j = 0; j &lt; 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+
+        fixedUvs.push(uvs[2 * uv]);
+        fixedUvs.push(1.0 - uvs[2 * uv + 1]);
+      }
+    }
+  }
+
+  function processFace3(face) {
+    var point;
+    var vertex;
+    var uv;
+    var normal;
+    var index;
+    var count;
+    var i;
+    var j;
+
+    for (i = 0; i &lt; face.length; i++) {
+      point = face[i].split(&#x27;/&#x27;);
+
+      vertex = processVertexIndex(point[0]);
+      uv = processUvIndex(point[1]);
+      normal = processNormalIndex(point[2]);
+
+      index = -1;
+      count = fixedVertices.length / 3;
+
+      if (!indices[vertex])
+        indices[vertex] = [];
+
+      for (j = 0; j &lt; indices[vertex].length; j++) {
+        if (indices[vertex][j].uv === uv &amp;&amp; indices[vertex][j].normal === normal) {
+          index = indices[vertex][j].index;
+          break;
+        }
+      }
+
+      if (index &gt;= 0)
+        fixedIndices.push(index);
+      else {
+        indices[vertex].push({
+          uv: uv,
+          normal: normal,
+          index: count
+        });
+
+        fixedIndices.push(count);
+
+        for (j = 0; j &lt; 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+
+        for (j = 0; j &lt; 3; j++)
+          fixedNormals.push(normals[3 * normal + j]);
+
+        fixedUvs.push(uvs[2 * uv]);
+        fixedUvs.push(1.0 - uvs[2 * uv + 1]);
+      }
+    }
+  }
+
+  function processFace4(face) {
+    var point;
+    var vertex;
+    var normal;
+    var index;
+    var count;
+    var i;
+    var j;
+
+    for (i = 0; i &lt; face.length; i++) {
+      point = face[i].split(&#x27;//&#x27;);
+
+      vertex = processVertexIndex(point[0]);
+      normal = processNormalIndex(point[1]);
+
+      index = -1;
+      count = fixedVertices.length / 3;
+
+      if (!indices[vertex])
+        indices[vertex] = [];
+
+      for (j = 0; j &lt; indices[vertex].length; j++) {
+        if (indices[vertex][j].normal === normal) {
+          index = indices[vertex][j].index;
+          break;
+        }
+      }
+
+      if (index &gt;= 0)
+        fixedIndices.push(index);
+      else {
+        indices[vertex].push({
+          normal: normal,
+          index: count
+        });
+
+        fixedIndices.push(count);
+
+        for (j = 0; j &lt; 3; j++)
+          fixedVertices.push(vertices[3 * vertex + j]);
+
+        for (j = 0; j &lt; 3; j++)
+          fixedNormals.push(normals[3 * normal + j]);
+      }
+    }
+  }
+
+  function processMesh(mesh) {
+    if (fixedIndices.length) {
+      mesh.geometry.buffers.addTriangularBuffer(fixedIndices, (fixedVertices.length / 3) &gt; EZ3.Math.MAX_USHORT);
+      mesh.geometry.buffers.addPositionBuffer(fixedVertices);
+
+      if (fixedUvs.length) {
+        mesh.geometry.buffers.addUvBuffer(fixedUvs);
+        fixedUvs = [];
+      }
+
+      if (fixedNormals.length) {
+        mesh.geometry.buffers.addNormalBuffer(fixedNormals);
+        fixedNormals = [];
+      }
+
+      indices = [];
+      fixedIndices = [];
+      fixedVertices = [];
+
+      that.asset.add(mesh);
+
+      return new EZ3.Mesh();
+    }
+
+    return mesh;
+  }
+
+  function processLibraries(libraries, materials) {
+    var requests = new EZ3.RequestManager();
+    var baseUrl = EZ3.toBaseUrl(that.url);
+    var files = [];
+    var i;
+
+    for (i = 0; i &lt; libraries.length; i++)
+      files.push(requests.addFileRequest(baseUrl + libraries[i], that.cached, that.crossOrigin));
+
+    requests.onComplete.add(function() {
+      for (i = 0; i &lt; files.length; i++)
+        that._parseMTL(baseUrl, files[i].data, materials, requests);
+
+      requests.onComplete.removeAll();
+      requests.onComplete.add(function() {
+        onLoad(that.url, that.asset);
+      });
+
+      requests.start();
+    });
+
+    requests.start();
+  }
+
+  function init() {
+    var mesh = new EZ3.Mesh();
+    var libraries = [];
+    var materials = [];
+    var lines = data.split(&#x27;\n&#x27;);
+    var line;
+    var result;
+    var i;
+
+    for (i = 0; i &lt; lines.length; i++) {
+      line = lines[i].trim().replace(/ +(?= )/g, &#x27;&#x27;);
+
+      if (line.length === 0 || line.charAt(0) === &#x27;#&#x27;)
+        continue;
+      else if ((result = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+        processVertex(result);
+      else if ((result = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+        processNormal(result);
+      else if ((result = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/.exec(line)))
+        processUv(result);
+      else if ((result = /f\s(([+-]?\d+\s){2,}[+-]?\d+)/.exec(line)))
+        processFace1(triangulate(result[1]));
+      else if ((result = /f\s(([+-]?\d+\/[+-]?\d+\s){2,}[+-]?\d+\/[+-]?\d+)/.exec(line)))
+        processFace2(triangulate(result[1]));
+      else if ((result = /f\s((([+-]?\d+\/[+-]?\d+\/[+-]?\d+\s){2,})[+-]?\d+\/[+-]?\d+\/[+-]?\d+)/.exec(line)))
+        processFace3(triangulate(result[1]));
+      else if ((result = /f\s(([+-]?\d+\/\/[+-]?\d+\s){2,}[+-]?\d+\/\/[+-]?\d+)/.exec(line)))
+        processFace4(triangulate(result[1]));
+      else if (/^mtllib/.test(line))
+        libraries.push(line.substring(7).trim());
+      else if (/^o/.test(line) || /^g/.test(line)) {
+        mesh = processMesh(mesh);
+        mesh.name = line.substring(2).trim();
+      } else if (/^usemtl/.test(line)) {
+        mesh = processMesh(mesh);
+        mesh.material.name = line.substring(7).trim();
+
+        if (!materials[mesh.material.name])
+          materials[mesh.material.name] = [];
+
+        materials[mesh.material.name].push(mesh.material);
+      }
+    }
+
+    processMesh(mesh);
+    processLibraries(libraries, materials);
+  }
+
+  init();
+};
+
+EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
+  var that = this;
+  var requests = new EZ3.RequestManager();
+
+  requests.addFileRequest(this.url, this.crossOrigin);
+
+  requests.onComplete.add(function(assets, failed) {
+    if (failed)
+      return onError(that.url, true);
+
+    that._parseOBJ(assets.get(that.url).data, onLoad);
+  });
+
+  requests.send();
+};
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/load/requests/MDLRequest.js - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/load/requests/MDLRequest.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+ * @class MDLRequest
+ * @extends Request
+ */
+
+EZ3.MDLRequest = function(url, cached, crossOrigin) {
+  EZ3.Request.call(this, url, new EZ3.Mesh(), cached, crossOrigin);
+};
+
+EZ3.MDLRequest.prototype = Object.create(EZ3.Request.prototype);
+EZ3.MDLRequest.prototype.constructor = EZ3.MDLRequest;
+
+EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
+  var that = this;
+  var offset = 0;
+  var palette = [
+    [  0,   0,   0], [ 15,  15,  15], [ 31,  31,  31], [ 47,  47,  47],
+    [ 63,  63,  63], [ 75,  75,  75], [ 91,  91,  91], [107, 107, 107],
+    [123, 123, 123], [139, 139, 139], [155, 155, 155], [171, 171, 171],
+    [187, 187, 187], [203, 203, 203], [219, 219, 219], [235, 235, 235],
+    [ 15,  11,   7], [ 23,  15,  11], [ 31,  23,  11], [ 39,  27,  15],
+    [ 47,  35,  19], [ 55,  43,  23], [ 63,  47,  23], [ 75,  55,  27],
+    [ 83,  59,  27], [ 91,  67,  31], [ 99,  75,  31], [107,  83,  31],
+    [115,  87,  31], [123,  95,  35], [131, 103,  35], [143, 111,  35],
+    [ 11,  11,  15], [ 19,  19,  27], [ 27,  27,  39], [ 39,  39,  51],
+    [ 47,  47,  63], [ 55,  55,  75], [ 63,  63,  87], [ 71,  71, 103],
+    [ 79,  79, 115], [ 91,  91, 127], [ 99,  99, 139], [107, 107, 151],
+    [115, 115, 163], [123, 123, 175], [131, 131, 187], [139, 139, 203],
+    [  0,   0,   0], [  7,   7,   0], [ 11,  11,   0], [ 19,  19,   0],
+    [ 27,  27,   0], [ 35,  35,   0], [ 43,  43,   7], [ 47,  47,   7],
+    [ 55,  55,   7], [ 63,  63,   7], [ 71,  71,   7], [ 75,  75,  11],
+    [ 83,  83,  11], [ 91,  91,  11], [ 99,  99,  11], [107, 107,  15],
+    [  7,   0,   0], [ 15,   0,   0], [ 23,   0,   0], [ 31,   0,   0],
+    [ 39,   0,   0], [ 47,   0,   0], [ 55,   0,   0], [ 63,   0,   0],
+    [ 71,   0,   0], [ 79,   0,   0], [ 87,   0,   0], [ 95,   0,   0],
+    [103,   0,   0], [111,   0,   0], [119,   0,   0], [127,   0,   0],
+    [ 19,  19,   0], [ 27,  27,   0], [ 35,  35,   0], [ 47,  43,   0],
+    [ 55,  47,   0], [ 67,  55,   0], [ 75,  59,   7], [ 87,  67,   7],
+    [ 95,  71,   7], [107,  75,  11], [119,  83,  15], [131,  87,  19],
+    [139,  91,  19], [151,  95,  27], [163,  99,  31], [175, 103,  35],
+    [ 35,  19,   7], [ 47,  23,  11], [ 59,  31,  15], [ 75,  35,  19],
+    [ 87,  43,  23], [ 99,  47,  31], [115,  55,  35], [127,  59,  43],
+    [143,  67,  51], [159,  79,  51], [175,  99,  47], [191, 119,  47],
+    [207, 143,  43], [223, 171,  39], [239, 203,  31], [255, 243,  27],
+    [ 11,   7,   0], [ 27,  19,   0], [ 43,  35,  15], [ 55,  43,  19],
+    [ 71,  51,  27], [ 83,  55,  35], [ 99,  63,  43], [111,  71,  51],
+    [127,  83,  63], [139,  95,  71], [155, 107,  83], [167, 123,  95],
+    [183, 135, 107], [195, 147, 123], [211, 163, 139], [227, 179, 151],
+    [171, 139, 163], [159, 127, 151], [147, 115, 135], [139, 103, 123],
+    [127,  91, 111], [119,  83,  99], [107,  75,  87], [ 95,  63,  75],
+    [ 87,  55,  67], [ 75,  47,  55], [ 67,  39,  47], [ 55,  31,  35],
+    [ 43,  23,  27], [ 35,  19,  19], [ 23,  11,  11], [ 15,   7,   7],
+    [187, 115, 159], [175, 107, 143], [163,  95, 131], [151,  87, 119],
+    [139,  79, 107], [127,  75,  95], [115,  67,  83], [107,  59,  75],
+    [ 95,  51,  63], [ 83,  43,  55], [ 71,  35,  43], [ 59,  31,  35],
+    [ 47,  23,  27], [ 35,  19,  19], [ 23,  11,  11], [ 15,   7,   7],
+    [219, 195, 187], [203, 179, 167], [191, 163, 155], [175, 151, 139],
+    [163, 135, 123], [151, 123, 111], [135, 111,  95], [123,  99,  83],
+    [107,  87,  71], [ 95,  75,  59], [ 83,  63,  51], [ 67,  51,  39],
+    [ 55,  43,  31], [ 39,  31,  23], [ 27,  19,  15], [ 15,  11,   7],
+    [111, 131, 123], [103, 123, 111], [ 95, 115, 103], [ 87, 107,  95],
+    [ 79,  99,  87], [ 71,  91,  79], [ 63,  83,  71], [ 55,  75,  63],
+    [ 47,  67,  55], [ 43,  59,  47], [ 35,  51,  39], [ 31,  43,  31],
+    [ 23,  35,  23], [ 15,  27,  19], [ 11,  19,  11], [  7,  11,   7],
+    [255, 243,  27], [239, 223,  23], [219, 203,  19], [203, 183,  15],
+    [187, 167,  15], [171, 151,  11], [155, 131,   7], [139, 115,   7],
+    [123,  99,   7], [107,  83,   0], [ 91,  71,   0], [ 75,  55,   0],
+    [ 59,  43,   0], [ 43,  31,   0], [ 27,  15,   0], [ 11,   7,   0],
+    [  0,   0, 255], [ 11,  11, 239], [ 19,  19, 223], [ 27,  27, 207],
+    [ 35,  35, 191], [ 43,  43, 175], [ 47,  47, 159], [ 47,  47, 143],
+    [ 47,  47, 127], [ 47,  47, 111], [ 47,  47,  95], [ 43,  43,  79],
+    [ 35,  35,  63], [ 27,  27,  47], [ 19,  19,  31], [ 11,  11,  15],
+    [ 43,   0,   0], [ 59,   0,   0], [ 75,   7,   0], [ 95,   7,   0],
+    [111,  15,   0], [127,  23,   7], [147,  31,   7], [163,  39,  11],
+    [183,  51,  15], [195,  75,  27], [207,  99,  43], [219, 127,  59],
+    [227, 151,  79], [231, 171,  95], [239, 191, 119], [247, 211, 139],
+    [167, 123,  59], [183, 155,  55], [199, 195,  55], [231, 227,  87],
+    [127, 191, 255], [171, 231, 255], [215, 255, 255], [103,   0,   0],
+    [139,   0,   0], [179,   0,   0], [215,   0,   0], [255,   0,   0],
+    [255, 243, 147], [255, 247, 199], [255, 255, 255], [159,  91,  83]
+  ];
+
+
+  function processSkins(header, skins) {
+    var skinSize = header.skinWidth * header.skinHeight;
+    var skinData;
+    var image;
+    var i;
+    var j;
+
+    for (i = 0; i &lt; header.numSkins; i++) {
+      skinData = [];
+      offset += 4;
+
+      for (j = 0; j &lt; skinSize; j++)
+        skinData.push(data.getUint8(offset++, true));
+
+      image = new EZ3.Image(header.skinWidth, header.skinHeight, EZ3.Image.RGBA, new Uint8Array(4 * skinSize));
+
+      for (j = 0; j &lt; skinSize; j++) {
+        image.data[4 * j] = palette[skinData[j]][0];
+        image.data[4 * j + 1] = palette[skinData[j]][1];
+        image.data[4 * j + 2] = palette[skinData[j]][2];
+        image.data[4 * j + 3] = 255;
+      }
+
+      skins.push(new EZ3.Texture2D(image));
+    }
+  }
+
+  function processTexCoords(header, seams, uvs) {
+    var i;
+
+    for (i = 0; i &lt; header.numVerts; i++) {
+      seams.push(data.getInt32(offset, true));
+      uvs.push(data.getInt32(offset + 4, true));
+      uvs.push(data.getInt32(offset + 8, true));
+
+      offset += 12;
+    }
+  }
+
+  function processTriangles(header, facesFront, indices) {
+    var i;
+    var j;
+
+    for (i = 0; i &lt; header.numTris; i++) {
+      facesFront.push(data.getInt32(offset, true));
+
+      for (j = 0; j &lt; 3; j++)
+        indices.push(data.getInt32(offset + (j + 1) * 4, true));
+
+      offset += 16;
+    }
+  }
+
+  function processFrames(header, frames) {
+    var c;
+    var i;
+    var j;
+    var w;
+
+    for (i = 0; i &lt; header.numFrames; i++) {
+      frames[i] = {
+        name: [],
+        vertices: [],
+        normals: []
+      };
+
+      offset += 12;
+
+      for (j = 0; j &lt; 16; j++) {
+        c = data.getInt8(offset + j, true);
+
+        if (c === 0)
+          break;
+
+        frames[i].name.push(c);
+      }
+
+      frames[i].name = String.fromCharCode.apply(null, frames[i].name);
+
+      offset += 16;
+
+      for (j = 0; j &lt; header.numVerts; j++) {
+        for (w = 2; w &gt;= 0; w--)
+          frames[i].vertices.push(header.scale[w] * data.getUint8(offset + w, true) + header.translate[w]);
+
+        offset += 3;
+
+        frames[i].normals.push(data.getUint8(offset++, true));
+      }
+    }
+  }
+
+  function init() {
+    var skins = [];
+    var seams = [];
+    var uvs = [];
+    var facesFront = [];
+    var indices = [];
+    var frames = [];
+    var header;
+    var n;
+    var i;
+    var j;
+    var w;
+
+    data = new DataView(data);
+
+    header = {
+      ident: data.getInt32(offset, true),
+      version: data.getInt32(offset + 4, true),
+      scale: [
+        data.getFloat32(offset + 8, true),
+        data.getFloat32(offset + 12, true),
+        data.getFloat32(offset + 16, true)
+      ],
+      translate: [
+        data.getFloat32(offset + 20, true),
+        data.getFloat32(offset + 24, true),
+        data.getFloat32(offset + 28, true)
+      ],
+      numSkins: data.getInt32(offset + 48, true),
+      skinWidth: data.getInt32(offset + 52, true),
+      skinHeight: data.getInt32(offset + 56, true),
+      numVerts: data.getInt32(offset + 60, true),
+      numTris: data.getInt32(offset + 64, true),
+      numFrames: data.getInt32(offset + 68, true)
+    };
+
+    if (header.ident !== 1330660425 || header.version !== 6)
+      return onError(that.url);
+
+    offset += 84;
+
+    processSkins(header, skins);
+    processTexCoords(header, seams, uvs);
+    processTriangles(header, facesFront, indices);
+    processFrames(header, frames);
+
+    var rev = {};
+    var numVerts = header.numVerts;
+
+    for (i = 0; i &lt; header.numTris; i++) {
+      for (j = 0; j &lt; 3; j++) {
+        n = 3 * i + j;
+
+        if (!facesFront[i] &amp;&amp; seams[indices[n]]) {
+          if (!rev[indices[n]]) {
+
+            for (w = 0; w &lt; header.numFrames; w++) {
+              frames[w].vertices.push(frames[w].vertices[3 * indices[n]]);
+              frames[w].vertices.push(frames[w].vertices[3 * indices[n] + 1]);
+              frames[w].vertices.push(frames[w].vertices[3 * indices[n] + 2]);
+            }
+
+            uvs.push(uvs[2 * indices[n]] + header.skinWidth * 0.5);
+            uvs.push(uvs[2 * indices[n] + 1]);
+            rev[indices[n]] = numVerts++;
+          }
+
+          indices[n] = rev[indices[n]];
+        }
+      }
+    }
+
+    for (i = 0; i &lt; uvs.length / 2; i++) {
+      j = 2 * i;
+
+      uvs[j] = (uvs[j] + 0.5) / header.skinWidth;
+      uvs[j + 1] = (uvs[j + 1] + 0.5) / header.skinHeight;
+    }
+
+    that.asset.geometry.buffers.addTriangularBuffer(indices, (frames[0].vertices.length / 3) &gt; EZ3.Math.MAX_USHORT);
+    that.asset.geometry.buffers.addPositionBuffer(frames[0].vertices);
+    that.asset.geometry.buffers.addUvBuffer(uvs);
+
+    that.asset.material.diffuseMap = skins[0];
+
+    onLoad(that.url, that.asset);
+  }
+
+  init();
+};
+
+EZ3.MDLRequest.prototype.send = function(onLoad, onError) {
+  var that = this;
+  var requests = new EZ3.RequestManager();
+
+  requests.addFileRequest(this.url, this.cached, this.crossOrigin, &#x27;arraybuffer&#x27;);
+
+  requests.onComplete.add(function(assets, failed) {
+    if (failed)
+      return onError(that.url);
+
+    that._parse(assets.get(that.url).data, onLoad, onError);
+  });
+
+  requests.send();
+};
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

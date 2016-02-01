@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/system/Device.js - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/system/Device.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+ * @class Device
+ */
+
+EZ3.Device = function() {
+  this.ready = false;
+  this.onResize = new EZ3.Signal();
+  this.operatingSystem = 0;
+  this.requestAnimationFrame = null;
+  this.cancelAnimationFrame = null;
+  this.touchDown = null;
+  this.touchMove = null;
+  this.touchUp = null;
+  this.wheel = null;
+  this.requestFullScreen = null;
+  this.exitFullScreen = null;
+  this.fullScreenChange = null;
+  this.fullScreenError = null;
+  this.requestPointerLock = null;
+  this.exitPointerLock = null;
+  this.pointerLockChange = null;
+  this.pointerLockError = null;
+};
+
+EZ3.Device = new EZ3.Device();
+
+EZ3.Device._check = function() {
+  var that = this;
+
+  function checkOperatingSystem() {
+    if (/Playstation Vita/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.PSVITA;
+    else if (/Kindle/.test(navigator.userAgent) || /\bKF[A-Z][A-Z]+/.test(navigator.userAgent) || /Silk.*Mobile Safari/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.KINDLE;
+    else if (/Android/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.ANDROID;
+    else if (/CrOS/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.CRHOMEOS;
+    else if (/iP[ao]d|iPhone/i.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.IOS;
+    else if (/Linux/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.LINUX;
+    else if (/Mac OS/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.MACOS;
+    else if (/Windows/.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS;
+
+    if (/Windows Phone/i.test(navigator.userAgent) || /IEMobile/i.test(navigator.userAgent))
+      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE;
+  }
+
+  function checkAnimationFrame() {
+    if (window.requestAnimationFrame) {
+      that.requestAnimationFrame = &#x27;requestAnimationFrame&#x27;;
+      that.cancelAnimationFrame = &#x27;cancelAnimationFrame&#x27;;
+    } else if (window.webkitRequestAnimationFrame) {
+      that.requestAnimationFrame = &#x27;webkitRequestAnimationFrame&#x27;;
+      that.cancelAnimationFrame = &#x27;webkitCancelAnimationFrame&#x27;;
+    } else if (window.mozRequestAnimationFrame) {
+      that.requestAnimationFrame = &#x27;mozRequestAnimationFrame&#x27;;
+      that.cancelAnimationFrame = &#x27;mozCancelAnimationFrame&#x27;;
+    } else if (window.msRequestAnimationFrame) {
+      that.requestAnimationFrame = &#x27;msRequestAnimationFrame&#x27;;
+      that.cancelAnimationFrame = &#x27;msCancelAnimationFrame&#x27;;
+    } else if (window.oRequestAnimationFrake) {
+      that.requestAnimationFrame = &#x27;oRequestAnimationFrame&#x27;;
+      that.cancelAnimationFrame = &#x27;oCancelAnimationFrame&#x27;;
+    }
+  }
+
+  function checkInput() {
+    if (&#x27;ontouchstart&#x27; in document.documentElement || window.navigator.maxTouchPoints) {
+      that.touchDown = &#x27;touchstart&#x27;;
+      that.touchMove = &#x27;touchmove&#x27;;
+      that.touchUp = &#x27;touchend&#x27;;
+    } else if (window.navigator.pointerEnabled) {
+      that.touchDown = &#x27;pointerdown&#x27;;
+      that.touchMove = &#x27;pointermove&#x27;;
+      that.touchUp = &#x27;pointerup&#x27;;
+    } else if (window.navigator.msPointerEnabled) {
+      that.touchDown = &#x27;MSPointerDown&#x27;;
+      that.touchMove = &#x27;MSPointerMove&#x27;;
+      that.touchUp = &#x27;MSPointerUp&#x27;;
+    }
+
+    if (&#x27;onwheel&#x27; in window || &#x27;WheelEvent&#x27; in window) {
+      that.wheel = &#x27;wheel&#x27;;
+    } else if (&#x27;onmousewheel&#x27; in window) {
+      that.wheel = &#x27;mousewheel&#x27;;
+    } else if (&#x27;MouseScrollEvent&#x27; in window) {
+      that.wheel = &#x27;DOMMouseScroll&#x27;;
+    }
+  }
+
+  function checkFullScreen() {
+    if (document.fullscreenEnabled) {
+      that.requestFullScreen = &#x27;requestFullscreen&#x27;;
+      that.exitFullScreen = &#x27;exitFullscreen&#x27;;
+      that.fullScreenChange = &#x27;fullscreenchange&#x27;;
+      that.fullScreenError = &#x27;fullscreenerror&#x27;;
+    } else if (document.webkitFullscreenEnabled) {
+      that.requestFullScreen = &#x27;webkitRequestFullscreen&#x27;;
+      that.exitFullScreen = &#x27;webkitExitFullscreen&#x27;;
+      that.fullScreenChange = &#x27;webkitfullscreenchange&#x27;;
+      that.fullScreenError = &#x27;webkitfullscreenerror&#x27;;
+    } else if (document.mozFullScreenEnabled) {
+      that.requestFullScreen = &#x27;mozRequestFullscreen&#x27;;
+      that.exitFullScreen = &#x27;mozCancelFullScreen&#x27;;
+      that.fullScreenChange = &#x27;mozfullscreenchange&#x27;;
+      that.fullScreenError = &#x27;mozfullscreenerror&#x27;;
+    } else if (document.msFullscreenEnabled) {
+      that.requestFullScreen = &#x27;msRequestFullscreen&#x27;;
+      that.exitFullScreen = &#x27;msExitFullscreen&#x27;;
+      that.fullScreenChange = &#x27;MSFullscreenChange&#x27;;
+      that.fullScreenError = &#x27;MSFullscreenError&#x27;;
+    }
+  }
+
+  function checkPointerLock() {
+    if (&#x27;pointerLockElement&#x27; in document) {
+      that.requestPointerLock = &#x27;requestPointerLock&#x27;;
+      that.exitPointerLock = &#x27;exitPointerLock&#x27;;
+      that.pointerLockChange = &#x27;pointerlockchange&#x27;;
+      that.pointerLockCancel = &#x27;pointerlockerror&#x27;;
+    } else if (&#x27;webkitPointerLockElement&#x27; in document) {
+      that.requestPointerLock = &#x27;webkitRequestPointerLock&#x27;;
+      that.exitPointerLock = &#x27;webkitExitPointerLock&#x27;;
+      that.pointerLockChange = &#x27;webkitpointerlockchange&#x27;;
+      that.pointerLockCancel = &#x27;webkitpointerlockerror&#x27;;
+    } else if (&#x27;mozPointerLockElement&#x27; in document) {
+      that.requestPointerLock = &#x27;mozRequestPointerLock&#x27;;
+      that.exitPointerLock = &#x27;mozExitPointerLock&#x27;;
+      that.pointerLockChange = &#x27;mozpointerlockchange&#x27;;
+      that.pointerLockCancel = &#x27;mozpointerlockerror&#x27;;
+    }
+  }
+
+  checkOperatingSystem();
+  checkAnimationFrame();
+  checkFullScreen();
+  checkPointerLock();
+  checkInput();
+};
+
+EZ3.Device._isReady = function() {
+  var that;
+
+  if (!document.body)
+    window.setTimeout(this._isReady, 20);
+  else if (!this.ready) {
+    that = this;
+
+    document.removeEventListener(&#x27;deviceready&#x27;, this._onReady);
+    document.removeEventListener(&#x27;DOMContentLoaded&#x27;, this._onReady);
+    window.removeEventListener(&#x27;load&#x27;, this._onReady);
+    delete this._onReady;
+
+    this._check();
+    delete this._check;
+
+    this._onResize = function() {
+      that.onResize.dispatch();
+    };
+
+    window.addEventListener(&#x27;resize&#x27;, this._onResize, true);
+
+    this.ready = true;
+    this._isReady.signal.dispatch();
+
+    this._isReady.signal.dispose();
+    delete this._isReady;
+  }
+};
+
+EZ3.Device.onReady = function(callback, context, params) {
+  var that;
+  var binding;
+
+  if (this.ready)
+    callback.apply(context, params);
+  else if (this._isReady.signal) {
+    binding = this._isReady.signal.add(callback, context);
+    binding.params = params;
+  } else {
+    that = this;
+
+    this._isReady.signal = new EZ3.Signal();
+    binding = this._isReady.signal.add(callback, context);
+    binding.params = params;
+
+    this._onReady = function() {
+      that._isReady();
+    };
+
+    if (document.readyState === &#x27;complete&#x27; || document.readyState === &#x27;interactive&#x27;)
+      this._isReady();
+    else if (typeof window.cordova !== &#x27;undefined&#x27; &amp;&amp; !navigator[&#x27;isCocoonJS&#x27;])
+      document.addEventListener(&#x27;deviceready&#x27;, this._onReady, false);
+    else {
+      document.addEventListener(&#x27;DOMContentLoaded&#x27;, this._onReady, false);
+      window.addEventListener(&#x27;load&#x27;, this._onReady, false);
+    }
+  }
+};
+
+EZ3.Device.OPERATING_SYSTEM = {};
+EZ3.Device.OPERATING_SYSTEM.WINDOWS = 1;
+EZ3.Device.OPERATING_SYSTEM.MACOS = 2;
+EZ3.Device.OPERATING_SYSTEM.LINUX = 4;
+EZ3.Device.OPERATING_SYSTEM.IOS = 8;
+EZ3.Device.OPERATING_SYSTEM.ANDROID = 16;
+EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE = 32;
+EZ3.Device.OPERATING_SYSTEM.CRHOMEOS = 64;
+EZ3.Device.OPERATING_SYSTEM.KINDLE = 128;
+EZ3.Device.OPERATING_SYSTEM.PSVITA = 256;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

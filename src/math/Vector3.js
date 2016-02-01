@@ -1,8 +1,27 @@
 /**
- * @class Vector3
+ * Representation of a 3D vector.
+ * @class EZ3.Vector3
+ * @constructor
+ * @param {Number} [x]
+ * @param {Number} [y]
+ * @param {Number} [z]
  */
-
 EZ3.Vector3 = function(x, y, z) {
+  /**
+   * @property {Number} x
+   * @default 0
+   */
+
+  /**
+   * @property {Number} y
+   * @default 0
+   */
+
+   /**
+    * @property {Number} z
+    * @default 0
+    */
+
   if (typeof x === 'number') {
     this.x = x;
     this.y = (typeof y === 'number') ? y : x;
@@ -16,6 +35,12 @@ EZ3.Vector3 = function(x, y, z) {
 
 EZ3.Vector3.prototype.constructor = EZ3.Vector3;
 
+/**
+ * @method EZ3.Vector3#add
+ * @param {EZ3.Vector3} v1
+ * @param {EZ3.Vector3} [v2]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.add = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = v1.x + v2.x;
@@ -29,6 +54,12 @@ EZ3.Vector3.prototype.add = function(v1, v2) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#sub
+ * @param {EZ3.Vector3} v1
+ * @param {EZ3.Vector3} [v2]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.sub = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = v1.x - v2.x;
@@ -39,16 +70,31 @@ EZ3.Vector3.prototype.sub = function(v1, v2) {
     this.y -= v1.y;
     this.z -= v1.z;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#set
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.set = function(x, y, z) {
   this.x = x;
   this.y = y;
   this.z = z;
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#scale
+ * @param {Number} s
+ * @param {EZ3.Vector3} [v]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.scale = function(s, v) {
   if (v !== undefined) {
     this.x = v.x * s;
@@ -59,9 +105,15 @@ EZ3.Vector3.prototype.scale = function(s, v) {
     this.y *= s;
     this.z *= s;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#dot
+ * @param {EZ3.Vector3} v
+ * @return {Number}
+ */
 EZ3.Vector3.prototype.dot = function(v) {
   if (v !== undefined)
     return v.x * this.x + v.y * this.y + v.z * this.z;
@@ -69,6 +121,12 @@ EZ3.Vector3.prototype.dot = function(v) {
     return -1;
 };
 
+/**
+ * @method EZ3.Vector3#max
+ * @param {EZ3.Vector3} v1
+ * @param {EZ3.Vector3} [v2]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.max = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = (v1.x > v2.x) ? v1.x : v2.x;
@@ -87,6 +145,12 @@ EZ3.Vector3.prototype.max = function(v1, v2) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#min
+ * @param {EZ3.Vector3} v1
+ * @param {EZ3.Vector3} [v2]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.min = function(v1, v2) {
   if (v2 !== undefined) {
     this.x = (v1.x < v2.x) ? v1.x : v2.x;
@@ -105,6 +169,12 @@ EZ3.Vector3.prototype.min = function(v1, v2) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#cross
+ * @param {EZ3.Vector3} v1
+ * @param {EZ3.Vector3} [v2]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.cross = function(v1, v2) {
   var x;
   var y;
@@ -127,6 +197,12 @@ EZ3.Vector3.prototype.cross = function(v1, v2) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#mulMatrix3
+ * @param {EZ3.Matrix3} m
+ * @param {EZ3.Vector3} [v]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.mulMatrix3 = function(m, v) {
   var e;
   var x;
@@ -158,6 +234,11 @@ EZ3.Vector3.prototype.mulMatrix3 = function(m, v) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#mulQuaternion
+ * @param {EZ3.Vector3} q
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.mulQuaternion = function(q) {
   var x = this.x;
   var y = this.y;
@@ -180,10 +261,19 @@ EZ3.Vector3.prototype.mulQuaternion = function(q) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#length
+ * @return {Number}
+ */
 EZ3.Vector3.prototype.length = function() {
   return Math.sqrt(this.dot(this));
 };
 
+/**
+ * @method EZ3.Vector3#normalize
+ * @param {EZ3.Vector3} [v]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.normalize = function(v) {
   var l;
 
@@ -214,6 +304,11 @@ EZ3.Vector3.prototype.normalize = function(v) {
   }
 };
 
+/**
+ * @method EZ3.Vector3#negate
+ * @param {EZ3.Vector3} [v]
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.negate = function(v) {
   if (v !== undefined) {
     this.x = -v.x;
@@ -224,29 +319,51 @@ EZ3.Vector3.prototype.negate = function(v) {
     this.y = -this.y;
     this.z = -this.z;
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#clone
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.clone = function() {
   return new EZ3.Vector3(this.x, this.y, this.z);
 };
 
+/**
+ * @method EZ3.Vector3#copy
+ * @param {EZ3.Vector3} v
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.copy = function(v) {
   this.x = v.x;
   this.y = v.y;
   this.z = v.z;
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#setPositionFromWorldMatrix
+ * @param {EZ3.Matrix3} m
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.setPositionFromWorldMatrix = function(m) {
   if (m !== undefined) {
     this.x = m.elements[12];
     this.y = m.elements[13];
     this.z = m.elements[14];
   }
+
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#setFromViewProjectionMatrix
+ * @param {EZ3.Matrix3} m
+ * @return {EZ3.Vector3}
+ */
 EZ3.Vector3.prototype.setFromViewProjectionMatrix = function(m) {
   var e = m.elements;
   var x = this.x;
@@ -261,6 +378,11 @@ EZ3.Vector3.prototype.setFromViewProjectionMatrix = function(m) {
   return this;
 };
 
+/**
+ * @method EZ3.Vector3#isEqual
+ * @param {EZ3.Vector3} v
+ * @return {Boolean}
+ */
 EZ3.Vector3.prototype.isEqual = function(v) {
   if (v !== undefined)
     return (this.x === v.x) && (this.y === v.y) && (this.z === v.z);
@@ -268,6 +390,11 @@ EZ3.Vector3.prototype.isEqual = function(v) {
     return false;
 };
 
+/**
+ * @method EZ3.Vector3#isZeroVector
+ * @param {EZ3.Vector3} [v]
+ * @return {Boolean}
+ */
 EZ3.Vector3.prototype.isZeroVector = function(v) {
   if (v !== undefined)
     return (v.x === 0.0) && (v.y === 0.0) && (v.z === 0.0);
@@ -275,17 +402,27 @@ EZ3.Vector3.prototype.isZeroVector = function(v) {
     return (this.x === 0.0) && (this.y === 0.0) && (this.z === 0.0);
 };
 
+/**
+ * @method EZ3.Vector3#isDiff
+ * @param {EZ3.Vector3} v
+ * @return {Boolean}
+ */
 EZ3.Vector3.prototype.isDiff = function(v) {
-  if (v !== undefined)
-    return !this.isEqual(v);
-  else
-    return true;
+  return !this.isEqual(v);
 };
 
+/**
+ * @method EZ3.Vector3#toArray
+ * @return {Number[]}
+ */
 EZ3.Vector3.prototype.toArray = function() {
   return [this.x, this.y, this.z];
 };
 
+/**
+ * @method EZ3.Vector3#toString
+ * @return {String}
+ */
 EZ3.Vector3.prototype.toString = function() {
   var x = this.x.toFixed(4);
   var y = this.y.toFixed(4);
@@ -294,6 +431,10 @@ EZ3.Vector3.prototype.toString = function() {
   return 'Vector3[' + x + ', ' + y + ', ' + z + ']';
 };
 
+/**
+ * @method EZ3.Vector3#toVector2
+ * @return {EZ3.Vector2}
+ */
 EZ3.Vector3.prototype.toVector2 = function() {
   return new EZ3.Vector2(this.x, this.y);
 };

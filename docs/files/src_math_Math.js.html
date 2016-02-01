@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/math/Math.js - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/math/Math.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+ * Math constants and functions.
+ * @class EZ3.Math
+ * @static
+ */
+
+EZ3.Math = function() {
+  /**
+   * @property {Number} PI
+   * @final
+   */
+  this.PI = Math.PI;
+
+  /**
+   * @property {Number} HALF_PI
+   * @final
+   */
+  this.HALF_PI = this.PI * 0.5;
+
+  /**
+   * @property {Number} DOUBLE_PI
+   * @final
+   */
+  this.DOUBLE_PI = 2.0 * this.PI;
+
+  /**
+   * @property {Number} MAX_UINT
+   * @final
+   */
+  this.MAX_UINT = Math.pow(2, 32) - 1;
+
+  /**
+   * @property {Number} MAX_USHORT
+   * @final
+   */
+  this.MAX_USHORT = Math.pow(2, 16) - 1;
+};
+
+EZ3.Math = new EZ3.Math();
+
+/**
+ * @method EZ3.Math#isPowerOfTwo
+ * @param {Number} x
+ * @return {Boolean}
+ */
+EZ3.Math.isPowerOfTwo = function(x) {
+  return (x &amp; (x - 1)) === 0;
+};
+
+/**
+ * @method EZ3.Math#toRadians
+ * @param {Number} x
+ * @return {Number}
+ */
+EZ3.Math.toRadians = function(x) {
+  return x * EZ3.Math.PI / 180.0;
+};
+
+/**
+ * @method EZ3.Math#toDegrees
+ * @param {Number} x
+ * @return {Number}
+ */
+EZ3.Math.toDegrees = function(x) {
+  return x * 180.0 / EZ3.Math.PI;
+};
+
+/**
+ * @method EZ3.Math#nextHighestPowerOfTwo
+ * @param {Number} x
+ * @return {Number}
+ */
+EZ3.Math.nextHighestPowerOfTwo = function(x) {
+  --x;
+  for (var i = 1; i &lt; 32; i &lt;&lt;= 1)
+    x = x | x &gt;&gt; i;
+
+  return x + 1;
+};
+
+/**
+ * @method EZ3.Math#clamp
+ * @param {Number} x
+ * @param {Number} min
+ * @param {Number} max
+ * @return {Number}
+ */
+EZ3.Math.clamp = function(x, min, max) {
+  return Math.min(max, Math.max(x, min));
+};
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

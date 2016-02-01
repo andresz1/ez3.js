@@ -1,7 +1,5 @@
 /**
  * @class BoundingSphere
  */
-
-EZ3.BoundingSphere = function(center, radius) {
-
+EZ3.BoundingSphere = function() {
 };

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>EZ3.Camera - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>EZ3.Camera</h1>
+</div>
+
+
+	<div class="well well-small">
+        <div class="extends">
+            Extends <a href="../classes/EZ3.Entity.html" class="crosslink">EZ3.Entity</a>
+        </div>
+    </div>
+
+
+
+
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-EZ3.Camera#updateView"><span class="im">EZ3.Camera#updateView</span>()</a></li>
+				<li><a href="#method-EZ3.Entity#add"><span class="im">EZ3.Entity#add</span>(<span class="ia">child</span>)</a></li>
+				<li><a href="#method-EZ3.Entity#getWorldDirection"><span class="im">EZ3.Entity#getWorldDirection</span>()</a></li>
+				<li><a href="#method-EZ3.Entity#getWorldPosition"><span class="im">EZ3.Entity#getWorldPosition</span>()</a></li>
+				<li><a href="#method-EZ3.Entity#getWorldRotation"><span class="im">EZ3.Entity#getWorldRotation</span>()</a></li>
+				<li><a href="#method-EZ3.Entity#getWorldScale"><span class="im">EZ3.Entity#getWorldScale</span>()</a></li>
+				<li><a href="#method-EZ3.Entity#lookAt"><span class="im">EZ3.Entity#lookAt</span>(<span class="ia">target</span><span class="ia">up</span>)</a></li>
+				<li><a href="#method-EZ3.Entity#remove"><span class="im">EZ3.Entity#remove</span>(<span class="ia">child</span>)</a></li>
+				<li><a href="#method-EZ3.Entity#traverse"><span class="im">EZ3.Entity#traverse</span>(<span class="ia">callback</span>)</a></li>
+				<li><a href="#method-EZ3.Entity#updateWorld"><span class="im">EZ3.Entity#updateWorld</span>()</a></li>
+				<li><a href="#method-EZ3.Entity#updateWorldTraverse"><span class="im">EZ3.Entity#updateWorldTraverse</span>()</a></li>
+			</ul>
+		</li>
+
+		<li>
+			<strong>Properties</strong>
+			<ul>
+				<li><a href="#prop-_cache"><span class="ip">_cache</span></a></li>
+				<li><a href="#prop-children"><span class="ip">children</span></a></li>
+				<li><a href="#prop-model"><span class="ip">model</span></a></li>
+				<li><a href="#prop-parent"><span class="ip">parent</span></a></li>
+				<li><a href="#prop-position"><span class="ip">position</span></a></li>
+				<li><a href="#prop-projection"><span class="ip">projection</span></a></li>
+				<li><a href="#prop-quaternion"><span class="ip">quaternion</span></a></li>
+				<li><a href="#prop-rotation"><span class="ip">rotation</span></a></li>
+				<li><a href="#prop-scale"><span class="ip">scale</span></a></li>
+				<li><a href="#prop-view"><span class="ip">view</span></a></li>
+				<li><a href="#prop-wolrd"><span class="ip">wolrd</span></a></li>
+			</ul>
+		</li>
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+    <div class="constructor yuidoc-class-constructor page-section">
+        <h2>Constructor</h2>
+        <div class="item-list">
+<div id="method-EZ3.Camera" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Camera</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_cameras_Camera.js.html#l1"><code>src&#x2F;cameras&#x2F;Camera.js:1</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+
+</div>
+        </div>
+    </div>
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-EZ3.Camera#updateView" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Camera#updateView</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_cameras_Camera.js.html#l23"><code>src&#x2F;cameras&#x2F;Camera.js:23</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+
+</div>
+<div id="method-EZ3.Entity#add" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#add</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>child</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#add">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l63"><code>src&#x2F;core&#x2F;Entity.js:63</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">child</code>
+						<span class="type"><a href="../classes/EZ3.Entity.html" class="crosslink">EZ3.Entity</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-EZ3.Entity#getWorldDirection" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#getWorldDirection</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#getWorldDirection">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l220"><code>src&#x2F;core&#x2F;Entity.js:220</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Entity#getWorldPosition" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#getWorldPosition</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#getWorldPosition">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l196"><code>src&#x2F;core&#x2F;Entity.js:196</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Entity#getWorldRotation" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#getWorldRotation</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#getWorldRotation">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l204"><code>src&#x2F;core&#x2F;Entity.js:204</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Entity#getWorldScale" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#getWorldScale</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#getWorldScale">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l212"><code>src&#x2F;core&#x2F;Entity.js:212</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Entity#lookAt" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#lookAt</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">target</code>
+				</li>
+				<li class="arg">
+						<code class="optional">up</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#lookAt">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l86"><code>src&#x2F;core&#x2F;Entity.js:86</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[target]</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[up]</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-EZ3.Entity#remove" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#remove</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>child</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#remove">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l75"><code>src&#x2F;core&#x2F;Entity.js:75</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">child</code>
+						<span class="type"><a href="../classes/EZ3.Entity.html" class="crosslink">EZ3.Entity</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-EZ3.Entity#traverse" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#traverse</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#traverse">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l166"><code>src&#x2F;core&#x2F;Entity.js:166</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">callback</code>
+						<span class="type">Function</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-EZ3.Entity#updateWorld" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#updateWorld</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#updateWorld">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l114"><code>src&#x2F;core&#x2F;Entity.js:114</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+
+</div>
+<div id="method-EZ3.Entity#updateWorldTraverse" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Entity#updateWorldTraverse</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/EZ3.Entity.html#method_EZ3.Entity#updateWorldTraverse">EZ3.Entity</a>:
+		<a href="../files/src_core_Entity.js.html#l187"><code>src&#x2F;core&#x2F;Entity.js:187</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+
+</div>
+        </div>
+    </div>
+
+    <div id="properties" class="page-section">
+        <h2 class="off-left">Properties</h2>
+
+        <div class="item-list">
+<div id="prop-_cache" class="property item private inherited">
+    <h3 class="name"><code>_cache</code></h3>
+    <span class="type">Object</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property__cache">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l8"><code>src&#x2F;core&#x2F;Entity.js:8</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-children" class="property item inherited">
+    <h3 class="name"><code>children</code></h3>
+    <span class="type"><a href="../classes/EZ3.Entity.html" class="crosslink">EZ3.Entity[]</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_children">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l19"><code>src&#x2F;core&#x2F;Entity.js:19</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-model" class="property item inherited">
+    <h3 class="name"><code>model</code></h3>
+    <span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_model">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l24"><code>src&#x2F;core&#x2F;Entity.js:24</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-parent" class="property item inherited">
+    <h3 class="name"><code>parent</code></h3>
+    <span class="type"><a href="../classes/EZ3.Entity.html" class="crosslink">EZ3.Entity</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_parent">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l14"><code>src&#x2F;core&#x2F;Entity.js:14</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-position" class="property item inherited">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_position">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l44"><code>src&#x2F;core&#x2F;Entity.js:44</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-projection" class="property item">
+    <h3 class="name"><code>projection</code></h3>
+    <span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_cameras_Camera.js.html#l14"><code>src&#x2F;cameras&#x2F;Camera.js:14</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-quaternion" class="property item inherited">
+    <h3 class="name"><code>quaternion</code></h3>
+    <span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_quaternion">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l49"><code>src&#x2F;core&#x2F;Entity.js:49</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-rotation" class="property item inherited">
+    <h3 class="name"><code>rotation</code></h3>
+    <span class="type"><a href="../classes/EZ3.Euler.html" class="crosslink">EZ3.Euler</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_rotation">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l39"><code>src&#x2F;core&#x2F;Entity.js:39</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-scale" class="property item inherited">
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_scale">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l34"><code>src&#x2F;core&#x2F;Entity.js:34</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-view" class="property item">
+    <h3 class="name"><code>view</code></h3>
+    <span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_cameras_Camera.js.html#l9"><code>src&#x2F;cameras&#x2F;Camera.js:9</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-wolrd" class="property item inherited">
+    <h3 class="name"><code>wolrd</code></h3>
+    <span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/EZ3.Entity.html#property_wolrd">EZ3.Entity</a>:
+        <a href="../files/src_core_Entity.js.html#l29"><code>src&#x2F;core&#x2F;Entity.js:29</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+        </div>
+    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

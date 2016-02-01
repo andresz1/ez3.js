@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/math/Matrix4.js - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/math/Matrix4.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+ * Representation of a 4x4 matrix.
+ * @class EZ3.Matrix4
+ * @constructor
+ * @param {Number|Number[]} [value]
+ */
+EZ3.Matrix4 = function(value) {
+  this.elements = null;
+
+  if (typeof value === &#x27;number&#x27;) {
+    this.elements = [
+      value, 0.0, 0.0, 0.0,
+      0.0, value, 0.0, 0.0,
+      0.0, 0.0, value, 0.0,
+      0.0, 0.0, 0.0, value
+    ];
+  } else if (value instanceof Array &amp;&amp; value.length === 16) {
+    this.elements = [
+      value[0], value[1], value[2], value[3],
+      value[4], value[5], value[6], value[7],
+      value[8], value[9], value[10], value[11],
+      value[12], value[13], value[14], value[15]
+    ];
+  } else
+    this.identity();
+};
+
+EZ3.Matrix4.prototype.constructor = EZ3.Matrix4;
+
+/**
+ * @method EZ3.Matrix4#transpose
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.transpose = function(m) {
+  var e01;
+  var e02;
+  var e03;
+  var e12;
+  var e13;
+  var e23;
+  var em;
+
+  if (m !== undefined) {
+    em = m.elements;
+
+    e01 = em[1];
+    e02 = em[2];
+    e03 = em[3];
+    e12 = em[6];
+    e13 = em[7];
+    e23 = em[11];
+
+    this.elements[1] = em[4];
+    this.elements[2] = em[8];
+    this.elements[3] = em[12];
+    this.elements[4] = e01;
+
+    this.elements[6] = em[9];
+    this.elements[7] = em[13];
+    this.elements[8] = e02;
+    this.elements[9] = e12;
+
+    this.elements[11] = em[14];
+    this.elements[12] = e03;
+    this.elements[13] = e13;
+    this.elements[14] = e23;
+  } else {
+    em = this.elements;
+    this.elements[0] = em[0];
+    this.elements[1] = em[4];
+    this.elements[2] = em[8];
+    this.elements[3] = em[12];
+
+    this.elements[4] = em[1];
+    this.elements[5] = em[5];
+    this.elements[6] = em[9];
+    this.elements[7] = em[13];
+
+    this.elements[8] = em[2];
+    this.elements[9] = em[6];
+    this.elements[10] = em[10];
+    this.elements[11] = em[14];
+
+    this.elements[12] = em[3];
+    this.elements[13] = em[7];
+    this.elements[14] = em[11];
+    this.elements[15] = em[15];
+  }
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#inverse
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.inverse = function(m) {
+  var te = this.elements;
+  var me = (m !== undefined) ? m.elements : this.elements;
+
+  var n11 = me[0];
+  var n12 = me[4];
+  var n13 = me[8];
+  var n14 = me[12];
+  var n21 = me[1];
+  var n22 = me[5];
+  var n23 = me[9];
+  var n24 = me[13];
+  var n31 = me[2];
+  var n32 = me[6];
+  var n33 = me[10];
+  var n34 = me[14];
+  var n41 = me[3];
+  var n42 = me[7];
+  var n43 = me[11];
+  var n44 = me[15];
+
+  te[0] = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44;
+  te[4] = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44;
+  te[8] = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44;
+  te[12] = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+
+  te[1] = n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44;
+  te[5] = n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44;
+  te[9] = n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44;
+  te[13] = n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34;
+
+  te[2] = n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44;
+  te[6] = n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44;
+  te[10] = n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44;
+  te[14] = n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34;
+
+  te[3] = n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43;
+  te[7] = n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43;
+  te[11] = n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43;
+  te[15] = n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33;
+
+  var det = n11 * te[0] + n21 * te[4] + n31 * te[8] + n41 * te[12];
+
+  if (!det)
+    return this.identity;
+
+  this.multiplyScalar(1 / det);
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#multiplyScalar
+ * @param {Number} s
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.multiplyScalar = function(s) {
+  var te = this.elements;
+
+  te[0] *= s;
+  te[4] *= s;
+  te[8] *= s;
+  te[12] *= s;
+
+  te[1] *= s;
+  te[5] *= s;
+  te[9] *= s;
+  te[13] *= s;
+
+  te[2] *= s;
+  te[6] *= s;
+  te[10] *= s;
+  te[14] *= s;
+
+  te[3] *= s;
+  te[7] *= s;
+  te[11] *= s;
+  te[15] *= s;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#mul
+ * @param {EZ3.Matrix4} m1
+ * @param {EZ3.Matrix4} [m2]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.mul = function(m1, m2) {
+  var em1;
+  var em2;
+  var a00;
+  var a01;
+  var a02;
+  var a03;
+  var a10;
+  var a11;
+  var a12;
+  var a13;
+  var a20;
+  var a21;
+  var a22;
+  var a23;
+  var a30;
+  var a31;
+  var a32;
+  var a33;
+  var b00;
+  var b01;
+  var b02;
+  var b03;
+  var b10;
+  var b11;
+  var b12;
+  var b13;
+  var b20;
+  var b21;
+  var b22;
+  var b23;
+  var b30;
+  var b31;
+  var b32;
+  var b33;
+
+  if (m2 !== undefined) {
+    em1 = m2.elements;
+    em2 = m1.elements;
+  } else {
+    em1 = m1.elements;
+    em2 = this.elements;
+  }
+
+  a00 = em1[0];
+  a01 = em1[1];
+  a02 = em1[2];
+  a03 = em1[3];
+  a10 = em1[4];
+  a11 = em1[5];
+  a12 = em1[6];
+  a13 = em1[7];
+  a20 = em1[8];
+  a21 = em1[9];
+  a22 = em1[10];
+  a23 = em1[11];
+  a30 = em1[12];
+  a31 = em1[13];
+  a32 = em1[14];
+  a33 = em1[15];
+
+  b00 = em2[0];
+  b01 = em2[1];
+  b02 = em2[2];
+  b03 = em2[3];
+  b10 = em2[4];
+  b11 = em2[5];
+  b12 = em2[6];
+  b13 = em2[7];
+  b20 = em2[8];
+  b21 = em2[9];
+  b22 = em2[10];
+  b23 = em2[11];
+  b30 = em2[12];
+  b31 = em2[13];
+  b32 = em2[14];
+  b33 = em2[15];
+
+  this.elements[0] = a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30;
+  this.elements[1] = a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31;
+  this.elements[2] = a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32;
+  this.elements[3] = a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33;
+
+  this.elements[4] = a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30;
+  this.elements[5] = a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31;
+  this.elements[6] = a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32;
+  this.elements[7] = a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33;
+
+  this.elements[8] = a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30;
+  this.elements[9] = a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31;
+  this.elements[10] = a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32;
+  this.elements[11] = a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33;
+
+  this.elements[12] = a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30;
+  this.elements[13] = a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31;
+  this.elements[14] = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32;
+  this.elements[15] = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#setPosition
+ * @param {EZ3.Vector3} v
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.setPosition = function(v, m) {
+  var em = (m !== undefined) ? m.elements : this.elements;
+  var x = v.x;
+  var y = v.y;
+  var z = v.z;
+
+  em[12] = x;
+  em[13] = y;
+  em[14] = z;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#translate
+ * @param {EZ3.Vector3} v
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.translate = function(v, m) {
+  var em = (m !== undefined) ? m.elements : this.elements;
+  var x = v.x;
+  var y = v.y;
+  var z = v.z;
+
+  var a00 = em[0];
+  var a01 = em[1];
+  var a02 = em[2];
+  var a03 = em[3];
+  var a10 = em[4];
+  var a11 = em[5];
+  var a12 = em[6];
+  var a13 = em[7];
+  var a20 = em[8];
+  var a21 = em[9];
+  var a22 = em[10];
+  var a23 = em[11];
+
+  this.elements[0] = a00;
+  this.elements[1] = a01;
+  this.elements[2] = a02;
+  this.elements[3] = a03;
+
+  this.elements[4] = a10;
+  this.elements[5] = a11;
+  this.elements[6] = a12;
+  this.elements[7] = a13;
+
+  this.elements[8] = a20;
+  this.elements[9] = a21;
+  this.elements[10] = a22;
+  this.elements[11] = a23;
+
+  this.elements[12] = a00 * x + a10 * y + a20 * z + this.elements[12];
+  this.elements[13] = a01 * x + a11 * y + a21 * z + this.elements[13];
+  this.elements[14] = a02 * x + a12 * y + a22 * z + this.elements[14];
+  this.elements[15] = a03 * x + a13 * y + a23 * z + this.elements[15];
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#scale
+ * @param {EZ3.Vector3} s
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.scale = function(s, m) {
+  var x = s.x;
+  var y = s.y;
+  var z = s.z;
+  var em = (m !== undefined) ? m.elements : this.elements;
+
+  this.elements[0] = em[0] * x;
+  this.elements[1] = em[1] * x;
+  this.elements[2] = em[2] * x;
+  this.elements[3] = em[3] * x;
+
+  this.elements[4] = em[4] * y;
+  this.elements[5] = em[5] * y;
+  this.elements[6] = em[6] * y;
+  this.elements[7] = em[7] * y;
+
+  this.elements[8] = em[8] * z;
+  this.elements[9] = em[9] * z;
+  this.elements[10] = em[10] * z;
+  this.elements[11] = em[11] * z;
+
+  this.elements[12] = em[12];
+  this.elements[13] = em[13];
+  this.elements[14] = em[14];
+  this.elements[15] = em[15];
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#setFromQuaternion
+ * @param {EZ3.Quaternion} q
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.setFromQuaternion = function(q) {
+  var x2 = 2 * q.x;
+  var y2 = 2 * q.y;
+  var z2 = 2 * q.z;
+  var xx = q.x * x2;
+  var yy = q.y * y2;
+  var zz = q.z * z2;
+  var xy = q.x * y2;
+  var yz = q.y * z2;
+  var xz = q.x * z2;
+  var wx = q.w * x2;
+  var wy = q.w * y2;
+  var wz = q.w * z2;
+
+  this.elements[0] = 1.0 - yy - zz;
+  this.elements[1] = xy - wz;
+  this.elements[2] = xz + wy;
+  this.elements[3] = 0.0;
+
+  this.elements[4] = xy + wz;
+  this.elements[5] = 1.0 - xx - zz;
+  this.elements[6] = yz - wx;
+  this.elements[7] = 0.0;
+
+  this.elements[8] = xz - wy;
+  this.elements[9] = yz + wx;
+  this.elements[10] = 1.0 - xx - yy;
+  this.elements[11] = 0.0;
+
+  this.elements[12] = 0.0;
+  this.elements[13] = 0.0;
+  this.elements[14] = 0.0;
+  this.elements[15] = 1.0;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#frustum
+ * @param {Number} left
+ * @param {Number} right
+ * @param {Number} bottom
+ * @param {Number} top
+ * @param {Number} near
+ * @param {Number} far
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
+  var te = this.elements;
+  var x = 2.0 * near / (right - left);
+  var y = 2.0 * near / (top - bottom);
+
+  var a = (right + left) / (right - left);
+  var b = (top + bottom) / (top - bottom);
+  var c = -(far + near) / (far - near);
+  var d = -2.0 * far * near / (far - near);
+
+  te[0] = x;
+  te[1] = 0;
+  te[2] = 0;
+  te[3] = 0;
+
+  te[4] = 0;
+  te[5] = y;
+  te[6] = 0;
+  te[7] = 0;
+
+  te[8] = a;
+  te[9] = b;
+  te[10] = c;
+  te[11] = -1;
+
+  te[12] = 0;
+  te[13] = 0;
+  te[14] = d;
+  te[15] = 0;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#perspective
+ * @param {Number} fovy
+ * @param {Number} aspect
+ * @param {Number} near
+ * @param {Number} far
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
+  var ymax = near * Math.tan(EZ3.Math.toRadians(fovy * 0.5));
+  var ymin = -ymax;
+  var xmax = ymax * aspect;
+  var xmin = ymin * aspect;
+
+  return this.frustum(xmin, xmax, ymin, ymax, near, far);
+};
+
+/**
+ * @method EZ3.Matrix4#orthographic
+ * @param {Number} left
+ * @param {Number} right
+ * @param {Number} bottom
+ * @param {Number} top
+ * @param {Number} near
+ * @param {Number} far
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.orthographic = function(left, right, top, bottom, near, far) {
+  var w = right - left;
+  var h = top - bottom;
+  var p = far - near;
+
+  var x = (right + left) / w;
+  var y = (top + bottom) / h;
+  var z = (far + near) / p;
+
+  this.elements[0] = 2.0 / w;
+  this.elements[1] = 0.0;
+  this.elements[2] = 0.0;
+  this.elements[3] = 0.0;
+
+  this.elements[4] = 0.0;
+  this.elements[5] = 2.0 / h;
+  this.elements[6] = 0.0;
+  this.elements[7] = 0.0;
+
+  this.elements[8] = 0.0;
+  this.elements[9] = 0.0;
+  this.elements[10] = -2.0 / p;
+  this.elements[11] = 0.0;
+
+  this.elements[12] = -x;
+  this.elements[13] = -y;
+  this.elements[14] = -z;
+  this.elements[15] = 1.0;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#lookAt
+ * @param {EZ3.Vector3} eye
+ * @param {EZ3.Vector3} center
+ * @param {EZ3.Vector3} up
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
+  var te = this.elements;
+  var x = new EZ3.Vector3();
+  var y = new EZ3.Vector3();
+  var z = new EZ3.Vector3();
+
+  z.sub(eye, center).normalize();
+
+  if (z.length() === 0)
+    z.z = 1;
+
+  x.cross(up, z).normalize();
+
+  if (x.length() === 0) {
+    z.x += 0.0001;
+    x.cross(up, z).normalize();
+  }
+
+  y.cross(z, x);
+
+  te[0] = x.x;
+  te[1] = y.x;
+  te[2] = z.x;
+  te[3] = 0.0;
+
+  te[4] = x.y;
+  te[5] = y.y;
+  te[6] = z.y;
+  te[7] = 0.0;
+
+  te[8] = x.z;
+  te[9] = y.z;
+  te[10] = z.z;
+  te[11] = 0.0;
+
+  te[12] = -x.dot(eye);
+  te[13] = -y.dot(eye);
+  te[14] = -z.dot(eye);
+  te[15] = 1.0;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#identity
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.identity = function() {
+  this.elements = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ];
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#yawPitchRoll
+ * @param {Number} yaw
+ * @param {Number} pitch
+ * @param {Number} roll
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
+  var cosYaw = Math.cos(yaw);
+  var sinYaw = Math.sin(yaw);
+  var cosRoll = Math.cos(roll);
+  var sinRoll = Math.sin(roll);
+  var cosPitch = Math.cos(pitch);
+  var sinPitch = Math.sin(pitch);
+
+  this.elements[0] = cosYaw * cosRoll + sinYaw * sinPitch * sinRoll;
+  this.elements[1] = sinRoll * cosPitch;
+  this.elements[2] = -sinYaw * cosRoll + cosYaw * sinPitch * sinRoll;
+  this.elements[3] = 0.0;
+
+  this.elements[4] = -cosYaw * sinRoll + sinYaw * sinPitch * cosRoll;
+  this.elements[5] = cosRoll * cosPitch;
+  this.elements[6] = sinRoll * sinYaw + cosYaw * sinPitch * cosRoll;
+  this.elements[7] = 0.0;
+
+  this.elements[8] = sinYaw * cosPitch;
+  this.elements[9] = -sinPitch;
+  this.elements[10] = cosYaw * cosPitch;
+  this.elements[11] = 0.0;
+
+  this.elements[12] = 0.0;
+  this.elements[13] = 0.0;
+  this.elements[14] = 0.0;
+  this.elements[15] = 1.0;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#determinant
+ * @return {Number}
+ */
+EZ3.Matrix4.prototype.determinant = function() {
+  var te = this.elements;
+  var n11 = te[0];
+  var n21 = te[1];
+  var n31 = te[2];
+  var n41 = te[3];
+  var n12 = te[4];
+  var n22 = te[5];
+  var n32 = te[6];
+  var n42 = te[7];
+  var n13 = te[8];
+  var n23 = te[9];
+  var n33 = te[10];
+  var n43 = te[11];
+  var n14 = te[12];
+  var n24 = te[13];
+  var n34 = te[14];
+  var n44 = te[15];
+
+  return (
+    n41 * (n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34) +
+    n42 * (n11 * n23 * n34 - n11 * n24 * n33 + n14 * n21 * n33 - n13 * n21 * n34 + n13 * n24 * n31 - n14 * n23 * n31) +
+    n43 * (n11 * n24 * n32 - n11 * n22 * n34 - n14 * n21 * n32 + n12 * n21 * n34 + n14 * n22 * n31 - n12 * n24 * n31) +
+    n44 * (-n13 * n22 * n31 - n11 * n23 * n32 + n11 * n22 * n33 + n13 * n21 * n32 - n12 * n21 * n33 + n12 * n23 * n31)
+  );
+};
+
+/**
+ * @method EZ3.Matrix4#compose
+ * @param {EZ3.Vector3} position
+ * @param {EZ3.Vector3} rotation
+ * @param {EZ3.Vector3} scale
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.compose = function(position, rotation, scale) {
+  this.setFromQuaternion(rotation);
+  this.setPosition(position);
+  this.scale(scale);
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#getPosition
+ * @return {EZ3.Vector3}
+ */
+EZ3.Matrix4.prototype.getPosition = function() {
+  var te = this.elements;
+  var position = new EZ3.Vector3(te[12], te[13], te[14]);
+
+  return position;
+};
+
+/**
+ * @method EZ3.Matrix4#getRotation
+ * @return {EZ3.Quaternion}
+ */
+EZ3.Matrix4.prototype.getRotation = function() {
+  var scale = this.getScale();
+  var matrix = new EZ3.Matrix4(this.elements);
+  var iSX;
+  var iSY;
+  var iSZ;
+
+  if (this.determinant() &lt; 0.0)
+    scale.x = -scale.x;
+
+  iSX = 1.0 / scale.x;
+  iSY = 1.0 / scale.y;
+  iSZ = 1.0 / scale.z;
+
+  matrix.elements[0] *= iSX;
+  matrix.elements[1] *= iSX;
+  matrix.elements[2] *= iSX;
+
+  matrix.elements[4] *= iSY;
+  matrix.elements[5] *= iSY;
+  matrix.elements[6] *= iSY;
+
+  matrix.elements[8] *= iSZ;
+  matrix.elements[9] *= iSZ;
+  matrix.elements[10] *= iSZ;
+
+  return new EZ3.Quaternion().setFromRotationMatrix(matrix);
+};
+
+/**
+ * @method EZ3.Matrix4#getScale
+ * @return {EZ3.Vector3}
+ */
+EZ3.Matrix4.prototype.getScale = function() {
+  var te = this.elements;
+  var scale = new EZ3.Vector3();
+  var vector = new EZ3.Vector3();
+
+  scale.x = vector.set(te[0], te[1], te[2]).length();
+  scale.y = vector.set(te[4], te[5], te[6]).length();
+  scale.z = vector.set(te[8], te[9], te[10]).length();
+
+  return scale;
+};
+
+/**
+ * @method EZ3.Matrix4#clone
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.clone = function() {
+  return new EZ3.Matrix4(this.toArray());
+};
+
+/**
+ * @method EZ3.Matrix4#copy
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.copy = function(m) {
+  this.elements[0] = m.elements[0];
+  this.elements[1] = m.elements[1];
+  this.elements[2] = m.elements[2];
+  this.elements[3] = m.elements[3];
+
+  this.elements[4] = m.elements[4];
+  this.elements[5] = m.elements[5];
+  this.elements[6] = m.elements[6];
+  this.elements[7] = m.elements[7];
+
+  this.elements[8] = m.elements[8];
+  this.elements[9] = m.elements[9];
+  this.elements[10] = m.elements[10];
+  this.elements[11] = m.elements[11];
+
+  this.elements[12] = m.elements[12];
+  this.elements[13] = m.elements[13];
+  this.elements[14] = m.elements[14];
+  this.elements[15] = m.elements[15];
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#toArray
+ * @return {Number[]}
+ */
+EZ3.Matrix4.prototype.toArray = function() {
+  return this.elements;
+};
+
+/**
+ * @method EZ3.Matrix4#toString
+ * @return {String}
+ */
+EZ3.Matrix4.prototype.toString = function() {
+  return &#x27;Matrix4[&#x27; + &#x27;\n&#x27; +
+    this.elements[0].toFixed(4) + &#x27;, &#x27; +
+    this.elements[4].toFixed(4) + &#x27;, &#x27; +
+    this.elements[8].toFixed(4) + &#x27;, &#x27; +
+    this.elements[12].toFixed(4) + &#x27;\n&#x27; +
+    this.elements[1].toFixed(4) + &#x27;, &#x27; +
+    this.elements[5].toFixed(4) + &#x27;, &#x27; +
+    this.elements[9].toFixed(4) + &#x27;, &#x27; +
+    this.elements[13].toFixed(4) + &#x27;\n&#x27; +
+    this.elements[2].toFixed(4) + &#x27;, &#x27; +
+    this.elements[6].toFixed(4) + &#x27;, &#x27; +
+    this.elements[10].toFixed(4) + &#x27;, &#x27; +
+    this.elements[14].toFixed(4) + &#x27;\n&#x27; +
+    this.elements[3].toFixed(4) + &#x27;, &#x27; +
+    this.elements[7].toFixed(4) + &#x27;, &#x27; +
+    this.elements[11].toFixed(4) + &#x27;, &#x27; +
+    this.elements[15].toFixed(4) + &#x27;\n]&#x27;;
+};
+
+/**
+ * @method EZ3.Matrix4#toMatrix3
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix3}
+ */
+EZ3.Matrix4.prototype.toMatrix3 = function(m) {
+  var e = (m !== undefined) ? m.elements : this.elements;
+  var matrix = new EZ3.Matrix3();
+
+  matrix.elements = [
+    e[0], e[3], e[6],
+    e[1], e[4], e[7],
+    e[2], e[5], e[8]
+  ];
+
+  return matrix;
+};
+
+/**
+ * @method EZ3.Matrix4#isEqual
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Boolean}
+ */
+EZ3.Matrix4.prototype.isEqual = function(m) {
+  if (m !== undefined) {
+    return m.elements[0] === this.elements[0] &amp;&amp;
+      m.elements[1] === this.elements[1] &amp;&amp;
+      m.elements[2] === this.elements[2] &amp;&amp;
+      m.elements[3] === this.elements[3] &amp;&amp;
+      m.elements[4] === this.elements[4] &amp;&amp;
+      m.elements[5] === this.elements[5] &amp;&amp;
+      m.elements[6] === this.elements[6] &amp;&amp;
+      m.elements[7] === this.elements[7] &amp;&amp;
+      m.elements[8] === this.elements[8] &amp;&amp;
+      m.elements[9] === this.elements[9] &amp;&amp;
+      m.elements[10] === this.elements[10] &amp;&amp;
+      m.elements[11] === this.elements[11] &amp;&amp;
+      m.elements[12] === this.elements[12] &amp;&amp;
+      m.elements[13] === this.elements[13] &amp;&amp;
+      m.elements[14] === this.elements[14] &amp;&amp;
+      m.elements[15] === this.elements[15];
+  } else
+    return false;
+};
+
+/**
+ * @method EZ3.Matrix4#isDiff
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Boolean}
+ */
+EZ3.Matrix4.prototype.isDiff = function(m) {
+  return !this.isEqual(m);
+};
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

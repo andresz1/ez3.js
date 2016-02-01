@@ -1,0 +1,5531 @@
+{
+    "project": {
+        "name": "ez3",
+        "description": "JavaScript 3D library",
+        "version": "1.0.0",
+        "url": "https://github.com/andresz1/ez3.js#readme"
+    },
+    "files": {
+        "src/cameras/Camera.js": {
+            "name": "src/cameras/Camera.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Camera": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/cameras/OrthographicCamera.js": {
+            "name": "src/cameras/OrthographicCamera.js",
+            "modules": {},
+            "classes": {
+                "EZ3.OrthographicCamera": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/cameras/PerspectiveCamera.js": {
+            "name": "src/cameras/PerspectiveCamera.js",
+            "modules": {},
+            "classes": {
+                "EZ3.PerspectiveCamera": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/controls/CameraControl.js": {
+            "name": "src/controls/CameraControl.js",
+            "modules": {},
+            "classes": {
+                "EZ3.CameraControl": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/controls/Control.js": {
+            "name": "src/controls/Control.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Control": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/controls/FreeControl.js": {
+            "name": "src/controls/FreeControl.js",
+            "modules": {},
+            "classes": {
+                "EZ3.FreeControl": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/controls/TargetControl.js": {
+            "name": "src/controls/TargetControl.js",
+            "modules": {},
+            "classes": {
+                "EZ3.TargetControl": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/core/Engine.js": {
+            "name": "src/core/Engine.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Engine": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/core/Entity.js": {
+            "name": "src/core/Entity.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Entity": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/core/Signal.js": {
+            "name": "src/core/Signal.js",
+            "modules": {},
+            "classes": {
+                "Signal": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/core/SignalBinding.js": {
+            "name": "src/core/SignalBinding.js",
+            "modules": {},
+            "classes": {
+                "SignalBinding": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/framebuffers/DepthCubeFramebuffer.js": {
+            "name": "src/framebuffers/DepthCubeFramebuffer.js",
+            "modules": {},
+            "classes": {
+                "DepthCubeFramebuffer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/framebuffers/DepthFramebuffer.js": {
+            "name": "src/framebuffers/DepthFramebuffer.js",
+            "modules": {},
+            "classes": {
+                "DepthFramebuffer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/framebuffers/Framebuffer.js": {
+            "name": "src/framebuffers/Framebuffer.js",
+            "modules": {},
+            "classes": {
+                "Framebuffer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/buffers/ArrayBuffer.js": {
+            "name": "src/geometry/buffers/ArrayBuffer.js",
+            "modules": {},
+            "classes": {
+                "ArrayBuffer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/buffers/Buffer.js": {
+            "name": "src/geometry/buffers/Buffer.js",
+            "modules": {},
+            "classes": {
+                "Buffer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/buffers/IndexBuffer.js": {
+            "name": "src/geometry/buffers/IndexBuffer.js",
+            "modules": {},
+            "classes": {
+                "IndexBuffer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/buffers/VertexBuffer.js": {
+            "name": "src/geometry/buffers/VertexBuffer.js",
+            "modules": {},
+            "classes": {
+                "VertexBuffer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/buffers/VertexBufferAttribute.js": {
+            "name": "src/geometry/buffers/VertexBufferAttribute.js",
+            "modules": {},
+            "classes": {
+                "VertexBufferAttribute": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/primitives/AstroidalEllipsoid.js": {
+            "name": "src/geometry/primitives/AstroidalEllipsoid.js",
+            "modules": {},
+            "classes": {
+                "AstroidalEllipsoid": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/primitives/Box.js": {
+            "name": "src/geometry/primitives/Box.js",
+            "modules": {},
+            "classes": {
+                "Box": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/primitives/Ellipsoid.js": {
+            "name": "src/geometry/primitives/Ellipsoid.js",
+            "modules": {},
+            "classes": {
+                "Ellipsoid": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/primitives/Plane.js": {
+            "name": "src/geometry/primitives/Plane.js",
+            "modules": {},
+            "classes": {
+                "Plane": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/primitives/Primitive.js": {
+            "name": "src/geometry/primitives/Primitive.js",
+            "modules": {},
+            "classes": {
+                "Primitive": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/primitives/Sphere.js": {
+            "name": "src/geometry/primitives/Sphere.js",
+            "modules": {},
+            "classes": {
+                "Sphere": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/primitives/Torus.js": {
+            "name": "src/geometry/primitives/Torus.js",
+            "modules": {},
+            "classes": {
+                "Torus": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/geometry/Geometry.js": {
+            "name": "src/geometry/Geometry.js",
+            "modules": {},
+            "classes": {
+                "Geometry": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/InputManager.js": {
+            "name": "src/input/InputManager.js",
+            "modules": {},
+            "classes": {
+                "InputManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/Keyboard.js": {
+            "name": "src/input/Keyboard.js",
+            "modules": {},
+            "classes": {
+                "Keboard": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/Mouse.js": {
+            "name": "src/input/Mouse.js",
+            "modules": {},
+            "classes": {
+                "Mouse": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/MousePointer.js": {
+            "name": "src/input/MousePointer.js",
+            "modules": {},
+            "classes": {
+                "MousePointer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/Pointer.js": {
+            "name": "src/input/Pointer.js",
+            "modules": {},
+            "classes": {
+                "Pointer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/Switch.js": {
+            "name": "src/input/Switch.js",
+            "modules": {},
+            "classes": {
+                "Switch": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/Touch.js": {
+            "name": "src/input/Touch.js",
+            "modules": {},
+            "classes": {
+                "Touch": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/input/TouchPointer.js": {
+            "name": "src/input/TouchPointer.js",
+            "modules": {},
+            "classes": {
+                "TouchPointer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/lights/DirectionalLight.js": {
+            "name": "src/lights/DirectionalLight.js",
+            "modules": {},
+            "classes": {
+                "DirectionalLight": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/lights/Light.js": {
+            "name": "src/lights/Light.js",
+            "modules": {},
+            "classes": {
+                "Light": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/lights/PointLight.js": {
+            "name": "src/lights/PointLight.js",
+            "modules": {},
+            "classes": {
+                "PointLight": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/lights/SpotLight.js": {
+            "name": "src/lights/SpotLight.js",
+            "modules": {},
+            "classes": {
+                "SpotLight": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/FileRequest.js": {
+            "name": "src/load/requests/FileRequest.js",
+            "modules": {},
+            "classes": {
+                "FileRequest": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/ImageRequest.js": {
+            "name": "src/load/requests/ImageRequest.js",
+            "modules": {},
+            "classes": {
+                "ImageRequest": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/MD2Request.js": {
+            "name": "src/load/requests/MD2Request.js",
+            "modules": {},
+            "classes": {
+                "MD2Request": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/MDLRequest.js": {
+            "name": "src/load/requests/MDLRequest.js",
+            "modules": {},
+            "classes": {
+                "MDLRequest": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/OBJRequest.js": {
+            "name": "src/load/requests/OBJRequest.js",
+            "modules": {},
+            "classes": {
+                "OBJRequest": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/OFFRequest.js": {
+            "name": "src/load/requests/OFFRequest.js",
+            "modules": {},
+            "classes": {
+                "OFFRequest": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/Request.js": {
+            "name": "src/load/requests/Request.js",
+            "modules": {},
+            "classes": {
+                "Request": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/RequestManager.js": {
+            "name": "src/load/requests/RequestManager.js",
+            "modules": {},
+            "classes": {
+                "RequestManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/requests/TGARequest.js": {
+            "name": "src/load/requests/TGARequest.js",
+            "modules": {},
+            "classes": {
+                "TGARequest": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/AssetManager.js": {
+            "name": "src/load/AssetManager.js",
+            "modules": {},
+            "classes": {
+                "AssetsManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/Cache.js": {
+            "name": "src/load/Cache.js",
+            "modules": {},
+            "classes": {
+                "Cache": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/File.js": {
+            "name": "src/load/File.js",
+            "modules": {},
+            "classes": {
+                "File": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/load/Image.js": {
+            "name": "src/load/Image.js",
+            "modules": {},
+            "classes": {
+                "Image": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/materials/Material.js": {
+            "name": "src/materials/Material.js",
+            "modules": {},
+            "classes": {
+                "Material": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/materials/MeshMaterial.js": {
+            "name": "src/materials/MeshMaterial.js",
+            "modules": {},
+            "classes": {
+                "MeshMaterial": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/materials/ShaderMaterial.js": {
+            "name": "src/materials/ShaderMaterial.js",
+            "modules": {},
+            "classes": {
+                "ShaderMaterial": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/BoundingBox.js": {
+            "name": "src/math/BoundingBox.js",
+            "modules": {},
+            "classes": {
+                "BoundingBox": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/BoundingSphere.js": {
+            "name": "src/math/BoundingSphere.js",
+            "modules": {},
+            "classes": {
+                "BoundingSphere": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Euler.js": {
+            "name": "src/math/Euler.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Euler": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Frustum.js": {
+            "name": "src/math/Frustum.js",
+            "modules": {},
+            "classes": {
+                "Frustum": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Math.js": {
+            "name": "src/math/Math.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Math": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Matrix3.js": {
+            "name": "src/math/Matrix3.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Matrix3": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Matrix4.js": {
+            "name": "src/math/Matrix4.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Matrix4": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Quaternion.js": {
+            "name": "src/math/Quaternion.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Quaternion": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Vector2.js": {
+            "name": "src/math/Vector2.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Vector2": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Vector3.js": {
+            "name": "src/math/Vector3.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Vector3": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Vector4.js": {
+            "name": "src/math/Vector4.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Vector4": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/meshes/Mesh.js": {
+            "name": "src/meshes/Mesh.js",
+            "modules": {},
+            "classes": {
+                "Mesh": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/render/GLSLProgram.js": {
+            "name": "src/render/GLSLProgram.js",
+            "modules": {},
+            "classes": {
+                "GLSLProgram": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/render/Renderer.js": {
+            "name": "src/render/Renderer.js",
+            "modules": {},
+            "classes": {
+                "Renderer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/render/RendererCapabilities.js": {
+            "name": "src/render/RendererCapabilities.js",
+            "modules": {},
+            "classes": {
+                "RendererCapabilities": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/render/RendererExtensions.js": {
+            "name": "src/render/RendererExtensions.js",
+            "modules": {},
+            "classes": {
+                "RendererExtensions": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/render/RendererState.js": {
+            "name": "src/render/RendererState.js",
+            "modules": {},
+            "classes": {
+                "RendererState": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/render/ShaderLibrary.js": {
+            "name": "src/render/ShaderLibrary.js",
+            "modules": {},
+            "classes": {
+                "ShaderLibrary": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/screens/Screen.js": {
+            "name": "src/screens/Screen.js",
+            "modules": {},
+            "classes": {
+                "Screen": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/screens/ScreenManager.js": {
+            "name": "src/screens/ScreenManager.js",
+            "modules": {},
+            "classes": {
+                "ScreenManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/system/AnimationFrame.js": {
+            "name": "src/system/AnimationFrame.js",
+            "modules": {},
+            "classes": {
+                "AnimationFrame": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/system/Device.js": {
+            "name": "src/system/Device.js",
+            "modules": {},
+            "classes": {
+                "Device": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/system/Time.js": {
+            "name": "src/system/Time.js",
+            "modules": {},
+            "classes": {
+                "Time": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/textures/Cubemap.js": {
+            "name": "src/textures/Cubemap.js",
+            "modules": {},
+            "classes": {
+                "Cubemap": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/textures/TargetCubemap.js": {
+            "name": "src/textures/TargetCubemap.js",
+            "modules": {},
+            "classes": {
+                "TargetCubemap": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/textures/TargetTexture2D.js": {
+            "name": "src/textures/TargetTexture2D.js",
+            "modules": {},
+            "classes": {
+                "TargetTexture2D": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/textures/Texture.js": {
+            "name": "src/textures/Texture.js",
+            "modules": {},
+            "classes": {
+                "Texture": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/textures/Texture2D.js": {
+            "name": "src/textures/Texture2D.js",
+            "modules": {},
+            "classes": {
+                "Texture2D": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "EZ3.Camera": {
+            "name": "EZ3.Camera",
+            "shortname": "EZ3.Camera",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/cameras/Camera.js",
+            "line": 1,
+            "extends": "EZ3.Entity",
+            "is_constructor": 1
+        },
+        "EZ3.OrthographicCamera": {
+            "name": "EZ3.OrthographicCamera",
+            "shortname": "EZ3.OrthographicCamera",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 1,
+            "extends": "EZ3.Camera",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "left",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "right",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "top",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "bottom",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "near",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "far",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.PerspectiveCamera": {
+            "name": "EZ3.PerspectiveCamera",
+            "shortname": "EZ3.PerspectiveCamera",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/cameras/PerspectiveCamera.js",
+            "line": 1,
+            "extends": "EZ3.Camera",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "fov",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "aspect",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "near",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "far",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.CameraControl": {
+            "name": "EZ3.CameraControl",
+            "shortname": "EZ3.CameraControl",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/controls/CameraControl.js",
+            "line": 1,
+            "extends": "EZ3.Control",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "entity",
+                    "description": "",
+                    "type": "EZ3.Entity"
+                },
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                },
+                {
+                    "name": "up",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Control": {
+            "name": "EZ3.Control",
+            "shortname": "EZ3.Control",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/controls/Control.js",
+            "line": 1,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "entity",
+                    "description": "",
+                    "type": "EZ3.Entity"
+                }
+            ]
+        },
+        "EZ3.FreeControl": {
+            "name": "EZ3.FreeControl",
+            "shortname": "EZ3.FreeControl",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/controls/FreeControl.js",
+            "line": 1,
+            "extends": "EZ3.CameraControl",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "entity",
+                    "description": "",
+                    "type": "EZ3.Entity"
+                },
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                },
+                {
+                    "name": "up",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.TargetControl": {
+            "name": "EZ3.TargetControl",
+            "shortname": "EZ3.TargetControl",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/controls/TargetControl.js",
+            "line": 1,
+            "extends": "EZ3.CameraControl",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "entity",
+                    "description": "",
+                    "type": "EZ3.Entity"
+                },
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                },
+                {
+                    "name": "up",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Engine": {
+            "name": "EZ3.Engine",
+            "shortname": "EZ3.Engine",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/core/Engine.js",
+            "line": 1,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "canvas",
+                    "description": "",
+                    "type": "HTMLElement"
+                },
+                {
+                    "name": "screen",
+                    "description": "",
+                    "type": "EZ3.Screen",
+                    "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Entity": {
+            "name": "EZ3.Entity",
+            "shortname": "EZ3.Entity",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/core/Entity.js",
+            "line": 1,
+            "is_constructor": 1
+        },
+        "Signal": {
+            "name": "Signal",
+            "shortname": "Signal",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/core/Signal.js",
+            "line": 1
+        },
+        "SignalBinding": {
+            "name": "SignalBinding",
+            "shortname": "SignalBinding",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/core/SignalBinding.js",
+            "line": 1
+        },
+        "DepthCubeFramebuffer": {
+            "name": "DepthCubeFramebuffer",
+            "shortname": "DepthCubeFramebuffer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/framebuffers/DepthCubeFramebuffer.js",
+            "line": 1,
+            "extends": "Framebuffer"
+        },
+        "DepthFramebuffer": {
+            "name": "DepthFramebuffer",
+            "shortname": "DepthFramebuffer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/framebuffers/DepthFramebuffer.js",
+            "line": 1,
+            "extends": "Framebuffer"
+        },
+        "Framebuffer": {
+            "name": "Framebuffer",
+            "shortname": "Framebuffer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/framebuffers/Framebuffer.js",
+            "line": 1
+        },
+        "ArrayBuffer": {
+            "name": "ArrayBuffer",
+            "shortname": "ArrayBuffer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/buffers/ArrayBuffer.js",
+            "line": 1
+        },
+        "Buffer": {
+            "name": "Buffer",
+            "shortname": "Buffer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/buffers/Buffer.js",
+            "line": 1
+        },
+        "IndexBuffer": {
+            "name": "IndexBuffer",
+            "shortname": "IndexBuffer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/buffers/IndexBuffer.js",
+            "line": 1,
+            "extends": "Buffer"
+        },
+        "VertexBuffer": {
+            "name": "VertexBuffer",
+            "shortname": "VertexBuffer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/buffers/VertexBuffer.js",
+            "line": 1,
+            "extends": "Buffer"
+        },
+        "VertexBufferAttribute": {
+            "name": "VertexBufferAttribute",
+            "shortname": "VertexBufferAttribute",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/buffers/VertexBufferAttribute.js",
+            "line": 1
+        },
+        "AstroidalEllipsoid": {
+            "name": "AstroidalEllipsoid",
+            "shortname": "AstroidalEllipsoid",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/primitives/AstroidalEllipsoid.js",
+            "line": 1,
+            "extends": "Primitive"
+        },
+        "Box": {
+            "name": "Box",
+            "shortname": "Box",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/primitives/Box.js",
+            "line": 1,
+            "extends": "Primitive"
+        },
+        "Ellipsoid": {
+            "name": "Ellipsoid",
+            "shortname": "Ellipsoid",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/primitives/Ellipsoid.js",
+            "line": 1,
+            "extends": "Primitive"
+        },
+        "Plane": {
+            "name": "Plane",
+            "shortname": "Plane",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/primitives/Plane.js",
+            "line": 1,
+            "extends": "Primitive"
+        },
+        "Primitive": {
+            "name": "Primitive",
+            "shortname": "Primitive",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/primitives/Primitive.js",
+            "line": 1,
+            "extends": "Geometry"
+        },
+        "Sphere": {
+            "name": "Sphere",
+            "shortname": "Sphere",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/primitives/Sphere.js",
+            "line": 1,
+            "extends": "Primitive"
+        },
+        "Torus": {
+            "name": "Torus",
+            "shortname": "Torus",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/primitives/Torus.js",
+            "line": 1,
+            "extends": "Primitive"
+        },
+        "Geometry": {
+            "name": "Geometry",
+            "shortname": "Geometry",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/geometry/Geometry.js",
+            "line": 1
+        },
+        "InputManager": {
+            "name": "InputManager",
+            "shortname": "InputManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/InputManager.js",
+            "line": 1
+        },
+        "Keboard": {
+            "name": "Keboard",
+            "shortname": "Keboard",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/Keyboard.js",
+            "line": 1
+        },
+        "Mouse": {
+            "name": "Mouse",
+            "shortname": "Mouse",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/Mouse.js",
+            "line": 1
+        },
+        "MousePointer": {
+            "name": "MousePointer",
+            "shortname": "MousePointer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/MousePointer.js",
+            "line": 1,
+            "extends": "Pointer"
+        },
+        "Pointer": {
+            "name": "Pointer",
+            "shortname": "Pointer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/Pointer.js",
+            "line": 1
+        },
+        "Switch": {
+            "name": "Switch",
+            "shortname": "Switch",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/Switch.js",
+            "line": 1
+        },
+        "Touch": {
+            "name": "Touch",
+            "shortname": "Touch",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/Touch.js",
+            "line": 1
+        },
+        "TouchPointer": {
+            "name": "TouchPointer",
+            "shortname": "TouchPointer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/input/TouchPointer.js",
+            "line": 1,
+            "extends": "Switch"
+        },
+        "DirectionalLight": {
+            "name": "DirectionalLight",
+            "shortname": "DirectionalLight",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/lights/DirectionalLight.js",
+            "line": 1,
+            "extends": "OrthographicCamera"
+        },
+        "Light": {
+            "name": "Light",
+            "shortname": "Light",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/lights/Light.js",
+            "line": 1
+        },
+        "PointLight": {
+            "name": "PointLight",
+            "shortname": "PointLight",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/lights/PointLight.js",
+            "line": 1,
+            "extends": "PerspectiveCamera"
+        },
+        "SpotLight": {
+            "name": "SpotLight",
+            "shortname": "SpotLight",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/lights/SpotLight.js",
+            "line": 1,
+            "extends": "OrthographicCamera"
+        },
+        "FileRequest": {
+            "name": "FileRequest",
+            "shortname": "FileRequest",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/FileRequest.js",
+            "line": 1,
+            "extends": "Request"
+        },
+        "ImageRequest": {
+            "name": "ImageRequest",
+            "shortname": "ImageRequest",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/ImageRequest.js",
+            "line": 1,
+            "extends": "Request"
+        },
+        "MD2Request": {
+            "name": "MD2Request",
+            "shortname": "MD2Request",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/MD2Request.js",
+            "line": 1,
+            "extends": "Request"
+        },
+        "MDLRequest": {
+            "name": "MDLRequest",
+            "shortname": "MDLRequest",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/MDLRequest.js",
+            "line": 1,
+            "extends": "Request"
+        },
+        "OBJRequest": {
+            "name": "OBJRequest",
+            "shortname": "OBJRequest",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/OBJRequest.js",
+            "line": 1,
+            "extends": "Request"
+        },
+        "OFFRequest": {
+            "name": "OFFRequest",
+            "shortname": "OFFRequest",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/OFFRequest.js",
+            "line": 1,
+            "extends": "Request"
+        },
+        "Request": {
+            "name": "Request",
+            "shortname": "Request",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/Request.js",
+            "line": 1
+        },
+        "RequestManager": {
+            "name": "RequestManager",
+            "shortname": "RequestManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/RequestManager.js",
+            "line": 1
+        },
+        "TGARequest": {
+            "name": "TGARequest",
+            "shortname": "TGARequest",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/requests/TGARequest.js",
+            "line": 1,
+            "extends": "Request"
+        },
+        "AssetsManager": {
+            "name": "AssetsManager",
+            "shortname": "AssetsManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/AssetManager.js",
+            "line": 1
+        },
+        "Cache": {
+            "name": "Cache",
+            "shortname": "Cache",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/Cache.js",
+            "line": 1
+        },
+        "File": {
+            "name": "File",
+            "shortname": "File",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/File.js",
+            "line": 1
+        },
+        "Image": {
+            "name": "Image",
+            "shortname": "Image",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/load/Image.js",
+            "line": 1,
+            "extends": "File"
+        },
+        "Material": {
+            "name": "Material",
+            "shortname": "Material",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/materials/Material.js",
+            "line": 1
+        },
+        "MeshMaterial": {
+            "name": "MeshMaterial",
+            "shortname": "MeshMaterial",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/materials/MeshMaterial.js",
+            "line": 1,
+            "extends": "Material"
+        },
+        "ShaderMaterial": {
+            "name": "ShaderMaterial",
+            "shortname": "ShaderMaterial",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/materials/ShaderMaterial.js",
+            "line": 1,
+            "extends": "Material"
+        },
+        "BoundingBox": {
+            "name": "BoundingBox",
+            "shortname": "BoundingBox",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/BoundingBox.js",
+            "line": 1
+        },
+        "BoundingSphere": {
+            "name": "BoundingSphere",
+            "shortname": "BoundingSphere",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/BoundingSphere.js",
+            "line": 1
+        },
+        "EZ3.Euler": {
+            "name": "EZ3.Euler",
+            "shortname": "EZ3.Euler",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Euler.js",
+            "line": 1,
+            "description": "Representation of a Euler angles.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "order",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "Frustum": {
+            "name": "Frustum",
+            "shortname": "Frustum",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Frustum.js",
+            "line": 1
+        },
+        "EZ3.Math": {
+            "name": "EZ3.Math",
+            "shortname": "EZ3.Math",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Math.js",
+            "line": 1,
+            "description": "Math constants and functions.",
+            "static": 1
+        },
+        "EZ3.Matrix3": {
+            "name": "EZ3.Matrix3",
+            "shortname": "EZ3.Matrix3",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Matrix3.js",
+            "line": 1,
+            "description": "Representation of a 3x3 matrix.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Number|Number[]",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Matrix4": {
+            "name": "EZ3.Matrix4",
+            "shortname": "EZ3.Matrix4",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Matrix4.js",
+            "line": 1,
+            "description": "Representation of a 4x4 matrix.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Number|Number[]",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Quaternion": {
+            "name": "EZ3.Quaternion",
+            "shortname": "EZ3.Quaternion",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Quaternion.js",
+            "line": 1,
+            "description": "Representation of a quaternion.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "w",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Vector2": {
+            "name": "EZ3.Vector2",
+            "shortname": "EZ3.Vector2",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Vector2.js",
+            "line": 1,
+            "description": "Representation of a 2D vector.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Vector3": {
+            "name": "EZ3.Vector3",
+            "shortname": "EZ3.Vector3",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Vector3.js",
+            "line": 1,
+            "description": "Representation of a 3D vector.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Vector4": {
+            "name": "EZ3.Vector4",
+            "shortname": "EZ3.Vector4",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Vector4.js",
+            "line": 1,
+            "description": "Representation of a 4D vector.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "w",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "Mesh": {
+            "name": "Mesh",
+            "shortname": "Mesh",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/meshes/Mesh.js",
+            "line": 1,
+            "extends": "Entity"
+        },
+        "GLSLProgram": {
+            "name": "GLSLProgram",
+            "shortname": "GLSLProgram",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/render/GLSLProgram.js",
+            "line": 1
+        },
+        "Renderer": {
+            "name": "Renderer",
+            "shortname": "Renderer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/render/Renderer.js",
+            "line": 1
+        },
+        "RendererCapabilities": {
+            "name": "RendererCapabilities",
+            "shortname": "RendererCapabilities",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/render/RendererCapabilities.js",
+            "line": 1
+        },
+        "RendererExtensions": {
+            "name": "RendererExtensions",
+            "shortname": "RendererExtensions",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/render/RendererExtensions.js",
+            "line": 1
+        },
+        "RendererState": {
+            "name": "RendererState",
+            "shortname": "RendererState",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/render/RendererState.js",
+            "line": 1
+        },
+        "ShaderLibrary": {
+            "name": "ShaderLibrary",
+            "shortname": "ShaderLibrary",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/render/ShaderLibrary.js",
+            "line": 1
+        },
+        "Screen": {
+            "name": "Screen",
+            "shortname": "Screen",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/screens/Screen.js",
+            "line": 1
+        },
+        "ScreenManager": {
+            "name": "ScreenManager",
+            "shortname": "ScreenManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/screens/ScreenManager.js",
+            "line": 1
+        },
+        "AnimationFrame": {
+            "name": "AnimationFrame",
+            "shortname": "AnimationFrame",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/system/AnimationFrame.js",
+            "line": 1
+        },
+        "Device": {
+            "name": "Device",
+            "shortname": "Device",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/system/Device.js",
+            "line": 1
+        },
+        "Time": {
+            "name": "Time",
+            "shortname": "Time",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/system/Time.js",
+            "line": 1
+        },
+        "Cubemap": {
+            "name": "Cubemap",
+            "shortname": "Cubemap",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/textures/Cubemap.js",
+            "line": 1,
+            "extends": "Texture"
+        },
+        "TargetCubemap": {
+            "name": "TargetCubemap",
+            "shortname": "TargetCubemap",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/textures/TargetCubemap.js",
+            "line": 1,
+            "extends": "Cubemap"
+        },
+        "TargetTexture2D": {
+            "name": "TargetTexture2D",
+            "shortname": "TargetTexture2D",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/textures/TargetTexture2D.js",
+            "line": 1,
+            "extends": "Texture2D"
+        },
+        "Texture": {
+            "name": "Texture",
+            "shortname": "Texture",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/textures/Texture.js",
+            "line": 1
+        },
+        "Texture2D": {
+            "name": "Texture2D",
+            "shortname": "Texture2D",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/textures/Texture2D.js",
+            "line": 1,
+            "extends": "Texture"
+        }
+    },
+    "elements": {},
+    "classitems": [
+        {
+            "file": "src/cameras/Camera.js",
+            "line": 9,
+            "itemtype": "property",
+            "name": "view",
+            "type": "EZ3.Matrix4",
+            "class": "EZ3.Camera"
+        },
+        {
+            "file": "src/cameras/Camera.js",
+            "line": 14,
+            "itemtype": "property",
+            "name": "projection",
+            "type": "EZ3.Matrix4",
+            "class": "EZ3.Camera"
+        },
+        {
+            "file": "src/cameras/Camera.js",
+            "line": 23,
+            "itemtype": "method",
+            "name": "EZ3.Camera#updateView",
+            "class": "EZ3.Camera"
+        },
+        {
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 16,
+            "itemtype": "property",
+            "name": "left",
+            "type": "Number",
+            "default": "-25",
+            "class": "EZ3.OrthographicCamera"
+        },
+        {
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 22,
+            "itemtype": "property",
+            "name": "right",
+            "type": "Number",
+            "default": "25",
+            "class": "EZ3.OrthographicCamera"
+        },
+        {
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 28,
+            "itemtype": "property",
+            "name": "top",
+            "type": "Number",
+            "default": "25",
+            "class": "EZ3.OrthographicCamera"
+        },
+        {
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 34,
+            "itemtype": "property",
+            "name": "bottom",
+            "type": "Number",
+            "default": "-25",
+            "class": "EZ3.OrthographicCamera"
+        },
+        {
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 40,
+            "itemtype": "property",
+            "name": "near",
+            "type": "Number",
+            "default": "0.1",
+            "class": "EZ3.OrthographicCamera"
+        },
+        {
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 46,
+            "itemtype": "property",
+            "name": "far",
+            "type": "Number",
+            "default": "2000",
+            "class": "EZ3.OrthographicCamera"
+        },
+        {
+            "file": "src/cameras/OrthographicCamera.js",
+            "line": 56,
+            "itemtype": "method",
+            "name": "EZ3.OrthographicCamera#updateProjection",
+            "class": "EZ3.OrthographicCamera"
+        },
+        {
+            "file": "src/cameras/PerspectiveCamera.js",
+            "line": 13,
+            "itemtype": "property",
+            "name": "fov",
+            "type": "Number",
+            "default": "70",
+            "class": "EZ3.PerspectiveCamera"
+        },
+        {
+            "file": "src/cameras/PerspectiveCamera.js",
+            "line": 19,
+            "itemtype": "property",
+            "name": "aspect",
+            "type": "Number",
+            "default": "1",
+            "class": "EZ3.PerspectiveCamera"
+        },
+        {
+            "file": "src/cameras/PerspectiveCamera.js",
+            "line": 25,
+            "itemtype": "property",
+            "name": "near",
+            "type": "Number",
+            "default": "0.1",
+            "class": "EZ3.PerspectiveCamera"
+        },
+        {
+            "file": "src/cameras/PerspectiveCamera.js",
+            "line": 31,
+            "itemtype": "property",
+            "name": "far",
+            "type": "Number",
+            "default": "2000",
+            "class": "EZ3.PerspectiveCamera"
+        },
+        {
+            "file": "src/cameras/PerspectiveCamera.js",
+            "line": 41,
+            "itemtype": "method",
+            "name": "EZ3.PerspectiveCamera#updateProjection",
+            "class": "EZ3.PerspectiveCamera"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 12,
+            "itemtype": "property",
+            "name": "target",
+            "type": "EZ3.Vector3",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 16,
+            "itemtype": "property",
+            "name": "up",
+            "type": "EZ3.Vector3",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 20,
+            "itemtype": "property",
+            "name": "look",
+            "type": "EZ3.Vector3",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 24,
+            "itemtype": "property",
+            "name": "rigth",
+            "type": "EZ3.Vector3",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 29,
+            "itemtype": "property",
+            "name": "roll",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 35,
+            "itemtype": "property",
+            "name": "minPitch",
+            "type": "Number",
+            "default": "-EZ3.Math.HALF_PI",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 41,
+            "itemtype": "property",
+            "name": "maxPitch",
+            "type": "Number",
+            "default": "EZ3.Math.HALF_PI",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 47,
+            "itemtype": "property",
+            "name": "minYaw",
+            "type": "Number",
+            "default": "-Infinity",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 53,
+            "itemtype": "property",
+            "name": "maxYaw",
+            "type": "Number",
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 64,
+            "itemtype": "method",
+            "name": "EZ3.CameraControl#lookAt",
+            "params": [
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                },
+                {
+                    "name": "up",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/CameraControl.js",
+            "line": 85,
+            "itemtype": "method",
+            "name": "EZ3.CameraControl#rotate",
+            "params": [
+                {
+                    "name": "dx",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "dy",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "EZ3.CameraControl"
+        },
+        {
+            "file": "src/controls/Control.js",
+            "line": 7,
+            "itemtype": "property",
+            "name": "entity",
+            "type": "EZ3.Entity",
+            "class": "EZ3.Control"
+        },
+        {
+            "file": "src/controls/FreeControl.js",
+            "line": 16,
+            "itemtype": "method",
+            "name": "EZ3.FreeControl#rotate",
+            "params": [
+                {
+                    "name": "dx",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "dy",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "EZ3.FreeControl"
+        },
+        {
+            "file": "src/controls/FreeControl.js",
+            "line": 38,
+            "itemtype": "method",
+            "name": "EZ3.FreeControl#lift",
+            "params": [
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "EZ3.FreeControl"
+        },
+        {
+            "file": "src/controls/FreeControl.js",
+            "line": 47,
+            "itemtype": "method",
+            "name": "EZ3.FreeControl#walk",
+            "params": [
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "EZ3.FreeControl"
+        },
+        {
+            "file": "src/controls/FreeControl.js",
+            "line": 56,
+            "itemtype": "method",
+            "name": "EZ3.FreeControl#strafe",
+            "params": [
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "EZ3.FreeControl"
+        },
+        {
+            "file": "src/controls/TargetControl.js",
+            "line": 16,
+            "itemtype": "method",
+            "name": "EZ3.TargetControl#rotate",
+            "params": [
+                {
+                    "name": "dx",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "dy",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "EZ3.TargetControl"
+        },
+        {
+            "file": "src/controls/TargetControl.js",
+            "line": 44,
+            "itemtype": "method",
+            "name": "EZ3.TargetControl#pan",
+            "params": [
+                {
+                    "name": "dx",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "dy",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "EZ3.TargetControl"
+        },
+        {
+            "file": "src/controls/TargetControl.js",
+            "line": 70,
+            "itemtype": "method",
+            "name": "EZ3.TargetControl#zoom",
+            "params": [
+                {
+                    "name": "speed",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "EZ3.TargetControl"
+        },
+        {
+            "file": "src/core/Engine.js",
+            "line": 11,
+            "itemtype": "property",
+            "name": "_animationFrame",
+            "type": "EZ3.AnimationFrame",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.Engine"
+        },
+        {
+            "file": "src/core/Engine.js",
+            "line": 17,
+            "itemtype": "property",
+            "name": "_renderer",
+            "type": "EZ3.Renderer",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.Engine"
+        },
+        {
+            "file": "src/core/Engine.js",
+            "line": 23,
+            "itemtype": "property",
+            "name": "time",
+            "type": "EZ3.Time",
+            "class": "EZ3.Engine"
+        },
+        {
+            "file": "src/core/Engine.js",
+            "line": 28,
+            "itemtype": "property",
+            "name": "input",
+            "type": "EZ3.Input",
+            "class": "EZ3.Engine"
+        },
+        {
+            "file": "src/core/Engine.js",
+            "line": 33,
+            "itemtype": "property",
+            "name": "screens",
+            "type": "EZ3.ScreenManager",
+            "class": "EZ3.Engine"
+        },
+        {
+            "file": "src/core/Engine.js",
+            "line": 45,
+            "itemtype": "method",
+            "name": "EZ3.Engine#_init",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "canvas",
+                    "description": "",
+                    "type": "HTMLElement"
+                },
+                {
+                    "name": "screen",
+                    "description": "",
+                    "type": "EZ3.Screen",
+                    "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "EZ3.Engine"
+        },
+        {
+            "file": "src/core/Engine.js",
+            "line": 67,
+            "itemtype": "method",
+            "name": "EZ3.Engine#_update",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.Engine"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 8,
+            "itemtype": "property",
+            "name": "_cache",
+            "type": "Object",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 14,
+            "itemtype": "property",
+            "name": "parent",
+            "type": "EZ3.Entity",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 19,
+            "itemtype": "property",
+            "name": "children",
+            "type": "EZ3.Entity[]",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 24,
+            "itemtype": "property",
+            "name": "model",
+            "type": "EZ3.Matrix4",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 29,
+            "itemtype": "property",
+            "name": "wolrd",
+            "type": "EZ3.Matrix4",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 34,
+            "itemtype": "property",
+            "name": "scale",
+            "type": "EZ3.Vector3",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 39,
+            "itemtype": "property",
+            "name": "rotation",
+            "type": "EZ3.Euler",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 44,
+            "itemtype": "property",
+            "name": "position",
+            "type": "EZ3.Vector3",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 49,
+            "itemtype": "property",
+            "name": "quaternion",
+            "type": "EZ3.Quaternion",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 63,
+            "itemtype": "method",
+            "name": "EZ3.Entity#add",
+            "params": [
+                {
+                    "name": "child",
+                    "description": "",
+                    "type": "EZ3.Entity"
+                }
+            ],
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 75,
+            "itemtype": "method",
+            "name": "EZ3.Entity#remove",
+            "params": [
+                {
+                    "name": "child",
+                    "description": "",
+                    "type": "EZ3.Entity"
+                }
+            ],
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 86,
+            "itemtype": "method",
+            "name": "EZ3.Entity#lookAt",
+            "params": [
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                },
+                {
+                    "name": "up",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 114,
+            "itemtype": "method",
+            "name": "EZ3.Entity#updateWorld",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 166,
+            "itemtype": "method",
+            "name": "EZ3.Entity#traverse",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 187,
+            "itemtype": "method",
+            "name": "EZ3.Entity#updateWorldTraverse",
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 196,
+            "itemtype": "method",
+            "name": "EZ3.Entity#getWorldPosition",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 204,
+            "itemtype": "method",
+            "name": "EZ3.Entity#getWorldRotation",
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 212,
+            "itemtype": "method",
+            "name": "EZ3.Entity#getWorldScale",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 220,
+            "itemtype": "method",
+            "name": "EZ3.Entity#getWorldDirection",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 11,
+            "itemtype": "property",
+            "name": "x",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 17,
+            "itemtype": "property",
+            "name": "y",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 23,
+            "itemtype": "property",
+            "name": "z",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 29,
+            "itemtype": "property",
+            "name": "order",
+            "type": "Number",
+            "default": "EZ3.Euler.XYZ",
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 35,
+            "itemtype": "property",
+            "name": "onChange",
+            "type": "EZ3.Signal",
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 43,
+            "itemtype": "method",
+            "name": "EZ3.Euler#set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "order",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Euler"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 62,
+            "itemtype": "method",
+            "name": "EZ3.Euler#clone",
+            "return": {
+                "description": "",
+                "type": "EZ3.Euler"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 70,
+            "itemtype": "method",
+            "name": "EZ3.Euler#set",
+            "params": [
+                {
+                    "name": "euler",
+                    "description": "",
+                    "type": "EZ3.Euler"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Euler"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 86,
+            "itemtype": "method",
+            "name": "EZ3.Euler#setFromRotationMatrix",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                },
+                {
+                    "name": "order",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "update",
+                    "description": "",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Euler"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 178,
+            "itemtype": "method",
+            "name": "EZ3.Euler#setFromQuaternion",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                },
+                {
+                    "name": "order",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "update",
+                    "description": "",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Euler"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 189,
+            "itemtype": "method",
+            "name": "EZ3.Euler#setFromVector3",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "order",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Euler"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 199,
+            "itemtype": "method",
+            "name": "EZ3.Euler#isEqual",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "",
+                    "type": "EZ3.Euler"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 211,
+            "itemtype": "method",
+            "name": "EZ3.Euler#isDiff",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "",
+                    "type": "EZ3.Euler"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 220,
+            "itemtype": "method",
+            "name": "EZ3.Euler#toVector3",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 228,
+            "itemtype": "method",
+            "name": "EZ3.Euler#toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 280,
+            "itemtype": "property",
+            "name": "XYZ",
+            "type": "Number",
+            "memberof": "EZ3.Euler",
+            "static": 1,
+            "final": 1,
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 288,
+            "itemtype": "property",
+            "name": "YZX",
+            "type": "Number",
+            "memberof": "EZ3.Euler",
+            "static": 1,
+            "final": 1,
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 296,
+            "itemtype": "property",
+            "name": "ZXY",
+            "type": "Number",
+            "memberof": "EZ3.Euler",
+            "static": 1,
+            "final": 1,
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 304,
+            "itemtype": "property",
+            "name": "XZY",
+            "type": "Number",
+            "memberof": "EZ3.Euler",
+            "static": 1,
+            "final": 1,
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 312,
+            "itemtype": "property",
+            "name": "YXZ",
+            "type": "Number",
+            "memberof": "EZ3.Euler",
+            "static": 1,
+            "final": 1,
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Euler.js",
+            "line": 320,
+            "itemtype": "property",
+            "name": "ZYX",
+            "type": "Number",
+            "memberof": "EZ3.Euler",
+            "static": 1,
+            "final": 1,
+            "class": "EZ3.Euler"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 8,
+            "itemtype": "property",
+            "name": "PI",
+            "type": "Number",
+            "final": 1,
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 14,
+            "itemtype": "property",
+            "name": "HALF_PI",
+            "type": "Number",
+            "final": 1,
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 20,
+            "itemtype": "property",
+            "name": "DOUBLE_PI",
+            "type": "Number",
+            "final": 1,
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 26,
+            "itemtype": "property",
+            "name": "MAX_UINT",
+            "type": "Number",
+            "final": 1,
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 32,
+            "itemtype": "property",
+            "name": "MAX_USHORT",
+            "type": "Number",
+            "final": 1,
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 41,
+            "itemtype": "method",
+            "name": "EZ3.Math#isPowerOfTwo",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 50,
+            "itemtype": "method",
+            "name": "EZ3.Math#toRadians",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 59,
+            "itemtype": "method",
+            "name": "EZ3.Math#toDegrees",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 68,
+            "itemtype": "method",
+            "name": "EZ3.Math#nextHighestPowerOfTwo",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Math.js",
+            "line": 81,
+            "itemtype": "method",
+            "name": "EZ3.Math#clamp",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "min",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "max",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Math"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 8,
+            "itemtype": "property",
+            "name": "elements",
+            "type": "Number[]",
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 31,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#add",
+            "params": [
+                {
+                    "name": "m1",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                },
+                {
+                    "name": "m2",
+                    "description": "",
+                    "type": "EZ3.Matrix3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 62,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#sub",
+            "params": [
+                {
+                    "name": "m1",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                },
+                {
+                    "name": "m2",
+                    "description": "",
+                    "type": "EZ3.Matrix3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 93,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#scale",
+            "params": [
+                {
+                    "name": "s",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 120,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#mul",
+            "params": [
+                {
+                    "name": "m1",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                },
+                {
+                    "name": "m2",
+                    "description": "",
+                    "type": "EZ3.Matrix3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 206,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#transpose",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 238,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#setFromQuaternion",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 270,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#inverse",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 299,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#normalFromMat4",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 310,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#identity",
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 324,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#clone",
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 332,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#copy",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 342,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#toArray",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 350,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 367,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#isEqual",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix3.js",
+            "line": 387,
+            "itemtype": "method",
+            "name": "EZ3.Matrix3#isDiff",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Matrix3"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 30,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#transpose",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 94,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#inverse",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 150,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#multiplyScalar",
+            "params": [
+                {
+                    "name": "s",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 181,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#mul",
+            "params": [
+                {
+                    "name": "m1",
+                    "description": "",
+                    "type": "EZ3.Matrix4"
+                },
+                {
+                    "name": "m2",
+                    "description": "",
+                    "type": "EZ3.Matrix4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 288,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#setPosition",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 307,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#translate",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 355,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#scale",
+            "params": [
+                {
+                    "name": "s",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 390,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#setFromQuaternion",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 432,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#frustum",
+            "params": [
+                {
+                    "name": "left",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "right",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "bottom",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "top",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "near",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "far",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 475,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#perspective",
+            "params": [
+                {
+                    "name": "fovy",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "aspect",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "near",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "far",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 492,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#orthographic",
+            "params": [
+                {
+                    "name": "left",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "right",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "bottom",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "top",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "near",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "far",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 534,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#lookAt",
+            "params": [
+                {
+                    "name": "eye",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "center",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "up",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 584,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#identity",
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 598,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#yawPitchRoll",
+            "params": [
+                {
+                    "name": "yaw",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "pitch",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "roll",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 636,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#determinant",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 667,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#compose",
+            "params": [
+                {
+                    "name": "position",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "rotation",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "scale",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 682,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#getPosition",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 693,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#getRotation",
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 726,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#getScale",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 742,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#clone",
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 750,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#copy",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 779,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#toArray",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 787,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 811,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#toMatrix3",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 829,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#isEqual",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Boolean"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 856,
+            "itemtype": "method",
+            "name": "EZ3.Matrix4#isDiff",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Boolean"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 12,
+            "itemtype": "property",
+            "name": "x",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 18,
+            "itemtype": "property",
+            "name": "y",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 24,
+            "itemtype": "property",
+            "name": "z",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 30,
+            "itemtype": "property",
+            "name": "w",
+            "type": "Number",
+            "default": "1",
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 36,
+            "itemtype": "property",
+            "name": "onChange",
+            "type": "EZ3.Signal",
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 44,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#add",
+            "params": [
+                {
+                    "name": "q1",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                },
+                {
+                    "name": "q2",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 68,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#sub",
+            "params": [
+                {
+                    "name": "q1",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                },
+                {
+                    "name": "q2",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 92,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#scale",
+            "params": [
+                {
+                    "name": "s",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 116,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#mul",
+            "params": [
+                {
+                    "name": "q1",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                },
+                {
+                    "name": "q2",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 159,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#normalize",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 212,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#inverse",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 235,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#length",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 248,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#copy",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 264,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#clone",
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 272,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#isEqual",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 284,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#isDiff",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 293,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#setFromAxisAngle",
+            "params": [
+                {
+                    "name": "axis",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "angle",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 312,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#setFromRotationMatrix",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 366,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#setFromEuler",
+            "params": [
+                {
+                    "name": "euler",
+                    "description": "",
+                    "type": "EZ3.Euler"
+                },
+                {
+                    "name": "update",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 420,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#toMatrix3",
+            "params": [
+                {
+                    "name": "mode",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Quaternion",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix3"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 475,
+            "itemtype": "method",
+            "name": "EZ3.Quaternion#toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 9,
+            "itemtype": "property",
+            "name": "x",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 14,
+            "itemtype": "property",
+            "name": "y",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 30,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#add",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 48,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#sub",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 65,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 78,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#scale",
+            "params": [
+                {
+                    "name": "s",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 96,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#dot",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 108,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#max",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 128,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#min",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 148,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#length",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 156,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#normalize",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 191,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#negate",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 208,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#copy",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 220,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#clone",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 228,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#isEqual",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 240,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#isDiff",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 249,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#isZeroVector",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector2"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 261,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#toArray",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector2.js",
+            "line": 269,
+            "itemtype": "method",
+            "name": "EZ3.Vector2#toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "EZ3.Vector2"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 10,
+            "itemtype": "property",
+            "name": "x",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 15,
+            "itemtype": "property",
+            "name": "y",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 20,
+            "itemtype": "property",
+            "name": "z",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 38,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#add",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 57,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#sub",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 77,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 92,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#scale",
+            "params": [
+                {
+                    "name": "s",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 112,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#dot",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 124,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#max",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 148,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#min",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 172,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#cross",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 200,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#mulMatrix3",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                },
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 237,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#mulQuaternion",
+            "params": [
+                {
+                    "name": "q",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 264,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#length",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 272,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#normalize",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 307,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#negate",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 326,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#clone",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 334,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#copy",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 347,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#setPositionFromWorldMatrix",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 362,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#setFromViewProjectionMatrix",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 381,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#isEqual",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 393,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#isZeroVector",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 405,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#isDiff",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 414,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#toArray",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 422,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 434,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#toVector2",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 12,
+            "itemtype": "property",
+            "name": "x",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 17,
+            "itemtype": "property",
+            "name": "y",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 22,
+            "itemtype": "property",
+            "name": "z",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 27,
+            "itemtype": "property",
+            "name": "z",
+            "type": "Number",
+            "default": "0",
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 48,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#add",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector4"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 70,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#sub",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector4"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 92,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "w",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 107,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#scale",
+            "params": [
+                {
+                    "name": "s",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 129,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#dot",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 141,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#max",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector4"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 170,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#min",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector4"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 198,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#mulMatrix4",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix4"
+                },
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 240,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#length",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 248,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#normalize",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 290,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#negate",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 311,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#copy",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 325,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#clone",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector4"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 333,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#isEqual",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 345,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#isZeroVector",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 371,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#isDiff",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector4"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 380,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#toArray",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 388,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#toString",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 401,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#toVector2",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector2"
+            },
+            "class": "EZ3.Vector4"
+        },
+        {
+            "file": "src/math/Vector4.js",
+            "line": 409,
+            "itemtype": "method",
+            "name": "EZ3.Vector4#toVector3",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector4"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/math/Euler.js:280"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/math/Euler.js:288"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/math/Euler.js:296"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/math/Euler.js:304"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/math/Euler.js:312"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/math/Euler.js:320"
+        }
+    ]
+}

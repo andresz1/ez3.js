@@ -17,6 +17,14 @@ module.exports = function(grunt) {
           'src/render/shaders/*.vert',
           'src/render/shaders/*.frag'
         ]
+      },
+      docs: {
+        dest: 'docs/',
+        src: 'src/',
+        theme: 'node_modules/yuidoc-lucid-theme',
+        helpers: [
+          'node_modules/yuidoc-lucid-theme/helpers/helpers.js'
+        ]
       }
     }
   });

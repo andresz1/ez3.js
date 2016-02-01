@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>EZ3.Matrix4 - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>EZ3.Matrix4</h1>
+</div>
+
+
+
+
+
+
+<div class="yuidoc-class-description">
+<p>Representation of a 4x4 matrix.</p>
+
+</div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-EZ3.Matrix4#clone"><span class="im">EZ3.Matrix4#clone</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#compose"><span class="im">EZ3.Matrix4#compose</span>(<span class="ia">position</span><span class="ia">rotation</span><span class="ia">scale</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#copy"><span class="im">EZ3.Matrix4#copy</span>(<span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#determinant"><span class="im">EZ3.Matrix4#determinant</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#frustum"><span class="im">EZ3.Matrix4#frustum</span>(<span class="ia">left</span><span class="ia">right</span><span class="ia">bottom</span><span class="ia">top</span><span class="ia">near</span><span class="ia">far</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#getPosition"><span class="im">EZ3.Matrix4#getPosition</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#getRotation"><span class="im">EZ3.Matrix4#getRotation</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#getScale"><span class="im">EZ3.Matrix4#getScale</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#identity"><span class="im">EZ3.Matrix4#identity</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#inverse"><span class="im">EZ3.Matrix4#inverse</span>(<span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#isDiff"><span class="im">EZ3.Matrix4#isDiff</span>(<span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#isEqual"><span class="im">EZ3.Matrix4#isEqual</span>(<span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#lookAt"><span class="im">EZ3.Matrix4#lookAt</span>(<span class="ia">eye</span><span class="ia">center</span><span class="ia">up</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#mul"><span class="im">EZ3.Matrix4#mul</span>(<span class="ia">m1</span><span class="ia">m2</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#multiplyScalar"><span class="im">EZ3.Matrix4#multiplyScalar</span>(<span class="ia">s</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#orthographic"><span class="im">EZ3.Matrix4#orthographic</span>(<span class="ia">left</span><span class="ia">right</span><span class="ia">bottom</span><span class="ia">top</span><span class="ia">near</span><span class="ia">far</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#perspective"><span class="im">EZ3.Matrix4#perspective</span>(<span class="ia">fovy</span><span class="ia">aspect</span><span class="ia">near</span><span class="ia">far</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#scale"><span class="im">EZ3.Matrix4#scale</span>(<span class="ia">s</span><span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#setFromQuaternion"><span class="im">EZ3.Matrix4#setFromQuaternion</span>(<span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#setPosition"><span class="im">EZ3.Matrix4#setPosition</span>(<span class="ia">v</span><span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#toArray"><span class="im">EZ3.Matrix4#toArray</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#toMatrix3"><span class="im">EZ3.Matrix4#toMatrix3</span>(<span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#toString"><span class="im">EZ3.Matrix4#toString</span>()</a></li>
+				<li><a href="#method-EZ3.Matrix4#translate"><span class="im">EZ3.Matrix4#translate</span>(<span class="ia">v</span><span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#transpose"><span class="im">EZ3.Matrix4#transpose</span>(<span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Matrix4#yawPitchRoll"><span class="im">EZ3.Matrix4#yawPitchRoll</span>(<span class="ia">yaw</span><span class="ia">pitch</span><span class="ia">roll</span>)</a></li>
+			</ul>
+		</li>
+
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+    <div class="constructor yuidoc-class-constructor page-section">
+        <h2>Constructor</h2>
+        <div class="item-list">
+<div id="method-EZ3.Matrix4" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">value</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l1"><code>src&#x2F;math&#x2F;Matrix4.js:1</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[value]</code>
+						<span class="type">Number  | Number[]</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+        </div>
+    </div>
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-EZ3.Matrix4#clone" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#clone</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l742"><code>src&#x2F;math&#x2F;Matrix4.js:742</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#compose" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#compose</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>position</code>
+				</li>
+				<li class="arg">
+						<code>rotation</code>
+				</li>
+				<li class="arg">
+						<code>scale</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l667"><code>src&#x2F;math&#x2F;Matrix4.js:667</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">position</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">rotation</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">scale</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#copy" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#copy</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l750"><code>src&#x2F;math&#x2F;Matrix4.js:750</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">m</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#determinant" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#determinant</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Number</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l636"><code>src&#x2F;math&#x2F;Matrix4.js:636</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Number</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#frustum" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#frustum</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>left</code>
+				</li>
+				<li class="arg">
+						<code>right</code>
+				</li>
+				<li class="arg">
+						<code>bottom</code>
+				</li>
+				<li class="arg">
+						<code>top</code>
+				</li>
+				<li class="arg">
+						<code>near</code>
+				</li>
+				<li class="arg">
+						<code>far</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l432"><code>src&#x2F;math&#x2F;Matrix4.js:432</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">left</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">right</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">bottom</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">top</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">near</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">far</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#getPosition" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#getPosition</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l682"><code>src&#x2F;math&#x2F;Matrix4.js:682</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#getRotation" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#getRotation</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l693"><code>src&#x2F;math&#x2F;Matrix4.js:693</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#getScale" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#getScale</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l726"><code>src&#x2F;math&#x2F;Matrix4.js:726</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#identity" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#identity</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l584"><code>src&#x2F;math&#x2F;Matrix4.js:584</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#inverse" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#inverse</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l94"><code>src&#x2F;math&#x2F;Matrix4.js:94</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[m]</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#isDiff" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#isDiff</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">EZ3.Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l856"><code>src&#x2F;math&#x2F;Matrix4.js:856</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">m</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">EZ3.Boolean</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#isEqual" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#isEqual</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">EZ3.Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l829"><code>src&#x2F;math&#x2F;Matrix4.js:829</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">m</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">EZ3.Boolean</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#lookAt" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#lookAt</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>eye</code>
+				</li>
+				<li class="arg">
+						<code>center</code>
+				</li>
+				<li class="arg">
+						<code>up</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l534"><code>src&#x2F;math&#x2F;Matrix4.js:534</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">eye</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">center</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">up</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#mul" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#mul</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>m1</code>
+				</li>
+				<li class="arg">
+						<code class="optional">m2</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l181"><code>src&#x2F;math&#x2F;Matrix4.js:181</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">m1</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[m2]</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#multiplyScalar" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#multiplyScalar</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>s</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l150"><code>src&#x2F;math&#x2F;Matrix4.js:150</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">s</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#orthographic" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#orthographic</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>left</code>
+				</li>
+				<li class="arg">
+						<code>right</code>
+				</li>
+				<li class="arg">
+						<code>bottom</code>
+				</li>
+				<li class="arg">
+						<code>top</code>
+				</li>
+				<li class="arg">
+						<code>near</code>
+				</li>
+				<li class="arg">
+						<code>far</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l492"><code>src&#x2F;math&#x2F;Matrix4.js:492</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">left</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">right</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">bottom</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">top</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">near</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">far</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#perspective" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#perspective</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>fovy</code>
+				</li>
+				<li class="arg">
+						<code>aspect</code>
+				</li>
+				<li class="arg">
+						<code>near</code>
+				</li>
+				<li class="arg">
+						<code>far</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l475"><code>src&#x2F;math&#x2F;Matrix4.js:475</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">fovy</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">aspect</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">near</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">far</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#scale" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#scale</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>s</code>
+				</li>
+				<li class="arg">
+						<code class="optional">m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l355"><code>src&#x2F;math&#x2F;Matrix4.js:355</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">s</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[m]</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#setFromQuaternion" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#setFromQuaternion</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l390"><code>src&#x2F;math&#x2F;Matrix4.js:390</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">q</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#setPosition" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#setPosition</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>v</code>
+				</li>
+				<li class="arg">
+						<code class="optional">m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l288"><code>src&#x2F;math&#x2F;Matrix4.js:288</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">v</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[m]</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#toArray" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#toArray</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Number[]</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l779"><code>src&#x2F;math&#x2F;Matrix4.js:779</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Number[]</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#toMatrix3" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#toMatrix3</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix3.html" class="crosslink">EZ3.Matrix3</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l811"><code>src&#x2F;math&#x2F;Matrix4.js:811</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[m]</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix3.html" class="crosslink">EZ3.Matrix3</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#toString" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#toString</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">String</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l787"><code>src&#x2F;math&#x2F;Matrix4.js:787</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">String</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#translate" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#translate</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>v</code>
+				</li>
+				<li class="arg">
+						<code class="optional">m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l307"><code>src&#x2F;math&#x2F;Matrix4.js:307</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">v</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[m]</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#transpose" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#transpose</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l30"><code>src&#x2F;math&#x2F;Matrix4.js:30</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[m]</code>
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Matrix4#yawPitchRoll" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Matrix4#yawPitchRoll</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>yaw</code>
+				</li>
+				<li class="arg">
+						<code>pitch</code>
+				</li>
+				<li class="arg">
+						<code>roll</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Matrix4.js.html#l598"><code>src&#x2F;math&#x2F;Matrix4.js:598</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">yaw</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">pitch</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">roll</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix4.html" class="crosslink">EZ3.Matrix4</a></span>
+			</div>
+		</div>
+
+</div>
+        </div>
+    </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

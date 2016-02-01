@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/math/Euler.js - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/math/Euler.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+ * Representation of a Euler angles.
+ * @class EZ3.Euler
+ * @constructor
+ * @param {Number} [x]
+ * @param {Number} [y]
+ * @param {Number} [z]
+ * @param {Number} [order]
+ */
+EZ3.Euler = function(x, y, z, order) {
+  /**
+   * @property {Number} x
+   * @default 0
+   */
+  this._x = (x !== undefined) ? x : 0;
+
+  /**
+   * @property {Number} y
+   * @default 0
+   */
+  this._y = (y !== undefined) ? y : 0;
+
+  /**
+   * @property {Number} z
+   * @default 0
+   */
+  this._z = (z !== undefined) ? z : 0;
+
+  /**
+   * @property {Number} order
+   * @default EZ3.Euler.XYZ
+   */
+  this._order = (order !== undefined) ? order : EZ3.Euler.XYZ;
+
+  /**
+   * @property {EZ3.Signal} onChange
+   */
+  this.onChange = new EZ3.Signal();
+};
+
+EZ3.Euler.prototype.constructor = EZ3.Euler;
+
+/**
+ * @method EZ3.Euler#set
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @param {Number} [order]
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.set = function(x, y, z, order) {
+  this._x = x;
+  this._y = y;
+  this._z = z;
+  this._order = order || this._order;
+
+  this.onChange.dispatch();
+
+  return this;
+};
+
+/**
+ * @method EZ3.Euler#clone
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.clone = function() {
+  return new this.constructor(this._x, this._y, this._z, this._order);
+};
+
+/**
+ * @method EZ3.Euler#set
+ * @param {EZ3.Euler} euler
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.copy = function(e) {
+  this._x = e.x;
+  this._y = e.y;
+  this._z = e.z;
+  this._order = e.order;
+
+  this.onChange.dispatch();
+
+  return this;
+};
+
+/**
+ * @method EZ3.Euler#setFromRotationMatrix
+ * @param {EZ3.Matrix3} m
+ * @param {Number} [order]
+ * @param {Boolean} [update]
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.setFromRotationMatrix = function(m, order, update) {
+  var te = m.elements;
+
+  var m11 = te[0];
+  var m21 = te[1];
+  var m31 = te[2];
+
+  var m12 = te[4];
+  var m22 = te[5];
+  var m32 = te[6];
+
+  var m13 = te[8];
+  var m23 = te[9];
+  var m33 = te[10];
+
+  order = (order !== undefined) ? order : this._order;
+
+  if (order === EZ3.Euler.XYZ) {
+    this._y = Math.asin(EZ3.Math.clamp(m13, -1, 1));
+
+    if (Math.abs(m13) &lt; 0.99999) {
+      this._x = Math.atan2(-m23, m33);
+      this._z = Math.atan2(-m12, m11);
+    } else {
+      this._x = Math.atan2(m32, m22);
+      this._z = 0;
+    }
+  } else if (order === EZ3.Euler.YXZ) {
+    this._x = Math.asin(-EZ3.Math.clamp(m23, -1, 1));
+
+    if (Math.abs(m23) &lt; 0.99999) {
+      this._y = Math.atan2(m13, m33);
+      this._z = Math.atan2(m21, m22);
+    } else {
+      this._y = Math.atan2(-m31, m11);
+      this._z = 0;
+    }
+  } else if (order === EZ3.Euler.ZXY) {
+    this._x = Math.asin(EZ3.Math.clamp(m32, -1, 1));
+
+    if (Math.abs(m32) &lt; 0.99999) {
+      this._y = Math.atan2(-m31, m33);
+      this._z = Math.atan2(-m12, m22);
+    } else {
+      this._y = 0;
+      this._z = Math.atan2(m21, m11);
+    }
+  } else if (order === EZ3.Euler.ZYX) {
+    this._y = Math.asin(-EZ3.Math.clamp(m31, -1, 1));
+
+    if (Math.abs(m31) &lt; 0.99999) {
+      this._x = Math.atan2(m32, m33);
+      this._z = Math.atan2(m21, m11);
+    } else {
+      this._x = 0;
+      this._z = Math.atan2(-m12, m22);
+    }
+  } else if (order === EZ3.Euler.YZX) {
+    this._z = Math.asin(EZ3.Math.clamp(m21, -1, 1));
+
+    if (Math.abs(m21) &lt; 0.99999) {
+      this._x = Math.atan2(-m23, m22);
+      this._y = Math.atan2(-m31, m11);
+    } else {
+      this._x = 0;
+      this._y = Math.atan2(m13, m33);
+    }
+  } else if (order === EZ3.Euler.XZY) {
+    this._z = Math.asin(-EZ3.Math.clamp(m12, -1, 1));
+
+    if (Math.abs(m12) &lt; 0.99999) {
+      this._x = Math.atan2(m32, m22);
+      this._y = Math.atan2(m13, m11);
+    } else {
+      this._x = Math.atan2(-m23, m33);
+      this._y = 0;
+    }
+  }
+
+  if (update)
+    this.onChange.dispatch();
+
+  return this;
+};
+
+/**
+ * @method EZ3.Euler#setFromQuaternion
+ * @param {EZ3.Quaternion} q
+ * @param {Number} [order]
+ * @param {Boolean} [update]
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.setFromQuaternion = function(q, order, update) {
+  return this.setFromRotationMatrix(new EZ3.Matrix4().setFromQuaternion(q), order, update);
+};
+
+/**
+ * @method EZ3.Euler#setFromVector3
+ * @param {EZ3.Vector3} v
+ * @param {Number} [order]
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.setFromVector3 = function(v, order) {
+  return this._set(v.x, v.y, v.z, order);
+};
+
+/**
+ * @method EZ3.Euler#isEqual
+ * @param {EZ3.Euler} e
+ * @return {Boolean}
+ */
+EZ3.Euler.prototype.isEqual = function(e) {
+  if (e !== undefined)
+    return this._x === e.x &amp;&amp; this._y === e.y &amp;&amp; this._z === e.z &amp;&amp; this._order === e.order;
+  else
+    return false;
+};
+
+/**
+ * @method EZ3.Euler#isDiff
+ * @param {EZ3.Euler} e
+ * @return {Boolean}
+ */
+EZ3.Euler.prototype.isDiff = function(e) {
+  return !this.isEqual(e);
+};
+
+/**
+ * @method EZ3.Euler#toVector3
+ * @return {EZ3.Vector3}
+ */
+EZ3.Euler.prototype.toVector3 = function() {
+  return new EZ3.Vector3(this._x, this._y, this._z);
+};
+
+/**
+ * @method EZ3.Euler#toString
+ * @return {String}
+ */
+EZ3.Euler.prototype.toString = function() {
+  return &#x27;EZ3.Euler[&#x27; + this._x + &#x27;, &#x27; + this._y + &#x27;, &#x27; + this._z + &#x27;, &#x27; + this._order + &#x27;]&#x27;;
+};
+
+Object.defineProperty(EZ3.Euler.prototype, &#x27;x&#x27;, {
+  get: function() {
+    return this._x;
+  },
+  set: function(x) {
+    this._x = x;
+
+    this.onChange.dispatch();
+  }
+});
+
+Object.defineProperty(EZ3.Euler.prototype, &#x27;y&#x27;, {
+  get: function() {
+    return this._y;
+  },
+  set: function(y) {
+    this._y = y;
+
+    this.onChange.dispatch();
+  }
+});
+
+Object.defineProperty(EZ3.Euler.prototype, &#x27;z&#x27;, {
+  get: function() {
+    return this._z;
+  },
+  set: function(z) {
+    this._z = z;
+
+    this.onChange.dispatch();
+  }
+});
+
+Object.defineProperty(EZ3.Euler.prototype, &#x27;order&#x27;, {
+  get: function() {
+    return this._order;
+  },
+  set: function(order) {
+    this._order = order;
+
+    this.onChange.dispatch();
+  }
+});
+
+/**
+ * @property {Number} XYZ
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
+EZ3.Euler.XYZ = 1;
+
+/**
+ * @property {Number} YZX
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
+EZ3.Euler.YZX = 2;
+
+/**
+ * @property {Number} ZXY
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
+EZ3.Euler.ZXY = 3;
+
+/**
+ * @property {Number} XZY
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
+EZ3.Euler.XZY = 4;
+
+/**
+ * @property {Number} YXZ
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
+EZ3.Euler.YXZ = 5;
+
+/**
+ * @property {Number} ZYX
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
+EZ3.Euler.ZYX = 6;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

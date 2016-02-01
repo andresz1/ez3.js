@@ -1,18 +1,53 @@
 /**
- * @class Euler
+ * Representation of a Euler angles.
+ * @class EZ3.Euler
+ * @constructor
+ * @param {Number} [x]
+ * @param {Number} [y]
+ * @param {Number} [z]
+ * @param {Number} [order]
  */
-
 EZ3.Euler = function(x, y, z, order) {
+  /**
+   * @property {Number} x
+   * @default 0
+   */
   this._x = (x !== undefined) ? x : 0;
+
+  /**
+   * @property {Number} y
+   * @default 0
+   */
   this._y = (y !== undefined) ? y : 0;
+
+  /**
+   * @property {Number} z
+   * @default 0
+   */
   this._z = (z !== undefined) ? z : 0;
+
+  /**
+   * @property {Number} order
+   * @default EZ3.Euler.XYZ
+   */
   this._order = (order !== undefined) ? order : EZ3.Euler.XYZ;
 
+  /**
+   * @property {EZ3.Signal} onChange
+   */
   this.onChange = new EZ3.Signal();
 };
 
 EZ3.Euler.prototype.constructor = EZ3.Euler;
 
+/**
+ * @method EZ3.Euler#set
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @param {Number} [order]
+ * @return {EZ3.Euler}
+ */
 EZ3.Euler.prototype.set = function(x, y, z, order) {
   this._x = x;
   this._y = y;
@@ -24,21 +59,37 @@ EZ3.Euler.prototype.set = function(x, y, z, order) {
   return this;
 };
 
+/**
+ * @method EZ3.Euler#clone
+ * @return {EZ3.Euler}
+ */
 EZ3.Euler.prototype.clone = function() {
   return new this.constructor(this._x, this._y, this._z, this._order);
 };
 
-EZ3.Euler.prototype.copy = function(euler) {
-  this._x = euler.x;
-  this._y = euler.y;
-  this._z = euler.z;
-  this._order = euler.order;
+/**
+ * @method EZ3.Euler#set
+ * @param {EZ3.Euler} euler
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.copy = function(e) {
+  this._x = e.x;
+  this._y = e.y;
+  this._z = e.z;
+  this._order = e.order;
 
   this.onChange.dispatch();
 
   return this;
 };
 
+/**
+ * @method EZ3.Euler#setFromRotationMatrix
+ * @param {EZ3.Matrix3} m
+ * @param {Number} [order]
+ * @param {Boolean} [update]
+ * @return {EZ3.Euler}
+ */
 EZ3.Euler.prototype.setFromRotationMatrix = function(m, order, update) {
   var te = m.elements;
 
@@ -120,33 +171,64 @@ EZ3.Euler.prototype.setFromRotationMatrix = function(m, order, update) {
 
   if (update)
     this.onChange.dispatch();
+
+  return this;
 };
 
+/**
+ * @method EZ3.Euler#setFromQuaternion
+ * @param {EZ3.Quaternion} q
+ * @param {Number} [order]
+ * @param {Boolean} [update]
+ * @return {EZ3.Euler}
+ */
 EZ3.Euler.prototype.setFromQuaternion = function(q, order, update) {
   return this.setFromRotationMatrix(new EZ3.Matrix4().setFromQuaternion(q), order, update);
 };
 
+/**
+ * @method EZ3.Euler#setFromVector3
+ * @param {EZ3.Vector3} v
+ * @param {Number} [order]
+ * @return {EZ3.Euler}
+ */
 EZ3.Euler.prototype.setFromVector3 = function(v, order) {
   return this._set(v.x, v.y, v.z, order);
 };
 
-EZ3.Euler.prototype.isEqual = function(euler) {
-  var x = this._x === euler.x;
-  var y = this._y === euler.y;
-  var z = this._z === euler.z;
-  var o = this._order === euler.order;
-
-  return x && y && z && o;
+/**
+ * @method EZ3.Euler#isEqual
+ * @param {EZ3.Euler} e
+ * @return {Boolean}
+ */
+EZ3.Euler.prototype.isEqual = function(e) {
+  if (e !== undefined)
+    return this._x === e.x && this._y === e.y && this._z === e.z && this._order === e.order;
+  else
+    return false;
 };
 
+/**
+ * @method EZ3.Euler#isDiff
+ * @param {EZ3.Euler} e
+ * @return {Boolean}
+ */
+EZ3.Euler.prototype.isDiff = function(e) {
+  return !this.isEqual(e);
+};
+
+/**
+ * @method EZ3.Euler#toVector3
+ * @return {EZ3.Vector3}
+ */
 EZ3.Euler.prototype.toVector3 = function() {
   return new EZ3.Vector3(this._x, this._y, this._z);
 };
 
-EZ3.Euler.prototype.toArray = function() {
-  return [this._x, this._y, this._z];
-};
-
+/**
+ * @method EZ3.Euler#toString
+ * @return {String}
+ */
 EZ3.Euler.prototype.toString = function() {
   return 'EZ3.Euler[' + this._x + ', ' + this._y + ', ' + this._z + ', ' + this._order + ']';
 };
@@ -195,9 +277,50 @@ Object.defineProperty(EZ3.Euler.prototype, 'order', {
   }
 });
 
+/**
+ * @property {Number} XYZ
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
 EZ3.Euler.XYZ = 1;
+
+/**
+ * @property {Number} YZX
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
 EZ3.Euler.YZX = 2;
+
+/**
+ * @property {Number} ZXY
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
 EZ3.Euler.ZXY = 3;
+
+/**
+ * @property {Number} XZY
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
 EZ3.Euler.XZY = 4;
+
+/**
+ * @property {Number} YXZ
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
 EZ3.Euler.YXZ = 5;
+
+/**
+ * @property {Number} ZYX
+ * @memberof EZ3.Euler
+ * @static
+ * @final
+ */
 EZ3.Euler.ZYX = 6;

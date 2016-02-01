@@ -1,8 +1,13 @@
 /**
- * @class Matrix3
+ * Representation of a 3x3 matrix.
+ * @class EZ3.Matrix3
+ * @constructor
+ * @param {Number|Number[]} [value]
  */
-
 EZ3.Matrix3 = function(value) {
+  /**
+   * @property {Number[]} elements
+   */
   this.elements = null;
 
   if (typeof value === 'number') {
@@ -23,6 +28,12 @@ EZ3.Matrix3 = function(value) {
 
 EZ3.Matrix3.prototype.constructor = EZ3.Matrix3;
 
+/**
+ * @method EZ3.Matrix3#add
+ * @param {EZ3.Matrix3} m1
+ * @param {EZ3.Matrix3} [m2]
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.add = function(m1, m2) {
   var em1;
   var em2;
@@ -48,6 +59,12 @@ EZ3.Matrix3.prototype.add = function(m1, m2) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#sub
+ * @param {EZ3.Matrix3} m1
+ * @param {EZ3.Matrix3} [m2]
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.sub = function(m1, m2) {
   var em1;
   var em2;
@@ -73,6 +90,12 @@ EZ3.Matrix3.prototype.sub = function(m1, m2) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#scale
+ * @param {Number} s
+ * @param {EZ3.Matrix3} [m]
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.scale = function(s, m) {
   var em;
 
@@ -94,6 +117,12 @@ EZ3.Matrix3.prototype.scale = function(s, m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#mul
+ * @param {EZ3.Matrix3} m1
+ * @param {EZ3.Matrix3} [m2]
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.mul = function(m1, m2) {
   var e = this.elements;
   var em1 = m1.elements;
@@ -174,6 +203,11 @@ EZ3.Matrix3.prototype.mul = function(m1, m2) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#transpose
+ * @param {EZ3.Matrix3} [m]
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.transpose = function(m) {
   var e = (m !== undefined) ? m.elements : this.elements;
   var tmp;
@@ -201,6 +235,11 @@ EZ3.Matrix3.prototype.transpose = function(m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#setFromQuaternion
+ * @param {EZ3.Quaternion} q
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.setFromQuaternion = function(q) {
   var x2 = 2 * q.x;
   var y2 = 2 * q.y;
@@ -228,6 +267,11 @@ EZ3.Matrix3.prototype.setFromQuaternion = function(q) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#inverse
+ * @param {EZ3.Matrix3} [m]
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.inverse = function(m) {
   var e = m.elements;
   var det;
@@ -252,11 +296,21 @@ EZ3.Matrix3.prototype.inverse = function(m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#normalFromMat4
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.normalFromMat4 = function(m) {
   this.inverse(m).transpose();
+
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#identity
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.identity = function() {
   this.elements = [
     1.0, 0.0, 0.0,
@@ -267,19 +321,36 @@ EZ3.Matrix3.prototype.identity = function() {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#clone
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.clone = function() {
   return new EZ3.Matrix3(this.elements);
 };
 
+/**
+ * @method EZ3.Matrix3#copy
+ * @param {EZ3.Matrix3} m
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix3.prototype.copy = function(m) {
   this.elements = m.elements;
   return this;
 };
 
+/**
+ * @method EZ3.Matrix3#toArray
+ * @return {Number[]}
+ */
 EZ3.Matrix3.prototype.toArray = function() {
   return this.elements;
 };
 
+/**
+ * @method EZ3.Matrix3#toString
+ * @return {String}
+ */
 EZ3.Matrix3.prototype.toString = function() {
   return 'Matrix3[' + '\n' +
     this.elements[0].toFixed(4) + ', ' +
@@ -293,6 +364,11 @@ EZ3.Matrix3.prototype.toString = function() {
     this.elements[8].toFixed(4) + '\n]';
 };
 
+/**
+ * @method EZ3.Matrix3#isEqual
+ * @param {EZ3.Matrix3} m
+ * @return {Boolean}
+ */
 EZ3.Matrix3.prototype.isEqual = function(m) {
   if (m !== undefined) {
     return m.elements[0] === this.elements[0] &&
@@ -308,9 +384,11 @@ EZ3.Matrix3.prototype.isEqual = function(m) {
     return false;
 };
 
+/**
+ * @method EZ3.Matrix3#isDiff
+ * @param {EZ3.Matrix3} m
+ * @return {Boolean}
+ */
 EZ3.Matrix3.prototype.isDiff = function(m) {
-  if (m !== undefined) {
-    return !this.isEqual(m);
-  } else
-    return true;
+  return !this.isEqual(m);
 };

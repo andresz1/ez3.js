@@ -1,7 +1,9 @@
 /**
- * @class Matrix4
+ * Representation of a 4x4 matrix.
+ * @class EZ3.Matrix4
+ * @constructor
+ * @param {Number|Number[]} [value]
  */
-
 EZ3.Matrix4 = function(value) {
   this.elements = null;
 
@@ -25,6 +27,11 @@ EZ3.Matrix4 = function(value) {
 
 EZ3.Matrix4.prototype.constructor = EZ3.Matrix4;
 
+/**
+ * @method EZ3.Matrix4#transpose
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.transpose = function(m) {
   var e01;
   var e02;
@@ -84,6 +91,11 @@ EZ3.Matrix4.prototype.transpose = function(m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#inverse
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.inverse = function(m) {
   var te = this.elements;
   var me = (m !== undefined) ? m.elements : this.elements;
@@ -135,6 +147,11 @@ EZ3.Matrix4.prototype.inverse = function(m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#multiplyScalar
+ * @param {Number} s
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.multiplyScalar = function(s) {
   var te = this.elements;
 
@@ -161,7 +178,13 @@ EZ3.Matrix4.prototype.multiplyScalar = function(s) {
   return this;
 };
 
-EZ3.Matrix4.prototype.mul = function(m2, m1) {
+/**
+ * @method EZ3.Matrix4#mul
+ * @param {EZ3.Matrix4} m1
+ * @param {EZ3.Matrix4} [m2]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.mul = function(m1, m2) {
   var em1;
   var em2;
   var a00;
@@ -197,11 +220,11 @@ EZ3.Matrix4.prototype.mul = function(m2, m1) {
   var b32;
   var b33;
 
-  if (m1 !== undefined) {
-    em1 = m1.elements;
-    em2 = m2.elements;
-  } else {
+  if (m2 !== undefined) {
     em1 = m2.elements;
+    em2 = m1.elements;
+  } else {
+    em1 = m1.elements;
     em2 = this.elements;
   }
 
@@ -262,6 +285,12 @@ EZ3.Matrix4.prototype.mul = function(m2, m1) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#setPosition
+ * @param {EZ3.Vector3} v
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.setPosition = function(v, m) {
   var em = (m !== undefined) ? m.elements : this.elements;
   var x = v.x;
@@ -275,6 +304,12 @@ EZ3.Matrix4.prototype.setPosition = function(v, m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#translate
+ * @param {EZ3.Vector3} v
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.translate = function(v, m) {
   var em = (m !== undefined) ? m.elements : this.elements;
   var x = v.x;
@@ -317,6 +352,12 @@ EZ3.Matrix4.prototype.translate = function(v, m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#scale
+ * @param {EZ3.Vector3} s
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.scale = function(s, m) {
   var x = s.x;
   var y = s.y;
@@ -346,6 +387,11 @@ EZ3.Matrix4.prototype.scale = function(s, m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#setFromQuaternion
+ * @param {EZ3.Quaternion} q
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.setFromQuaternion = function(q) {
   var x2 = 2 * q.x;
   var y2 = 2 * q.y;
@@ -383,6 +429,16 @@ EZ3.Matrix4.prototype.setFromQuaternion = function(q) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#frustum
+ * @param {Number} left
+ * @param {Number} right
+ * @param {Number} bottom
+ * @param {Number} top
+ * @param {Number} near
+ * @param {Number} far
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
   var te = this.elements;
   var x = 2.0 * near / (right - left);
@@ -416,6 +472,14 @@ EZ3.Matrix4.prototype.frustum = function(left, right, bottom, top, near, far) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#perspective
+ * @param {Number} fovy
+ * @param {Number} aspect
+ * @param {Number} near
+ * @param {Number} far
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
   var ymax = near * Math.tan(EZ3.Math.toRadians(fovy * 0.5));
   var ymin = -ymax;
@@ -425,6 +489,16 @@ EZ3.Matrix4.prototype.perspective = function(fovy, aspect, near, far) {
   return this.frustum(xmin, xmax, ymin, ymax, near, far);
 };
 
+/**
+ * @method EZ3.Matrix4#orthographic
+ * @param {Number} left
+ * @param {Number} right
+ * @param {Number} bottom
+ * @param {Number} top
+ * @param {Number} near
+ * @param {Number} far
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.orthographic = function(left, right, top, bottom, near, far) {
   var w = right - left;
   var h = top - bottom;
@@ -457,6 +531,13 @@ EZ3.Matrix4.prototype.orthographic = function(left, right, top, bottom, near, fa
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#lookAt
+ * @param {EZ3.Vector3} eye
+ * @param {EZ3.Vector3} center
+ * @param {EZ3.Vector3} up
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
   var te = this.elements;
   var x = new EZ3.Vector3();
@@ -500,7 +581,10 @@ EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
   return this;
 };
 
-
+/**
+ * @method EZ3.Matrix4#identity
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.identity = function() {
   this.elements = [
     1, 0, 0, 0,
@@ -511,6 +595,13 @@ EZ3.Matrix4.prototype.identity = function() {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#yawPitchRoll
+ * @param {Number} yaw
+ * @param {Number} pitch
+ * @param {Number} roll
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
   var cosYaw = Math.cos(yaw);
   var sinYaw = Math.sin(yaw);
@@ -542,6 +633,10 @@ EZ3.Matrix4.prototype.yawPitchRoll = function(yaw, pitch, roll) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#determinant
+ * @return {Number}
+ */
 EZ3.Matrix4.prototype.determinant = function() {
   var te = this.elements;
   var n11 = te[0];
@@ -569,6 +664,13 @@ EZ3.Matrix4.prototype.determinant = function() {
   );
 };
 
+/**
+ * @method EZ3.Matrix4#compose
+ * @param {EZ3.Vector3} position
+ * @param {EZ3.Vector3} rotation
+ * @param {EZ3.Vector3} scale
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.compose = function(position, rotation, scale) {
   this.setFromQuaternion(rotation);
   this.setPosition(position);
@@ -577,6 +679,10 @@ EZ3.Matrix4.prototype.compose = function(position, rotation, scale) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#getPosition
+ * @return {EZ3.Vector3}
+ */
 EZ3.Matrix4.prototype.getPosition = function() {
   var te = this.elements;
   var position = new EZ3.Vector3(te[12], te[13], te[14]);
@@ -584,6 +690,10 @@ EZ3.Matrix4.prototype.getPosition = function() {
   return position;
 };
 
+/**
+ * @method EZ3.Matrix4#getRotation
+ * @return {EZ3.Quaternion}
+ */
 EZ3.Matrix4.prototype.getRotation = function() {
   var scale = this.getScale();
   var matrix = new EZ3.Matrix4(this.elements);
@@ -613,6 +723,10 @@ EZ3.Matrix4.prototype.getRotation = function() {
   return new EZ3.Quaternion().setFromRotationMatrix(matrix);
 };
 
+/**
+ * @method EZ3.Matrix4#getScale
+ * @return {EZ3.Vector3}
+ */
 EZ3.Matrix4.prototype.getScale = function() {
   var te = this.elements;
   var scale = new EZ3.Vector3();
@@ -625,10 +739,19 @@ EZ3.Matrix4.prototype.getScale = function() {
   return scale;
 };
 
+/**
+ * @method EZ3.Matrix4#clone
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.clone = function() {
   return new EZ3.Matrix4(this.toArray());
 };
 
+/**
+ * @method EZ3.Matrix4#copy
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Matrix4}
+ */
 EZ3.Matrix4.prototype.copy = function(m) {
   this.elements[0] = m.elements[0];
   this.elements[1] = m.elements[1];
@@ -653,10 +776,18 @@ EZ3.Matrix4.prototype.copy = function(m) {
   return this;
 };
 
+/**
+ * @method EZ3.Matrix4#toArray
+ * @return {Number[]}
+ */
 EZ3.Matrix4.prototype.toArray = function() {
   return this.elements;
 };
 
+/**
+ * @method EZ3.Matrix4#toString
+ * @return {String}
+ */
 EZ3.Matrix4.prototype.toString = function() {
   return 'Matrix4[' + '\n' +
     this.elements[0].toFixed(4) + ', ' +
@@ -677,6 +808,11 @@ EZ3.Matrix4.prototype.toString = function() {
     this.elements[15].toFixed(4) + '\n]';
 };
 
+/**
+ * @method EZ3.Matrix4#toMatrix3
+ * @param {EZ3.Matrix4} [m]
+ * @return {EZ3.Matrix3}
+ */
 EZ3.Matrix4.prototype.toMatrix3 = function(m) {
   var e = (m !== undefined) ? m.elements : this.elements;
   var matrix = new EZ3.Matrix3();
@@ -690,34 +826,38 @@ EZ3.Matrix4.prototype.toMatrix3 = function(m) {
   return matrix;
 };
 
+/**
+ * @method EZ3.Matrix4#isEqual
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Boolean}
+ */
 EZ3.Matrix4.prototype.isEqual = function(m) {
-  if (m) {
-    if (m !== undefined) {
-      return m.elements[0] === this.elements[0] &&
-        m.elements[1] === this.elements[1] &&
-        m.elements[2] === this.elements[2] &&
-        m.elements[3] === this.elements[3] &&
-        m.elements[4] === this.elements[4] &&
-        m.elements[5] === this.elements[5] &&
-        m.elements[6] === this.elements[6] &&
-        m.elements[7] === this.elements[7] &&
-        m.elements[8] === this.elements[8] &&
-        m.elements[9] === this.elements[9] &&
-        m.elements[10] === this.elements[10] &&
-        m.elements[11] === this.elements[11] &&
-        m.elements[12] === this.elements[12] &&
-        m.elements[13] === this.elements[13] &&
-        m.elements[14] === this.elements[14] &&
-        m.elements[15] === this.elements[15];
-    } else
-      return false;
+  if (m !== undefined) {
+    return m.elements[0] === this.elements[0] &&
+      m.elements[1] === this.elements[1] &&
+      m.elements[2] === this.elements[2] &&
+      m.elements[3] === this.elements[3] &&
+      m.elements[4] === this.elements[4] &&
+      m.elements[5] === this.elements[5] &&
+      m.elements[6] === this.elements[6] &&
+      m.elements[7] === this.elements[7] &&
+      m.elements[8] === this.elements[8] &&
+      m.elements[9] === this.elements[9] &&
+      m.elements[10] === this.elements[10] &&
+      m.elements[11] === this.elements[11] &&
+      m.elements[12] === this.elements[12] &&
+      m.elements[13] === this.elements[13] &&
+      m.elements[14] === this.elements[14] &&
+      m.elements[15] === this.elements[15];
   } else
     return false;
 };
 
+/**
+ * @method EZ3.Matrix4#isDiff
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Boolean}
+ */
 EZ3.Matrix4.prototype.isDiff = function(m) {
-  if (m !== undefined) {
-    return !this.isEqual(m);
-  } else
-    return true;
+  return !this.isEqual(m);
 };

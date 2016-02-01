@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>EZ3.Quaternion - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>EZ3.Quaternion</h1>
+</div>
+
+
+
+
+
+
+<div class="yuidoc-class-description">
+<p>Representation of a quaternion.</p>
+
+</div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-EZ3.Quaternion#add"><span class="im">EZ3.Quaternion#add</span>(<span class="ia">q1</span><span class="ia">q2</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#clone"><span class="im">EZ3.Quaternion#clone</span>()</a></li>
+				<li><a href="#method-EZ3.Quaternion#copy"><span class="im">EZ3.Quaternion#copy</span>(<span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#inverse"><span class="im">EZ3.Quaternion#inverse</span>(<span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#isDiff"><span class="im">EZ3.Quaternion#isDiff</span>(<span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#isEqual"><span class="im">EZ3.Quaternion#isEqual</span>(<span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#length"><span class="im">EZ3.Quaternion#length</span>()</a></li>
+				<li><a href="#method-EZ3.Quaternion#mul"><span class="im">EZ3.Quaternion#mul</span>(<span class="ia">q1</span><span class="ia">q2</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#normalize"><span class="im">EZ3.Quaternion#normalize</span>(<span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#scale"><span class="im">EZ3.Quaternion#scale</span>(<span class="ia">s</span><span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#setFromAxisAngle"><span class="im">EZ3.Quaternion#setFromAxisAngle</span>(<span class="ia">axis</span><span class="ia">angle</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#setFromEuler"><span class="im">EZ3.Quaternion#setFromEuler</span>(<span class="ia">euler</span><span class="ia">update</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#setFromRotationMatrix"><span class="im">EZ3.Quaternion#setFromRotationMatrix</span>(<span class="ia">m</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#sub"><span class="im">EZ3.Quaternion#sub</span>(<span class="ia">q1</span><span class="ia">q2</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#toMatrix3"><span class="im">EZ3.Quaternion#toMatrix3</span>(<span class="ia">mode</span><span class="ia">q</span>)</a></li>
+				<li><a href="#method-EZ3.Quaternion#toString"><span class="im">EZ3.Quaternion#toString</span>()</a></li>
+			</ul>
+		</li>
+
+		<li>
+			<strong>Properties</strong>
+			<ul>
+				<li><a href="#prop-onChange"><span class="ip">onChange</span></a></li>
+				<li><a href="#prop-w"><span class="ip">w</span></a></li>
+				<li><a href="#prop-x"><span class="ip">x</span></a></li>
+				<li><a href="#prop-y"><span class="ip">y</span></a></li>
+				<li><a href="#prop-z"><span class="ip">z</span></a></li>
+			</ul>
+		</li>
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+    <div class="constructor yuidoc-class-constructor page-section">
+        <h2>Constructor</h2>
+        <div class="item-list">
+<div id="method-EZ3.Quaternion" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">x</code>
+				</li>
+				<li class="arg">
+						<code class="optional">y</code>
+				</li>
+				<li class="arg">
+						<code class="optional">z</code>
+				</li>
+				<li class="arg">
+						<code class="optional">w</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l1"><code>src&#x2F;math&#x2F;Quaternion.js:1</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[x]</code>
+						<span class="type">Number</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[y]</code>
+						<span class="type">Number</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[z]</code>
+						<span class="type">Number</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[w]</code>
+						<span class="type">Number</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+        </div>
+    </div>
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-EZ3.Quaternion#add" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#add</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>q1</code>
+				</li>
+				<li class="arg">
+						<code class="optional">q2</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l44"><code>src&#x2F;math&#x2F;Quaternion.js:44</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">q1</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[q2]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#clone" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#clone</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l264"><code>src&#x2F;math&#x2F;Quaternion.js:264</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#copy" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#copy</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l248"><code>src&#x2F;math&#x2F;Quaternion.js:248</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[q]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#inverse" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#inverse</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l212"><code>src&#x2F;math&#x2F;Quaternion.js:212</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[q]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#isDiff" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#isDiff</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l284"><code>src&#x2F;math&#x2F;Quaternion.js:284</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">q</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#isEqual" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#isEqual</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l272"><code>src&#x2F;math&#x2F;Quaternion.js:272</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">q</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#length" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#length</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Number</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l235"><code>src&#x2F;math&#x2F;Quaternion.js:235</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Number</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#mul" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#mul</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>q1</code>
+				</li>
+				<li class="arg">
+						<code class="optional">q2</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l116"><code>src&#x2F;math&#x2F;Quaternion.js:116</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">q1</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[q2]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#normalize" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#normalize</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l159"><code>src&#x2F;math&#x2F;Quaternion.js:159</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[q]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#scale" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#scale</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>s</code>
+				</li>
+				<li class="arg">
+						<code class="optional">q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l92"><code>src&#x2F;math&#x2F;Quaternion.js:92</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">s</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[q]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#setFromAxisAngle" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#setFromAxisAngle</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>axis</code>
+				</li>
+				<li class="arg">
+						<code>angle</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l293"><code>src&#x2F;math&#x2F;Quaternion.js:293</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">axis</code>
+						<span class="type"><a href="../classes/EZ3.Vector3.html" class="crosslink">EZ3.Vector3</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">angle</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#setFromEuler" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#setFromEuler</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>euler</code>
+				</li>
+				<li class="arg">
+						<code>update</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l366"><code>src&#x2F;math&#x2F;Quaternion.js:366</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">euler</code>
+						<span class="type"><a href="../classes/EZ3.Euler.html" class="crosslink">EZ3.Euler</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">update</code>
+						<span class="type">Boolean</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#setFromRotationMatrix" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#setFromRotationMatrix</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>m</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l312"><code>src&#x2F;math&#x2F;Quaternion.js:312</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">m</code>
+						<span class="type"><a href="../classes/EZ3.Matrix3.html" class="crosslink">EZ3.Matrix3</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#sub" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#sub</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>q1</code>
+				</li>
+				<li class="arg">
+						<code class="optional">q2</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l68"><code>src&#x2F;math&#x2F;Quaternion.js:68</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">q1</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[q2]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#toMatrix3" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#toMatrix3</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>mode</code>
+				</li>
+				<li class="arg">
+						<code class="optional">q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.Matrix3.html" class="crosslink">EZ3.Matrix3</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l420"><code>src&#x2F;math&#x2F;Quaternion.js:420</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">mode</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[q]</code>
+						<span class="type"><a href="../classes/EZ3.Quaternion.html" class="crosslink">EZ3.Quaternion</a></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.Matrix3.html" class="crosslink">EZ3.Matrix3</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Quaternion#toString" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Quaternion#toString</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">String</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_math_Quaternion.js.html#l475"><code>src&#x2F;math&#x2F;Quaternion.js:475</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">String</span>
+			</div>
+		</div>
+
+</div>
+        </div>
+    </div>
+
+    <div id="properties" class="page-section">
+        <h2 class="off-left">Properties</h2>
+
+        <div class="item-list">
+<div id="prop-onChange" class="property item">
+    <h3 class="name"><code>onChange</code></h3>
+    <span class="type">EZ3.Signal</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_math_Quaternion.js.html#l36"><code>src&#x2F;math&#x2F;Quaternion.js:36</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-w" class="property item">
+    <h3 class="name"><code>w</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_math_Quaternion.js.html#l30"><code>src&#x2F;math&#x2F;Quaternion.js:30</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+        <p><strong>Default:</strong> 1</p>
+
+
+</div>
+<div id="prop-x" class="property item">
+    <h3 class="name"><code>x</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_math_Quaternion.js.html#l12"><code>src&#x2F;math&#x2F;Quaternion.js:12</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+        <p><strong>Default:</strong> 0</p>
+
+
+</div>
+<div id="prop-y" class="property item">
+    <h3 class="name"><code>y</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_math_Quaternion.js.html#l18"><code>src&#x2F;math&#x2F;Quaternion.js:18</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+        <p><strong>Default:</strong> 0</p>
+
+
+</div>
+<div id="prop-z" class="property item">
+    <h3 class="name"><code>z</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_math_Quaternion.js.html#l24"><code>src&#x2F;math&#x2F;Quaternion.js:24</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+        <p><strong>Default:</strong> 0</p>
+
+
+</div>
+        </div>
+    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

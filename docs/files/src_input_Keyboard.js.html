@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/input/Keyboard.js - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AnimationFrame", "classes/ArrayBuffer", "classes/AssetsManager", "classes/AstroidalEllipsoid", "classes/BoundingBox", "classes/BoundingSphere", "classes/Box", "classes/Buffer", "classes/Cache", "classes/Cubemap", "classes/DepthCubeFramebuffer", "classes/DepthFramebuffer", "classes/Device", "classes/DirectionalLight", "classes/Ellipsoid", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.FreeControl", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Quaternion", "classes/EZ3.TargetControl", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/File", "classes/FileRequest", "classes/Framebuffer", "classes/Frustum", "classes/Geometry", "classes/GLSLProgram", "classes/Image", "classes/ImageRequest", "classes/IndexBuffer", "classes/InputManager", "classes/Keboard", "classes/Light", "classes/Material", "classes/MD2Request", "classes/MDLRequest", "classes/Mesh", "classes/MeshMaterial", "classes/Mouse", "classes/MousePointer", "classes/OBJRequest", "classes/OFFRequest", "classes/Plane", "classes/Pointer", "classes/PointLight", "classes/Primitive", "classes/Renderer", "classes/RendererCapabilities", "classes/RendererExtensions", "classes/RendererState", "classes/Request", "classes/RequestManager", "classes/Screen", "classes/ScreenManager", "classes/ShaderLibrary", "classes/ShaderMaterial", "classes/Signal", "classes/SignalBinding", "classes/Sphere", "classes/SpotLight", "classes/Switch", "classes/TargetCubemap", "classes/TargetTexture2D", "classes/Texture", "classes/Texture2D", "classes/TGARequest", "classes/Time", "classes/Torus", "classes/Touch", "classes/TouchPointer", "classes/VertexBuffer", "classes/VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AnimationFrame.html">AnimationFrame</a></li>
+                <li><a href="../classes/ArrayBuffer.html">ArrayBuffer</a></li>
+                <li><a href="../classes/AssetsManager.html">AssetsManager</a></li>
+                <li><a href="../classes/AstroidalEllipsoid.html">AstroidalEllipsoid</a></li>
+                <li><a href="../classes/BoundingBox.html">BoundingBox</a></li>
+                <li><a href="../classes/BoundingSphere.html">BoundingSphere</a></li>
+                <li><a href="../classes/Box.html">Box</a></li>
+                <li><a href="../classes/Buffer.html">Buffer</a></li>
+                <li><a href="../classes/Cache.html">Cache</a></li>
+                <li><a href="../classes/Cubemap.html">Cubemap</a></li>
+                <li><a href="../classes/DepthCubeFramebuffer.html">DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/DepthFramebuffer.html">DepthFramebuffer</a></li>
+                <li><a href="../classes/Device.html">Device</a></li>
+                <li><a href="../classes/DirectionalLight.html">DirectionalLight</a></li>
+                <li><a href="../classes/Ellipsoid.html">Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/File.html">File</a></li>
+                <li><a href="../classes/FileRequest.html">FileRequest</a></li>
+                <li><a href="../classes/Framebuffer.html">Framebuffer</a></li>
+                <li><a href="../classes/Frustum.html">Frustum</a></li>
+                <li><a href="../classes/Geometry.html">Geometry</a></li>
+                <li><a href="../classes/GLSLProgram.html">GLSLProgram</a></li>
+                <li><a href="../classes/Image.html">Image</a></li>
+                <li><a href="../classes/ImageRequest.html">ImageRequest</a></li>
+                <li><a href="../classes/IndexBuffer.html">IndexBuffer</a></li>
+                <li><a href="../classes/InputManager.html">InputManager</a></li>
+                <li><a href="../classes/Keboard.html">Keboard</a></li>
+                <li><a href="../classes/Light.html">Light</a></li>
+                <li><a href="../classes/Material.html">Material</a></li>
+                <li><a href="../classes/MD2Request.html">MD2Request</a></li>
+                <li><a href="../classes/MDLRequest.html">MDLRequest</a></li>
+                <li><a href="../classes/Mesh.html">Mesh</a></li>
+                <li><a href="../classes/MeshMaterial.html">MeshMaterial</a></li>
+                <li><a href="../classes/Mouse.html">Mouse</a></li>
+                <li><a href="../classes/MousePointer.html">MousePointer</a></li>
+                <li><a href="../classes/OBJRequest.html">OBJRequest</a></li>
+                <li><a href="../classes/OFFRequest.html">OFFRequest</a></li>
+                <li><a href="../classes/Plane.html">Plane</a></li>
+                <li><a href="../classes/Pointer.html">Pointer</a></li>
+                <li><a href="../classes/PointLight.html">PointLight</a></li>
+                <li><a href="../classes/Primitive.html">Primitive</a></li>
+                <li><a href="../classes/Renderer.html">Renderer</a></li>
+                <li><a href="../classes/RendererCapabilities.html">RendererCapabilities</a></li>
+                <li><a href="../classes/RendererExtensions.html">RendererExtensions</a></li>
+                <li><a href="../classes/RendererState.html">RendererState</a></li>
+                <li><a href="../classes/Request.html">Request</a></li>
+                <li><a href="../classes/RequestManager.html">RequestManager</a></li>
+                <li><a href="../classes/Screen.html">Screen</a></li>
+                <li><a href="../classes/ScreenManager.html">ScreenManager</a></li>
+                <li><a href="../classes/ShaderLibrary.html">ShaderLibrary</a></li>
+                <li><a href="../classes/ShaderMaterial.html">ShaderMaterial</a></li>
+                <li><a href="../classes/Signal.html">Signal</a></li>
+                <li><a href="../classes/SignalBinding.html">SignalBinding</a></li>
+                <li><a href="../classes/Sphere.html">Sphere</a></li>
+                <li><a href="../classes/SpotLight.html">SpotLight</a></li>
+                <li><a href="../classes/Switch.html">Switch</a></li>
+                <li><a href="../classes/TargetCubemap.html">TargetCubemap</a></li>
+                <li><a href="../classes/TargetTexture2D.html">TargetTexture2D</a></li>
+                <li><a href="../classes/Texture.html">Texture</a></li>
+                <li><a href="../classes/Texture2D.html">Texture2D</a></li>
+                <li><a href="../classes/TGARequest.html">TGARequest</a></li>
+                <li><a href="../classes/Time.html">Time</a></li>
+                <li><a href="../classes/Torus.html">Torus</a></li>
+                <li><a href="../classes/Touch.html">Touch</a></li>
+                <li><a href="../classes/TouchPointer.html">TouchPointer</a></li>
+                <li><a href="../classes/VertexBuffer.html">VertexBuffer</a></li>
+                <li><a href="../classes/VertexBufferAttribute.html">VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/input/Keyboard.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+ * @class Keboard
+ */
+
+EZ3.Keyboard = function() {
+  this._keys = [];
+
+  this.enabled = false;
+  this.onKeyPress = new EZ3.Signal();
+  this.onKeyDown = new EZ3.Signal();
+  this.onKeyUp = new EZ3.Signal();
+};
+
+EZ3.Keyboard.prototype.constructor = EZ3.Keyboard;
+
+EZ3.Keyboard.prototype._processKeyDown = function(event) {
+  if(!this._keys[event.keyCode])
+    this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
+
+  if(this._keys[event.keyCode].processDown())
+    this.onKeyPress.dispatch(this._keys[event.keyCode]);
+
+  this.onKeyDown.dispatch(this._keys[event.keyCode]);
+};
+
+EZ3.Keyboard.prototype._processKeyUp = function(event) {
+  if(!this._keys[event.keyCode])
+    this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
+
+  this._keys[event.keyCode].processUp();
+  this.onKeyUp.dispatch(this._keys[event.keyCode]);
+};
+
+EZ3.Keyboard.prototype.enable = function() {
+  var that = this;
+
+  this.enabled = true;
+
+  this._onKeyDown = function(event) {
+    that._processKeyDown(event);
+  };
+  this._onKeyUp = function(event) {
+    that._processKeyUp(event);
+  };
+
+  window.addEventListener(&#x27;keydown&#x27;, this._onKeyDown, false);
+	window.addEventListener(&#x27;keyup&#x27;, this._onKeyUp, false);
+};
+
+EZ3.Keyboard.prototype.disable = function() {
+  this.enabled = false;
+
+  window.removeEventListener(&#x27;keydown&#x27;, this._onKeyDown);
+	window.removeEventListener(&#x27;keyup&#x27;, this._onKeyUp);
+
+  delete this._onKeyDown;
+  delete this._onKeyUp;
+};
+
+EZ3.Keyboard.prototype.getKey = function(code) {
+  if(!this._keys[code])
+    this._keys[code] = new EZ3.Switch(code);
+
+  return this._keys[code];
+};
+
+EZ3.Keyboard.A = &#x27;A&#x27;.charCodeAt(0);
+EZ3.Keyboard.B = &#x27;B&#x27;.charCodeAt(0);
+EZ3.Keyboard.C = &#x27;C&#x27;.charCodeAt(0);
+EZ3.Keyboard.D = &#x27;D&#x27;.charCodeAt(0);
+EZ3.Keyboard.E = &#x27;E&#x27;.charCodeAt(0);
+EZ3.Keyboard.F = &#x27;F&#x27;.charCodeAt(0);
+EZ3.Keyboard.G = &#x27;G&#x27;.charCodeAt(0);
+EZ3.Keyboard.H = &#x27;H&#x27;.charCodeAt(0);
+EZ3.Keyboard.I = &#x27;I&#x27;.charCodeAt(0);
+EZ3.Keyboard.J = &#x27;J&#x27;.charCodeAt(0);
+EZ3.Keyboard.K = &#x27;K&#x27;.charCodeAt(0);
+EZ3.Keyboard.L = &#x27;L&#x27;.charCodeAt(0);
+EZ3.Keyboard.M = &#x27;M&#x27;.charCodeAt(0);
+EZ3.Keyboard.N = &#x27;N&#x27;.charCodeAt(0);
+EZ3.Keyboard.O = &#x27;O&#x27;.charCodeAt(0);
+EZ3.Keyboard.P = &#x27;P&#x27;.charCodeAt(0);
+EZ3.Keyboard.Q = &#x27;Q&#x27;.charCodeAt(0);
+EZ3.Keyboard.R = &#x27;R&#x27;.charCodeAt(0);
+EZ3.Keyboard.S = &#x27;S&#x27;.charCodeAt(0);
+EZ3.Keyboard.T = &#x27;T&#x27;.charCodeAt(0);
+EZ3.Keyboard.U = &#x27;U&#x27;.charCodeAt(0);
+EZ3.Keyboard.V = &#x27;V&#x27;.charCodeAt(0);
+EZ3.Keyboard.W = &#x27;W&#x27;.charCodeAt(0);
+EZ3.Keyboard.X = &#x27;X&#x27;.charCodeAt(0);
+EZ3.Keyboard.Y = &#x27;Y&#x27;.charCodeAt(0);
+EZ3.Keyboard.Z = &#x27;Z&#x27;.charCodeAt(0);
+EZ3.Keyboard.ZERO = &#x27;0&#x27;.charCodeAt(0);
+EZ3.Keyboard.ONE = &#x27;1&#x27;.charCodeAt(0);
+EZ3.Keyboard.TWO = &#x27;2&#x27;.charCodeAt(0);
+EZ3.Keyboard.THREE = &#x27;3&#x27;.charCodeAt(0);
+EZ3.Keyboard.FOUR = &#x27;4&#x27;.charCodeAt(0);
+EZ3.Keyboard.FIVE = &#x27;5&#x27;.charCodeAt(0);
+EZ3.Keyboard.SIX = &#x27;6&#x27;.charCodeAt(0);
+EZ3.Keyboard.SEVEN = &#x27;7&#x27;.charCodeAt(0);
+EZ3.Keyboard.EIGHT = &#x27;8&#x27;.charCodeAt(0);
+EZ3.Keyboard.NINE = &#x27;9&#x27;.charCodeAt(0);
+EZ3.Keyboard.NUMPAD_0 = 96;
+EZ3.Keyboard.NUMPAD_1 = 97;
+EZ3.Keyboard.NUMPAD_2 = 98;
+EZ3.Keyboard.NUMPAD_3 = 99;
+EZ3.Keyboard.NUMPAD_4 = 100;
+EZ3.Keyboard.NUMPAD_5 = 101;
+EZ3.Keyboard.NUMPAD_6 = 102;
+EZ3.Keyboard.NUMPAD_7 = 103;
+EZ3.Keyboard.NUMPAD_8 = 104;
+EZ3.Keyboard.NUMPAD_9 = 105;
+EZ3.Keyboard.NUMPAD_MULTIPLY = 106;
+EZ3.Keyboard.NUMPAD_ADD = 107;
+EZ3.Keyboard.NUMPAD_ENTER = 108;
+EZ3.Keyboard.NUMPAD_SUBTRACT = 109;
+EZ3.Keyboard.NUMPAD_DECIMAL = 110;
+EZ3.Keyboard.NUMPAD_DIVIDE = 111;
+EZ3.Keyboard.F1 = 112;
+EZ3.Keyboard.F2 = 113;
+EZ3.Keyboard.F3 = 114;
+EZ3.Keyboard.F4 = 115;
+EZ3.Keyboard.F5 = 116;
+EZ3.Keyboard.F6 = 117;
+EZ3.Keyboard.F7 = 118;
+EZ3.Keyboard.F8 = 119;
+EZ3.Keyboard.F9 = 120;
+EZ3.Keyboard.F10 = 121;
+EZ3.Keyboard.F11 = 122;
+EZ3.Keyboard.F12 = 123;
+EZ3.Keyboard.F13 = 124;
+EZ3.Keyboard.F14 = 125;
+EZ3.Keyboard.F15 = 126;
+EZ3.Keyboard.COLON = 186;
+EZ3.Keyboard.EQUALS = 187;
+EZ3.Keyboard.COMMA = 188;
+EZ3.Keyboard.UNDERSCORE = 189;
+EZ3.Keyboard.PERIOD = 190;
+EZ3.Keyboard.QUESTION_MARK = 191;
+EZ3.Keyboard.TILDE = 192;
+EZ3.Keyboard.OPEN_BRACKET = 219;
+EZ3.Keyboard.BACKWARD_SLASH = 220;
+EZ3.Keyboard.CLOSED_BRACKET = 221;
+EZ3.Keyboard.QUOTES = 222;
+EZ3.Keyboard.BACKSPACE = 8;
+EZ3.Keyboard.TAB = 9;
+EZ3.Keyboard.CLEAR = 12;
+EZ3.Keyboard.ENTER = 13;
+EZ3.Keyboard.SHIFT = 16;
+EZ3.Keyboard.CONTROL = 17;
+EZ3.Keyboard.ALT = 18;
+EZ3.Keyboard.CAPS_LOCK = 20;
+EZ3.Keyboard.ESC = 27;
+EZ3.Keyboard.SPACEBAR = 32;
+EZ3.Keyboard.PAGE_UP = 33;
+EZ3.Keyboard.PAGE_DOWN = 34;
+EZ3.Keyboard.END = 35;
+EZ3.Keyboard.HOME = 36;
+EZ3.Keyboard.LEFT = 37;
+EZ3.Keyboard.UP = 38;
+EZ3.Keyboard.RIGHT = 39;
+EZ3.Keyboard.DOWN = 40;
+EZ3.Keyboard.PLUS = 43;
+EZ3.Keyboard.MINUS = 44;
+EZ3.Keyboard.INSERT = 45;
+EZ3.Keyboard.DELETE = 46;
+EZ3.Keyboard.HELP = 47;
+EZ3.Keyboard.NUM_LOCK = 144;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
