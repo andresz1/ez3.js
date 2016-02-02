@@ -1,19 +1,26 @@
 /**
- * @class Plane
- * @extends Primitive
+ * @class EZ3.Plane
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
  */
 
 EZ3.Plane = function(resolution) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(2, 2)
+   */
   this.resolution = resolution || new EZ3.Vector2(2, 2);
 };
 
 EZ3.Plane.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Plane.prototype.constructor = EZ3.Plane;
 
+/**
+ * @method EZ3.Plane#generate
+ */
 EZ3.Plane.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -51,6 +58,10 @@ EZ3.Plane.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Plane
+ */
 Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {
   get: function() {
     if (!this.resolution.isEqual(this._cache.resolution)) {

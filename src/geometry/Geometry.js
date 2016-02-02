@@ -1,14 +1,28 @@
 /**
- * @class Geometry
+ * @class EZ3.Geometry
+ * @constructor
  */
-
 EZ3.Geometry = function() {
+  /**
+   * @property {EZ3.ArrayBuffer} buffers
+   */
   this.buffers = new EZ3.ArrayBuffer();
-
+  /**
+   * @property {Boolean} linearDataNeedUpdate
+   * @default true
+   */
   this.linearDataNeedUpdate = true;
-  this.normalDataNeedUpdate  = true;
+  /**
+   * @property {Boolean} normalDataNeedUpdate
+   * @default true
+   */
+  this.normalDataNeedUpdate = true;
 };
 
+/**
+ * @method EZ3.Geometry#_computeLinearData
+ * @private
+ */
 EZ3.Geometry.prototype._computeLinearData = function() {
   var triangles = this.buffers.getTriangularBuffer();
   var need32Bits;
@@ -30,6 +44,10 @@ EZ3.Geometry.prototype._computeLinearData = function() {
   this.buffers.addLinearBuffer(lines, need32Bits);
 };
 
+/**
+ * @method EZ3.Geometry#_computeNormalData
+ * @private
+ */
 EZ3.Geometry.prototype._computeNormalData = function() {
   var indices = this.buffers.getTriangularBuffer();
   var vertices = this.buffers.getPositionBuffer();
@@ -89,6 +107,9 @@ EZ3.Geometry.prototype._computeNormalData = function() {
   this.buffers.addNormalBuffer(normals);
 };
 
+/**
+ * @method EZ3.Geometry#updateLinearData
+ */
 EZ3.Geometry.prototype.updateLinearData = function() {
   if (this.linearDataNeedUpdate) {
     this._computeLinearData();
@@ -96,6 +117,9 @@ EZ3.Geometry.prototype.updateLinearData = function() {
   }
 };
 
+/**
+ * @method EZ3.Geometry#updateNormalData
+ */
 EZ3.Geometry.prototype.updateNormalData = function() {
   if (this.normalDataNeedUpdate) {
     this._computeNormalData();

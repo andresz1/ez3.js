@@ -1,20 +1,32 @@
 /**
- * @class Box
- * @extends Primitive
+ * @class EZ3.Box
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector3} [resolution]
+ * @param {EZ3.Vector3} [dimensions]
  */
-
 EZ3.Box = function(resolution, dimensions) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
+  /**
+   * @property {EZ3.Vector3} resolution
+   * @default new EZ3.Vector3(1, 1, 1)
+   */
   this.resolution = resolution || new EZ3.Vector3(1, 1, 1);
+
+  /**
+   * @property {EZ3.Vector3} dimensions
+   * @default new EZ3.Vector3(1, 1, 1)
+   */
+  this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Box.prototype.constructor = EZ3.Box;
 
+/**
+ * @method EZ3.Box#generate
+ */
 EZ3.Box.prototype.generate = function() {
   var that = this;
   var uvs = [];
@@ -91,6 +103,10 @@ EZ3.Box.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Box
+ */
 Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
   get: function() {
     var changed = false;

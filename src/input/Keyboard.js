@@ -1,18 +1,40 @@
 /**
- * @class Keboard
+ * @class EZ3.Keyboard
+ * @constructor
  */
-
 EZ3.Keyboard = function() {
+  /**
+   * @property {EZ3.Switch[]} _keys
+   * @private
+   */
   this._keys = [];
 
+  /**
+   * @property {Boolean} enabled
+   * @default false
+   */
   this.enabled = false;
+  /**
+   * @property {EZ3.Signal} onKeyPress
+   */
   this.onKeyPress = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onKeyDown
+   */
   this.onKeyDown = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onKeyUp
+   */
   this.onKeyUp = new EZ3.Signal();
 };
 
 EZ3.Keyboard.prototype.constructor = EZ3.Keyboard;
 
+/**
+ * @method EZ3.Keyboard#_processKeyDown
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
@@ -23,6 +45,11 @@ EZ3.Keyboard.prototype._processKeyDown = function(event) {
   this.onKeyDown.dispatch(this._keys[event.keyCode]);
 };
 
+/**
+ * @method EZ3.Keyboard#_processKeyUp
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
@@ -31,6 +58,9 @@ EZ3.Keyboard.prototype._processKeyUp = function(event) {
   this.onKeyUp.dispatch(this._keys[event.keyCode]);
 };
 
+/**
+ * @method EZ3.Keyboard#enable
+ */
 EZ3.Keyboard.prototype.enable = function() {
   var that = this;
 
@@ -47,6 +77,9 @@ EZ3.Keyboard.prototype.enable = function() {
 	window.addEventListener('keyup', this._onKeyUp, false);
 };
 
+/**
+ * @method EZ3.Keyboard#disable
+ */
 EZ3.Keyboard.prototype.disable = function() {
   this.enabled = false;
 
@@ -57,6 +90,11 @@ EZ3.Keyboard.prototype.disable = function() {
   delete this._onKeyUp;
 };
 
+/**
+ * @method EZ3.Keyboard#getKey
+ * @param {Number} code
+ * @return {EZ3.Switch}
+ */
 EZ3.Keyboard.prototype.getKey = function(code) {
   if(!this._keys[code])
     this._keys[code] = new EZ3.Switch(code);

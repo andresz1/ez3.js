@@ -1,20 +1,31 @@
 /**
- * @class Torus
- * @extends Primitive
+ * @class EZ3.Torus
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {EZ3.Vector2} [radiouses]
  */
-
 EZ3.Torus = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.radiouses = radiouses || new EZ3.Vector2(7, 3);
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(5, 5)
+   */
   this.resolution = resolution || new EZ3.Vector2(5, 5);
+  /**
+   * @property {EZ3.Vector2} radiouses
+   * @default new EZ3.Vector2(7, 3)
+   */
+  this.radiouses = radiouses || new EZ3.Vector2(7, 3);
 };
 
 EZ3.Torus.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Torus.prototype.constructor = EZ3.Torus;
 
+/**
+ * @method EZ3.Torus#generate
+ */
 EZ3.Torus.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -81,6 +92,10 @@ EZ3.Torus.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Torus
+ */
 Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
   get: function() {
     var changed = false;

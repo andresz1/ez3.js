@@ -1,20 +1,31 @@
 /**
- * @class AstroidalEllipsoid
- * @extends Primitive
+ * @class EZ3.AstroidalEllipsoid
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {EZ3.Vector3} [radiouses]
  */
-
 EZ3.AstroidalEllipsoid = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.radiouses = radiouses || new EZ3.Vector3(90, 90, 90);
-  this.resolution = resolution || new EZ3.Vector2(150, 150);
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(50, 50)
+   */
+  this.resolution = resolution || new EZ3.Vector2(5, 5);
+  /**
+   * @property {EZ3.Vector3} radiouses
+   * @default new EZ3.Vector3(6, 6, 6)
+   */
+  this.radiouses = radiouses || new EZ3.Vector3(6, 6, 6);
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
 
+/**
+ * @method EZ3.AstroidalEllipsoid#generate
+ */
 EZ3.AstroidalEllipsoid.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -75,6 +86,10 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.AstroidalEllipsoid
+ */
 Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'needGenerate', {
   get: function() {
     var changed = false;

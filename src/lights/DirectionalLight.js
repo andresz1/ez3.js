@@ -1,13 +1,17 @@
 /**
- * @class DirectionalLight
- * @extends Light
- * @extends OrthographicCamera
+ * @class EZ3.DirectionalLight
+ * @extends EZ3.Light
+ * @extends EZ3.OrthographicCamera
+ * @constructor
  */
-
 EZ3.DirectionalLight = function() {
   EZ3.Light.call(this);
   EZ3.OrthographicCamera.call(this, -100.0, 100.0, 100.0, -100.0, 1.0, 5000.0);
 
+  /**
+   * @property {EZ3.DepthFramebuffer} depthFramebuffer
+   * @default new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512))
+   */
   this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
 };
 
@@ -15,6 +19,16 @@ EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
 EZ3.extends(EZ3.DirectionalLight.prototype, EZ3.OrthographicCamera.prototype);
 EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
 
+/**
+ * @method EZ3.DirectionalLight#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ * @param {EZ3.GLSLProgram} program
+ * @param {Number} i
+ * @param {Boolean} shadowReceiver
+ * @param {Number} length
+ */
 EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
   var prefix = 'uDirectionalLights[' + i + '].';
   var direction = this.getWorldDirection();

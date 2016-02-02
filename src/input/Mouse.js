@@ -1,38 +1,94 @@
 /**
- * @class Mouse
+ * @class EZ3.Mouse
+ * @constructor
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
  */
-
 EZ3.Mouse = function(domElement, bounds) {
+  /**
+   * @property {HTMLElement} _domElement
+   * @private
+   */
   this._domElement = domElement;
+  /**
+   * @property {HTMLRect} _bounds
+   * @private
+   */
   this._bounds = bounds;
 
+  /**
+   * @property {Boolean} enabled
+   * @default false
+   */
   this.enabled = false;
+  /**
+   * @property {EZ3.MousePointer} pointer
+   */
   this.pointer = new EZ3.MousePointer();
+  /**
+   * @property {EZ3.Signal} onPress
+   */
   this.onPress = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onMove
+   */
   this.onMove = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onUp
+   */
   this.onUp = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onWheel
+   */
   this.onWheel = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onLockChange
+   */
   this.onLockChange = new EZ3.Signal();
 };
 
 EZ3.Mouse.prototype.constructor = EZ3.Mouse;
 
+/**
+ * @method EZ3.Mouse#_processMousePress
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMousePress = function(event) {
   this.pointer.processPress(event, this._domElement, this._bounds, this.onPress, this.onMove);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseMove
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMouseMove = function(event) {
   this.pointer.processMove(event, this._domElement, this._bounds, this.onMove);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseUp
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMouseUp = function(event) {
   this.pointer.processUp(event, this.onUp);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseWheel
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMouseWheel = function(event) {
   this.pointer.processWheel(event, this.onWheel);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseLockChange
+ * @private
+ */
 EZ3.Mouse.prototype._processMouseLockChange = function() {
   var device = EZ3.Device;
 
@@ -45,6 +101,9 @@ EZ3.Mouse.prototype._processMouseLockChange = function() {
   this.pointer.processLockChange(this.onLockChange);
 };
 
+/**
+ * @method EZ3.Moused#requestPointerLock
+ */
 EZ3.Mouse.prototype.requestPointerLock = function() {
   var device = EZ3.Device;
   var that;
@@ -62,6 +121,9 @@ EZ3.Mouse.prototype.requestPointerLock = function() {
   }
 };
 
+/**
+ * @method EZ3.Moused#exitPointerLock
+ */
 EZ3.Mouse.prototype.exitPointerLock = function() {
   var device = EZ3.Device;
 
@@ -69,6 +131,9 @@ EZ3.Mouse.prototype.exitPointerLock = function() {
     document[device.exitPointerLock]();
 };
 
+/**
+ * @method EZ3.Moused#enable
+ */
 EZ3.Mouse.prototype.enable = function() {
   var that = this;
   var device = EZ3.Device;
@@ -100,6 +165,9 @@ EZ3.Mouse.prototype.enable = function() {
   }
 };
 
+/**
+ * @method EZ3.Moused#disable
+ */
 EZ3.Mouse.prototype.disable = function() {
   var device = EZ3.Device;
 

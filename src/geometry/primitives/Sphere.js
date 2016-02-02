@@ -1,20 +1,31 @@
 /**
- * @class Sphere
- * @extends Primitive
+ * @class EZ3.Sphere
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {Number} [radius]
  */
-
 EZ3.Sphere = function(resolution, radius) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.radius = radius || 5;
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(6, 6)
+   */
   this.resolution = resolution || new EZ3.Vector2(6, 6);
+  /**
+   * @property {EZ3.Vector2} radius
+   * @default 5
+   */
+  this.radius = radius || 5;
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Sphere.prototype.constructor = EZ3.Sphere;
 
+/**
+ * @method EZ3.Sphere#generate
+ */
 EZ3.Sphere.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -71,6 +82,10 @@ EZ3.Sphere.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Sphere
+ */
 Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
   get: function() {
     var changed = false;

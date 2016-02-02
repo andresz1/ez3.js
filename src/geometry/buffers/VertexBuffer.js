@@ -1,18 +1,36 @@
 /**
- * @class VertexBuffer
- * @extends Buffer
+ * @class EZ3.VertexBuffer
+ * @extends EZ3.Buffer
+ * @constructor
+ * @param {Number[]} [data]
+ * @param {Boolean} [need32Bits]
  */
-
 EZ3.VertexBuffer = function(data, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
 
+  /**
+   * @property {Object} _attributes
+   * @default {}
+   * @private
+   */
   this._attributes = {};
+  /**
+   * @property {Number} _stride
+   * @private
+   * @default 0
+   */
   this._stride = 0;
 };
 
 EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
 EZ3.VertexBuffer.prototype.constructor = EZ3.VertexBuffer;
 
+/**
+ * @method EZ3.VertexBuffer#isValid
+ * @param {WebGLContext} gl
+ * @param {Object} attributes
+ * @return {Boolean}
+ */
 EZ3.VertexBuffer.prototype.isValid = function(gl, attributes) {
   var k;
 
@@ -23,6 +41,12 @@ EZ3.VertexBuffer.prototype.isValid = function(gl, attributes) {
   return false;
 };
 
+/**
+ * @method EZ3.VertexBuffer#bind
+ * @param {WebGLContext} gl
+ * @param {Object} attributes
+ * @param {EZ3.RendererState} state
+ */
 EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
   var type = gl.FLOAT;
   var normalized;
@@ -49,10 +73,19 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
   }
 };
 
+/**
+ * @method EZ3.VertexBuffer#update
+ * @param {WebGLContext} gl
+ */
 EZ3.VertexBuffer.prototype.update = function(gl) {
   EZ3.Buffer.prototype.update.call(this, gl, gl.ARRAY_BUFFER, 4);
 };
 
+/**
+ * @method EZ3.VertexBuffer#addAttribute
+ * @param {String} name
+ * @param {EZ3.VertexBufferAttribute} attribute
+ */
 EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
   this._stride += 4 * attribute.size;
   this._attributes[name] = attribute;

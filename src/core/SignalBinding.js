@@ -1,7 +1,7 @@
 /**
- * @class SignalBinding
+ * @class EZ3.SignalBinding
+ * @constructor
  */
-
 EZ3.SignalBinding = function(signal, listener, isOnce, listenerContext, priority) {
   this._signal = signal;
   this._priority = (priority !== undefined) ? priority : 0;

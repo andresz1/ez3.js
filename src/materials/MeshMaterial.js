@@ -1,35 +1,105 @@
 /**
- * @class MeshMaterial
- * @extends Material
+ * @class EZ3.MeshMaterial
+ * @extends EZ3.Material
+ * @constructor
  */
-
 EZ3.MeshMaterial = function() {
   EZ3.Material.call(this);
 
+  /**
+   * @property {EZ3.Vector3} emissive
+   * @default new EZ3.Vector3()
+   */
   this.emissive = new EZ3.Vector3();
+  /**
+   * @property {EZ3.Vector3} diffuse
+   * @default new EZ3.Vector3(0.8, 0.8, 0.8)
+   */
   this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
+  /**
+   * @property {EZ3.Vector3} specular
+   * @default new EZ3.Vector3(0.2, 0.2, 0.2)
+   */
   this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
-
+  /**
+   * @property {Number} shading
+   * @default EZ3.MeshMaterial.SMOOTH
+   */
   this.shading = EZ3.MeshMaterial.SMOOTH;
-
+  /**
+   * @property {EZ3.Texture2D} normalMap
+   */
   this.normalMap = null;
+  /**
+   * @property {EZ3.Texture2D} diffuseMap
+   */
   this.diffuseMap = null;
+  /**
+   * @property {EZ3.Texture2D} emissiveMap
+   */
   this.emissiveMap = null;
+  /**
+   * @property {EZ3.Texture2D} specularMap
+   */
   this.specularMap = null;
+  /**
+   * @property {EZ3.Cubemap} environmentMap
+   */
   this.environmentMap = null;
-
+  /**
+   * @property {Boolean} reflective
+   * @default false
+   */
   this.reflective = false;
+  /**
+   * @property {Boolean} refractive
+   * @default false
+   */
   this.refractive = false;
-
+  /**
+   * @property {Number} diffuseReflection
+   * @default EZ3.MeshMaterial.LAMBERT
+   */
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
+  /**
+   * @property {Number} specularReflection
+   * @default EZ3.MeshMaterial.BLINN_PHONG
+   */
   this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
-
-  this.albedo = 3.0;
-  this.fresnel = 0.0;
-  this.opacity = 1.0;
+  /**
+   * @property {Number} albedo
+   * @default 3
+   */
+  this.albedo = 3;
+  /**
+   * @property {Number} fresnel
+   * @default 0
+   */
+  this.fresnel = 0;
+  /**
+   * @property {Number} opacity
+   * @default 1
+   */
+  this.opacity = 1;
+  /**
+   * @property {Number} shininess
+   * @default 180
+   */
   this.shininess = 180;
-  this.refractiveIndex = 1.0;
+  /**
+   * @property {Number} refractiveIndex
+   * @default 1
+   */
+  this.refractiveIndex = 1;
+  /**
+   * @property {Number} diffuseRoughness
+   * @default 0.2
+   */
   this.diffuseRoughness = 0.2;
+  /**
+   * @property {Number} specularRoughness
+   * @default 0.2
+   */
   this.specularRoughness = 0.2;
 
   this.morphTarget = false;
@@ -39,6 +109,13 @@ EZ3.MeshMaterial = function() {
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
+/**
+ * @method EZ3.MeshMaterial#updateProgram
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {Object} lights
+ * @param {Boolean} shadowReceiver
+ */
 EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights, shadowReceiver) {
   var id = 'MESH.';
   var defines = [];
@@ -97,6 +174,12 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights, shadowRec
   }
 };
 
+/**
+ * @method EZ3.MeshMaterial#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ */
 EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state, capabilities) {
   this.program.loadUniformFloat(gl, 'uEmissive', this.emissive);
   this.program.loadUniformFloat(gl, 'uDiffuse', this.diffuse);
@@ -156,11 +239,52 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state, capabilities) {
   }
 };
 
+/**
+ * @property {Number} FLAT
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.FLAT = 0;
+/**
+ * @property {Number} SMOOTH
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.SMOOTH = 1;
-
+/**
+ * @property {Number} LAMBERT
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.LAMBERT = 0;
+/**
+ * @property {Number} OREN_NAYAR
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.OREN_NAYAR = 1;
+/**
+ * @property {Number} PHONG
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.PHONG = 2;
+/**
+ * @property {Number} BLINN_PHONG
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.BLINN_PHONG = 3;
+/**
+ * @property {Number} COOK_TORRANCE
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.COOK_TORRANCE = 4;

@@ -1,19 +1,50 @@
 /**
- * @class Buffer
+ * @class EZ3.Buffer
+ * @constructor
+ * @param {Number[]} [data]
+ * @param {Boolean} [dynamic]
  */
-
 EZ3.Buffer = function(data, dynamic) {
+  /**
+   * @property {WebGLId} _id
+   * @private
+   */
   this._id = null;
+  /**
+   * @property {Object} _cache
+   * @private
+   */
   this._cache = {};
+  /**
+   * @property {Number} _ranges
+   * @private
+   */
   this._ranges = [];
 
+  /**
+   * @property {Number[]} data
+   * @default []
+   */
   this.data = data || [];
-  this.dynamic = dynamic || false;
+  /**
+   * @property {Boolean} dynamic
+   * @default false
+   */
+  this.dynamic = (dynamic !== undefined) ? dynamic : false;
+  /**
+   * @property {Boolean} needUpdate
+   * @default true
+   */
   this.needUpdate = true;
 };
 
 EZ3.Buffer.prototype.constructor = EZ3.Buffer;
 
+/**
+ * @method EZ3.Buffer#bind
+ * @param {WebGLContext} gl
+ * @param {Number} target
+ */
 EZ3.Buffer.prototype.bind = function(gl, target) {
   if(!this._id)
     this._id = gl.createBuffer();
@@ -21,6 +52,12 @@ EZ3.Buffer.prototype.bind = function(gl, target) {
   gl.bindBuffer(target, this._id);
 };
 
+/**
+ * @method EZ3.Buffer#update
+ * @param {WebGLContext} gl
+ * @param {Number} target
+ * @param {Number} [bytes]
+ */
 EZ3.Buffer.prototype.update = function(gl, target, bytes) {
   var length = bytes * this.data.length;
   var changed = false;
@@ -66,6 +103,11 @@ EZ3.Buffer.prototype.update = function(gl, target, bytes) {
   }
 };
 
+/**
+ * @method EZ3.Buffer#addUpdateRange
+ * @param {Number} left
+ * @param {Number} right
+ */
 EZ3.Buffer.prototype.addUpdateRange = function(left, right) {
     this._ranges.push(left, right);
 };

@@ -1,20 +1,31 @@
 /**
- * @class Ellipsoid
- * @extends Primitive
+ * @class EZ3.Ellipsoid
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {EZ3.Vector3} [radiouses]
  */
-
 EZ3.Ellipsoid = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector3(40, 40)
+   */
+  this.resolution = resolution || new EZ3.Vector2(40, 40);
+  /**
+   * @property {EZ3.Vector3} radiouses
+   * @default new EZ3.Vector3(10, 5, 10)
+   */
   this.radiouses = radiouses || new EZ3.Vector3(10, 5, 10);
-  this.resolution = resolution || new EZ3.Vector2(100, 100);
 };
 
 EZ3.Ellipsoid.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Ellipsoid.prototype.constructor = EZ3.Ellipsoid;
 
+/**
+ * @method EZ3.Ellipsoid#generate
+ */
 EZ3.Ellipsoid.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -75,6 +86,10 @@ EZ3.Ellipsoid.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Ellipsoid
+ */
 Object.defineProperty(EZ3.Ellipsoid.prototype, 'needGenerate', {
   get: function() {
     var changed = false;

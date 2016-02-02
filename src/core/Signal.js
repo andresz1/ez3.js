@@ -1,7 +1,7 @@
 /**
- * @class Signal
+ * @class EZ3.Signal
+ * @constructor
  */
-
 EZ3.Signal = function() {
   var that = this;
 

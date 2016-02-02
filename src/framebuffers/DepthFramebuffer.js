@@ -1,8 +1,9 @@
 /**
- * @class DepthFramebuffer
- * @extends Framebuffer
+ * @class EZ3.DepthFramebuffer
+ * @extends EZ3.Framebuffer
+ * @constructor
+ * @param {EZ3.Vector2} size
  */
-
 EZ3.DepthFramebuffer = function(size) {
   EZ3.Framebuffer.call(this, size);
 };
@@ -10,6 +11,10 @@ EZ3.DepthFramebuffer = function(size) {
 EZ3.DepthFramebuffer.prototype = Object.create(EZ3.Framebuffer.prototype);
 EZ3.DepthFramebuffer.prototype.constructor = EZ3.DepthFramebuffer;
 
+/**
+ * @method EZ3.DepthFramebuffer#update
+ * @param {WebGLContext} gl
+ */
 EZ3.DepthFramebuffer.prototype.update = function(gl) {
   if(this.size.isDiff(this._cache.size)) {
     this._cache.size = this.size.clone();

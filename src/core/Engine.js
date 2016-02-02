@@ -13,7 +13,6 @@ EZ3.Engine = function(canvas, screen, options) {
    * @private
    */
   this._animationFrame = null;
-
   /**
    * @property {EZ3.Renderer} _renderer
    * @private
@@ -24,12 +23,10 @@ EZ3.Engine = function(canvas, screen, options) {
    * @property {EZ3.Time} time
    */
   this.time = null;
-
   /**
    * @property {EZ3.Input} input
    */
   this.input = null;
-
   /**
    * @property {EZ3.ScreenManager} screens
    */
