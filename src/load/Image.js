@@ -1,19 +1,40 @@
 /**
- * @class Image
- * @extends File
+ * @class EZ3.Image
+ * @extends EZ3.File
+ * @constructor
+ * @param {Number} [width]
+ * @param {Number} [height]
+ * @param {Number} [format]
+ * @param {Number[]} [data]
  */
-
 EZ3.Image = function(width, height, format, data) {
   EZ3.File.call(this, data);
 
-  this.width = width || 0;
-  this.height = height || 0;
-  this.format = format || EZ3.Image.RGBA;
+  /**
+   * @property {Number} width
+   * @default 0
+   */
+  this.width = (width !== undefined)? width : 0;
+  /**
+   * @property {Number} height
+   * @default 0
+   */
+  this.height = (height !== undefined)? height : 0;
+  /**
+   * @property {Number} format
+   * @default EZ3.Image.RGBA
+   */
+  this.format = (format !== undefined)? format : EZ3.Image.RGBA;
 };
 
 EZ3.Image.prototype = Object.create(EZ3.File.prototype);
 EZ3.Image.prototype.constructor = EZ3.Image;
 
+/**
+ * @method EZ3.Image#getGLFormat
+ * @param {WebGLContext} gl
+ * @return {Number}
+ */
 EZ3.Image.prototype.getGLFormat = function(gl) {
   if (this.format === EZ3.Image.RGB_FORMAT)
     return gl.RGB;
@@ -21,6 +42,10 @@ EZ3.Image.prototype.getGLFormat = function(gl) {
     return gl.RGBA;
 };
 
+/**
+ * @method EZ3.Image#getCanvas
+ * @return {HTMLElement}
+ */
 EZ3.Image.prototype.getCanvas = function() {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
@@ -36,6 +61,10 @@ EZ3.Image.prototype.getCanvas = function() {
   return canvas;
 };
 
+/**
+ * @method EZ3.Image#toPowerOfTwo
+ * @return {EZ3.Image}
+ */
 EZ3.Image.prototype.toPowerOfTwo = function() {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
@@ -51,6 +80,9 @@ EZ3.Image.prototype.toPowerOfTwo = function() {
   return this;
 };
 
+/**
+ * @method EZ3.Image#download
+ */
 EZ3.Image.prototype.download = function() {
   var a = document.createElement('a');
 
@@ -62,5 +94,17 @@ EZ3.Image.prototype.download = function() {
   document.body.removeChild(a);
 };
 
+/**
+ * @property {Number} RGB_FORMAT
+ * @memberof EZ3.Image
+ * @static
+ * @final
+ */
 EZ3.Image.RGB_FORMAT = 1;
+/**
+ * @property {Number} RGBA_FORMAT
+ * @memberof EZ3.Image
+ * @static
+ * @final
+ */
 EZ3.Image.RGBA_FORMAT = 2;
