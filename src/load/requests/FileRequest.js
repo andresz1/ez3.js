@@ -1,19 +1,35 @@
 /**
- * @class FileRequest
- * @extends Request
+ * @class EZ3.FileRequest
+ * @extends EZ3.Request
+ * @constructor
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @param {String} [responseType]
  */
-
 EZ3.FileRequest = function(url, cached, crossOrigin, responseType) {
   EZ3.Request.call(this, url, new EZ3.File(), cached, crossOrigin);
 
+  /**
+   * @property {XMLHttpRequest} _request
+   * @private
+   */
   this._request = new XMLHttpRequest();
 
+  /**
+   * @property {String} responseType
+   */
   this.responseType = responseType;
 };
 
 EZ3.FileRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.FileRequest.prototype.constructor = EZ3.FileRequest;
 
+/**
+ * @method EZ3.FileRequest#_processLoad
+ * @param {XMLHttpRequest} data
+ * @param {Function} onLoad
+ */
 EZ3.FileRequest.prototype._processLoad = function(data, onLoad) {
   this._removeEventListeners();
 
@@ -22,11 +38,20 @@ EZ3.FileRequest.prototype._processLoad = function(data, onLoad) {
   onLoad(this.url, this.asset, this.cached);
 };
 
+/**
+ * @method EZ3.FileRequest#_processError
+ * @param {Function} onError
+ */
 EZ3.FileRequest.prototype._processError = function(onError) {
   this._removeEventListeners();
   onError(this.url);
 };
 
+/**
+ * @method EZ3.FileRequest#_addEventListeners
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.FileRequest.prototype._addEventListeners = function(onLoad, onError) {
   var that = this;
 
@@ -42,6 +67,9 @@ EZ3.FileRequest.prototype._addEventListeners = function(onLoad, onError) {
   this._request.addEventListener('error', this._onError, false);
 };
 
+/**
+ * @method EZ3.FileRequest#_removeEventListeners
+ */
 EZ3.FileRequest.prototype._removeEventListeners = function() {
   this._request.removeEventListener('load', this._onLoad, false);
   this._request.removeEventListener('error', this._onError, false);
@@ -50,6 +78,11 @@ EZ3.FileRequest.prototype._removeEventListeners = function() {
   delete this._onError;
 };
 
+/**
+ * @method EZ3.FileRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.FileRequest.prototype.send = function(onLoad, onError) {
   this._request.open('GET', this.url, true);
 

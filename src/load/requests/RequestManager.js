@@ -1,19 +1,55 @@
 /**
- * @class RequestManager
+ * @class EZ3.RequestManager
+ * @constructor
  */
-
 EZ3.RequestManager = function() {
+  /**
+   * @property {Object} _requests
+   * @private
+   */
   this._requests = {};
+  /**
+   * @property {AssetManager} _assets
+   * @private
+   */
   this._assets = new EZ3.AssetManager();
 
+  /**
+   * @property {Boolean} started
+   * @default false
+   */
   this.started = false;
+  /**
+   * @property {Number} toSend
+   * @default 0
+   */
   this.toSend = 0;
+  /**
+   * @property {Number} loaded
+   * @default 0
+   */
   this.loaded = 0;
+  /**
+   * @property {Number} failed
+   * @default 0
+   */
   this.failed = 0;
+  /**
+   * @property {EZ3.Signal} onComplete
+   */
   this.onComplete = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onProgress
+   */
   this.onProgress = new EZ3.Signal();
 };
 
+/**
+ * @method EZ3.RequestManager#_processLoad
+ * @param {String} url
+ * @param {EZ3.File|EZ3.Entity} asset
+ * @param {Boolean} cached
+ */
 EZ3.RequestManager.prototype._processLoad = function(url, asset, cached) {
   var cache;
 
@@ -28,12 +64,21 @@ EZ3.RequestManager.prototype._processLoad = function(url, asset, cached) {
   this._processProgress(url, asset);
 };
 
+/**
+ * @method EZ3.RequestManager#_processError
+ * @param {String} url
+ */
 EZ3.RequestManager.prototype._processError = function(url) {
   this.failed++;
 
   this._processProgress(url);
 };
 
+/**
+ * @method EZ3.RequestManager#_processProgress
+ * @param {String} url
+ * @param {EZ3.File|EZ3.Entity} asset
+ */
 EZ3.RequestManager.prototype._processProgress = function(url, asset) {
   var loaded, failed, assets;
 
@@ -55,6 +100,14 @@ EZ3.RequestManager.prototype._processProgress = function(url, asset) {
   }
 };
 
+/**
+ * @method EZ3.RequestManager#addFileRequest
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @param {String} [responseType]
+ * @return {EZ3.File}
+ */
 EZ3.RequestManager.prototype.addFileRequest = function(url, cached, crossOrigin, responseType) {
   var cache = EZ3.Cache;
   var file = cache.get(url);
@@ -72,6 +125,13 @@ EZ3.RequestManager.prototype.addFileRequest = function(url, cached, crossOrigin,
   return this._requests[url].asset;
 };
 
+/**
+ * @method EZ3.RequestManager#addImageRequest
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @return {EZ3.Image}
+ */
 EZ3.RequestManager.prototype.addImageRequest = function(url, cached, crossOrigin) {
   var cache = EZ3.Cache;
   var image = cache.get(url);
@@ -95,6 +155,13 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, cached, crossOrigin
   return this._requests[url].asset;
 };
 
+/**
+ * @method EZ3.RequestManager#addEntityRequest
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @return {EZ3.Entity}
+ */
 EZ3.RequestManager.prototype.addEntityRequest = function(url, cached, crossOrigin) {
   if (!this._requests[url]) {
     var extension = EZ3.toFileExtension(url);
@@ -116,6 +183,9 @@ EZ3.RequestManager.prototype.addEntityRequest = function(url, cached, crossOrigi
   return this._requests[url].asset;
 };
 
+/**
+ * @method EZ3.RequestManager#send
+ */
 EZ3.RequestManager.prototype.send = function() {
   var assets;
   var url;

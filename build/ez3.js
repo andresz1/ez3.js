@@ -1,7 +1,16 @@
+/**
+ * @class EZ3
+ * @static
+ */
 var EZ3 = function() {};
 
 EZ3 = new EZ3();
 
+/**
+ * @method EZ3#extends
+ * @param {Object} destination
+ * @param {Object} source
+ */
 EZ3.extends = function(destination, source) {
   var k;
 
@@ -9,14 +18,29 @@ EZ3.extends = function(destination, source) {
     destination[k] = source[k];
 };
 
+/**
+ * @method EZ3#toFileName
+ * @param {String} url
+ * @return {String}
+ */
 EZ3.toFileName = function(url) {
   return url.split('/').pop();
 };
 
+/**
+ * @method EZ3#toFileExtension
+ * @param {String} url
+ * @return {String}
+ */
 EZ3.toFileExtension = function(url) {
   return url.split('/').pop().split('.').pop();
 };
 
+/**
+ * @method EZ3#toBaseUrl
+ * @param {String} url
+ * @return {String}
+ */
 EZ3.toBaseUrl = function(url) {
   var tokens = url.split('/');
 
@@ -52,7 +76,6 @@ EZ3.Engine = function(canvas, screen, options) {
    * @private
    */
   this._animationFrame = null;
-
   /**
    * @property {EZ3.Renderer} _renderer
    * @private
@@ -63,12 +86,10 @@ EZ3.Engine = function(canvas, screen, options) {
    * @property {EZ3.Time} time
    */
   this.time = null;
-
   /**
    * @property {EZ3.Input} input
    */
   this.input = null;
-
   /**
    * @property {EZ3.ScreenManager} screens
    */
@@ -340,21 +361,22 @@ EZ3.Entity.prototype.getWorldDirection = function() {
   return new EZ3.Vector3(0, 0, 1).mulQuaternion(this.getWorldRotation());
 };
 
-EZ3.Scene = function() {
-  EZ3.Entity.call(this);
-};
-
-EZ3.Scene.prototype = Object.create(EZ3.Entity.prototype);
-EZ3.Scene.prototype.constructor = EZ3.Scene;
-
 /**
- * @class Signal
+ * @class EZ3.Signal
+ * @constructor
  */
-
 EZ3.Signal = function() {
   var that = this;
 
+  /**
+   * @property {EZ3.SignalBinding[]} _bindings
+   * @private
+   */
   this._bindings = [];
+  /**
+   * @property {Any[]} _prevParams
+   * @private
+   */
   this._prevParams = null;
 
   this.dispatch = function() {
@@ -362,10 +384,38 @@ EZ3.Signal = function() {
   };
 };
 
+/**
+ * @property {Boolean} _shouldPropagate
+ * @memberof EZ3.Signal
+ * @static
+ * @private
+ * @default true
+ */
 EZ3.Signal.prototype._shouldPropagate = true;
+/**
+ * @property {Boolean} memorize
+ * @memberof EZ3.Signal
+ * @static
+ * @default false
+ */
 EZ3.Signal.prototype.memorize = false;
+/**
+ * @property {Boolean} active
+ * @memberof EZ3.Signal
+ * @static
+ * @default true
+ */
 EZ3.Signal.prototype.active = true;
 
+/**
+ * @method EZ3.Signal#_registerListener
+ * @private
+ * @param {Function} listener
+ * @param {Boolean} isOnce
+ * @param {Object} [listenerContext]
+ * @param {Number} [priority]
+ * @return {EZ3.SignalBinding}
+ */
 EZ3.Signal.prototype._registerListener = function(listener, isOnce, listenerContext, priority) {
   var prevIndex = this._indexOfListener(listener, listenerContext);
   var binding;
@@ -394,6 +444,11 @@ EZ3.Signal.prototype._registerListener = function(listener, isOnce, listenerCont
   return binding;
 };
 
+/**
+ * @method EZ3.Signal#_addBinding
+ * @private
+ * @param {EZ3.SignalBinding} binding
+ */
 EZ3.Signal.prototype._addBinding = function(binding) {
   var n = this._bindings.length;
 
@@ -404,6 +459,12 @@ EZ3.Signal.prototype._addBinding = function(binding) {
   this._bindings.splice(n + 1, 0, binding);
 };
 
+/**
+ * @method EZ3.Signal#_indexOfListener
+ * @private
+ * @param {Function} listener
+ * @param {Object} [context]
+ */
 EZ3.Signal.prototype._indexOfListener = function(listener, context) {
   var n = this._bindings.length;
   var cur;
@@ -418,18 +479,43 @@ EZ3.Signal.prototype._indexOfListener = function(listener, context) {
   return -1;
 };
 
+/**
+ * @method EZ3.Signal#has
+ * @param {Function} listener
+ * @param {Object} [context]
+ */
 EZ3.Signal.prototype.has = function(listener, context) {
   return this._indexOfListener(listener, context) !== -1;
 };
 
+/**
+ * @method EZ3.Signal#add
+ * @param {Function} listener
+ * @param {Object} [listenerContext]
+ * @param {Number} [priority]
+ * @return {EZ3.SignalBinding}
+ */
 EZ3.Signal.prototype.add = function(listener, listenerContext, priority) {
   return this._registerListener(listener, false, listenerContext, priority);
 };
 
+/**
+ * @method EZ3.Signal#addOnce
+ * @param {Function} listener
+ * @param {Object} [listenerContext]
+ * @param {Number} [priority]
+ * @return {EZ3.SignalBinding}
+ */
 EZ3.Signal.prototype.addOnce = function(listener, listenerContext, priority) {
   return this._registerListener(listener, true, listenerContext, priority);
 };
 
+/**
+ * @method EZ3.Signal#remove
+ * @param {Function} listener
+ * @param {Object} [context]
+ * @return {Function}
+ */
 EZ3.Signal.prototype.remove = function(listener, context) {
   var i = this._indexOfListener(listener, context);
 
@@ -441,6 +527,10 @@ EZ3.Signal.prototype.remove = function(listener, context) {
   return listener;
 };
 
+/**
+ * @method EZ3.Signal#removeAll
+ * @param {Object} [context]
+ */
 EZ3.Signal.prototype.removeAll = function(context) {
   var n = this._bindings.length;
 
@@ -459,14 +549,25 @@ EZ3.Signal.prototype.removeAll = function(context) {
   }
 };
 
+/**
+ * @method EZ3.Signal#getNumListeners
+ * @return {Number}
+ */
 EZ3.Signal.prototype.getNumListeners = function() {
   return this._bindings.length;
 };
 
+/**
+ * @method EZ3.Signal#halt
+ */
 EZ3.Signal.prototype.halt = function() {
   this._shouldPropagate = false;
 };
 
+/**
+ * @method EZ3.Signal#dispatch
+ * @param {Any[]} params
+ */
 EZ3.Signal.prototype.dispatch = function(params) {
   var paramsArr;
   var bindings;
@@ -492,10 +593,16 @@ EZ3.Signal.prototype.dispatch = function(params) {
   } while (bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
 };
 
+/**
+ * @method EZ3.Signal#forget
+ */
 EZ3.Signal.prototype.forget = function() {
   this._prevParams = null;
 };
 
+/**
+ * @method EZ3.Signal#dispose
+ */
 EZ3.Signal.prototype.dispose = function() {
   this.removeAll();
   delete this._bindings;
@@ -503,27 +610,71 @@ EZ3.Signal.prototype.dispose = function() {
 };
 
 /**
- * @class SignalBinding
+ * @class EZ3.SignalBinding
+ * @constructor
+ * @param {EZ3.Signal} signal
+ * @param {Function} listener
+ * @param {Boolean} isOnce
+ * @param {Object} [listenerContext]
+ * @param {Number} [priority]
  */
-
 EZ3.SignalBinding = function(signal, listener, isOnce, listenerContext, priority) {
+  /**
+   * @property {EZ3.Signal} _signal
+   * @private
+   */
   this._signal = signal;
+  /**
+   * @property {Number} _priority
+   * @private
+   * @default 0
+   */
   this._priority = (priority !== undefined) ? priority : 0;
 
+  /**
+   * @property {Function} listener
+   */
   this.listener = listener;
+  /**
+   * @property {Boolean} isOnce
+   */
   this.isOnce = isOnce;
+  /**
+   * @property {Object} context
+   */
   this.context = listenerContext;
 };
 
+/**
+ * @property {Boolean} active
+ * @memberof EZ3.SignalBinding
+ * @default true
+ * @static
+ */
 EZ3.SignalBinding.prototype.active = true;
+/**
+ * @property {Number} params
+ * @memberof EZ3.SignalBinding
+ * @default null
+ * @static
+ */
 EZ3.SignalBinding.prototype.params = null;
 
+/**
+ * @method EZ3.SignalBinding#_destroy
+ * @private
+ */
 EZ3.SignalBinding.prototype._destroy = function() {
   delete this._signal;
   delete this.listener;
   delete this.context;
 };
 
+/**
+ * @method EZ3.SignalBinding#execute
+ * @param {Any[]} paramsArr
+ * @return Any
+ */
 EZ3.SignalBinding.prototype.execute = function(paramsArr) {
   var handlerReturn;
   var params;
@@ -538,61 +689,111 @@ EZ3.SignalBinding.prototype.execute = function(paramsArr) {
   return handlerReturn;
 };
 
+/**
+ * @method EZ3.SignalBinding#detach
+ * @return {Function|null}
+ */
 EZ3.SignalBinding.prototype.detach = function() {
   return this.isBound() ? this._signal.remove(this.listener, this.context) : null;
 };
 
+/**
+ * @method EZ3.SignalBinding#isBound
+ * @return {Boolean}
+ */
 EZ3.SignalBinding.prototype.isBound = function() {
-  return (!!this._signal && !!this.listener);
+  return !!this._signal && !!this.listener;
 };
 
 /**
- * @class Framebuffer
+ * @class EZ3.Framebuffer
+ * @constructor
+ * @param {EZ3.Vector2} size
  */
-
- EZ3.Framebuffer = function(size) {
+EZ3.Framebuffer = function(size) {
+  /**
+   * @property {WebGLId} _id
+   * @private
+   */
   this._id = null;
+  /**
+   * @property {Object} _cache
+   * @private
+   */
   this._cache = {};
-  this._renderbuffer = null;
 
+  /**
+   * @property {EZ3.Vector2} size
+   */
   this.size = size;
+  /**
+   * @property {EZ3.TargetTexture|EZ3.TargetCubemap} texture
+   */
   this.texture = null;
 };
 
 EZ3.Framebuffer.prototype.constructor = EZ3.Framebuffer;
 
+/**
+ * @method EZ3.Framebuffer#bind
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ */
 EZ3.Framebuffer.prototype.bind = function(gl, state) {
-  if(!this._id)
+  if (!this._id)
     this._id = gl.createFramebuffer();
 
   gl.bindFramebuffer(gl.FRAMEBUFFER, this._id);
   state.viewport(new EZ3.Vector2(), this.size);
 };
 
+/**
+ * @method EZ3.Framebuffer#update
+ * @param {WebGLContext} gl
+ */
 EZ3.Framebuffer.prototype.update = function(gl) {
   this.texture.bind(gl);
   this.texture.update(gl);
   this.texture.attach(gl);
 
-  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
+  if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
     console.warn('EZ3.Framebuffer.update: update is not completed.');
 };
 
+/**
+ * @method EZ3.Framebuffer#bind
+ * @static
+ * @param {WebGLContext} gl
+ */
 EZ3.Framebuffer.unbind = function(gl) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 };
 
 /**
- * @class Geometry
+ * @class EZ3.Geometry
+ * @constructor
  */
-
 EZ3.Geometry = function() {
+  /**
+   * @property {EZ3.ArrayBuffer} buffers
+   */
   this.buffers = new EZ3.ArrayBuffer();
-
+  /**
+   * @property {Boolean} linearDataNeedUpdate
+   * @default true
+   */
   this.linearDataNeedUpdate = true;
-  this.normalDataNeedUpdate  = true;
+  /**
+   * @property {Boolean} normalDataNeedUpdate
+   * @default true
+   */
+  this.normalDataNeedUpdate = true;
 };
 
+/**
+ * @method EZ3.Geometry#_computeLinearData
+ * @private
+ */
 EZ3.Geometry.prototype._computeLinearData = function() {
   var triangles = this.buffers.getTriangularBuffer();
   var need32Bits;
@@ -614,6 +815,10 @@ EZ3.Geometry.prototype._computeLinearData = function() {
   this.buffers.addLinearBuffer(lines, need32Bits);
 };
 
+/**
+ * @method EZ3.Geometry#_computeNormalData
+ * @private
+ */
 EZ3.Geometry.prototype._computeNormalData = function() {
   var indices = this.buffers.getTriangularBuffer();
   var vertices = this.buffers.getPositionBuffer();
@@ -673,6 +878,9 @@ EZ3.Geometry.prototype._computeNormalData = function() {
   this.buffers.addNormalBuffer(normals);
 };
 
+/**
+ * @method EZ3.Geometry#updateLinearData
+ */
 EZ3.Geometry.prototype.updateLinearData = function() {
   if (this.linearDataNeedUpdate) {
     this._computeLinearData();
@@ -680,6 +888,9 @@ EZ3.Geometry.prototype.updateLinearData = function() {
   }
 };
 
+/**
+ * @method EZ3.Geometry#updateNormalData
+ */
 EZ3.Geometry.prototype.updateNormalData = function() {
   if (this.normalDataNeedUpdate) {
     this._computeNormalData();
@@ -688,18 +899,42 @@ EZ3.Geometry.prototype.updateNormalData = function() {
 };
 
 /**
- * @class ArrayBuffer
+ * @class EZ3.ArrayBuffer
+ * @constructor
  */
-
 EZ3.ArrayBuffer = function() {
+  /**
+   * @property {WebGLId} _id
+   * @private
+   */
   this._id = null;
+  /**
+   * @property {EZ3.IndexBuffer} _triangular
+   * @private
+   */
   this._triangular = null;
+  /**
+   * @property {EZ3.IndexBuffer} _linear
+   * @private
+   */
   this._linear = null;
+  /**
+   * @property {Object} _triangular
+   * @private
+   */
   this._vertex = {};
 };
 
 EZ3.ArrayBuffer.prototype.constructor = EZ3.ArrayBuffer;
 
+/**
+ * @method EZ3.ArrayBuffer#bind
+ * @param {WebGLContext} gl
+ * @param {Object} attributes
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererExtensions} extensions
+ * @param {Number} index
+ */
 EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extensions, index) {
   var buffer;
   var k;
@@ -749,6 +984,13 @@ EZ3.ArrayBuffer.prototype.bind = function(gl, attributes, state, extensions, ind
   }
 };
 
+/**
+ * @method EZ3.ArrayBuffer#addLinearBuffer
+ * @param {Number[]} [data]
+ * @param {Boolean} [need32Bits]
+ * @param {Boolean} [dynamic]
+ * @return {EZ3.IndexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.addLinearBuffer = function(data, need32Bits, dynamic) {
   var buffer = this._linear;
 
@@ -773,6 +1015,13 @@ EZ3.ArrayBuffer.prototype.addLinearBuffer = function(data, need32Bits, dynamic) 
   return buffer;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#addTriangularBuffer
+ * @param {Number[]} [data]
+ * @param {Boolean} [need32Bits]
+ * @param {Boolean} [dynamic]
+ * @return {EZ3.IndexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.addTriangularBuffer = function(data, need32Bits, dynamic) {
   var buffer = this._triangular;
 
@@ -797,6 +1046,12 @@ EZ3.ArrayBuffer.prototype.addTriangularBuffer = function(data, need32Bits, dynam
   return buffer;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#addPositionBuffer
+ * @param {Number[]} [data]
+ * @param {Boolean} [dynamic]
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.addPositionBuffer = function(data, dynamic) {
   var buffer = this._vertex.position;
 
@@ -818,6 +1073,12 @@ EZ3.ArrayBuffer.prototype.addPositionBuffer = function(data, dynamic) {
   return buffer;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#addNormalBuffer
+ * @param {Number[]} [data]
+ * @param {Boolean} [dynamic]
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.addNormalBuffer = function(data, dynamic) {
   var buffer = this._vertex.normal;
 
@@ -839,6 +1100,12 @@ EZ3.ArrayBuffer.prototype.addNormalBuffer = function(data, dynamic) {
   return buffer;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#addUvBuffer
+ * @param {Number[]} [data]
+ * @param {Boolean} [dynamic]
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.addUvBuffer = function(data, dynamic) {
   var buffer = this._vertex.uv;
 
@@ -860,52 +1127,113 @@ EZ3.ArrayBuffer.prototype.addUvBuffer = function(data, dynamic) {
   return buffer;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#addVertexBuffer
+ * @param {String} name
+ * @param {EZ3.VertexBuffer} buffer
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.addVertexBuffer = function(name, buffer) {
   this._vertex[name] = buffer;
 
   return buffer;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#getTriangularBuffer
+ * @return {EZ3.IndexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.getTriangularBuffer = function() {
   return this._triangular;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#getLinearBuffer
+ * @return {EZ3.IndexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.getLinearBuffer = function() {
   return this._linear;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#getPositionBuffer
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.getPositionBuffer = function() {
   return this._vertex.position;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#getNormalBuffer
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.getNormalBuffer = function() {
   return this._vertex.normal;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#getUvBuffer
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.getUvBuffer = function() {
   return this._vertex.uv;
 };
 
+/**
+ * @method EZ3.ArrayBuffer#getVertexBuffer
+ * @return {EZ3.VertexBuffer}
+ */
 EZ3.ArrayBuffer.prototype.getVertexBuffer = function(name) {
   return this._vertex[name];
 };
 
 /**
- * @class Buffer
+ * @class EZ3.Buffer
+ * @constructor
+ * @param {Number[]} [data]
+ * @param {Boolean} [dynamic]
  */
-
 EZ3.Buffer = function(data, dynamic) {
+  /**
+   * @property {WebGLId} _id
+   * @private
+   */
   this._id = null;
+  /**
+   * @property {Object} _cache
+   * @private
+   */
   this._cache = {};
+  /**
+   * @property {Number} _ranges
+   * @private
+   */
   this._ranges = [];
 
+  /**
+   * @property {Number[]} data
+   * @default []
+   */
   this.data = data || [];
-  this.dynamic = dynamic || false;
+  /**
+   * @property {Boolean} dynamic
+   * @default false
+   */
+  this.dynamic = (dynamic !== undefined) ? dynamic : false;
+  /**
+   * @property {Boolean} needUpdate
+   * @default true
+   */
   this.needUpdate = true;
 };
 
 EZ3.Buffer.prototype.constructor = EZ3.Buffer;
 
+/**
+ * @method EZ3.Buffer#bind
+ * @param {WebGLContext} gl
+ * @param {Number} target
+ */
 EZ3.Buffer.prototype.bind = function(gl, target) {
   if(!this._id)
     this._id = gl.createBuffer();
@@ -913,6 +1241,12 @@ EZ3.Buffer.prototype.bind = function(gl, target) {
   gl.bindBuffer(target, this._id);
 };
 
+/**
+ * @method EZ3.Buffer#update
+ * @param {WebGLContext} gl
+ * @param {Number} target
+ * @param {Number} [bytes]
+ */
 EZ3.Buffer.prototype.update = function(gl, target, bytes) {
   var length = bytes * this.data.length;
   var changed = false;
@@ -958,14 +1292,22 @@ EZ3.Buffer.prototype.update = function(gl, target, bytes) {
   }
 };
 
+/**
+ * @method EZ3.Buffer#addUpdateRange
+ * @param {Number} left
+ * @param {Number} right
+ */
 EZ3.Buffer.prototype.addUpdateRange = function(left, right) {
     this._ranges.push(left, right);
 };
 
 /**
- * @class VertexBufferAttribute
+ * @class EZ3.VertexBufferAttribute
+ * @constructor
+ * @param {Number} size
+ * @param {Number} offset
+ * @param {Boolean} normalized
  */
-
 EZ3.VertexBufferAttribute = function(size, offset, normalized) {
   this.size = size;
   this.offset = (offset !== undefined) ? 4 * offset : 0;
@@ -973,23 +1315,40 @@ EZ3.VertexBufferAttribute = function(size, offset, normalized) {
 };
 
 /**
- * @class InputManager
+ * @class EZ3.InputManager
+ * @constructor
+ * @param {HTMLElement} canvas
+ * @param {HTMLRect} bounds
  */
-
 EZ3.InputManager = function(canvas, bounds) {
+  /**
+   * @property {EZ3.Keyboard} keyboard
+   */
   this.keyboard = new EZ3.Keyboard();
+  /**
+   * @property {EZ3.Mouse} mouse
+   */
   this.mouse = new EZ3.Mouse(canvas, bounds);
+  /**
+   * @property {EZ3.Touch} touch
+   */
   this.touch = new EZ3.Touch(canvas, bounds);
 
   this.enable();
 };
 
+/**
+ * @method EZ3.InputManager#enable
+ */
 EZ3.InputManager.prototype.enable = function() {
   this.keyboard.enable();
   this.mouse.enable();
   this.touch.enable();
 };
 
+/**
+ * @method EZ3.InputManager#disable
+ */
 EZ3.InputManager.prototype.disable = function() {
   this.keyboard.disable();
   this.mouse.disable();
@@ -997,20 +1356,42 @@ EZ3.InputManager.prototype.disable = function() {
 };
 
 /**
- * @class Keboard
+ * @class EZ3.Keyboard
+ * @constructor
  */
-
 EZ3.Keyboard = function() {
+  /**
+   * @property {EZ3.Switch[]} _keys
+   * @private
+   */
   this._keys = [];
 
+  /**
+   * @property {Boolean} enabled
+   * @default false
+   */
   this.enabled = false;
+  /**
+   * @property {EZ3.Signal} onKeyPress
+   */
   this.onKeyPress = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onKeyDown
+   */
   this.onKeyDown = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onKeyUp
+   */
   this.onKeyUp = new EZ3.Signal();
 };
 
 EZ3.Keyboard.prototype.constructor = EZ3.Keyboard;
 
+/**
+ * @method EZ3.Keyboard#_processKeyDown
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Keyboard.prototype._processKeyDown = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
@@ -1021,6 +1402,11 @@ EZ3.Keyboard.prototype._processKeyDown = function(event) {
   this.onKeyDown.dispatch(this._keys[event.keyCode]);
 };
 
+/**
+ * @method EZ3.Keyboard#_processKeyUp
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Keyboard.prototype._processKeyUp = function(event) {
   if(!this._keys[event.keyCode])
     this._keys[event.keyCode] = new EZ3.Switch(event.keyCode);
@@ -1029,6 +1415,9 @@ EZ3.Keyboard.prototype._processKeyUp = function(event) {
   this.onKeyUp.dispatch(this._keys[event.keyCode]);
 };
 
+/**
+ * @method EZ3.Keyboard#enable
+ */
 EZ3.Keyboard.prototype.enable = function() {
   var that = this;
 
@@ -1045,6 +1434,9 @@ EZ3.Keyboard.prototype.enable = function() {
 	window.addEventListener('keyup', this._onKeyUp, false);
 };
 
+/**
+ * @method EZ3.Keyboard#disable
+ */
 EZ3.Keyboard.prototype.disable = function() {
   this.enabled = false;
 
@@ -1055,6 +1447,11 @@ EZ3.Keyboard.prototype.disable = function() {
   delete this._onKeyUp;
 };
 
+/**
+ * @method EZ3.Keyboard#getKey
+ * @param {Number} code
+ * @return {EZ3.Switch}
+ */
 EZ3.Keyboard.prototype.getKey = function(code) {
   if(!this._keys[code])
     this._keys[code] = new EZ3.Switch(code);
@@ -1166,40 +1563,96 @@ EZ3.Keyboard.HELP = 47;
 EZ3.Keyboard.NUM_LOCK = 144;
 
 /**
- * @class Mouse
+ * @class EZ3.Mouse
+ * @constructor
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
  */
-
 EZ3.Mouse = function(domElement, bounds) {
+  /**
+   * @property {HTMLElement} _domElement
+   * @private
+   */
   this._domElement = domElement;
+  /**
+   * @property {HTMLRect} _bounds
+   * @private
+   */
   this._bounds = bounds;
 
+  /**
+   * @property {Boolean} enabled
+   * @default false
+   */
   this.enabled = false;
+  /**
+   * @property {EZ3.MousePointer} pointer
+   */
   this.pointer = new EZ3.MousePointer();
+  /**
+   * @property {EZ3.Signal} onPress
+   */
   this.onPress = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onMove
+   */
   this.onMove = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onUp
+   */
   this.onUp = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onWheel
+   */
   this.onWheel = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onLockChange
+   */
   this.onLockChange = new EZ3.Signal();
 };
 
 EZ3.Mouse.prototype.constructor = EZ3.Mouse;
 
+/**
+ * @method EZ3.Mouse#_processMousePress
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMousePress = function(event) {
   this.pointer.processPress(event, this._domElement, this._bounds, this.onPress, this.onMove);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseMove
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMouseMove = function(event) {
   this.pointer.processMove(event, this._domElement, this._bounds, this.onMove);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseUp
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMouseUp = function(event) {
   this.pointer.processUp(event, this.onUp);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseWheel
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Mouse.prototype._processMouseWheel = function(event) {
   this.pointer.processWheel(event, this.onWheel);
 };
 
+/**
+ * @method EZ3.Moused#_processMouseLockChange
+ * @private
+ */
 EZ3.Mouse.prototype._processMouseLockChange = function() {
   var device = EZ3.Device;
 
@@ -1212,6 +1665,9 @@ EZ3.Mouse.prototype._processMouseLockChange = function() {
   this.pointer.processLockChange(this.onLockChange);
 };
 
+/**
+ * @method EZ3.Moused#requestPointerLock
+ */
 EZ3.Mouse.prototype.requestPointerLock = function() {
   var device = EZ3.Device;
   var that;
@@ -1229,6 +1685,9 @@ EZ3.Mouse.prototype.requestPointerLock = function() {
   }
 };
 
+/**
+ * @method EZ3.Moused#exitPointerLock
+ */
 EZ3.Mouse.prototype.exitPointerLock = function() {
   var device = EZ3.Device;
 
@@ -1236,6 +1695,9 @@ EZ3.Mouse.prototype.exitPointerLock = function() {
     document[device.exitPointerLock]();
 };
 
+/**
+ * @method EZ3.Moused#enable
+ */
 EZ3.Mouse.prototype.enable = function() {
   var that = this;
   var device = EZ3.Device;
@@ -1267,6 +1729,9 @@ EZ3.Mouse.prototype.enable = function() {
   }
 };
 
+/**
+ * @method EZ3.Moused#disable
+ */
 EZ3.Mouse.prototype.disable = function() {
   var device = EZ3.Device;
 
@@ -1294,31 +1759,53 @@ EZ3.Mouse.BACK_BUTTON = 3;
 EZ3.Mouse.FORWARD_BUTTON = 4;
 
 /**
- * @class Pointer
+ * @class EZ3.Pointer
+ * @constructor
  */
-
 EZ3.Pointer = function() {
+  /**
+   * @property {Object} last
+   */
   this.last = {
     page : new EZ3.Vector2(),
     client : new EZ3.Vector2(),
     screen : new EZ3.Vector2(),
     position : new EZ3.Vector2()
   };
+  /**
+   * @property {Object} current
+   */
   this.current = {
     page : new EZ3.Vector2(),
     client : new EZ3.Vector2(),
     screen : new EZ3.Vector2(),
     position : new EZ3.Vector2()
   };
+  /**
+   * @property {Boolean} entered
+   * @default false
+   */
   this.entered = false;
 };
 
 EZ3.Pointer.prototype.constructor = EZ3.Pointer;
 
+/**
+ * @method EZ3.Pointer#processPress
+ * @param {HTMLEvent} event
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
+ */
 EZ3.Pointer.prototype.processPress = function(event, domElement, bounds) {
   EZ3.Pointer.prototype.processMove.call(this, event, domElement, bounds);
 };
 
+/**
+ * @method EZ3.Pointer#processMove
+ * @param {HTMLEvent} event
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
+ */
 EZ3.Pointer.prototype.processMove = function(event, domElement, bounds) {
   var x = Math.round((event.clientX - bounds.left) / (bounds.right - bounds.left) * domElement.width);
   var y = Math.round((event.clientY - bounds.top) / (bounds.bottom - bounds.top) * domElement.height);
@@ -1335,21 +1822,34 @@ EZ3.Pointer.prototype.processMove = function(event, domElement, bounds) {
 };
 
 /**
- * @class Switch
+ * @class EZ3.Switch
+ * @constructor
+ * @param {Number} code
  */
-
 EZ3.Switch = function(code) {
+  /**
+   * @property {Boolean} _state
+   */
   this._state = false;
 
+  /**
+   * @property {Number} code
+   */
   this.code = code;
 };
 
 EZ3.Switch.prototype.constructor = EZ3.Switch;
 
+/**
+ * @method EZ3.Switch#processPress
+ */
 EZ3.Switch.prototype.processPress = function() {
   this._state = true;
 };
 
+/**
+ * @method EZ3.Switch#processDown
+ */
 EZ3.Switch.prototype.processDown = function() {
   var isUp = this.isUp();
 
@@ -1358,36 +1858,80 @@ EZ3.Switch.prototype.processDown = function() {
   return isUp;
 };
 
+/**
+ * @method EZ3.Switch#processUp
+ */
 EZ3.Switch.prototype.processUp = function() {
   this._state = false;
 };
 
+/**
+ * @method EZ3.Switch#isDown
+ * @return {Boolean}
+ */
 EZ3.Switch.prototype.isDown = function() {
   return this._state;
 };
 
+/**
+ * @method EZ3.Switch#isUp
+ * @return {Boolean}
+ */
 EZ3.Switch.prototype.isUp = function() {
   return !this._state;
 };
 
 /**
- * @class Touch
+ * @class EZ3.Touch
+ * @constructor
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
  */
 
 EZ3.Touch = function(domElement, bounds) {
-  this._device = EZ3.Device;
+  /**
+   * @property {HTMLElement} _domElement
+   * @private
+   */
   this._domElement = domElement;
+  /**
+   * @property {HTMLRect} _bounds
+   * @private
+   */
   this._bounds = bounds;
+  /**
+   * @property {EZ3.TouchPointer[]} _pointers
+   * @private
+   */
   this._pointers = [];
 
+  /**
+   * @property {Boolean} enabled
+   * @default false
+   */
   this.enabled = false;
+  /**
+   * @property {EZ3.Signal} onPress
+   */
   this.onPress = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onMove
+   */
   this.onMove = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onUp
+   */
   this.onUp = new EZ3.Signal();
 };
 
 EZ3.Touch.prototype.constructor = EZ3.Touch;
 
+/**
+ * @method EZ3.Touch#_getPointerIndex
+ * @private
+ * @param {Number} id
+ * @return {Number}
+ */
 EZ3.Touch.prototype._getPointerIndex = function(id) {
   var i;
 
@@ -1398,6 +1942,11 @@ EZ3.Touch.prototype._getPointerIndex = function(id) {
   return -1;
 };
 
+/**
+ * @method EZ3.Touch#_processTouchPress
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Touch.prototype._processTouchPress = function(event) {
   var touch;
   var i;
@@ -1411,7 +1960,7 @@ EZ3.Touch.prototype._processTouchPress = function(event) {
     for (j = 0; j < EZ3.Touch.MAX_NUM_OF_POINTERS; j++) {
       if (!this._pointers[j]) {
         touch = event.changedTouches[i];
-        this._pointers[j] = new EZ3.TouchPointer(j, touch .identifier);
+        this._pointers[j] = new EZ3.TouchPointer(j, touch.identifier);
         break;
       } else if (this._pointers[j].isUp()) {
         touch = event.changedTouches[i];
@@ -1425,6 +1974,11 @@ EZ3.Touch.prototype._processTouchPress = function(event) {
   }
 };
 
+/**
+ * @method EZ3.Touch#_processTouchMove
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Touch.prototype._processTouchMove = function(event) {
   var i;
   var j;
@@ -1438,6 +1992,11 @@ EZ3.Touch.prototype._processTouchMove = function(event) {
   }
 };
 
+/**
+ * @method EZ3.Touch#_processTouchUp
+ * @private
+ * @param {HTMLEvent} event
+ */
 EZ3.Touch.prototype._processTouchUp = function(event) {
   var i;
   var j;
@@ -1451,10 +2010,14 @@ EZ3.Touch.prototype._processTouchUp = function(event) {
   }
 };
 
+/**
+ * @method EZ3.Touch#enable
+ */
 EZ3.Touch.prototype.enable = function() {
+  var device = EZ3.Device;
   var that;
 
-  if (this._device.touchDown) {
+  if (device.touchDown) {
     that = this;
 
     this.enabled = true;
@@ -1471,19 +2034,24 @@ EZ3.Touch.prototype.enable = function() {
       that._processTouchUp(event);
     };
 
-    this._domElement.addEventListener(this._device.touchDown, this._onTouchPress, false);
-    this._domElement.addEventListener(this._device.touchMove, this._onTouchMove, false);
-    this._domElement.addEventListener(this._device.touchUp, this._onTouchUp, false);
+    this._domElement.addEventListener(device.touchDown, this._onTouchPress, false);
+    this._domElement.addEventListener(device.touchMove, this._onTouchMove, false);
+    this._domElement.addEventListener(device.touchUp, this._onTouchUp, false);
   }
 };
 
+/**
+ * @method EZ3.Touch#disable
+ */
 EZ3.Touch.prototype.disable = function() {
-  if (this._device.touchDown) {
+  var device = EZ3.Device;
+
+  if (device.touchDown) {
     this.enabled = false;
 
-    this._domElement.removeEventListener(this._device.touchDown, this._onTouchPress, false);
-    this._domElement.removeEventListener(this._device.touchMove, this._onTouchMove, false);
-    this._domElement.removeEventListener(this._device.touchUp, this._onTouchUp, false);
+    this._domElement.removeEventListener(device.touchDown, this._onTouchPress, false);
+    this._domElement.removeEventListener(device.touchMove, this._onTouchMove, false);
+    this._domElement.removeEventListener(device.touchUp, this._onTouchUp, false);
 
     delete this._onTouchPress;
     delete this._onTouchMove;
@@ -1491,6 +2059,11 @@ EZ3.Touch.prototype.disable = function() {
   }
 };
 
+/**
+ * @method EZ3.Touch#getPointer
+ * @param {Number} code
+ * @return {EZ3.TouchPointer}
+ */
 EZ3.Touch.prototype.getPointer = function(code) {
   if (!this._pointers[code])
     this._pointers[code] = new EZ3.TouchPointer(code);
@@ -1511,39 +2084,75 @@ EZ3.Touch.POINTER_10 = 9;
 EZ3.Touch.MAX_NUM_OF_POINTERS = 10;
 
 /**
- * @class Light
+ * @class EZ3.Light
+ * @constructor
  */
-
 EZ3.Light = function() {
-  this.shadowBias = 0.00005;
-  this.shadowDarkness = 0.2;
-
+  /**
+   * @property {EZ3.Vector3} diffuse
+   * @default new EZ3.Vector3(1.0, 1.0, 1.0)
+   */
   this.diffuse = new EZ3.Vector3(1.0, 1.0, 1.0);
+  /**
+   * @property {EZ3.Vector3} specular
+   * @default new EZ3.Vector3(1.0, 1.0, 1.0)
+   */
   this.specular = new EZ3.Vector3(1.0, 1.0, 1.0);
+  /**
+   * @property {Number} shadowBias
+   * @default 0.00005
+   */
+  this.shadowBias = 0.00005;
+  /**
+   * @property {Number} shadowDarkness
+   * @default 0.2
+   */
+  this.shadowDarkness = 0.2;
 };
 
 EZ3.Light.prototype = Object.create(EZ3.Entity.prototype);
 EZ3.Light.prototype.constructor = EZ3.Light;
 
+/**
+ * @method EZ3.Light#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.GLSLProgram} program
+ * @param {String} prefix
+ */
 EZ3.Light.prototype.updateUniforms = function(gl, program, prefix) {
   program.loadUniformFloat(gl, prefix + 'diffuse', this.diffuse);
   program.loadUniformFloat(gl, prefix + 'specular', this.specular);
 };
 
 /**
- * @class AssetsManager
+ * @class EZ3.AssetsManager
+ * @constructor
  */
-
 EZ3.AssetManager = function() {
+  /**
+   * @property {Object} _assets
+   * @private
+   */
   this._assets = {};
 };
 
+/**
+ * @method EZ3.AssetManager#add
+ * @param {String} url
+ * @param {EZ3.File|EZ3.Entity} asset
+ * @return {EZ3.File|EZ3.Entity}
+ */
 EZ3.AssetManager.prototype.add = function(url, asset) {
   this._assets[url] = asset;
 
   return this._assets[url];
 };
 
+/**
+ * @method EZ3.AssetManager#get
+ * @param {String} id
+ * @return {EZ3.File|EZ3.Entity}
+ */
 EZ3.AssetManager.prototype.get = function(id) {
   var asset = this._assets[id];
   var url;
@@ -1557,64 +2166,137 @@ EZ3.AssetManager.prototype.get = function(id) {
 };
 
 /**
- * @class Cache
+ * @class EZ3.Cache
+ * @static
  */
-
 EZ3.Cache = function() {
+  /**
+   * @property {Object} _files
+   * @private
+   */
   this._files = {};
 };
 
 EZ3.Cache = new EZ3.Cache();
 
+/**
+ * @method EZ3.Cache#add
+ * @param {String} url
+ * @param {EZ3.File} file
+ * @return {EZ3.File}
+ */
 EZ3.Cache.add = function(url, file) {
   this._files[url] = file;
 
   return this._files[url];
 };
 
+/**
+ * @method EZ3.Cache#get
+ * @param {String} url
+ * @return {EZ3.File}
+ */
 EZ3.Cache.get = function(url) {
   return this._files[url];
 };
 
 /**
- * @class File
+ * @class EZ3.File
+ * @constructor
+ * @param {Any} [data]
  */
-
 EZ3.File = function(data) {
+  /**
+   * @property {Any} data
+   */
   this.data = data || null;
 };
 
 EZ3.File.prototype.constructor = EZ3.File;
 
 /**
- * @class Request
+ * @class EZ3.Request
+ * @constructor
+ * @param {String} url
+ * @param {EZ3.File|EZ3.Entity} asset
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.Request = function(url, asset, cached, crossOrigin) {
+  /**
+   * @property {String} url
+   */
   this.url = url;
+  /**
+   * @property {EZ3.File|EZ3.Entity} asset
+   */
   this.asset = asset;
+  /**
+   * @property {Boolean} cached
+   * @default true
+   */
   this.cached = (cached !== undefined) ? cached : true;
+  /**
+   * @property {Boolean} crossOrigin
+   * @default false
+   */
   this.crossOrigin = (crossOrigin !== undefined) ? crossOrigin : false;
 };
 
 EZ3.Request.prototype.constructor = EZ3.Request;
 
 /**
- * @class RequestManager
+ * @class EZ3.RequestManager
+ * @constructor
  */
-
 EZ3.RequestManager = function() {
+  /**
+   * @property {Object} _requests
+   * @private
+   */
   this._requests = {};
+  /**
+   * @property {AssetManager} _assets
+   * @private
+   */
   this._assets = new EZ3.AssetManager();
 
+  /**
+   * @property {Boolean} started
+   * @default false
+   */
   this.started = false;
+  /**
+   * @property {Number} toSend
+   * @default 0
+   */
   this.toSend = 0;
+  /**
+   * @property {Number} loaded
+   * @default 0
+   */
   this.loaded = 0;
+  /**
+   * @property {Number} failed
+   * @default 0
+   */
   this.failed = 0;
+  /**
+   * @property {EZ3.Signal} onComplete
+   */
   this.onComplete = new EZ3.Signal();
+  /**
+   * @property {EZ3.Signal} onProgress
+   */
   this.onProgress = new EZ3.Signal();
 };
 
+/**
+ * @method EZ3.RequestManager#_processLoad
+ * @param {String} url
+ * @param {EZ3.File|EZ3.Entity} asset
+ * @param {Boolean} cached
+ */
 EZ3.RequestManager.prototype._processLoad = function(url, asset, cached) {
   var cache;
 
@@ -1629,12 +2311,21 @@ EZ3.RequestManager.prototype._processLoad = function(url, asset, cached) {
   this._processProgress(url, asset);
 };
 
+/**
+ * @method EZ3.RequestManager#_processError
+ * @param {String} url
+ */
 EZ3.RequestManager.prototype._processError = function(url) {
   this.failed++;
 
   this._processProgress(url);
 };
 
+/**
+ * @method EZ3.RequestManager#_processProgress
+ * @param {String} url
+ * @param {EZ3.File|EZ3.Entity} asset
+ */
 EZ3.RequestManager.prototype._processProgress = function(url, asset) {
   var loaded, failed, assets;
 
@@ -1656,6 +2347,14 @@ EZ3.RequestManager.prototype._processProgress = function(url, asset) {
   }
 };
 
+/**
+ * @method EZ3.RequestManager#addFileRequest
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @param {String} [responseType]
+ * @return {EZ3.File}
+ */
 EZ3.RequestManager.prototype.addFileRequest = function(url, cached, crossOrigin, responseType) {
   var cache = EZ3.Cache;
   var file = cache.get(url);
@@ -1673,6 +2372,13 @@ EZ3.RequestManager.prototype.addFileRequest = function(url, cached, crossOrigin,
   return this._requests[url].asset;
 };
 
+/**
+ * @method EZ3.RequestManager#addImageRequest
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @return {EZ3.Image}
+ */
 EZ3.RequestManager.prototype.addImageRequest = function(url, cached, crossOrigin) {
   var cache = EZ3.Cache;
   var image = cache.get(url);
@@ -1696,6 +2402,13 @@ EZ3.RequestManager.prototype.addImageRequest = function(url, cached, crossOrigin
   return this._requests[url].asset;
 };
 
+/**
+ * @method EZ3.RequestManager#addEntityRequest
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @return {EZ3.Entity}
+ */
 EZ3.RequestManager.prototype.addEntityRequest = function(url, cached, crossOrigin) {
   if (!this._requests[url]) {
     var extension = EZ3.toFileExtension(url);
@@ -1717,6 +2430,9 @@ EZ3.RequestManager.prototype.addEntityRequest = function(url, cached, crossOrigi
   return this._requests[url].asset;
 };
 
+/**
+ * @method EZ3.RequestManager#send
+ */
 EZ3.RequestManager.prototype.send = function() {
   var assets;
   var url;
@@ -1739,21 +2455,58 @@ EZ3.RequestManager.prototype.entity = EZ3.RequestManager.prototype.addEntityRequ
 EZ3.RequestManager.prototype.start = EZ3.RequestManager.prototype.send;
 
 /**
- * @class Material
+ * @class EZ3.Material
+ * @constructor
+ * @param {String} id
  */
-
 EZ3.Material = function(id) {
+  /**
+   * @property {String} _id
+   * @private
+   */
   this._id = id || null;
 
+  /**
+   * @property {EZ3.GLSLProgram} program
+   */
   this.program = null;
+  /**
+   * @property {Number} fill
+   * @default EZ3.Material.SOLID
+   */
   this.fill = EZ3.Material.SOLID;
+  /**
+   * @property {Boolean} visible
+   * @default true
+   */
   this.visible = true;
+  /**
+   * @property {Boolean} depthTest
+   * @default true
+   */
   this.depthTest = true;
+  /**
+   * @property {Boolean} transparent
+   * @default false
+   */
   this.transparent = false;
+  /**
+   * @property {Number} faceCulling
+   * @default EZ3.Material.BACK_CULLING
+   */
   this.faceCulling = EZ3.Material.BACK_CULLING;
+  /**
+   * @property {Number} blending
+   * @default EZ3.Material.STANDARD_BLENDING
+   */
   this.blending = EZ3.Material.STANDARD_BLENDING;
 };
 
+/**
+ * @method EZ3.Material#updateStates
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ */
 EZ3.Material.prototype.updateStates = function(gl, state) {
   if (this.depthTest)
     state.enable(gl.DEPTH_TEST);
@@ -1789,27 +2542,87 @@ EZ3.Material.prototype.updateStates = function(gl, state) {
     state.disable(gl.BLEND);
 };
 
+/**
+ * @property {Number} SOLID
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.SOLID = 0;
+/**
+ * @property {Number} POINTS
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.POINTS = 1;
+/**
+ * @property {Number} WIREFRAME
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.WIREFRAME = 2;
-
+/**
+ * @property {Number} NO_CULLING
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.NO_CULLING = 0;
+/**
+ * @property {Number} BACK_CULLING
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.BACK_CULLING = 1;
+/**
+ * @property {Number} FRONT_CULLING
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.FRONT_CULLING = 2;
-
+/**
+ * @property {Number} STANDARD_BLENDING
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.STANDARD_BLENDING = 0;
+/**
+ * @property {Number} ADDITIVE_BLENDING
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.ADDITIVE_BLENDING = 1;
+/**
+ * @property {Number} SUBTRACTIVE_BLENDING
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.SUBTRACTIVE_BLENDING = 2;
+/**
+ * @property {Number} MULTIPLICATIVE_BLENDING
+ * @memberof EZ3.Material
+ * @static
+ * @final
+ */
 EZ3.Material.MULTIPLICATIVE_BLENDING = 3;
 
 /**
- * @class BoundingBox
+ * @class EZ3.BoundingBox
+ * @constructor
  */
 EZ3.BoundingBox = function() {
 };
 
 /**
- * @class BoundingSphere
+ * @class EZ3.BoundingSphere
+ * @constructor
  */
 EZ3.BoundingSphere = function() {
 };
@@ -2142,7 +2955,8 @@ EZ3.Euler.YXZ = 5;
 EZ3.Euler.ZYX = 6;
 
 /**
- * @class Frustum
+ * @class EZ3.Frustum
+ * @constructor
  */
 EZ3.Frustum = function() {
 };
@@ -2152,7 +2966,6 @@ EZ3.Frustum = function() {
  * @class EZ3.Math
  * @static
  */
-
 EZ3.Math = function() {
   /**
    * @property {Number} PI
@@ -5162,82 +5975,48 @@ EZ3.Vector4.prototype.toVector3 = function() {
 };
 
 /**
- * @class Mesh
- * @extends Entity
+ * @class EZ3.GLSLProgram
+ * @constructor
+ * @param {WebGLContext} gl
+ * @param {String} vertex
+ * @param {String} fragment
+ * @param {String} [prefix]
  */
-
-EZ3.Mesh = function(geometry, material) {
-  EZ3.Entity.call(this);
-
-  this.normal = new EZ3.Matrix3();
-  this.geometry = geometry || new EZ3.Geometry();
-  this.material = material || new EZ3.MeshMaterial();
-
-  this.shadowCaster = false;
-  this.shadowReceiver = false;
-};
-
-EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
-EZ3.Mesh.prototype.constructor = EZ3.Mesh;
-
-EZ3.Mesh.prototype.updateProgram = function(gl, state, lights) {
-  this.material.updateProgram(gl, state, lights, this.shadowReceiver);
-};
-
-EZ3.Mesh.prototype.updateLinearData = function() {
-  if (this.material.fill === EZ3.Material.WIREFRAME)
-    this.geometry.updateLinearData();
-};
-
-EZ3.Mesh.prototype.updateNormal = function() {
-  if (this.world.isDiff(this._cache.world)) {
-    this.normal.normalFromMat4(this.world);
-    this._cache.world = this.world.clone();
-  }
-};
-
-EZ3.Mesh.prototype.render = function(gl, attributes, state, extensions) {
-  var mode;
-  var index;
-  var buffer;
-
-  if (this.material.fill === EZ3.Material.WIREFRAME) {
-    index = EZ3.IndexBuffer.LINEAR;
-    buffer = this.geometry.buffers.getLinearBuffer();
-    mode = gl.LINES;
-  } else if (this.material.fill === EZ3.Material.POINTS) {
-    buffer = this.geometry.buffers.getPositionBuffer();
-    mode = gl.POINTS;
-  } else {
-    index = EZ3.IndexBuffer.TRIANGULAR;
-    buffer = this.geometry.buffers.getTriangularBuffer();
-    mode = gl.TRIANGLES;
-  }
-
-  if (index) {
-    this.geometry.buffers.bind(gl, attributes, state, extensions, index);
-    gl.drawElements(mode, buffer.data.length, buffer.getGLType(gl, extensions), 0);
-  } else {
-    this.geometry.buffers.bind(gl, attributes, state, extensions);
-    gl.drawArrays(mode, 0, buffer.data.length / 3);
-  }
-};
-
-/**
- * @class GLSLProgram
- */
-
 EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
+  /**
+   * @property {WebGLId} _id
+   * @private
+   */
   this._id = null;
+  /**
+   * @property {Object} _cache
+   * @private
+   */
   this._cache = {};
+  /**
+   * @property {WebGLShader} _shaders
+   * @private
+   */
   this._shaders = [];
 
+  /**
+   * @property {Object} uniforms
+   */
   this.uniforms = {};
+  /**
+   * @property {Object} attributes
+   */
   this.attributes = {};
 
   this._create(gl, vertex, fragment, prefix);
 };
 
+/**
+ * @method EZ3.GLSLProgram#_compile
+ * @param {WebGLContext} gl
+ * @param {Number} type
+ * @param {String} code
+ */
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
   var shader = gl.createShader(type);
   var warning;
@@ -5259,6 +6038,13 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#_create
+ * @param {WebGLContext} gl
+ * @param {String} vertex
+ * @param {String} fragment
+ * @param {String} prefix
+ */
 EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
   var warning;
 
@@ -5289,6 +6075,10 @@ EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#_loadUniforms
+ * @param {WebGLContext} gl
+ */
 EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
   var uniforms = gl.getProgramParameter(this._id, gl.ACTIVE_UNIFORMS);
   var name;
@@ -5300,6 +6090,10 @@ EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#_loadAttributes
+ * @param {WebGLContext} gl
+ */
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
   var attributes = gl.getProgramParameter(this._id, gl.ACTIVE_ATTRIBUTES);
   var name;
@@ -5311,10 +6105,20 @@ EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#bind
+ * @param {WebGLContext} gl
+ */
 EZ3.GLSLProgram.prototype.bind = function(gl) {
   gl.useProgram(this._id);
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformInteger
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {Number|EZ3.Vector2|EZ3.Vector3|EZ3.Vector4} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformInteger = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -5335,6 +6139,12 @@ EZ3.GLSLProgram.prototype.loadUniformInteger = function(gl, name, data) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformFloat
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {Number|EZ3.Vector2|EZ3.Vector3|EZ3.Vector4} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformFloat = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -5355,6 +6165,12 @@ EZ3.GLSLProgram.prototype.loadUniformFloat = function(gl, name, data) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformMatrix
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {EZ3.Matrix3|EZ3.Matrix4} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -5369,6 +6185,12 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformSamplerArray
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {Number[]} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformSamplerArray = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -5380,26 +6202,66 @@ EZ3.GLSLProgram.prototype.loadUniformSamplerArray = function(gl, name, data) {
   }
 };
 
+/**
+ * @property {Number} VERTEX
+ * @memberof EZ3.GLSLProgram
+ * @static
+ * @final
+ */
 EZ3.GLSLProgram.VERTEX = 0;
+/**
+ * @property {Number} FRAGMENT
+ * @memberof EZ3.GLSLProgram
+ * @static
+ * @final
+ */
 EZ3.GLSLProgram.FRAGMENT = 1;
 
 /**
- * @class Renderer
+ * @class EZ3.Renderer
+ * @param {HTMLElement} canvas
+ * @param {Öbject} options
  */
-
 EZ3.Renderer = function(canvas, options) {
+  /**
+   * @property {HTMLElement} canvas
+   */
   this.canvas = canvas;
+  /**
+   * @property {Object} options
+   */
   this.options = options;
+  /**
+   * @property {WebGLContext} context
+   */
   this.context = null;
+  /**
+   * @property {EZ3.RendererState} state
+   */
   this.state = null;
+  /**
+   * @property {EZ3.RendererExtensions} extensions
+   */
   this.extensions = null;
+  /**
+   * @property {EZ3.RendererCapabilities} capabilities
+   */
   this.capabilities = null;
 };
 
+/**
+ * @method EZ3.Renderer#_processContextLost
+ */
 EZ3.Renderer.prototype._processContextLost = function(event) {
   event.preventDefault();
 };
 
+/**
+ * @method EZ3.Renderer#_renderMesh
+ * @param {EZ3.Mesh} mesh
+ * @param {EZ3.Camera} camera
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   var gl = this.context;
   var program = mesh.material.program;
@@ -5440,6 +6302,13 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   this.state.usedTextureSlots = 0;
 };
 
+/**
+ * @method EZ3.Renderer#_renderMeshDepth
+ * @param {EZ3.GLSLProgram} program
+ * @param {EZ3.Mesh} mesh
+ * @param {EZ3.Matrix4} view
+ * @param {EZ3.Matrix4} projection
+ */
 EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, view, projection) {
   var gl = this.context;
   var modelView = new EZ3.Matrix4();
@@ -5452,6 +6321,12 @@ EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, view, projecti
   mesh.render(gl, program.attributes, this.state, this.extensions);
 };
 
+/**
+ * @method EZ3.Renderer#_renderOmnidirectionalDepth
+ * @param {EZ3.GLSLProgram} program
+ * @param {EZ3.Mesh[]} meshes
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, lights) {
   var gl = this.context;
   var target = new EZ3.Vector3();
@@ -5510,6 +6385,12 @@ EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, l
   }
 };
 
+/**
+ * @method EZ3.Renderer#_renderDirectionalDepth
+ * @param {EZ3.GLSLProgram} program
+ * @param {EZ3.Mesh[]} meshes
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, lights) {
   var gl = this.context;
   var light;
@@ -5529,6 +6410,11 @@ EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, light
   }
 };
 
+/**
+ * @method EZ3.Renderer#_renderDepth
+ * @param {EZ3.Mesh[]} meshes
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderDepth = function(meshes, lights) {
   var gl = this.context;
   var vertex;
@@ -5557,6 +6443,9 @@ EZ3.Renderer.prototype._renderDepth = function(meshes, lights) {
   EZ3.Framebuffer.unbind(gl);
 };
 
+/**
+ * @method EZ3.Renderer#initContext
+ */
 EZ3.Renderer.prototype.initContext = function() {
   var that = this;
   var names = [
@@ -5590,18 +6479,32 @@ EZ3.Renderer.prototype.initContext = function() {
   this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
 };
 
+/**
+ * @method EZ3.Renderer#clearColor
+ * @param {EZ3.Vector4} color
+ */
 EZ3.Renderer.prototype.clearColor = function(color) {
   var gl = this.context;
 
   gl.clearColor(color.x, color.y, color.z, color.w);
 };
 
+/**
+ * @method EZ3.Renderer#clear
+ */
 EZ3.Renderer.prototype.clear = function() {
   var gl = this.context;
 
   gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
 };
 
+/**
+ * @method EZ3.Renderer#render
+ * @param {EZ3.Vector2} position
+ * @param {EZ3.Vector2} size
+ * @param {EZ3.Entity} scene
+ * @param {EZ3.Camera} camera
+ */
 EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
   var gl = this.context;
   var meshes = {
@@ -5704,47 +6607,121 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
 };
 
 /**
- * @class RendererCapabilities
+ * @class EZ3.RendererCapabilities
+ * @constructor
+ * @param {WebGLContext} gl
  */
-
 EZ3.RendererCapabilities = function(gl) {
+  /**
+   * @property {Number} maxTextureSlots
+   */
   this.maxTextureSlots = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS) - 1;
 };
 
 /**
- * @class RendererExtensions
+ * @class EZ3.RendererExtensions
+ * @constructor
+ * @param {WebGLContext} gl
  */
-
 EZ3.RendererExtensions = function(gl) {
+  /**
+   * @property {WebGLExtension} elementIndexUInt
+   */
   this.elementIndexUInt = gl.getExtension('OES_element_index_uint');
+  /**
+   * @property {WebGLExtension} vertexArrayObject
+   */
   this.vertexArrayObject = gl.getExtension('OES_vertex_array_object');
+  /**
+   * @property {WebGLExtension} standardDerivates
+   */
   this.standardDerivates = gl.getExtension('OES_standard_derivatives');
 };
 
 /**
- * @class RendererState
+ * @class EZ3.RendererState
+ * @constructor
+ * @param {WebGLContext} context
  */
 
 EZ3.RendererState = function(context) {
+  /**
+   * @property {WebGLContext} _context
+   * @private
+   */
   this._context = context;
+  /**
+   * @property {Object} _states
+   * @private
+   */
   this._states = {};
+  /**
+   * @property {Object} _blendEquation
+   * @private
+   */
   this._blendEquation = {};
+  /**
+   * @property {Object} _blendFunc
+   * @private
+   */
   this._blendFunc = {};
+  /**
+   * @property {Object} _textureSlots
+   * @private
+   */
   this._textureSlots = {};
+  /**
+   * @property {Object} _attributeLayouts
+   * @private
+   */
   this._attributeLayouts = {};
+  /**
+   * @property {Object} _viewport
+   * @private
+   */
   this._viewport = {};
+  /**
+   * @property {GLSLProgram} _program
+   * @private
+   */
   this._program = null;
+  /**
+   * @property {Number} _cullFace
+   * @private
+   */
   this._cullFace = null;
+  /**
+   * @property {Number} _depthFunc
+   * @private
+   */
   this._depthFunc = null;
+  /**
+   * @property {Number} _textureSlot
+   * @private
+   */
   this._textureSlot = null;
 
+  /**
+   * @property {Object} programs
+   */
   this.programs = {};
+  /**
+   * @property {Number} usedTextureSlots
+   * @default 0
+   */
   this.usedTextureSlots = 0;
+  /**
+   * @property {Number[]} textureArraySlots
+   */
   this.textureArraySlots = [];
 };
 
 EZ3.RendererState.prototype.constructor = EZ3.State;
 
+/**
+ * @method EZ3.RendererState#enable
+ * @param {Number} state
+ */
 EZ3.RendererState.prototype.enable = function(state) {
   var gl = this._context;
 
@@ -5755,6 +6732,10 @@ EZ3.RendererState.prototype.enable = function(state) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#disable
+ * @param {Number} state
+ */
 EZ3.RendererState.prototype.disable = function(state) {
   var gl = this._context;
 
@@ -5765,6 +6746,10 @@ EZ3.RendererState.prototype.disable = function(state) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#enableVertexAttribArray
+ * @param {Number} layout
+ */
 EZ3.RendererState.prototype.enableVertexAttribArray = function(layout) {
   var gl = this._context;
 
@@ -5774,6 +6759,14 @@ EZ3.RendererState.prototype.enableVertexAttribArray = function(layout) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#createProgram
+ * @param {String} id
+ * @param {String} vertex
+ * @param {String} fragment
+ * @param {String} [prefix]
+ * @return {EZ3.GLSLProgram}
+ */
 EZ3.RendererState.prototype.createProgram = function(id, vertex, fragment, prefix) {
   var gl = this._context;
 
@@ -5783,6 +6776,10 @@ EZ3.RendererState.prototype.createProgram = function(id, vertex, fragment, prefi
   return this.programs[id];
 };
 
+/**
+ * @method EZ3.RendererState#bindProgram
+ * @param {EZ3.GLSLProgram} program
+ */
 EZ3.RendererState.prototype.bindProgram = function(program) {
   var gl = this._context;
 
@@ -5793,6 +6790,11 @@ EZ3.RendererState.prototype.bindProgram = function(program) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#bindTexture
+ * @param {Number} target
+ * @param {Number} id
+ */
 EZ3.RendererState.prototype.bindTexture = function(target, id) {
   var gl = this._context;
   var slot = gl.TEXTURE0 + this.usedTextureSlots;
@@ -5828,6 +6830,11 @@ EZ3.RendererState.prototype.bindTexture = function(target, id) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#viewport
+ * @param {EZ3.Vector2} position
+ * @param {EZ3.Vector2} size
+ */
 EZ3.RendererState.prototype.viewport = function(position, size) {
   var gl = this._context;
   var changed = false;
@@ -5846,6 +6853,10 @@ EZ3.RendererState.prototype.viewport = function(position, size) {
     gl.viewport(position.x, position.y, size.x, size.y);
 };
 
+/**
+ * @method EZ3.RendererState#depthFunc
+ * @param {Number} func
+ */
 EZ3.RendererState.prototype.depthFunc = function(func) {
   var gl = this._context;
 
@@ -5856,6 +6867,10 @@ EZ3.RendererState.prototype.depthFunc = function(func) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#cullFace
+ * @param {Number} face
+ */
 EZ3.RendererState.prototype.cullFace = function(face) {
   var gl = this._context;
 
@@ -5866,6 +6881,11 @@ EZ3.RendererState.prototype.cullFace = function(face) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#blendEquation
+ * @param {Number} modeRGB
+ * @param {Number} modeAlpha
+ */
 EZ3.RendererState.prototype.blendEquation = function(modeRGB, modeAlpha) {
   var gl = this._context;
   var changed = false;
@@ -5886,6 +6906,13 @@ EZ3.RendererState.prototype.blendEquation = function(modeRGB, modeAlpha) {
     gl.blendEquationSeparate(modeRGB, modeAlpha);
 };
 
+/**
+ * @method EZ3.RendererState#blendEquation
+ * @param {Number} srcRGB
+ * @param {Number} dstRGB
+ * @param {Number} srcAlpha
+ * @param {Number} dstAlpha
+ */
 EZ3.RendererState.prototype.blendFunc = function(srcRGB, dstRGB, srcAlpha, dstAlpha) {
   var gl = this._context;
   var changed = false;
@@ -5918,11 +6945,17 @@ EZ3.RendererState.prototype.blendFunc = function(srcRGB, dstRGB, srcAlpha, dstAl
 };
 
 /**
-* @class ShaderLibrary
+* @class EZ3.ShaderLibrary
+* @constructor
 */
-
 EZ3.ShaderLibrary = function() {
+/**
+* @property {Object} mesh
+*/
   this.mesh = {};
+/**
+* @property {Object} depth
+*/
   this.depth = {};
 };
 
@@ -5933,36 +6966,90 @@ EZ3.ShaderLibrary['mesh'].vertex = "precision highp float;\r\n\r\nattribute vec3
 EZ3.ShaderLibrary['depth'].fragment = "precision highp float;\n\nvec4 pack(const in float depth) {\n  const vec4 bitShift = vec4(255.0 * 255.0 * 255.0, 255.0 * 255.0, 255.0, 1.0);\n\tconst vec4 bitMask = vec4(0.0, 1.0 / 255.0, 1.0 / 255.0, 1.0 / 255.0);\n\n\tvec4 res = fract(depth * bitShift);\n\tres -= res.xxyz * bitMask;\n\n\treturn res;\n}\n\nvoid main() {\n  gl_FragColor = pack(gl_FragCoord.z);\n}\n";
 EZ3.ShaderLibrary['mesh'].fragment = "precision highp float;\r\n\r\nstruct PointLight {\r\n\tvec3 position;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n\tfloat shadowBias;\r\n\tfloat shadowDarkness;\r\n};\r\n\r\nstruct DirectionalLight {\r\n\tvec3 direction;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n\tmat4 shadow;\r\n\tfloat shadowBias;\r\n\tfloat shadowDarkness;\r\n};\r\n\r\nstruct SpotLight {\r\n\tvec3 position;\r\n\tvec3 direction;\r\n\tfloat cutoff;\r\n\tvec3 diffuse;\r\n\tvec3 specular;\r\n\tmat4 shadow;\r\n\tfloat shadowBias;\r\n\tfloat shadowDarkness;\r\n};\r\n\r\nuniform vec3 uEmissive;\r\nuniform vec3 uDiffuse;\r\nuniform vec3 uSpecular;\r\nuniform float uShininess;\r\nuniform float uOpacity;\r\nuniform vec3 uEyePosition;\r\n\r\n#if MAX_POINT_LIGHTS > 0\r\n  uniform PointLight uPointLights[MAX_POINT_LIGHTS];\r\n\r\n\t#ifdef SHADOW_MAP\r\n\t\tuniform samplerCube uPointShadowSampler[MAX_POINT_LIGHTS];\r\n\t#endif\r\n#endif\r\n\r\n#if MAX_DIRECTIONAL_LIGHTS > 0\r\n  uniform DirectionalLight uDirectionalLights[MAX_DIRECTIONAL_LIGHTS];\r\n\r\n\t#ifdef SHADOW_MAP\r\n\t\tuniform sampler2D uDirectionalShadowSampler[MAX_DIRECTIONAL_LIGHTS];\r\n\t#endif\r\n#endif\r\n\r\n#if MAX_SPOT_LIGHTS > 0\r\n  uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];\r\n\r\n\t#ifdef SHADOW_MAP\r\n\t\tuniform sampler2D uSpotShadowSampler[MAX_SPOT_LIGHTS];\r\n\t#endif\r\n#endif\r\n\r\n#ifdef EMISSIVE_MAP\r\n\tuniform sampler2D uEmissiveSampler;\r\n#endif\r\n\r\n#ifdef DIFFUSE_MAP\r\n\tuniform sampler2D uDiffuseSampler;\r\n#endif\r\n\r\n#ifdef SPECULAR_MAP\r\n\tuniform sampler2D uSpecularSampler;\r\n#endif\r\n\r\n#ifdef ENVIRONMENT_MAP\r\n\tuniform samplerCube uEnvironmentSampler;\r\n#endif\r\n\r\n#ifdef REFRACTION\r\n\tuniform float uRefractiveIndex;\r\n#endif\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormal;\r\nvarying vec2 vUv;\r\n\r\n#ifdef LAMBERT\r\n\tfloat lambert(in vec3 s, in vec3 n) {\r\n\t\treturn max(dot(s, n), 0.0);\r\n\t}\r\n#endif\r\n\r\n#ifdef OREN_NAYAR\r\n\tuniform float uAlbedo;\r\n\tuniform float uDiffuseRoughness;\r\n\r\n\tfloat orenNayar(in vec3 v, in vec3 s, in vec3 n) {\r\n\t\tfloat PI = acos(-1.0);\r\n\r\n\t\tfloat SdotV = dot(s, v);\r\n\t\tfloat SdotN = dot(s, n);\r\n\t\tfloat NdotV = dot(n, v);\r\n\r\n\t\tfloat S = SdotV - SdotN * NdotV;\r\n\t\tfloat T = mix(1.0, max(SdotN, NdotV), step(0.0, S));\r\n\t\tfloat sigma2 = uDiffuseRoughness * uDiffuseRoughness;\r\n\r\n\t\tfloat A = 1.0 + sigma2 * (uAlbedo / (sigma2 + 0.13) + 0.5 / (sigma2 + 0.33));\r\n\t\tfloat B = 0.45 * sigma2 / (sigma2 + 0.09);\r\n\r\n\t\treturn uAlbedo * max(0.0, SdotN) * (A + B * S / T) / PI;\r\n\t}\r\n#endif\r\n\r\n#ifdef PHONG\r\n\tfloat phong(in vec3 v, in vec3 s, in vec3 n) {\r\n\t\treturn pow(max(dot(reflect(-s, n), v), 0.0), uShininess);\r\n\t}\r\n#endif\r\n\r\n#ifdef BLINN_PHONG\r\n\tfloat blinnPhong(in vec3 v, in vec3 s, in vec3 n) {\r\n\t\treturn pow(max(dot(normalize(s + v), n), 0.0), uShininess);\r\n\t}\r\n#endif\r\n\r\n#ifdef COOK_TORRANCE\r\n\tuniform float uFresnel;\r\n\tuniform float uSpecularRoughness;\r\n\r\n\tfloat beckmannDistribution(in float NdotH) {\r\n\t\tfloat PI = acos(-1.0);\r\n\t\tfloat cos2Beta = NdotH * NdotH;\r\n\t\tfloat tan2Beta = (cos2Beta - 1.0) / cos2Beta;\r\n\t\tfloat div =  PI * uSpecularRoughness * uSpecularRoughness * cos2Beta * cos2Beta;\r\n\r\n\t\treturn exp(tan2Beta / (uSpecularRoughness * uSpecularRoughness)) / div;\r\n\t}\r\n\r\n\tfloat cookTorrance(in vec3 v, in vec3 s, in vec3 n) {\r\n\t\tvec3 h = normalize(s + v);\r\n\r\n\t\tfloat VdotN = max(dot(v, n), 0.000001);\r\n\t\tfloat SdotN = max(dot(s, n), 0.000001);\r\n\t\tfloat VdotH = max(dot(v, h), 0.000001);\r\n\t\tfloat SdotH = max(dot(s, h), 0.000001);\r\n\t\tfloat NdotH = max(dot(n, h), 0.000001);\r\n\r\n\t\tfloat G1 = (2.0 * NdotH * VdotN) / VdotH;\r\n\t\tfloat G2 = (2.0 * NdotH * SdotN) / SdotH;\r\n\t\tfloat G = min(1.0, min(G1, G2));\r\n\r\n\t\tfloat D = beckmannDistribution(NdotH);\r\n\t\tfloat F = pow(1.0 - VdotN, uFresnel);\r\n\t\tfloat PI = acos(-1.0);\r\n\r\n\t  return  G * F * D / max(PI * VdotN, 0.0);\r\n\t}\r\n#endif\r\n\r\n#ifdef NORMAL_MAP\r\n\t#extension GL_OES_standard_derivatives : enable\r\n\r\n\tuniform sampler2D uNormalSampler;\r\n\r\n\tvec3 pertubNormal(in vec3 v) {\r\n\t\tvec3 q0 = dFdx(v);\r\n\t\tvec3 q1 = dFdy(v);\r\n\r\n\t\tvec2 st0 = dFdx(vUv);\r\n\t\tvec2 st1 = dFdy(vUv);\r\n\r\n\t\tvec3 s = normalize(q0 * st1.t - q1 * st0.t);\r\n\t\tvec3 t = normalize(-q0 * st1.s + q1 * st0.s);\r\n\t\tvec3 n = normalize(vNormal);\r\n\r\n\t\tvec3 d = texture2D(uNormalSampler, vUv).xyz * 2.0 - 1.0;\r\n\r\n\t\treturn normalize(mat3(s, t, n) * d);\r\n\t}\r\n#endif\r\n\r\n#ifdef SHADOW_MAP\r\n\tbool isBounded(in float coordinate) {\r\n\t\treturn coordinate >= 0.0 && coordinate <= 1.0;\r\n\t}\r\n\r\n\tfloat unpack(in vec4 color) {\r\n\t\tconst vec4 bitShift = vec4(1.0 / (255.0 * 255.0 * 255.0), 1.0 / (255.0 * 255.0), 1.0 / 255.0, 1.0);\r\n\t  return dot(color, bitShift);\r\n\t}\r\n\r\n\t#if (MAX_POINT_LIGHTS > 0)\r\n\t\tfloat omnidirectionalShadow(in vec3 lightPosition, in float bias, in float darkness, in samplerCube sampler) {\r\n\t\t\tvec3 direction = vPosition - lightPosition;\r\n\t\t\tfloat vertexDepth = clamp(length(direction), 0.0, 1.0);\r\n\t\t\tfloat shadowMapDepth = unpack(textureCube(sampler, direction)) + bias;\r\n\r\n\t\t\treturn (vertexDepth > shadowMapDepth) ? darkness : 1.0;\r\n\t\t}\r\n\t#endif\r\n\r\n\t#if (MAX_DIRECTIONAL_LIGHTS > 0) || (MAX_SPOT_LIGHTS > 0)\r\n\t\tfloat directionalShadow(in mat4 shadowMatrix, in float bias, in float darkness, in sampler2D sampler) {\r\n\t\t\tvec4 lightCoordinates = shadowMatrix * vec4(vPosition, 1.0);\r\n\t\t\tvec3 shadowCoordinates = lightCoordinates.xyz / lightCoordinates.w;\r\n\r\n\t\t\tif(isBounded(shadowCoordinates.x) && isBounded(shadowCoordinates.y) && isBounded(shadowCoordinates.z)) {\r\n\t\t\t\tfloat vertexDepth = shadowCoordinates.z;\r\n\t\t\t\tfloat shadowMapDepth = unpack(texture2D(sampler, shadowCoordinates.xy)) + bias;\r\n\r\n\t\t\t\treturn (vertexDepth > shadowMapDepth) ? darkness : 1.0;\r\n\t\t\t}\r\n\r\n\t\t\treturn 1.0;\r\n\t\t}\r\n\t#endif\r\n#endif\r\n\r\nfloat computeDiffuseReflection(in vec3 v, in vec3 s, in vec3 n) {\r\n\tfloat diffuse = 1.0;\r\n\r\n\t#ifdef LAMBERT\r\n\t\tdiffuse = lambert(s, n);\r\n\t#endif\r\n\r\n\t#ifdef OREN_NAYAR\r\n\t\tdiffuse = orenNayar(v, s, n);\r\n\t#endif\r\n\r\n\treturn diffuse;\r\n}\r\n\r\nfloat computeSpecularReflection(in vec3 v, in vec3 s, in vec3 n) {\r\n\tfloat specular = 1.0;\r\n\r\n\t#ifdef BLINN_PHONG\r\n\t\tspecular = blinnPhong(v, s, n);\r\n\t#endif\r\n\r\n\t#ifdef COOK_TORRANCE\r\n\t\tspecular = cookTorrance(v, s, n);\r\n\t#endif\r\n\r\n\t#ifdef PHONG\r\n\t\tspecular = phong(v, s, n);\r\n\t#endif\r\n\r\n\treturn specular;\r\n}\r\n\r\nvoid main() {\r\n\tfloat shadow = 1.0;\r\n\r\n\tfloat diffuseReflection;\r\n\tfloat specularReflection;\r\n\r\n\tvec3 emissive = uEmissive;\r\n\tvec3 diffuse = vec3(0.0);\r\n\tvec3 specular = vec3(0.0);\r\n\r\n\tvec3 v = normalize(uEyePosition - vPosition);\r\n\r\n\t#ifdef FLAT\r\n\t\tvec3 fdx = dFdx(vPosition);\r\n\t\tvec3 fdy = dFdy(vPosition);\r\n\t\tvec3 n = normalize(cross(fdx, fdy));\r\n\t#else\r\n\t\tvec3 n = vNormal;\r\n\t#endif\r\n\r\n\t#ifdef NORMAL_MAP\r\n\t\tn = pertubNormal(-v);\r\n\t#endif\r\n\r\n\t#if MAX_POINT_LIGHTS > 0\r\n\t  for(int i = 0; i < MAX_POINT_LIGHTS; i++) {\r\n\t\t\tvec3 s = normalize(uPointLights[i].position - vPosition);\r\n\r\n\t\t\tdiffuseReflection = computeDiffuseReflection(v, s, n);\r\n\r\n\t\t\tif (diffuseReflection > 0.0) {\r\n\r\n\t\t\t\tspecularReflection = computeSpecularReflection(v, s, n);\r\n\r\n\t\t\t\t#ifdef SHADOW_MAP\r\n\t\t\t\t\tvec3 lightPosition = uPointLights[i].position;\r\n\t\t\t\t\tfloat shadowBias = uPointLights[i].shadowBias;\r\n\t\t\t\t\tfloat shadowDarkness = uPointLights[i].shadowDarkness;\r\n\r\n\t\t\t\t\tshadow = omnidirectionalShadow(lightPosition, shadowBias, shadowDarkness, uPointShadowSampler[i]);\r\n\t\t\t\t#endif\r\n\r\n\t\t\t\tdiffuse += uPointLights[i].diffuse * uDiffuse * diffuseReflection * shadow;\r\n\t\t\t\tspecular += uPointLights[i].specular * uSpecular * specularReflection * shadow;\r\n\t\t\t}\r\n\t  }\r\n\t#endif\r\n\r\n\t#if MAX_DIRECTIONAL_LIGHTS > 0\r\n\t  for(int i = 0; i < MAX_DIRECTIONAL_LIGHTS; i++) {\r\n\t\t\tvec3 s = uDirectionalLights[i].direction;\r\n\r\n\t\t\tdiffuseReflection = computeDiffuseReflection(v, s, n);\r\n\r\n\t\t\tif (diffuseReflection > 0.0) {\r\n\r\n\t\t\t\tspecularReflection = computeSpecularReflection(v, s, n);\r\n\r\n\t\t\t\t#ifdef SHADOW_MAP\r\n\t\t\t\t\tmat4 shadowMatrix = uDirectionalLights[i].shadow;\r\n\t\t\t\t\tfloat shadowBias = uDirectionalLights[i].shadowBias;\r\n\t\t\t\t\tfloat shadowDarkness = uDirectionalLights[i].shadowDarkness;\r\n\r\n\t\t\t\t\tshadow = directionalShadow(shadowMatrix, shadowBias, shadowDarkness, uDirectionalShadowSampler[i]);\r\n\t\t\t\t#endif\r\n\r\n\t\t\t\tdiffuse += uDirectionalLights[i].diffuse * uDiffuse * diffuseReflection * shadow;\r\n\t\t\t\tspecular += uDirectionalLights[i].specular * uSpecular * specularReflection * shadow;\r\n\t\t\t}\r\n\t  }\r\n\t#endif\r\n\r\n\t#if MAX_SPOT_LIGHTS > 0\r\n\t  for(int i = 0; i < MAX_SPOT_LIGHTS; i++) {\r\n\t\t\tvec3 s = normalize(uSpotLights[i].position - vPosition);\r\n\t\t\tfloat angle = max(dot(s, uSpotLights[i].direction), 0.0);\r\n\r\n\t\t\tif(angle > uSpotLights[i].cutoff) {\r\n\r\n\t\t\t\tdiffuseReflection = computeDiffuseReflection(v, s, n);\r\n\r\n\t\t\t\tif (diffuseReflection > 0.0) {\r\n\r\n\t\t\t\t\tspecularReflection = computeSpecularReflection(v, s, n);\r\n\r\n\t\t\t\t\t#ifdef SHADOW_MAP\r\n\t\t\t\t\t\tmat4 shadowMatrix = uSpotLights[i].shadow;\r\n\t\t\t\t\t\tfloat shadowBias = uSpotLights[i].shadowBias;\r\n\t\t\t\t\t\tfloat shadowDarkness = uSpotLights[i].shadowDarkness;\r\n\r\n\t\t\t\t\t\tshadow = directionalShadow(shadowMatrix, shadowBias, shadowDarkness, uSpotShadowSampler[i]);\r\n\t\t\t\t\t#endif\r\n\r\n\t\t\t\t\tdiffuse += uSpotLights[i].diffuse * uDiffuse * diffuseReflection * shadow;\r\n\t\t\t\t\tspecular += uSpotLights[i].specular * uSpecular * specularReflection * shadow;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t  }\r\n\t#endif\r\n\r\n\t#ifdef EMISSIVE_MAP\r\n\t  emissive *= texture2D(uEmissiveSampler, vUv).rgb;\r\n\t#endif\r\n\r\n\t#ifdef DIFFUSE_MAP\r\n\t\tdiffuse *= texture2D(uDiffuseSampler, vUv).rgb;\r\n\t#endif\r\n\r\n\t#ifdef SPECULAR_MAP\r\n\t\tspecular *= texture2D(uSpecularSampler, vUv).rgb;\r\n\t#endif\r\n\r\n\t#ifdef REFLECTION\r\n\t\tvec3 reflection = reflect(-v, n);\r\n\t\tdiffuse *= textureCube(uEnvironmentSampler, reflection).rgb;\r\n\t#endif\r\n\r\n\t#ifdef REFRACTION\r\n\t\tvec3 refraction = refract(-v, n, uRefractiveIndex);\r\n\t\tdiffuse *= textureCube(uEnvironmentSampler, refraction).rgb;\r\n\t#endif\r\n\r\n\tgl_FragColor = vec4(emissive + diffuse + specular, uOpacity);\r\n}\r\n";
 /**
- * @class Screen
+ * @class EZ3.Screen
+ * @constructor
+ * @param {EZ3.Vector2} position
+ * @param {EZ3.Vector2} size
  */
-
 EZ3.Screen = function(position, size) {
+  /**
+   * @property {EZ3.Vector2} position
+   */
   this.position = position;
+  /**
+   * @property {EZ3.Vector2} size
+   */
   this.size = size;
+  /**
+   * @property {EZ3.RequestManager} load
+   */
   this.load = new EZ3.RequestManager();
+  /**
+   * @property {EZ3.Scene} scene
+   */
   this.scene = new EZ3.Scene();
+  /**
+   * @property {EZ3.Camera} camera
+   */
   this.camera = null;
 };
 
 /**
- * @class ScreenManager
+ * @class EZ3.ScreenManager
+ * @constructor
+ * @param {HTMLElement} canvas
+ * @param {HTMLRect} bounds
+ * @param {EZ3.Renderer} renderer
+ * @param {EZ3.Time} time
+ * @param {EZ3.InputManager} input
+ * @param {EZ3.Screen|Object|Function} screen
  */
-
 EZ3.ScreenManager = function(canvas, bounds, renderer, time, input, screen) {
+  /**
+   * @property {EZ3.Screen|Object[]} _screens
+   * @private
+   */
   this._screens = [];
 
+  /**
+   * @property {HTMLElement} canvas
+   */
   this.canvas = canvas;
+  /**
+   * @property {HTMLRect} bounds
+   */
   this.bounds = bounds;
+  /**
+   * @property {EZ3.Renderer} renderer
+   */
   this.renderer = renderer;
+  /**
+   * @property {EZ3.Time} time
+   */
   this.time = time;
+  /**
+   * @property {EZ3.InputManager} input
+   */
   this.input = input;
+  /**
+   * @property {EZ3.Vector4} clearColor
+   * @default new EZ3.Vector4(0, 0, 0, 1)
+   */
   this.clearColor = new EZ3.Vector4(0, 0, 0, 1);
+  /**
+   * @property {Boolean} fullScreeneded
+   * @default false
+   */
   this.fullScreeneded = false;
 
   if (screen)
     this.add('default', screen);
 };
 
+/**
+ * @method EZ3.ScreenManager#_addScreenEventListeners
+ * @param {EZ3.Screen|Object} screen
+ */
 EZ3.ScreenManager.prototype._addScreenEventListeners = function(screen) {
   var device = EZ3.Device;
   var inputs = {
@@ -6000,6 +7087,10 @@ EZ3.ScreenManager.prototype._addScreenEventListeners = function(screen) {
     device.onResize.add(screen.onResize, screen);
 };
 
+/**
+ * @method EZ3.ScreenManager#_removeScreenEventListeners
+ * @param {EZ3.Screen|Object} screen
+ */
 EZ3.ScreenManager.prototype._removeScreenEventListeners = function(screen) {
   var device = EZ3.Device;
   var inputs = {
@@ -6033,6 +7124,9 @@ EZ3.ScreenManager.prototype._removeScreenEventListeners = function(screen) {
   device.onResize.removeAll(screen);
 };
 
+/**
+ * @method EZ3.ScreenManager#_processFullScreenChange
+ */
 EZ3.ScreenManager.prototype._processFullScreenChange = function() {
   var device = EZ3.Device;
 
@@ -6044,6 +7138,12 @@ EZ3.ScreenManager.prototype._processFullScreenChange = function() {
   }
 };
 
+/**
+ * @method EZ3.ScreenManager#add
+ * @param {String} id
+ * @param {EZ3.Screen|Object|Function} screen
+ * @return {EZ3.Screen|Object}
+ */
 EZ3.ScreenManager.prototype.add = function(id, screen) {
   var Screen;
   var onComplete;
@@ -6099,6 +7199,11 @@ EZ3.ScreenManager.prototype.add = function(id, screen) {
   return screen;
 };
 
+/**
+ * @method EZ3.ScreenManager#get
+ * @param {String} id
+ * @return {EZ3.Screen|Object}
+ */
 EZ3.ScreenManager.prototype.get = function(id) {
   var i;
 
@@ -6107,6 +7212,11 @@ EZ3.ScreenManager.prototype.get = function(id) {
       return this._screens[i];
 };
 
+/**
+ * @method EZ3.ScreenManager#add
+ * @param {String} id
+ * @param {EZ3.Screen|Object} screen
+ */
 EZ3.ScreenManager.prototype.remove = function(id) {
   var i;
 
@@ -6118,6 +7228,9 @@ EZ3.ScreenManager.prototype.remove = function(id) {
   }
 };
 
+/**
+ * @method EZ3.ScreenManager#update
+ */
 EZ3.ScreenManager.prototype.update = function() {
   var screen;
   var i;
@@ -6133,6 +7246,9 @@ EZ3.ScreenManager.prototype.update = function() {
   }
 };
 
+/**
+ * @method EZ3.ScreenManager#requestFullScreen
+ */
 EZ3.ScreenManager.prototype.requestFullScreen = function() {
   var device = EZ3.Device;
   var that;
@@ -6149,6 +7265,9 @@ EZ3.ScreenManager.prototype.requestFullScreen = function() {
   }
 };
 
+/**
+ * @method EZ3.ScreenManager#exitFullScreen
+ */
 EZ3.ScreenManager.prototype.exitFullScreen = function() {
   var device = EZ3.Device;
 
@@ -6157,12 +7276,17 @@ EZ3.ScreenManager.prototype.exitFullScreen = function() {
 };
 
 /**
- * @class AnimationFrame
+ * @class EZ3.AnimationFrame
+ * @constructor
+ * @param {Boolean} [timeOut]
  */
-
 EZ3.AnimationFrame = function(timeOut) {
   var device = EZ3.Device;
 
+  /**
+   * @property {Number} _id
+   * @private
+   */
   this._id = 0;
 
   if (!device.requestAnimationFrame || timeOut) {
@@ -6184,63 +7308,169 @@ EZ3.AnimationFrame = function(timeOut) {
   }
 };
 
+/**
+ * @method EZ3.AnimationFrame#request
+ * @param {Function} callback
+ */
 EZ3.AnimationFrame.prototype.request = function(callback) {
   this._id = this._onRequestAnimationFrame(callback);
 };
 
+/**
+ * @method EZ3.AnimationFrame#cancel
+ */
 EZ3.AnimationFrame.prototype.cancel = function() {
   this._onCancelAnimationFrame(this._id);
 };
 
 /**
- * @class Device
+ * @class EZ3.Device
+ * @static
  */
-
 EZ3.Device = function() {
+  /**
+   * @property {Boolean} ready
+   */
   this.ready = false;
+  /**
+   * @property {EZ3.Signal} onResize
+   */
   this.onResize = new EZ3.Signal();
+  /**
+   * @property {Number} operatingSystem
+   */
   this.operatingSystem = 0;
+  /**
+   * @property {String} requestAnimationFrame
+   */
   this.requestAnimationFrame = null;
+  /**
+   * @property {String} cancelAnimationFrame
+   */
   this.cancelAnimationFrame = null;
+  /**
+   * @property {String} touchDown
+   */
   this.touchDown = null;
+  /**
+   * @property {String} touchMove
+   */
   this.touchMove = null;
+  /**
+   * @property {String} touchUp
+   */
   this.touchUp = null;
+  /**
+   * @property {String} wheel
+   */
   this.wheel = null;
+  /**
+   * @property {String} requestFullScreen
+   */
   this.requestFullScreen = null;
+  /**
+   * @property {String} exitFullScreen
+   */
   this.exitFullScreen = null;
+  /**
+   * @property {String} fullScreenChange
+   */
   this.fullScreenChange = null;
+  /**
+   * @property {String} fullScreenError
+   */
   this.fullScreenError = null;
+  /**
+   * @property {String} requestPointerLock
+   */
   this.requestPointerLock = null;
+  /**
+   * @property {String} exitPointerLock
+   */
   this.exitPointerLock = null;
+  /**
+   * @property {String} pointerLockChange
+   */
   this.pointerLockChange = null;
+  /**
+   * @property {String} pointerLockError
+   */
   this.pointerLockError = null;
+  /**
+   * @property {Number} WINDOW
+   * @final
+   */
+  EZ3.Device.WINDOWS = 1;
+  /**
+   * @property {Number} MACOS
+   * @final
+   */
+  EZ3.Device.MACOS = 2;
+  /**
+   * @property {Number} LINUX
+   * @final
+   */
+  EZ3.Device.LINUX = 4;
+  /**
+   * @property {Number} IOS
+   * @final
+   */
+  EZ3.Device.IOS = 8;
+  /**
+   * @property {Number} ANDROID
+   * @final
+   */
+  EZ3.Device.ANDROID = 16;
+  /**
+   * @property {Number} WINDOWS_PHONE
+   * @final
+   */
+  EZ3.Device.WINDOWS_PHONE = 32;
+  /**
+   * @property {Number} CRHOMEOS
+   * @final
+   */
+  EZ3.Device.CRHOMEOS = 64;
+  /**
+   * @property {Number} KINDLE
+   * @final
+   */
+  EZ3.Device.KINDLE = 128;
+  /**
+   * @property {Number} PSVITA
+   * @final
+   */
+  EZ3.Device.PSVITA = 256;
 };
 
 EZ3.Device = new EZ3.Device();
 
+/**
+ * @method EZ3.Device#_check
+ */
 EZ3.Device._check = function() {
   var that = this;
 
   function checkOperatingSystem() {
     if (/Playstation Vita/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.PSVITA;
+      that.operatingSystem = EZ3.Device.PSVITA;
     else if (/Kindle/.test(navigator.userAgent) || /\bKF[A-Z][A-Z]+/.test(navigator.userAgent) || /Silk.*Mobile Safari/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.KINDLE;
+      that.operatingSystem = EZ3.Device.KINDLE;
     else if (/Android/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.ANDROID;
+      that.operatingSystem = EZ3.Device.ANDROID;
     else if (/CrOS/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.CRHOMEOS;
+      that.operatingSystem = EZ3.Device.CRHOMEOS;
     else if (/iP[ao]d|iPhone/i.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.IOS;
+      that.operatingSystem = EZ3.Device.IOS;
     else if (/Linux/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.LINUX;
+      that.operatingSystem = EZ3.Device.LINUX;
     else if (/Mac OS/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.MACOS;
+      that.operatingSystem = EZ3.Device.MACOS;
     else if (/Windows/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS;
+      that.operatingSystem = EZ3.Device.WINDOWS;
 
     if (/Windows Phone/i.test(navigator.userAgent) || /IEMobile/i.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE;
+      that.operatingSystem = EZ3.Device.WINDOWS_PHONE;
   }
 
   function checkAnimationFrame() {
@@ -6336,6 +7566,9 @@ EZ3.Device._check = function() {
   checkInput();
 };
 
+/**
+ * @method EZ3.Device#_isReady
+ */
 EZ3.Device._isReady = function() {
   var that;
 
@@ -6366,6 +7599,12 @@ EZ3.Device._isReady = function() {
   }
 };
 
+/**
+ * @method EZ3.Device#onReady
+ * @param {EZ3.Signal} callback
+ * @param {Object} [context]
+ * @param {Any[]} params
+ */
 EZ3.Device.onReady = function(callback, context, params) {
   var that;
   var binding;
@@ -6397,32 +7636,39 @@ EZ3.Device.onReady = function(callback, context, params) {
   }
 };
 
-EZ3.Device.OPERATING_SYSTEM = {};
-EZ3.Device.OPERATING_SYSTEM.WINDOWS = 1;
-EZ3.Device.OPERATING_SYSTEM.MACOS = 2;
-EZ3.Device.OPERATING_SYSTEM.LINUX = 4;
-EZ3.Device.OPERATING_SYSTEM.IOS = 8;
-EZ3.Device.OPERATING_SYSTEM.ANDROID = 16;
-EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE = 32;
-EZ3.Device.OPERATING_SYSTEM.CRHOMEOS = 64;
-EZ3.Device.OPERATING_SYSTEM.KINDLE = 128;
-EZ3.Device.OPERATING_SYSTEM.PSVITA = 256;
-
 /**
- * @class Time
+ * @class EZ3.Time
+ * @constructor
  */
-
 EZ3.Time = function() {
+  /**
+   * @property {Number} now
+   */
   this.now = 0;
+  /**
+   * @property {Number} previous
+   */
   this.previous = 0;
+  /**
+   * @property {Number} elapsed
+   */
   this.elapsed = 0;
+  /**
+   * @property {Number} started
+   */
   this.started = 0;
 };
 
+/**
+ * @method EZ3.Time#start
+ */
 EZ3.Time.prototype.start = function() {
   this.started = this.now = Date.now();
 };
 
+/**
+ * @method EZ3.Time#update
+ */
 EZ3.Time.prototype.update = function() {
   this.previous = this.now;
   this.now = Date.now();
@@ -6430,22 +7676,66 @@ EZ3.Time.prototype.update = function() {
 };
 
 /**
- * @class Texture
+ * @class EZ3.Texture
+ * @constructor
+ * @param {Boolean} [generateMipmaps]
  */
-
 EZ3.Texture = function(generateMipmaps) {
+  /**
+   * @property {WebGLId} _id
+   * @private
+   */
   this._id = null;
+  /**
+   * @property {Object} _cache
+   * @private
+   */
   this._cache = {};
 
+  /**
+   * @property {Boolean} generateMipmaps
+   * @default true
+   */
   this.generateMipmaps = (generateMipmaps === undefined) ? true : generateMipmaps;
+  /**
+   * @property {Number} wrapS
+   * @default EZ3.Texture.REPEAT
+   */
   this.wrapS = EZ3.Texture.REPEAT;
+  /**
+   * @property {Number} wrapT
+   * @default EZ3.Texture.REPEAT
+   */
   this.wrapT = EZ3.Texture.REPEAT;
+  /**
+   * @property {Number} magFilter
+   * @default EZ3.Texture.LINEAR
+   */
   this.magFilter = EZ3.Texture.LINEAR;
+  /**
+   * @property {Number} minFilter
+   * @default EZ3.Texture.LINEAR_MIPMAP_LINEAR
+   */
   this.minFilter = EZ3.Texture.LINEAR_MIPMAP_LINEAR;
+  /**
+   * @property {Number} flipY
+   * @default false
+   */
   this.flipY = false;
+  /**
+   * @property {Number} needUpdate
+   * @default true
+   */
   this.needUpdate = true;
 };
 
+/**
+ * @method EZ3.Texture#_getGLFilter
+ * @protected
+ * @param {WebGLContext} gl
+ * @param {Number} filter
+ * @return {Number}
+ */
 EZ3.Texture.prototype._getGLFilter = function(gl, filter) {
   if (filter === EZ3.Texture.LINEAR)
     return gl.LINEAR;
@@ -6461,6 +7751,13 @@ EZ3.Texture.prototype._getGLFilter = function(gl, filter) {
     return gl.LINEAR_MIPMAP_NEAREST;
 };
 
+/**
+ * @method EZ3.Texture#_getGLWrap
+ * @protected
+ * @param {WebGLContext} gl
+ * @param {Number} wrap
+ * @return {Number}
+ */
 EZ3.Texture.prototype._getGLWrap = function(gl, wrap) {
   if (wrap === EZ3.Texture.CLAMP_TO_EDGE)
     return gl.CLAMP_TO_EDGE;
@@ -6470,6 +7767,13 @@ EZ3.Texture.prototype._getGLWrap = function(gl, wrap) {
     return gl.MIRRORED_REPEAT;
 };
 
+/**
+ * @method EZ3.Texture#_updateImage
+ * @protected
+ * @param {WebGLContext} gl
+ * @param {Number} target
+ * @param {EZ3.Image} image
+ */
 EZ3.Texture.prototype._updateImage = function(gl, target, image) {
   var format = image.getGLFormat(gl);
 
@@ -6479,6 +7783,12 @@ EZ3.Texture.prototype._updateImage = function(gl, target, image) {
   gl.texImage2D(target, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, image.data);
 };
 
+/**
+ * @method EZ3.Texture#_updateMipmaps
+ * @protected
+ * @param {WebGLContext} gl
+ * @param {Number} target
+ */
 EZ3.Texture.prototype._updateMipmaps = function(gl, target) {
   if (!this.generateMipmaps) {
     this.magFilter = EZ3.Texture.LINEAR;
@@ -6488,6 +7798,11 @@ EZ3.Texture.prototype._updateMipmaps = function(gl, target) {
   }
 };
 
+/**
+ * @method EZ3.Texture#_updatePixelStore
+ * @protected
+ * @param {WebGLContext} gl
+ */
 EZ3.Texture.prototype._updatePixelStore = function(gl) {
   if (this._cache.flipY !== this.flipY) {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, this.flipY);
@@ -6495,6 +7810,12 @@ EZ3.Texture.prototype._updatePixelStore = function(gl) {
   }
 };
 
+/**
+ * @method EZ3.Texture#_updateParameters
+ * @protected
+ * @param {WebGLContext} gl
+ * @param {Number} target
+ */
 EZ3.Texture.prototype._updateParameters = function(gl, target) {
   if (this._cache.wrapS !== this.wrapS) {
     gl.texParameteri(target, gl.TEXTURE_WRAP_S, this._getGLWrap(gl, this.wrapS));
@@ -6517,6 +7838,13 @@ EZ3.Texture.prototype._updateParameters = function(gl, target) {
   }
 };
 
+/**
+ * @method EZ3.Texture#bind
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ * @param {Number} target
+ */
 EZ3.Texture.prototype.bind = function(gl, state, capabilities, target) {
   if (!this._id)
     this._id = gl.createTexture();
@@ -6530,17 +7858,75 @@ EZ3.Texture.prototype.bind = function(gl, state, capabilities, target) {
     gl.bindTexture(target, this._id);
 };
 
+/**
+ * @property {Number} LINEAR
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.LINEAR = 1;
+/**
+ * @property {Number} NEAREST
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.NEAREST = 2;
+/**
+ * @property {Number} LINEAR_MIPMAP_LINEAR
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.LINEAR_MIPMAP_LINEAR = 3;
+/**
+ * @property {Number} NEAREST_MIPMAP_NEAREST
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.NEAREST_MIPMAP_NEAREST = 4;
+/**
+ * @property {Number} NEAREST_MIPMAP_LINEAR
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.NEAREST_MIPMAP_LINEAR = 5;
+/**
+ * @property {Number} LINEAR_MIPMAP_NEAREST
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.LINEAR_MIPMAP_NEAREST = 6;
-
+/**
+ * @property {Number} CLAMP_TO_EDGE
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.CLAMP_TO_EDGE = 1;
+/**
+ * @property {Number} REPEAT
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.REPEAT = 2;
+/**
+ * @property {Number} MIRRORED_REPEAT
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.MIRRORED_REPEAT = 3;
-
+/**
+ * @property {Number} COLOR_ATTACHMENT0
+ * @memberof EZ3.Texture
+ * @static
+ * @final
+ */
 EZ3.Texture.COLOR_ATTACHMENT0 = 1;
 
 /**
@@ -6676,8 +8062,123 @@ EZ3.Camera.prototype.updateView = function() {
 };
 
 /**
- * @class DepthCubeFramebuffer
- * @extends Framebuffer
+ * @class EZ3.Scene
+ * @extends EZ3.Entity
+ * @constructor
+ */
+EZ3.Scene = function() {
+  EZ3.Entity.call(this);
+};
+
+EZ3.Scene.prototype = Object.create(EZ3.Entity.prototype);
+EZ3.Scene.prototype.constructor = EZ3.Scene;
+
+/**
+ * @class EZ3.Mesh
+ * @extends EZ3.Entity
+ * @constructor
+ * @param {EZ3.Geometry} [geometry]
+ * @param {EZ3.Material} [material]
+ */
+
+EZ3.Mesh = function(geometry, material) {
+  EZ3.Entity.call(this);
+  /**
+   * @property {EZ3.Geometry} geometry
+   * @default new EZ3.Geometry()
+   */
+  this.geometry = geometry || new EZ3.Geometry();
+  /**
+   * @property {EZ3.Material} material
+   * @default new EZ3.MeshMaterial()
+   */
+  this.material = material || new EZ3.MeshMaterial();
+  /**
+   * @property {EZ3.Matrix3} normal
+   */
+  this.normal = new EZ3.Matrix3();
+  /**
+   * @property {Boolean} shadowCaster
+   * @default false
+   */
+  this.shadowCaster = false;
+  /**
+   * @property {Boolean} shadowReceiver
+   * @default false
+   */
+  this.shadowReceiver = false;
+};
+
+EZ3.Mesh.prototype = Object.create(EZ3.Entity.prototype);
+EZ3.Mesh.prototype.constructor = EZ3.Mesh;
+
+/**
+ * @method EZ3.Mesh#updateProgram
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {Object} lights
+ */
+EZ3.Mesh.prototype.updateProgram = function(gl, state, lights) {
+  this.material.updateProgram(gl, state, lights, this.shadowReceiver);
+};
+
+/**
+ * @method EZ3.Mesh#updateLinearData
+ */
+EZ3.Mesh.prototype.updateLinearData = function() {
+  if (this.material.fill === EZ3.Material.WIREFRAME)
+    this.geometry.updateLinearData();
+};
+
+/**
+ * @method EZ3.Mesh#updateNormal
+ */
+EZ3.Mesh.prototype.updateNormal = function() {
+  if (this.world.isDiff(this._cache.world)) {
+    this.normal.normalFromMat4(this.world);
+    this._cache.world = this.world.clone();
+  }
+};
+
+/**
+ * @method EZ3.Mesh#render
+ * @param {WebGLContext} gl
+ * @param {Object} attributes
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererExtensions} extensions
+ */
+EZ3.Mesh.prototype.render = function(gl, attributes, state, extensions) {
+  var mode;
+  var index;
+  var buffer;
+
+  if (this.material.fill === EZ3.Material.WIREFRAME) {
+    index = EZ3.IndexBuffer.LINEAR;
+    buffer = this.geometry.buffers.getLinearBuffer();
+    mode = gl.LINES;
+  } else if (this.material.fill === EZ3.Material.POINTS) {
+    buffer = this.geometry.buffers.getPositionBuffer();
+    mode = gl.POINTS;
+  } else {
+    index = EZ3.IndexBuffer.TRIANGULAR;
+    buffer = this.geometry.buffers.getTriangularBuffer();
+    mode = gl.TRIANGLES;
+  }
+
+  if (index) {
+    this.geometry.buffers.bind(gl, attributes, state, extensions, index);
+    gl.drawElements(mode, buffer.data.length, buffer.getGLType(gl, extensions), 0);
+  } else {
+    this.geometry.buffers.bind(gl, attributes, state, extensions);
+    gl.drawArrays(mode, 0, buffer.data.length / 3);
+  }
+};
+
+/**
+ * @class EZ3.DepthCubeFramebuffer
+ * @extends EZ3.Framebuffer
+ * @constructor
+ * @param {EZ3.Vector2} size
  */
 
 EZ3.DepthCubeFramebuffer = function(size) {
@@ -6687,6 +8188,10 @@ EZ3.DepthCubeFramebuffer = function(size) {
 EZ3.DepthCubeFramebuffer.prototype = Object.create(EZ3.Framebuffer.prototype);
 EZ3.DepthCubeFramebuffer.prototype.constructor = EZ3.DepthCubeFramebuffer;
 
+/**
+ * @method EZ3.DepthCubeFramebuffer#update
+ * @param {WebGLContext} gl
+ */
 EZ3.DepthCubeFramebuffer.prototype.update = function(gl) {
   if(this.size.isDiff(this._cache.size)) {
     this._cache.size = this.size.clone();
@@ -6700,10 +8205,11 @@ EZ3.DepthCubeFramebuffer.prototype.update = function(gl) {
 };
 
 /**
- * @class DepthFramebuffer
- * @extends Framebuffer
+ * @class EZ3.DepthFramebuffer
+ * @extends EZ3.Framebuffer
+ * @constructor
+ * @param {EZ3.Vector2} size
  */
-
 EZ3.DepthFramebuffer = function(size) {
   EZ3.Framebuffer.call(this, size);
 };
@@ -6711,6 +8217,10 @@ EZ3.DepthFramebuffer = function(size) {
 EZ3.DepthFramebuffer.prototype = Object.create(EZ3.Framebuffer.prototype);
 EZ3.DepthFramebuffer.prototype.constructor = EZ3.DepthFramebuffer;
 
+/**
+ * @method EZ3.DepthFramebuffer#update
+ * @param {WebGLContext} gl
+ */
 EZ3.DepthFramebuffer.prototype.update = function(gl) {
   if(this.size.isDiff(this._cache.size)) {
     this._cache.size = this.size.clone();
@@ -6724,17 +8234,26 @@ EZ3.DepthFramebuffer.prototype.update = function(gl) {
 };
 
 /**
- * @class Primitive
- * @extends Geometry
+ * @class EZ3.Primitive
+ * @extends EZ3.Geometry
+ * @constructor
  */
-
 EZ3.Primitive = function() {
   EZ3.Geometry.call(this);
+
+  /**
+   * @property {Object} _cache
+   * @private
+   */
+  this._cache = {};
 };
 
 EZ3.Primitive.prototype = Object.create(EZ3.Geometry.prototype);
 EZ3.Primitive.prototype.constructor = EZ3.Primitive;
 
+/**
+ * @method EZ3.Primitive#updateCommonData
+ */
 EZ3.Primitive.prototype.updateCommonData = function() {
   if (this.needGenerate) {
     this.generate();
@@ -6744,28 +8263,44 @@ EZ3.Primitive.prototype.updateCommonData = function() {
 };
 
 /**
- * @class IndexBuffer
- * @extends Buffer
+ * @class EZ3.IndexBuffer
+ * @extends EZ3.Buffer
+ * @constructor
+ * @param {Number[]} [data]
+ * @param {Boolean} [need32Bits]
+ * @param {Boolean} [dynamic]
  */
-
 EZ3.IndexBuffer = function(data, need32Bits, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
 
+  /**
+   * @property {Boolean} needUpdate
+   * @default false
+   */
   this.need32Bits = (need32Bits !== undefined) ? need32Bits : false;
 };
 
 EZ3.IndexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
 EZ3.IndexBuffer.prototype.constructor = EZ3.IndexBuffer;
 
+/**
+ * @method EZ3.IndexBuffer#bind
+ * @param {WebGLContext} gl
+ */
 EZ3.IndexBuffer.prototype.bind = function(gl) {
   EZ3.Buffer.prototype.bind.call(this, gl, gl.ELEMENT_ARRAY_BUFFER);
 };
 
-EZ3.IndexBuffer.prototype.update = function(gl, extension) {
+/**
+ * @method EZ3.IndexBuffer#update
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererExtensions} extensions
+ */
+EZ3.IndexBuffer.prototype.update = function(gl, extensions) {
   var bytes;
 
   if(this.need32Bits) {
-    if(extension.elementIndexUInt)
+    if(extensions.elementIndexUInt)
       bytes = 4;
     else
       return;
@@ -6775,28 +8310,65 @@ EZ3.IndexBuffer.prototype.update = function(gl, extension) {
   EZ3.Buffer.prototype.update.call(this, gl, gl.ELEMENT_ARRAY_BUFFER, bytes);
 };
 
+/**
+ * @method EZ3.IndexBuffer#getGLType
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererExtensions} extensions
+ * @return Number
+ */
 EZ3.IndexBuffer.prototype.getGLType = function(gl, extensions) {
   return (extensions.elementIndexUInt && this.need32Bits) ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT;
 };
 
+/**
+ * @property {Number} TRIANGULAR
+ * @memberof EZ3.IndexBuffer
+ * @static
+ * @final
+ */
 EZ3.IndexBuffer.TRIANGULAR = 1;
+
+/**
+ * @property {Number} LINEAR
+ * @memberof EZ3.IndexBuffer
+ * @static
+ * @final
+ */
 EZ3.IndexBuffer.LINEAR = 2;
 
 /**
- * @class VertexBuffer
- * @extends Buffer
+ * @class EZ3.VertexBuffer
+ * @extends EZ3.Buffer
+ * @constructor
+ * @param {Number[]} [data]
+ * @param {Boolean} [need32Bits]
  */
-
 EZ3.VertexBuffer = function(data, dynamic) {
   EZ3.Buffer.call(this, data, dynamic);
 
+  /**
+   * @property {Object} _attributes
+   * @default {}
+   * @private
+   */
   this._attributes = {};
+  /**
+   * @property {Number} _stride
+   * @private
+   * @default 0
+   */
   this._stride = 0;
 };
 
 EZ3.VertexBuffer.prototype = Object.create(EZ3.Buffer.prototype);
 EZ3.VertexBuffer.prototype.constructor = EZ3.VertexBuffer;
 
+/**
+ * @method EZ3.VertexBuffer#isValid
+ * @param {WebGLContext} gl
+ * @param {Object} attributes
+ * @return {Boolean}
+ */
 EZ3.VertexBuffer.prototype.isValid = function(gl, attributes) {
   var k;
 
@@ -6807,6 +8379,12 @@ EZ3.VertexBuffer.prototype.isValid = function(gl, attributes) {
   return false;
 };
 
+/**
+ * @method EZ3.VertexBuffer#bind
+ * @param {WebGLContext} gl
+ * @param {Object} attributes
+ * @param {EZ3.RendererState} state
+ */
 EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
   var type = gl.FLOAT;
   var normalized;
@@ -6833,33 +8411,64 @@ EZ3.VertexBuffer.prototype.bind = function(gl, attributes, state) {
   }
 };
 
+/**
+ * @method EZ3.VertexBuffer#update
+ * @param {WebGLContext} gl
+ */
 EZ3.VertexBuffer.prototype.update = function(gl) {
   EZ3.Buffer.prototype.update.call(this, gl, gl.ARRAY_BUFFER, 4);
 };
 
+/**
+ * @method EZ3.VertexBuffer#addAttribute
+ * @param {String} name
+ * @param {EZ3.VertexBufferAttribute} attribute
+ */
 EZ3.VertexBuffer.prototype.addAttribute = function(name, attribute) {
   this._stride += 4 * attribute.size;
   this._attributes[name] = attribute;
 };
 
 /**
- * @class MousePointer
- * @extends Pointer
+ * @class EZ3.MousePointer
+ * @extends EZ3.Pointer
+ * @constructor
  */
-
 EZ3.MousePointer = function() {
   EZ3.Pointer.call(this);
 
+  /**
+   * @property {EZ3.Switch[]} _buttons
+   * @private
+   */
   this._buttons = [];
 
+  /**
+   * @property {EZ3.Vector2} wheel
+   */
   this.wheel = new EZ3.Vector2();
+  /**
+   * @property {EZ3.Vector2} movement
+   */
   this.movement = new EZ3.Vector2();
+  /**
+   * @property {Boolean} locked
+   * @default false
+   */
   this.locked = false;
 };
 
 EZ3.MousePointer.prototype = Object.create(EZ3.Pointer.prototype);
 EZ3.MousePointer.prototype.constructor = EZ3.MousePointer;
 
+/**
+ * @method EZ3.MousePointer#processPress
+ * @param {HTMLEvent} event
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
+ * @param {EZ3.Signal} onPress
+ * @param {EZ3.Signal} onMove
+ */
 EZ3.MousePointer.prototype.processPress = function(event, domElement, bounds, onPress, onMove) {
   if (!this._buttons[event.button])
     this._buttons[event.button] = new EZ3.Switch(event.button);
@@ -6871,6 +8480,13 @@ EZ3.MousePointer.prototype.processPress = function(event, domElement, bounds, on
   onMove.dispatch(this);
 };
 
+/**
+ * @method EZ3.MousePointer#processMove
+ * @param {HTMLEvent} event
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
+ * @param {EZ3.Signal} onMove
+ */
 EZ3.MousePointer.prototype.processMove = function(event, domElement, bounds, onMove) {
   if (!this.locked)
     EZ3.Pointer.prototype.processMove.call(this, event, domElement, bounds);
@@ -6882,6 +8498,11 @@ EZ3.MousePointer.prototype.processMove = function(event, domElement, bounds, onM
   onMove.dispatch(this);
 };
 
+/**
+ * @method EZ3.MousePointer#processUp
+ * @param {HTMLEvent} event
+ * @param {EZ3.Signal} onUp
+ */
 EZ3.MousePointer.prototype.processUp = function(event, onUp) {
   if (!this._buttons[event.button])
     this._buttons[event.button] = new EZ3.Switch(event.button);
@@ -6891,6 +8512,11 @@ EZ3.MousePointer.prototype.processUp = function(event, onUp) {
   onUp.dispatch(this._buttons[event.button]);
 };
 
+/**
+ * @method EZ3.MousePointer#processWheel
+ * @param {HTMLEvent} event
+ * @param {EZ3.Signal} onWheel
+ */
 EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
   this.wheel.x = event.wheelDeltaX || event.deltaX;
   this.wheel.y = event.wheelDeltaY || event.deltaY;
@@ -6898,12 +8524,21 @@ EZ3.MousePointer.prototype.processWheel = function(event, onWheel) {
   onWheel.dispatch(this.wheel);
 };
 
+/**
+ * @method EZ3.MousePointer#processLockChange
+ * @param {EZ3.Signal} onLockChange
+ */
 EZ3.MousePointer.prototype.processLockChange = function(onLockChange) {
   this.locked = !this.locked;
 
   onLockChange.dispatch(this.locked);
 };
 
+/**
+ * @method EZ3.MousePointer#getButton
+ * @param {Number} code
+ * @return {EZ3.Switch}
+ */
 EZ3.MousePointer.prototype.getButton = function(code) {
   if (!this._buttons[code])
     this._buttons[code] = new EZ3.Switch(code);
@@ -6912,22 +8547,36 @@ EZ3.MousePointer.prototype.getButton = function(code) {
 };
 
 /**
- * @class TouchPointer
- * @extends Pointer
- * @extends Switch
+ * @class EZ3.TouchPointer
+ * @extends EZ3.Pointer
+ * @extends EZ3.Switch
+ * @constructor
+ * @param {Number} code
+ * @param {Number} id
  */
-
 EZ3.TouchPointer = function(code, id) {
   EZ3.Pointer.call(this);
   EZ3.Switch.call(this, code);
 
-  this.id = id || 0;
+  /**
+   * @property {Number} id
+   * @default 0
+   */
+  this.id = (id !== undefined)? id : 0;
 };
 
 EZ3.TouchPointer.prototype = Object.create(EZ3.Pointer.prototype);
 EZ3.extends(EZ3.TouchPointer.prototype, EZ3.Switch.prototype);
 EZ3.TouchPointer.prototype.constructor = EZ3.TouchPointer;
 
+/**
+ * @method EZ3.TouchPointer#processPress
+ * @param {HTMLEvent} event
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
+ * @param {EZ3.Signal} onPress
+ * @param {EZ3.Signal} onMove
+ */
 EZ3.TouchPointer.prototype.processPress = function(event, domElement, bounds, onPress, onMove) {
   EZ3.Pointer.prototype.processPress.call(this, event, domElement, bounds);
   EZ3.Switch.prototype.processPress.call(this);
@@ -6941,176 +8590,64 @@ EZ3.TouchPointer.prototype.processPress = function(event, domElement, bounds, on
   onMove.dispatch(this);
 };
 
+/**
+ * @method EZ3.TouchPointer#processMove
+ * @param {HTMLEvent} event
+ * @param {HTMLElement} domElement
+ * @param {HTMLRect} bounds
+ * @param {EZ3.Signal} onMove
+ */
 EZ3.TouchPointer.prototype.processMove = function(event, domElement, bounds, onMove) {
   EZ3.Pointer.prototype.processMove.call(this, event, domElement, bounds);
   onMove.dispatch(this);
 };
 
+/**
+ * @method EZ3.TouchPointer#processUp
+ * @param {EZ3.Signal} onUp
+ */
 EZ3.TouchPointer.prototype.processUp = function(onUp) {
   EZ3.Switch.prototype.processUp.call(this);
   onUp.dispatch(this);
 };
 
 /**
- * @class DirectionalLight
- * @extends Light
- * @extends OrthographicCamera
+ * @class EZ3.Image
+ * @extends EZ3.File
+ * @constructor
+ * @param {Number} [width]
+ * @param {Number} [height]
+ * @param {Number} [format]
+ * @param {Number[]} [data]
  */
-
-EZ3.DirectionalLight = function() {
-  EZ3.Light.call(this);
-  EZ3.OrthographicCamera.call(this, -100.0, 100.0, 100.0, -100.0, 1.0, 5000.0);
-
-  this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
-};
-
-EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
-EZ3.extends(EZ3.DirectionalLight.prototype, EZ3.OrthographicCamera.prototype);
-EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
-
-EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
-  var prefix = 'uDirectionalLights[' + i + '].';
-  var direction = this.getWorldDirection();
-  var viewProjection;
-  var shadow;
-  var bias;
-
-  if (!direction.isZeroVector())
-    direction.normalize();
-
-  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
-
-  program.loadUniformFloat(gl, prefix + 'direction', direction);
-
-  if (shadowReceiver) {
-    bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
-    viewProjection = new EZ3.Matrix4().mul(this.projection, this.view);
-    shadow = new EZ3.Matrix4().mul(bias, viewProjection);
-
-    program.loadUniformMatrix(gl, prefix + 'shadow', shadow);
-    program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
-    program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
-
-    this.depthFramebuffer.texture.bind(gl, state, capabilities);
-
-    state.textureArraySlots.push(state.usedTextureSlots++);
-
-    if(i === length - 1) {
-      program.loadUniformSamplerArray(gl, 'uDirectionalShadowSampler[0]', state.textureArraySlots);
-      state.textureArraySlots = [];
-    }
-  }
-};
-
-/**
- * @class PointLight
- * @extends Light
- * @extends PerspectiveCamera
- */
-
-EZ3.PointLight = function() {
-  EZ3.Light.call(this);
-  EZ3.PerspectiveCamera.call(this, 90.0, 1.0, 1.0, 5000.0);
-
-  this.depthFramebuffer = new EZ3.DepthCubeFramebuffer(new EZ3.Vector2(512, 512));
-};
-
-EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);
-EZ3.extends(EZ3.PointLight.prototype, EZ3.PerspectiveCamera.prototype);
-EZ3.PointLight.prototype.constructor = EZ3.PointLight;
-
-EZ3.PointLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
-  var prefix = 'uPointLights[' + i + '].';
-
-  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
-
-  program.loadUniformFloat(gl, prefix + 'position', this.position);
-
-  if(shadowReceiver) {
-    program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
-    program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
-
-    this.depthFramebuffer.texture.bind(gl, state, capabilities);
-
-    state.textureArraySlots.push(state.usedTextureSlots++);
-
-    if(i === length - 1) {
-      program.loadUniformSamplerArray(gl, 'uPointShadowSampler[0]', state.textureArraySlots);
-      state.textureArraySlots = [];
-    }
-  }
-};
-
-/**
- * @class SpotLight
- * @extends Light
- * @extends OrthographicCamera
- */
-
-EZ3.SpotLight = function() {
-  EZ3.Light.call(this);
-  EZ3.PerspectiveCamera.call(this, 60.0, 1.0, 1.0, 4000.0);
-
-  this.cutoff = 0.9;
-  this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
-};
-
-EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
-EZ3.extends(EZ3.SpotLight.prototype, EZ3.PerspectiveCamera.prototype);
-EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
-
-EZ3.SpotLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
-  var prefix = 'uSpotLights[' + i + '].';
-  var direction = this.getWorldDirection();
-  var viewProjection;
-  var shadow;
-  var bias;
-
-  if(!direction.isZeroVector())
-    direction.normalize();
-
-  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
-
-  program.loadUniformFloat(gl, prefix + 'position', this.position);
-  program.loadUniformFloat(gl, prefix + 'direction', direction);
-  program.loadUniformFloat(gl, prefix + 'cutoff', this.cutoff);
-
-  if(shadowReceiver) {
-    bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
-    viewProjection = new EZ3.Matrix4().mul(this.projection, this.view);
-    shadow = new EZ3.Matrix4().mul(bias, viewProjection);
-
-    program.loadUniformMatrix(gl, prefix + 'shadow', shadow);
-    program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
-    program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
-
-    this.depthFramebuffer.texture.bind(gl, state, capabilities);
-
-    state.textureArraySlots.push(state.usedTextureSlots++);
-
-    if(i === length - 1) {
-      program.loadUniformSamplerArray(gl, 'uSpotShadowSampler[0]', state.textureArraySlots);
-      state.textureArraySlots = [];
-    }
-  }
-};
-
-/**
- * @class Image
- * @extends File
- */
-
 EZ3.Image = function(width, height, format, data) {
   EZ3.File.call(this, data);
 
-  this.width = width || 0;
-  this.height = height || 0;
-  this.format = format || EZ3.Image.RGBA;
+  /**
+   * @property {Number} width
+   * @default 0
+   */
+  this.width = (width !== undefined)? width : 0;
+  /**
+   * @property {Number} height
+   * @default 0
+   */
+  this.height = (height !== undefined)? height : 0;
+  /**
+   * @property {Number} format
+   * @default EZ3.Image.RGBA
+   */
+  this.format = (format !== undefined)? format : EZ3.Image.RGBA;
 };
 
 EZ3.Image.prototype = Object.create(EZ3.File.prototype);
 EZ3.Image.prototype.constructor = EZ3.Image;
 
+/**
+ * @method EZ3.Image#getGLFormat
+ * @param {WebGLContext} gl
+ * @return {Number}
+ */
 EZ3.Image.prototype.getGLFormat = function(gl) {
   if (this.format === EZ3.Image.RGB_FORMAT)
     return gl.RGB;
@@ -7118,6 +8655,10 @@ EZ3.Image.prototype.getGLFormat = function(gl) {
     return gl.RGBA;
 };
 
+/**
+ * @method EZ3.Image#getCanvas
+ * @return {HTMLElement}
+ */
 EZ3.Image.prototype.getCanvas = function() {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
@@ -7133,6 +8674,10 @@ EZ3.Image.prototype.getCanvas = function() {
   return canvas;
 };
 
+/**
+ * @method EZ3.Image#toPowerOfTwo
+ * @return {EZ3.Image}
+ */
 EZ3.Image.prototype.toPowerOfTwo = function() {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
@@ -7148,6 +8693,9 @@ EZ3.Image.prototype.toPowerOfTwo = function() {
   return this;
 };
 
+/**
+ * @method EZ3.Image#download
+ */
 EZ3.Image.prototype.download = function() {
   var a = document.createElement('a');
 
@@ -7159,25 +8707,53 @@ EZ3.Image.prototype.download = function() {
   document.body.removeChild(a);
 };
 
+/**
+ * @property {Number} RGB_FORMAT
+ * @memberof EZ3.Image
+ * @static
+ * @final
+ */
 EZ3.Image.RGB_FORMAT = 1;
+/**
+ * @property {Number} RGBA_FORMAT
+ * @memberof EZ3.Image
+ * @static
+ * @final
+ */
 EZ3.Image.RGBA_FORMAT = 2;
 
 /**
- * @class FileRequest
- * @extends Request
+ * @class EZ3.FileRequest
+ * @extends EZ3.Request
+ * @constructor
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
+ * @param {String} [responseType]
  */
-
 EZ3.FileRequest = function(url, cached, crossOrigin, responseType) {
   EZ3.Request.call(this, url, new EZ3.File(), cached, crossOrigin);
 
+  /**
+   * @property {XMLHttpRequest} _request
+   * @private
+   */
   this._request = new XMLHttpRequest();
 
+  /**
+   * @property {String} responseType
+   */
   this.responseType = responseType;
 };
 
 EZ3.FileRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.FileRequest.prototype.constructor = EZ3.FileRequest;
 
+/**
+ * @method EZ3.FileRequest#_processLoad
+ * @param {XMLHttpRequest} data
+ * @param {Function} onLoad
+ */
 EZ3.FileRequest.prototype._processLoad = function(data, onLoad) {
   this._removeEventListeners();
 
@@ -7186,11 +8762,20 @@ EZ3.FileRequest.prototype._processLoad = function(data, onLoad) {
   onLoad(this.url, this.asset, this.cached);
 };
 
+/**
+ * @method EZ3.FileRequest#_processError
+ * @param {Function} onError
+ */
 EZ3.FileRequest.prototype._processError = function(onError) {
   this._removeEventListeners();
   onError(this.url);
 };
 
+/**
+ * @method EZ3.FileRequest#_addEventListeners
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.FileRequest.prototype._addEventListeners = function(onLoad, onError) {
   var that = this;
 
@@ -7206,6 +8791,9 @@ EZ3.FileRequest.prototype._addEventListeners = function(onLoad, onError) {
   this._request.addEventListener('error', this._onError, false);
 };
 
+/**
+ * @method EZ3.FileRequest#_removeEventListeners
+ */
 EZ3.FileRequest.prototype._removeEventListeners = function() {
   this._request.removeEventListener('load', this._onLoad, false);
   this._request.removeEventListener('error', this._onError, false);
@@ -7214,6 +8802,11 @@ EZ3.FileRequest.prototype._removeEventListeners = function() {
   delete this._onError;
 };
 
+/**
+ * @method EZ3.FileRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.FileRequest.prototype.send = function(onLoad, onError) {
   this._request.open('GET', this.url, true);
 
@@ -7229,19 +8822,30 @@ EZ3.FileRequest.prototype.send = function(onLoad, onError) {
 };
 
 /**
- * @class ImageRequest
- * @extends Request
+ * @class EZ3.ImageRequest
+ * @extends EZ3.Request
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
-EZ3.ImageRequest = function(url, crossOrigin, cached) {
+EZ3.ImageRequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Image(), cached, crossOrigin);
 
+  /**
+   * @property {Image} _request
+   * @private
+   */
   this._request = new Image();
 };
 
 EZ3.ImageRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.ImageRequest.prototype.constructor = EZ3.ImageRequest;
 
+/**
+ * @method EZ3.ImageRequest#_processLoad
+ * @param {Image} image
+ * @param {Function} onLoad
+ */
 EZ3.ImageRequest.prototype._processLoad = function(image, onLoad) {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
@@ -7259,11 +8863,20 @@ EZ3.ImageRequest.prototype._processLoad = function(image, onLoad) {
   onLoad(this.url, this.asset, this.cached);
 };
 
+/**
+ * @method EZ3.ImageRequest#_processError
+ * @param {Function} onError
+ */
 EZ3.ImageRequest.prototype._processError = function(onError) {
   this._removeEventListeners();
   onError(this.url);
 };
 
+/**
+ * @method EZ3.ImageRequest#_addEventListeners
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.ImageRequest.prototype._addEventListeners = function(onLoad, onError) {
   var that = this;
 
@@ -7279,6 +8892,9 @@ EZ3.ImageRequest.prototype._addEventListeners = function(onLoad, onError) {
   this._request.addEventListener('error', this._onError, false);
 };
 
+/**
+ * @method EZ3.ImageRequest#_removeEventListeners
+ */
 EZ3.ImageRequest.prototype._removeEventListeners = function() {
   this._request.removeEventListener('load', this._onLoad, false);
   this._request.removeEventListener('error', this._onError, false);
@@ -7287,6 +8903,11 @@ EZ3.ImageRequest.prototype._removeEventListeners = function() {
   delete this._onError;
 };
 
+/**
+ * @method EZ3.ImageRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.ImageRequest.prototype.send = function(onLoad, onError) {
   this._addEventListeners(onLoad, onError);
 
@@ -7297,10 +8918,13 @@ EZ3.ImageRequest.prototype.send = function(onLoad, onError) {
 };
 
 /**
- * @class MD2Request
- * @extends Request
+ * @class EZ3.MD2Request
+ * @extends EZ3.Request
+ * @constructor
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
  EZ3.MD2Request = function(url, cached, crossOrigin) {
    EZ3.Request.call(this, url, new EZ3.Mesh(), cached, crossOrigin);
  };
@@ -7308,9 +8932,20 @@ EZ3.ImageRequest.prototype.send = function(onLoad, onError) {
  EZ3.MD2Request.prototype = Object.create(EZ3.Request.prototype);
  EZ3.MD2Request.prototype.constructor = EZ3.MD2Request;
 
+ /**
+  * @method EZ3.MD2Request#_parse
+  * @param {ArrayBuffer} data
+  * @param {Function} onLoad
+  * @param {Function} onError
+  */
  EZ3.MD2Request.prototype._parse = function(data, onLoad, onError) {
  };
 
+ /**
+  * @method EZ3.MD2Request#send
+  * @param {Function} onLoad
+  * @param {Function} onError
+  */
  EZ3.MD2Request.prototype.send = function(onLoad, onError) {
    var that = this;
    var requests = new EZ3.RequestManager();
@@ -7328,10 +8963,13 @@ EZ3.ImageRequest.prototype.send = function(onLoad, onError) {
  };
 
 /**
- * @class MDLRequest
- * @extends Request
+ * @class EZ3.MDLRequest
+ * @extends EZ3.Request
+ * @constructor
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.MDLRequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Mesh(), cached, crossOrigin);
 };
@@ -7339,6 +8977,12 @@ EZ3.MDLRequest = function(url, cached, crossOrigin) {
 EZ3.MDLRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.MDLRequest.prototype.constructor = EZ3.MDLRequest;
 
+/**
+ * @method EZ3.MDLRequest#_parse
+ * @param {ArrayBuffer} data
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
   var that = this;
   var offset = 0;
@@ -7593,6 +9237,11 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
   init();
 };
 
+/**
+ * @method EZ3.MDLRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.MDLRequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();
@@ -7610,10 +9259,12 @@ EZ3.MDLRequest.prototype.send = function(onLoad, onError) {
 };
 
 /**
- * @class OBJRequest
- * @extends Request
+ * @class EZ3.OBJRequest
+ * @extends EZ3.Request
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.OBJRequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Entity(), cached, crossOrigin);
 };
@@ -7621,6 +9272,13 @@ EZ3.OBJRequest = function(url, cached, crossOrigin) {
 EZ3.OBJRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.OBJRequest.prototype.constructor = EZ3.OBJRequest;
 
+/**
+ * @method EZ3.OBJRequest#_parseMTL
+ * @param {String} baseUrl
+ * @param {String} data
+ * @param {EZ3.Material[]} materials
+ * @param {EZ3.RequestManager} requests
+ */
 EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests) {
   var that = this;
   var currents;
@@ -7711,6 +9369,11 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
   init();
 };
 
+/**
+ * @method EZ3.OBJRequest#_parseOBJ
+ * @param {String} data
+ * @param {Function} onLoad
+ */
 EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
   var that = this;
   var indices = [];
@@ -8053,6 +9716,11 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
   init();
 };
 
+/**
+ * @method EZ3.OBJRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();
@@ -8070,10 +9738,12 @@ EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
 };
 
 /**
- * @class OFFRequest
- * @extends Request
+ * @class EZ3.OFFRequest
+ * @extends EZ3.Request
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.OFFRequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Mesh(), cached, crossOrigin);
 };
@@ -8081,6 +9751,12 @@ EZ3.OFFRequest = function(url, cached, crossOrigin) {
 EZ3.OFFRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.OFFRequest.prototype.constructor = EZ3.OFFRequest;
 
+/**
+ * @method EZ3.OFFRequest#_parse
+ * @param {String} data
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.OFFRequest.prototype._parse = function(data, onLoad, onError) {
   var that = this;
   var indices = [];
@@ -8165,6 +9841,11 @@ EZ3.OFFRequest.prototype._parse = function(data, onLoad, onError) {
   init();
 };
 
+/**
+ * @method EZ3.OFFRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.OFFRequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();
@@ -8182,10 +9863,12 @@ EZ3.OFFRequest.prototype.send = function(onLoad, onError) {
 };
 
 /**
- * @class TGARequest
- * @extends Request
+ * @class EZ3.TGARequest
+ * @extends EZ3.Request
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.TGARequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Image(), cached, crossOrigin);
 };
@@ -8193,6 +9876,12 @@ EZ3.TGARequest = function(url, cached, crossOrigin) {
 EZ3.TGARequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.TGARequest.prototype.constructor = EZ3.TGARequest;
 
+/**
+ * @method EZ3.TGARequest#_parse
+ * @param {ArrayBuffer} data
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
   var TYPE_NO_DATA = 0;
   var TYPE_INDEXED = 1;
@@ -8561,6 +10250,11 @@ EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
   init();
 };
 
+/**
+ * @method EZ3.TGARequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.TGARequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();
@@ -8578,37 +10272,107 @@ EZ3.TGARequest.prototype.send = function(onLoad, onError) {
 };
 
 /**
- * @class MeshMaterial
- * @extends Material
+ * @class EZ3.MeshMaterial
+ * @extends EZ3.Material
+ * @constructor
  */
-
 EZ3.MeshMaterial = function() {
   EZ3.Material.call(this);
 
+  /**
+   * @property {EZ3.Vector3} emissive
+   * @default new EZ3.Vector3()
+   */
   this.emissive = new EZ3.Vector3();
+  /**
+   * @property {EZ3.Vector3} diffuse
+   * @default new EZ3.Vector3(0.8, 0.8, 0.8)
+   */
   this.diffuse = new EZ3.Vector3(0.8, 0.8, 0.8);
+  /**
+   * @property {EZ3.Vector3} specular
+   * @default new EZ3.Vector3(0.2, 0.2, 0.2)
+   */
   this.specular = new EZ3.Vector3(0.2, 0.2, 0.2);
-
+  /**
+   * @property {Number} shading
+   * @default EZ3.MeshMaterial.SMOOTH
+   */
   this.shading = EZ3.MeshMaterial.SMOOTH;
-
+  /**
+   * @property {EZ3.Texture2D} normalMap
+   */
   this.normalMap = null;
+  /**
+   * @property {EZ3.Texture2D} diffuseMap
+   */
   this.diffuseMap = null;
+  /**
+   * @property {EZ3.Texture2D} emissiveMap
+   */
   this.emissiveMap = null;
+  /**
+   * @property {EZ3.Texture2D} specularMap
+   */
   this.specularMap = null;
+  /**
+   * @property {EZ3.Cubemap} environmentMap
+   */
   this.environmentMap = null;
-
+  /**
+   * @property {Boolean} reflective
+   * @default false
+   */
   this.reflective = false;
+  /**
+   * @property {Boolean} refractive
+   * @default false
+   */
   this.refractive = false;
-
+  /**
+   * @property {Number} diffuseReflection
+   * @default EZ3.MeshMaterial.LAMBERT
+   */
   this.diffuseReflection = EZ3.MeshMaterial.LAMBERT;
+  /**
+   * @property {Number} specularReflection
+   * @default EZ3.MeshMaterial.BLINN_PHONG
+   */
   this.specularReflection = EZ3.MeshMaterial.BLINN_PHONG;
-
-  this.albedo = 3.0;
-  this.fresnel = 0.0;
-  this.opacity = 1.0;
+  /**
+   * @property {Number} albedo
+   * @default 3
+   */
+  this.albedo = 3;
+  /**
+   * @property {Number} fresnel
+   * @default 0
+   */
+  this.fresnel = 0;
+  /**
+   * @property {Number} opacity
+   * @default 1
+   */
+  this.opacity = 1;
+  /**
+   * @property {Number} shininess
+   * @default 180
+   */
   this.shininess = 180;
-  this.refractiveIndex = 1.0;
+  /**
+   * @property {Number} refractiveIndex
+   * @default 1
+   */
+  this.refractiveIndex = 1;
+  /**
+   * @property {Number} diffuseRoughness
+   * @default 0.2
+   */
   this.diffuseRoughness = 0.2;
+  /**
+   * @property {Number} specularRoughness
+   * @default 0.2
+   */
   this.specularRoughness = 0.2;
 
   this.morphTarget = false;
@@ -8618,6 +10382,13 @@ EZ3.MeshMaterial = function() {
 EZ3.MeshMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.MeshMaterial.prototype.constructor = EZ3.Material;
 
+/**
+ * @method EZ3.MeshMaterial#updateProgram
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {Object} lights
+ * @param {Boolean} shadowReceiver
+ */
 EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights, shadowReceiver) {
   var id = 'MESH.';
   var defines = [];
@@ -8676,6 +10447,12 @@ EZ3.MeshMaterial.prototype.updateProgram = function(gl, state, lights, shadowRec
   }
 };
 
+/**
+ * @method EZ3.MeshMaterial#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ */
 EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state, capabilities) {
   this.program.loadUniformFloat(gl, 'uEmissive', this.emissive);
   this.program.loadUniformFloat(gl, 'uDiffuse', this.diffuse);
@@ -8735,39 +10512,118 @@ EZ3.MeshMaterial.prototype.updateUniforms = function(gl, state, capabilities) {
   }
 };
 
+/**
+ * @property {Number} FLAT
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.FLAT = 0;
+/**
+ * @property {Number} SMOOTH
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.SMOOTH = 1;
-
+/**
+ * @property {Number} LAMBERT
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.LAMBERT = 0;
+/**
+ * @property {Number} OREN_NAYAR
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.OREN_NAYAR = 1;
+/**
+ * @property {Number} PHONG
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.PHONG = 2;
+/**
+ * @property {Number} BLINN_PHONG
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.BLINN_PHONG = 3;
+/**
+ * @property {Number} COOK_TORRANCE
+ * @memberof EZ3.MeshMaterial
+ * @static
+ * @final
+ */
 EZ3.MeshMaterial.COOK_TORRANCE = 4;
 
 /**
- * @class ShaderMaterial
- * @extends Material
+ * @class EZ3.ShaderMaterial
+ * @extends EZ3.Material
+ * @constructor
+ * @param {String} id
+ * @param {String} vertex
+ * @param {String} fragment
  */
-
 EZ3.ShaderMaterial = function(id, vertex, fragment) {
   EZ3.Material.call(this, 'SHADER.' + id);
 
+  /**
+   * @property {String} _vertex
+   * @private
+   */
   this._vertex = vertex;
+  /**
+   * @property {String} _fragment
+   * @private
+   */
   this._fragment = fragment;
+  /**
+   * @property {Object} _uniformIntegers
+   * @private
+   */
   this._uniformIntegers = {};
+  /**
+   * @property {Object} _uniformFloats
+   * @private
+   */
   this._uniformFloats = {};
+  /**
+   * @property {Object} _uniformMatrices
+   * @private
+   */
   this._uniformMatrices = {};
+  /**
+   * @property {Object} _uniformTextures
+   * @private
+   */
   this._uniformTextures = {};
 };
 
 EZ3.ShaderMaterial.prototype = Object.create(EZ3.Material.prototype);
 EZ3.ShaderMaterial.prototype.constructor = EZ3.Material;
 
+/**
+ * @method EZ3.ShaderMaterial#updateProgram
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ */
 EZ3.ShaderMaterial.prototype.updateProgram = function(gl, state) {
   if (!this.program)
     this.program = state.createProgram(this._id, this._vertex, this._fragment);
 };
 
+/**
+ * @method EZ3.ShaderMaterial#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ */
 EZ3.ShaderMaterial.prototype.updateUniforms = function(gl, state, capabilities) {
   var name;
   var texture;
@@ -8791,22 +10647,47 @@ EZ3.ShaderMaterial.prototype.updateUniforms = function(gl, state, capabilities) 
   }
 };
 
+/**
+ * @method EZ3.ShaderMaterial#setUniformInteger
+ * @param {String} name
+ * @param {Number|EZ3.Vector2|EZ3.Vector3|EZ3.Vector4} value
+ */
 EZ3.ShaderMaterial.prototype.setUniformInteger = function(name, value) {
   this._uniformIntegers[name] = value;
 };
 
+/**
+ * @method EZ3.ShaderMaterial#setUniformFloat
+ * @param {String} name
+ * @param {Number|EZ3.Vector2|EZ3.Vector3|EZ3.Vector4} value
+ */
 EZ3.ShaderMaterial.prototype.setUniformFloat = function(name, value) {
   this._uniformFloats[name] = value;
 };
 
+/**
+ * @method EZ3.ShaderMaterial#setUniformMatrix
+ * @param {String} name
+ * @param {EZ3.Matrix3|EZ3.Matrix4} value
+ */
 EZ3.ShaderMaterial.prototype.setUniformMatrix = function(name, value) {
   this._uniformMatrices[name] = value;
 };
 
+/**
+ * @method EZ3.ShaderMaterial#setUniformTexture
+ * @param {String} name
+ * @param {EZ3.Texture} value
+ */
 EZ3.ShaderMaterial.prototype.setUniformTexture = function(name, value) {
   this._uniformTextures[name] = value;
 };
 
+/**
+ * @method EZ3.ShaderMaterial#getUniform
+ * @param {String} name
+ * @return {Number|EZ3.Vector2|EZ3.Vector3|EZ3.Vector4|EZ3.Matrix3|EZ3.Matrix4|EZ3.Texture}
+ */
 EZ3.ShaderMaterial.prototype.getUniform = function(name) {
   if (this._uniformIntegers[name])
     return this._uniformIntegers[name];
@@ -8819,10 +10700,17 @@ EZ3.ShaderMaterial.prototype.getUniform = function(name) {
 };
 
 /**
- * @class Cubemap
- * @extends Texture
+ * @class EZ3.Cubemap
+ * @extends EZ3.Texture
+ * @constructor
+ * @param {EZ3.Image} px
+ * @param {EZ3.Image} nx
+ * @param {EZ3.Image} py
+ * @param {EZ3.Image} ny
+ * @param {EZ3.Image} pz
+ * @param {EZ3.Image} nz
+ * @param {Boolean} [generateMipmaps]
  */
-
 EZ3.Cubemap = function(px, nx, py, ny, pz, nz, generateMipmaps) {
   EZ3.Texture.call(this, generateMipmaps);
 
@@ -8838,10 +10726,20 @@ EZ3.Cubemap = function(px, nx, py, ny, pz, nz, generateMipmaps) {
 EZ3.Cubemap.prototype = Object.create(EZ3.Texture.prototype);
 EZ3.Cubemap.prototype.contructor = EZ3.Cubemap;
 
+/**
+ * @method EZ3.Cubemap#bind
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @return {EZ3.RendererCapabilities} capabilities
+ */
 EZ3.Cubemap.prototype.bind = function(gl, state, capabilities) {
   EZ3.Texture.prototype.bind.call(this, gl,  state, capabilities, gl.TEXTURE_CUBE_MAP);
 };
 
+/**
+ * @method EZ3.Cubemap#update
+ * @param {WebGLContext} gl
+ */
 EZ3.Cubemap.prototype.update = function(gl) {
   var k;
 
@@ -8858,35 +10756,91 @@ EZ3.Cubemap.prototype.update = function(gl) {
   EZ3.Texture.prototype._updatePixelStore.call(this, gl);
 };
 
+/**
+ * @method EZ3.Cubemap#setImage
+ * @param {Number} target
+ * @param {EZ3.Image} image
+ */
 EZ3.Cubemap.prototype.setImage = function(target, image) {
   this._images[target] = image;
 };
 
+/**
+ * @property {Number} POSITIVE_X
+ * @memberof EZ3.Cubemap
+ * @static
+ * @final
+ */
 EZ3.Cubemap.POSITIVE_X = 0;
+/**
+ * @property {Number} NEGATIVE_X
+ * @memberof EZ3.Cubemap
+ * @static
+ * @final
+ */
 EZ3.Cubemap.NEGATIVE_X = 1;
+/**
+ * @property {Number} POSITIVE_Y
+ * @memberof EZ3.Cubemap
+ * @static
+ * @final
+ */
 EZ3.Cubemap.POSITIVE_Y = 2;
+/**
+ * @property {Number} NEGATIVE_Y
+ * @memberof EZ3.Cubemap
+ * @static
+ * @final
+ */
 EZ3.Cubemap.NEGATIVE_Y = 3;
+/**
+ * @property {Number} POSITIVE_Z
+ * @memberof EZ3.Cubemap
+ * @static
+ * @final
+ */
 EZ3.Cubemap.POSITIVE_Z = 4;
+/**
+ * @property {Number} NEGATIVE_Z
+ * @memberof EZ3.Cubemap
+ * @static
+ * @final
+ */
 EZ3.Cubemap.NEGATIVE_Z = 5;
 
 /**
- * @class Texture2D
- * @extends Texture
+ * @class EZ3.Texture2D
+ * @extends EZ3.Texture
+ * @constructor
+ * @param {EZ3.Image} Image
+ * @param {Boolean} [generateMipmaps]
  */
-
 EZ3.Texture2D = function(image, generateMipmaps) {
   EZ3.Texture.call(this, generateMipmaps);
 
+  /**
+   * @property {EZ3.Image} image
+   */
   this.image = image;
 };
 
 EZ3.Texture2D.prototype = Object.create(EZ3.Texture.prototype);
 EZ3.Texture2D.prototype.constructor = EZ3.Texture2D;
 
+/**
+ * @method EZ3.Texture2D#bind
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @return {EZ3.RendererCapabilities} capabilities
+ */
 EZ3.Texture2D.prototype.bind = function(gl, state, capabilities) {
   EZ3.Texture.prototype.bind.call(this, gl, state, capabilities, gl.TEXTURE_2D);
 };
 
+/**
+ * @method EZ3.Texture2D#bind
+ * @param {WebGLContext} gl
+ */
 EZ3.Texture2D.prototype.update = function(gl) {
   if (this.needUpdate) {
     EZ3.Texture.prototype._updateImage.call(this, gl, gl.TEXTURE_2D, this.image);
@@ -9217,22 +11171,33 @@ EZ3.PerspectiveCamera.prototype.updateProjection = function() {
 };
 
 /**
- * @class AstroidalEllipsoid
- * @extends Primitive
+ * @class EZ3.AstroidalEllipsoid
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {EZ3.Vector3} [radiouses]
  */
-
 EZ3.AstroidalEllipsoid = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.radiouses = radiouses || new EZ3.Vector3(90, 90, 90);
-  this.resolution = resolution || new EZ3.Vector2(150, 150);
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(50, 50)
+   */
+  this.resolution = resolution || new EZ3.Vector2(5, 5);
+  /**
+   * @property {EZ3.Vector3} radiouses
+   * @default new EZ3.Vector3(6, 6, 6)
+   */
+  this.radiouses = radiouses || new EZ3.Vector3(6, 6, 6);
 };
 
 EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
 
+/**
+ * @method EZ3.AstroidalEllipsoid#generate
+ */
 EZ3.AstroidalEllipsoid.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -9293,6 +11258,10 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.AstroidalEllipsoid
+ */
 Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
@@ -9312,22 +11281,34 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'needGenerate', {
 });
 
 /**
- * @class Box
- * @extends Primitive
+ * @class EZ3.Box
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector3} [resolution]
+ * @param {EZ3.Vector3} [dimensions]
  */
-
 EZ3.Box = function(resolution, dimensions) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
+  /**
+   * @property {EZ3.Vector3} resolution
+   * @default new EZ3.Vector3(1, 1, 1)
+   */
   this.resolution = resolution || new EZ3.Vector3(1, 1, 1);
+
+  /**
+   * @property {EZ3.Vector3} dimensions
+   * @default new EZ3.Vector3(1, 1, 1)
+   */
+  this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
 };
 
 EZ3.Box.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Box.prototype.constructor = EZ3.Box;
 
+/**
+ * @method EZ3.Box#generate
+ */
 EZ3.Box.prototype.generate = function() {
   var that = this;
   var uvs = [];
@@ -9404,6 +11385,10 @@ EZ3.Box.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Box
+ */
 Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
@@ -9423,22 +11408,33 @@ Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
 });
 
 /**
- * @class Ellipsoid
- * @extends Primitive
+ * @class EZ3.Ellipsoid
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {EZ3.Vector3} [radiouses]
  */
-
 EZ3.Ellipsoid = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector3(40, 40)
+   */
+  this.resolution = resolution || new EZ3.Vector2(40, 40);
+  /**
+   * @property {EZ3.Vector3} radiouses
+   * @default new EZ3.Vector3(10, 5, 10)
+   */
   this.radiouses = radiouses || new EZ3.Vector3(10, 5, 10);
-  this.resolution = resolution || new EZ3.Vector2(100, 100);
 };
 
 EZ3.Ellipsoid.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Ellipsoid.prototype.constructor = EZ3.Ellipsoid;
 
+/**
+ * @method EZ3.Ellipsoid#generate
+ */
 EZ3.Ellipsoid.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -9499,6 +11495,10 @@ EZ3.Ellipsoid.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Ellipsoid
+ */
 Object.defineProperty(EZ3.Ellipsoid.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
@@ -9518,21 +11518,28 @@ Object.defineProperty(EZ3.Ellipsoid.prototype, 'needGenerate', {
 });
 
 /**
- * @class Plane
- * @extends Primitive
+ * @class EZ3.Plane
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
  */
 
 EZ3.Plane = function(resolution) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(2, 2)
+   */
   this.resolution = resolution || new EZ3.Vector2(2, 2);
 };
 
 EZ3.Plane.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Plane.prototype.constructor = EZ3.Plane;
 
+/**
+ * @method EZ3.Plane#generate
+ */
 EZ3.Plane.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -9570,6 +11577,10 @@ EZ3.Plane.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Plane
+ */
 Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {
   get: function() {
     if (!this.resolution.isEqual(this._cache.resolution)) {
@@ -9582,22 +11593,33 @@ Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {
 });
 
 /**
- * @class Sphere
- * @extends Primitive
+ * @class EZ3.Sphere
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {Number} [radius]
  */
-
 EZ3.Sphere = function(resolution, radius) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.radius = radius || 5;
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(6, 6)
+   */
   this.resolution = resolution || new EZ3.Vector2(6, 6);
+  /**
+   * @property {EZ3.Vector2} radius
+   * @default 5
+   */
+  this.radius = radius || 5;
 };
 
 EZ3.Sphere.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Sphere.prototype.constructor = EZ3.Sphere;
 
+/**
+ * @method EZ3.Sphere#generate
+ */
 EZ3.Sphere.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -9654,6 +11676,10 @@ EZ3.Sphere.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Sphere
+ */
 Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
@@ -9673,22 +11699,33 @@ Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
 });
 
 /**
- * @class Torus
- * @extends Primitive
+ * @class EZ3.Torus
+ * @extends EZ3.Primitive
+ * @constructor
+ * @param {EZ3.Vector2} [resolution]
+ * @param {EZ3.Vector2} [radiouses]
  */
-
 EZ3.Torus = function(resolution, radiouses) {
   EZ3.Primitive.call(this);
 
-  this._cache = {};
-
-  this.radiouses = radiouses || new EZ3.Vector2(7, 3);
+  /**
+   * @property {EZ3.Vector2} resolution
+   * @default new EZ3.Vector2(5, 5)
+   */
   this.resolution = resolution || new EZ3.Vector2(5, 5);
+  /**
+   * @property {EZ3.Vector2} radiouses
+   * @default new EZ3.Vector2(7, 3)
+   */
+  this.radiouses = radiouses || new EZ3.Vector2(7, 3);
 };
 
 EZ3.Torus.prototype = Object.create(EZ3.Primitive.prototype);
 EZ3.Torus.prototype.constructor = EZ3.Torus;
 
+/**
+ * @method EZ3.Torus#generate
+ */
 EZ3.Torus.prototype.generate = function() {
   var indices = [];
   var vertices = [];
@@ -9755,6 +11792,10 @@ EZ3.Torus.prototype.generate = function() {
   this.buffers.addUvBuffer(uvs);
 };
 
+/**
+ * @property {Boolean} needGenerate
+ * @memberof EZ3.Torus
+ */
 Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
@@ -9774,10 +11815,13 @@ Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
 });
 
 /**
- * @class TargetCubemap
- * @extends Cubemap
+ * @class EZ3.TargetCubemap
+ * @extends EZ3.Cubemap
+ * @constructor
+ * @param {EZ3.Vector2} size
+ * @param {Number} format
+ * @param {Number} attachment
  */
-
  EZ3.TargetCubemap = function(size, format, attachment) {
    EZ3.Cubemap.call(this,
      new EZ3.Image(size.x, size.y, format, null),
@@ -9795,6 +11839,11 @@ Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
  EZ3.TargetCubemap.prototype = Object.create(EZ3.Cubemap.prototype);
  EZ3.TargetCubemap.prototype.constructor = EZ3.TargetCubemap;
 
+ /**
+  * @method EZ3.TargetCubemap#attach
+  * @param {WebGLContext} gl
+  * @param {Number} face
+  */
  EZ3.TargetCubemap.prototype.attach = function(gl, face) {
    var index = face || 0;
 
@@ -9802,19 +11851,219 @@ Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
  };
 
 /**
- * @class TargetTexture2D
- * @extends Texture2D
+ * @class EZ3.TargetTexture2D
+ * @extends EZ3.Texture2D
+ * @constructor
+ * @param {EZ3.Vector2} size
+ * @param {Number} format
+ * @param {Number} attachment
  */
-
  EZ3.TargetTexture2D = function(size, format, attachment) {
    EZ3.Texture2D.call(this, new EZ3.Image(size.x, size.y, format, null), false);
 
+   /**
+    * @property {Number} attachment
+    */
    this.attachment = attachment;
  };
 
  EZ3.TargetTexture2D.prototype = Object.create(EZ3.Texture2D.prototype);
  EZ3.TargetTexture2D.prototype.constructor = EZ3.TargetTexture2D;
 
+ /**
+  * @method EZ3.TargetTexture2D#attach
+  * @param {WebGLContext} gl
+  */
  EZ3.TargetTexture2D.prototype.attach = function(gl) {
    gl.framebufferTexture2D(gl.FRAMEBUFFER, this.attachment, gl.TEXTURE_2D, this._id, 0);
  };
+
+/**
+ * @class EZ3.DirectionalLight
+ * @extends EZ3.Light
+ * @extends EZ3.OrthographicCamera
+ * @constructor
+ */
+EZ3.DirectionalLight = function() {
+  EZ3.Light.call(this);
+  EZ3.OrthographicCamera.call(this, -100.0, 100.0, 100.0, -100.0, 1.0, 5000.0);
+
+  /**
+   * @property {EZ3.DepthFramebuffer} depthFramebuffer
+   * @default new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512))
+   */
+  this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
+};
+
+EZ3.DirectionalLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.extends(EZ3.DirectionalLight.prototype, EZ3.OrthographicCamera.prototype);
+EZ3.DirectionalLight.prototype.constructor = EZ3.DirectionalLight;
+
+/**
+ * @method EZ3.DirectionalLight#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ * @param {EZ3.GLSLProgram} program
+ * @param {Number} i
+ * @param {Boolean} shadowReceiver
+ * @param {Number} length
+ */
+EZ3.DirectionalLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
+  var prefix = 'uDirectionalLights[' + i + '].';
+  var direction = this.getWorldDirection();
+  var viewProjection;
+  var shadow;
+  var bias;
+
+  if (!direction.isZeroVector())
+    direction.normalize();
+
+  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
+
+  program.loadUniformFloat(gl, prefix + 'direction', direction);
+
+  if (shadowReceiver) {
+    bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
+    viewProjection = new EZ3.Matrix4().mul(this.projection, this.view);
+    shadow = new EZ3.Matrix4().mul(bias, viewProjection);
+
+    program.loadUniformMatrix(gl, prefix + 'shadow', shadow);
+    program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
+    program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
+
+    this.depthFramebuffer.texture.bind(gl, state, capabilities);
+
+    state.textureArraySlots.push(state.usedTextureSlots++);
+
+    if(i === length - 1) {
+      program.loadUniformSamplerArray(gl, 'uDirectionalShadowSampler[0]', state.textureArraySlots);
+      state.textureArraySlots = [];
+    }
+  }
+};
+
+/**
+ * @class EZ3.SpotLight
+ * @extends EZ3.Light
+ * @extends EZ3.OrthographicCamera
+ * @constructor
+ */
+EZ3.SpotLight = function() {
+  EZ3.Light.call(this);
+  EZ3.PerspectiveCamera.call(this, 60.0, 1.0, 1.0, 4000.0);
+
+  /**
+   * @property {Number} cutoff
+   * @default 0.9
+   */
+  this.cutoff = 0.9;
+  /**
+   * @property {EZ3.DepthCubeFramebuffer} depthFramebuffer
+   * @default new EZ3.DepthCubeFramebuffer(new EZ3.Vector2(512, 512))
+   */
+  this.depthFramebuffer = new EZ3.DepthFramebuffer(new EZ3.Vector2(512, 512));
+};
+
+EZ3.SpotLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.extends(EZ3.SpotLight.prototype, EZ3.PerspectiveCamera.prototype);
+EZ3.SpotLight.prototype.constructor = EZ3.SpotLight;
+
+/**
+ * @method EZ3.SpotLight#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ * @param {EZ3.GLSLProgram} program
+ * @param {Number} i
+ * @param {Boolean} shadowReceiver
+ * @param {Number} length
+ */
+EZ3.SpotLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
+  var prefix = 'uSpotLights[' + i + '].';
+  var direction = this.getWorldDirection();
+  var viewProjection;
+  var shadow;
+  var bias;
+
+  if(!direction.isZeroVector())
+    direction.normalize();
+
+  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
+
+  program.loadUniformFloat(gl, prefix + 'position', this.position);
+  program.loadUniformFloat(gl, prefix + 'direction', direction);
+  program.loadUniformFloat(gl, prefix + 'cutoff', this.cutoff);
+
+  if(shadowReceiver) {
+    bias = new EZ3.Matrix4().translate(new EZ3.Vector3(0.5)).scale(new EZ3.Vector3(0.5));
+    viewProjection = new EZ3.Matrix4().mul(this.projection, this.view);
+    shadow = new EZ3.Matrix4().mul(bias, viewProjection);
+
+    program.loadUniformMatrix(gl, prefix + 'shadow', shadow);
+    program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
+    program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
+
+    this.depthFramebuffer.texture.bind(gl, state, capabilities);
+
+    state.textureArraySlots.push(state.usedTextureSlots++);
+
+    if(i === length - 1) {
+      program.loadUniformSamplerArray(gl, 'uSpotShadowSampler[0]', state.textureArraySlots);
+      state.textureArraySlots = [];
+    }
+  }
+};
+
+/**
+ * @class EZ3.PointLight
+ * @extends EZ3.Light
+ * @extends EZ3.PerspectiveCamera
+ * @constructor
+ */
+EZ3.PointLight = function() {
+  EZ3.Light.call(this);
+  EZ3.PerspectiveCamera.call(this, 90.0, 1.0, 1.0, 5000.0);
+
+  /**
+   * @property {EZ3.DepthCubeFramebuffer} depthFramebuffer
+   * @default new EZ3.DepthCubeFramebuffer(new EZ3.Vector2(512, 512))
+   */
+  this.depthFramebuffer = new EZ3.DepthCubeFramebuffer(new EZ3.Vector2(512, 512));
+};
+
+EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);
+EZ3.extends(EZ3.PointLight.prototype, EZ3.PerspectiveCamera.prototype);
+EZ3.PointLight.prototype.constructor = EZ3.PointLight;
+
+/**
+ * @method EZ3.PointLight#updateUniforms
+ * @param {WebGLContext} gl
+ * @param {EZ3.RendererState} state
+ * @param {EZ3.RendererCapabilities} capabilities
+ * @param {EZ3.GLSLProgram} program
+ * @param {Number} i
+ * @param {Boolean} shadowReceiver
+ * @param {Number} length
+ */
+EZ3.PointLight.prototype.updateUniforms = function(gl, state, capabilities, program, i, shadowReceiver, length) {
+  var prefix = 'uPointLights[' + i + '].';
+
+  EZ3.Light.prototype.updateUniforms.call(this, gl, program, prefix);
+
+  program.loadUniformFloat(gl, prefix + 'position', this.position);
+
+  if(shadowReceiver) {
+    program.loadUniformFloat(gl, prefix + 'shadowBias', this.shadowBias);
+    program.loadUniformFloat(gl, prefix + 'shadowDarkness', this.shadowDarkness);
+
+    this.depthFramebuffer.texture.bind(gl, state, capabilities);
+
+    state.textureArraySlots.push(state.usedTextureSlots++);
+
+    if(i === length - 1) {
+      program.loadUniformSamplerArray(gl, 'uPointShadowSampler[0]', state.textureArraySlots);
+      state.textureArraySlots = [];
+    }
+  }
+};

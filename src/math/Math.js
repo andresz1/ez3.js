@@ -3,7 +3,6 @@
  * @class EZ3.Math
  * @static
  */
-
 EZ3.Math = function() {
   /**
    * @property {Number} PI

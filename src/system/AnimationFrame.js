@@ -1,10 +1,15 @@
 /**
- * @class AnimationFrame
+ * @class EZ3.AnimationFrame
+ * @constructor
+ * @param {Boolean} [timeOut]
  */
-
 EZ3.AnimationFrame = function(timeOut) {
   var device = EZ3.Device;
 
+  /**
+   * @property {Number} _id
+   * @private
+   */
   this._id = 0;
 
   if (!device.requestAnimationFrame || timeOut) {
@@ -26,10 +31,17 @@ EZ3.AnimationFrame = function(timeOut) {
   }
 };
 
+/**
+ * @method EZ3.AnimationFrame#request
+ * @param {Function} callback
+ */
 EZ3.AnimationFrame.prototype.request = function(callback) {
   this._id = this._onRequestAnimationFrame(callback);
 };
 
+/**
+ * @method EZ3.AnimationFrame#cancel
+ */
 EZ3.AnimationFrame.prototype.cancel = function() {
   this._onCancelAnimationFrame(this._id);
 };

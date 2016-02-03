@@ -1,18 +1,46 @@
 /**
- * @class GLSLProgram
+ * @class EZ3.GLSLProgram
+ * @constructor
+ * @param {WebGLContext} gl
+ * @param {String} vertex
+ * @param {String} fragment
+ * @param {String} [prefix]
  */
-
 EZ3.GLSLProgram = function(gl, vertex, fragment, prefix) {
+  /**
+   * @property {WebGLId} _id
+   * @private
+   */
   this._id = null;
+  /**
+   * @property {Object} _cache
+   * @private
+   */
   this._cache = {};
+  /**
+   * @property {WebGLShader} _shaders
+   * @private
+   */
   this._shaders = [];
 
+  /**
+   * @property {Object} uniforms
+   */
   this.uniforms = {};
+  /**
+   * @property {Object} attributes
+   */
   this.attributes = {};
 
   this._create(gl, vertex, fragment, prefix);
 };
 
+/**
+ * @method EZ3.GLSLProgram#_compile
+ * @param {WebGLContext} gl
+ * @param {Number} type
+ * @param {String} code
+ */
 EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
   var shader = gl.createShader(type);
   var warning;
@@ -34,6 +62,13 @@ EZ3.GLSLProgram.prototype._compile = function(gl, type, code) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#_create
+ * @param {WebGLContext} gl
+ * @param {String} vertex
+ * @param {String} fragment
+ * @param {String} prefix
+ */
 EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
   var warning;
 
@@ -64,6 +99,10 @@ EZ3.GLSLProgram.prototype._create = function(gl, vertex, fragment, prefix) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#_loadUniforms
+ * @param {WebGLContext} gl
+ */
 EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
   var uniforms = gl.getProgramParameter(this._id, gl.ACTIVE_UNIFORMS);
   var name;
@@ -75,6 +114,10 @@ EZ3.GLSLProgram.prototype._loadUniforms = function(gl) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#_loadAttributes
+ * @param {WebGLContext} gl
+ */
 EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
   var attributes = gl.getProgramParameter(this._id, gl.ACTIVE_ATTRIBUTES);
   var name;
@@ -86,10 +129,20 @@ EZ3.GLSLProgram.prototype._loadAttributes = function(gl) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#bind
+ * @param {WebGLContext} gl
+ */
 EZ3.GLSLProgram.prototype.bind = function(gl) {
   gl.useProgram(this._id);
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformInteger
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {Number|EZ3.Vector2|EZ3.Vector3|EZ3.Vector4} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformInteger = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -110,6 +163,12 @@ EZ3.GLSLProgram.prototype.loadUniformInteger = function(gl, name, data) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformFloat
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {Number|EZ3.Vector2|EZ3.Vector3|EZ3.Vector4} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformFloat = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -130,6 +189,12 @@ EZ3.GLSLProgram.prototype.loadUniformFloat = function(gl, name, data) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformMatrix
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {EZ3.Matrix3|EZ3.Matrix4} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -144,6 +209,12 @@ EZ3.GLSLProgram.prototype.loadUniformMatrix = function(gl, name, data) {
   }
 };
 
+/**
+ * @method EZ3.GLSLProgram#loadUniformSamplerArray
+ * @param {WebGLContext} gl
+ * @param {String} name
+ * @param {Number[]} data
+ */
 EZ3.GLSLProgram.prototype.loadUniformSamplerArray = function(gl, name, data) {
   var location = this.uniforms[name];
 
@@ -155,5 +226,17 @@ EZ3.GLSLProgram.prototype.loadUniformSamplerArray = function(gl, name, data) {
   }
 };
 
+/**
+ * @property {Number} VERTEX
+ * @memberof EZ3.GLSLProgram
+ * @static
+ * @final
+ */
 EZ3.GLSLProgram.VERTEX = 0;
+/**
+ * @property {Number} FRAGMENT
+ * @memberof EZ3.GLSLProgram
+ * @static
+ * @final
+ */
 EZ3.GLSLProgram.FRAGMENT = 1;

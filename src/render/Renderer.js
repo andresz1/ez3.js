@@ -1,20 +1,48 @@
 /**
- * @class Renderer
+ * @class EZ3.Renderer
+ * @param {HTMLElement} canvas
+ * @param {Öbject} options
  */
-
 EZ3.Renderer = function(canvas, options) {
+  /**
+   * @property {HTMLElement} canvas
+   */
   this.canvas = canvas;
+  /**
+   * @property {Object} options
+   */
   this.options = options;
+  /**
+   * @property {WebGLContext} context
+   */
   this.context = null;
+  /**
+   * @property {EZ3.RendererState} state
+   */
   this.state = null;
+  /**
+   * @property {EZ3.RendererExtensions} extensions
+   */
   this.extensions = null;
+  /**
+   * @property {EZ3.RendererCapabilities} capabilities
+   */
   this.capabilities = null;
 };
 
+/**
+ * @method EZ3.Renderer#_processContextLost
+ */
 EZ3.Renderer.prototype._processContextLost = function(event) {
   event.preventDefault();
 };
 
+/**
+ * @method EZ3.Renderer#_renderMesh
+ * @param {EZ3.Mesh} mesh
+ * @param {EZ3.Camera} camera
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   var gl = this.context;
   var program = mesh.material.program;
@@ -55,6 +83,13 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
   this.state.usedTextureSlots = 0;
 };
 
+/**
+ * @method EZ3.Renderer#_renderMeshDepth
+ * @param {EZ3.GLSLProgram} program
+ * @param {EZ3.Mesh} mesh
+ * @param {EZ3.Matrix4} view
+ * @param {EZ3.Matrix4} projection
+ */
 EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, view, projection) {
   var gl = this.context;
   var modelView = new EZ3.Matrix4();
@@ -67,6 +102,12 @@ EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, view, projecti
   mesh.render(gl, program.attributes, this.state, this.extensions);
 };
 
+/**
+ * @method EZ3.Renderer#_renderOmnidirectionalDepth
+ * @param {EZ3.GLSLProgram} program
+ * @param {EZ3.Mesh[]} meshes
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, lights) {
   var gl = this.context;
   var target = new EZ3.Vector3();
@@ -125,6 +166,12 @@ EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, l
   }
 };
 
+/**
+ * @method EZ3.Renderer#_renderDirectionalDepth
+ * @param {EZ3.GLSLProgram} program
+ * @param {EZ3.Mesh[]} meshes
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, lights) {
   var gl = this.context;
   var light;
@@ -144,6 +191,11 @@ EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, light
   }
 };
 
+/**
+ * @method EZ3.Renderer#_renderDepth
+ * @param {EZ3.Mesh[]} meshes
+ * @param {Object} lights
+ */
 EZ3.Renderer.prototype._renderDepth = function(meshes, lights) {
   var gl = this.context;
   var vertex;
@@ -172,6 +224,9 @@ EZ3.Renderer.prototype._renderDepth = function(meshes, lights) {
   EZ3.Framebuffer.unbind(gl);
 };
 
+/**
+ * @method EZ3.Renderer#initContext
+ */
 EZ3.Renderer.prototype.initContext = function() {
   var that = this;
   var names = [
@@ -205,18 +260,32 @@ EZ3.Renderer.prototype.initContext = function() {
   this.canvas.addEventListener('webglcontextlost', this._onContextLost, false);
 };
 
+/**
+ * @method EZ3.Renderer#clearColor
+ * @param {EZ3.Vector4} color
+ */
 EZ3.Renderer.prototype.clearColor = function(color) {
   var gl = this.context;
 
   gl.clearColor(color.x, color.y, color.z, color.w);
 };
 
+/**
+ * @method EZ3.Renderer#clear
+ */
 EZ3.Renderer.prototype.clear = function() {
   var gl = this.context;
 
   gl.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
 };
 
+/**
+ * @method EZ3.Renderer#render
+ * @param {EZ3.Vector2} position
+ * @param {EZ3.Vector2} size
+ * @param {EZ3.Entity} scene
+ * @param {EZ3.Camera} camera
+ */
 EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
   var gl = this.context;
   var meshes = {

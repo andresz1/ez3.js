@@ -1,8 +1,10 @@
 /**
- * @class OFFRequest
- * @extends Request
+ * @class EZ3.OFFRequest
+ * @extends EZ3.Request
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.OFFRequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Mesh(), cached, crossOrigin);
 };
@@ -10,6 +12,12 @@ EZ3.OFFRequest = function(url, cached, crossOrigin) {
 EZ3.OFFRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.OFFRequest.prototype.constructor = EZ3.OFFRequest;
 
+/**
+ * @method EZ3.OFFRequest#_parse
+ * @param {String} data
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.OFFRequest.prototype._parse = function(data, onLoad, onError) {
   var that = this;
   var indices = [];
@@ -94,6 +102,11 @@ EZ3.OFFRequest.prototype._parse = function(data, onLoad, onError) {
   init();
 };
 
+/**
+ * @method EZ3.OFFRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.OFFRequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();

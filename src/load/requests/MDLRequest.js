@@ -1,8 +1,11 @@
 /**
- * @class MDLRequest
- * @extends Request
+ * @class EZ3.MDLRequest
+ * @extends EZ3.Request
+ * @constructor
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.MDLRequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Mesh(), cached, crossOrigin);
 };
@@ -10,6 +13,12 @@ EZ3.MDLRequest = function(url, cached, crossOrigin) {
 EZ3.MDLRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.MDLRequest.prototype.constructor = EZ3.MDLRequest;
 
+/**
+ * @method EZ3.MDLRequest#_parse
+ * @param {ArrayBuffer} data
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
   var that = this;
   var offset = 0;
@@ -264,6 +273,11 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
   init();
 };
 
+/**
+ * @method EZ3.MDLRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.MDLRequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();

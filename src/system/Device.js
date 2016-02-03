@@ -1,52 +1,151 @@
 /**
- * @class Device
+ * @class EZ3.Device
+ * @static
  */
-
 EZ3.Device = function() {
+  /**
+   * @property {Boolean} ready
+   */
   this.ready = false;
+  /**
+   * @property {EZ3.Signal} onResize
+   */
   this.onResize = new EZ3.Signal();
+  /**
+   * @property {Number} operatingSystem
+   */
   this.operatingSystem = 0;
+  /**
+   * @property {String} requestAnimationFrame
+   */
   this.requestAnimationFrame = null;
+  /**
+   * @property {String} cancelAnimationFrame
+   */
   this.cancelAnimationFrame = null;
+  /**
+   * @property {String} touchDown
+   */
   this.touchDown = null;
+  /**
+   * @property {String} touchMove
+   */
   this.touchMove = null;
+  /**
+   * @property {String} touchUp
+   */
   this.touchUp = null;
+  /**
+   * @property {String} wheel
+   */
   this.wheel = null;
+  /**
+   * @property {String} requestFullScreen
+   */
   this.requestFullScreen = null;
+  /**
+   * @property {String} exitFullScreen
+   */
   this.exitFullScreen = null;
+  /**
+   * @property {String} fullScreenChange
+   */
   this.fullScreenChange = null;
+  /**
+   * @property {String} fullScreenError
+   */
   this.fullScreenError = null;
+  /**
+   * @property {String} requestPointerLock
+   */
   this.requestPointerLock = null;
+  /**
+   * @property {String} exitPointerLock
+   */
   this.exitPointerLock = null;
+  /**
+   * @property {String} pointerLockChange
+   */
   this.pointerLockChange = null;
+  /**
+   * @property {String} pointerLockError
+   */
   this.pointerLockError = null;
+  /**
+   * @property {Number} WINDOW
+   * @final
+   */
+  EZ3.Device.WINDOWS = 1;
+  /**
+   * @property {Number} MACOS
+   * @final
+   */
+  EZ3.Device.MACOS = 2;
+  /**
+   * @property {Number} LINUX
+   * @final
+   */
+  EZ3.Device.LINUX = 4;
+  /**
+   * @property {Number} IOS
+   * @final
+   */
+  EZ3.Device.IOS = 8;
+  /**
+   * @property {Number} ANDROID
+   * @final
+   */
+  EZ3.Device.ANDROID = 16;
+  /**
+   * @property {Number} WINDOWS_PHONE
+   * @final
+   */
+  EZ3.Device.WINDOWS_PHONE = 32;
+  /**
+   * @property {Number} CRHOMEOS
+   * @final
+   */
+  EZ3.Device.CRHOMEOS = 64;
+  /**
+   * @property {Number} KINDLE
+   * @final
+   */
+  EZ3.Device.KINDLE = 128;
+  /**
+   * @property {Number} PSVITA
+   * @final
+   */
+  EZ3.Device.PSVITA = 256;
 };
 
 EZ3.Device = new EZ3.Device();
 
+/**
+ * @method EZ3.Device#_check
+ */
 EZ3.Device._check = function() {
   var that = this;
 
   function checkOperatingSystem() {
     if (/Playstation Vita/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.PSVITA;
+      that.operatingSystem = EZ3.Device.PSVITA;
     else if (/Kindle/.test(navigator.userAgent) || /\bKF[A-Z][A-Z]+/.test(navigator.userAgent) || /Silk.*Mobile Safari/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.KINDLE;
+      that.operatingSystem = EZ3.Device.KINDLE;
     else if (/Android/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.ANDROID;
+      that.operatingSystem = EZ3.Device.ANDROID;
     else if (/CrOS/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.CRHOMEOS;
+      that.operatingSystem = EZ3.Device.CRHOMEOS;
     else if (/iP[ao]d|iPhone/i.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.IOS;
+      that.operatingSystem = EZ3.Device.IOS;
     else if (/Linux/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.LINUX;
+      that.operatingSystem = EZ3.Device.LINUX;
     else if (/Mac OS/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.MACOS;
+      that.operatingSystem = EZ3.Device.MACOS;
     else if (/Windows/.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS;
+      that.operatingSystem = EZ3.Device.WINDOWS;
 
     if (/Windows Phone/i.test(navigator.userAgent) || /IEMobile/i.test(navigator.userAgent))
-      that.operatingSystem = EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE;
+      that.operatingSystem = EZ3.Device.WINDOWS_PHONE;
   }
 
   function checkAnimationFrame() {
@@ -142,6 +241,9 @@ EZ3.Device._check = function() {
   checkInput();
 };
 
+/**
+ * @method EZ3.Device#_isReady
+ */
 EZ3.Device._isReady = function() {
   var that;
 
@@ -172,6 +274,12 @@ EZ3.Device._isReady = function() {
   }
 };
 
+/**
+ * @method EZ3.Device#onReady
+ * @param {EZ3.Signal} callback
+ * @param {Object} [context]
+ * @param {Any[]} params
+ */
 EZ3.Device.onReady = function(callback, context, params) {
   var that;
   var binding;
@@ -202,14 +310,3 @@ EZ3.Device.onReady = function(callback, context, params) {
     }
   }
 };
-
-EZ3.Device.OPERATING_SYSTEM = {};
-EZ3.Device.OPERATING_SYSTEM.WINDOWS = 1;
-EZ3.Device.OPERATING_SYSTEM.MACOS = 2;
-EZ3.Device.OPERATING_SYSTEM.LINUX = 4;
-EZ3.Device.OPERATING_SYSTEM.IOS = 8;
-EZ3.Device.OPERATING_SYSTEM.ANDROID = 16;
-EZ3.Device.OPERATING_SYSTEM.WINDOWS_PHONE = 32;
-EZ3.Device.OPERATING_SYSTEM.CRHOMEOS = 64;
-EZ3.Device.OPERATING_SYSTEM.KINDLE = 128;
-EZ3.Device.OPERATING_SYSTEM.PSVITA = 256;

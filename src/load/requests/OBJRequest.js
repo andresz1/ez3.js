@@ -1,8 +1,10 @@
 /**
- * @class OBJRequest
- * @extends Request
+ * @class EZ3.OBJRequest
+ * @extends EZ3.Request
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.OBJRequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Entity(), cached, crossOrigin);
 };
@@ -10,6 +12,13 @@ EZ3.OBJRequest = function(url, cached, crossOrigin) {
 EZ3.OBJRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.OBJRequest.prototype.constructor = EZ3.OBJRequest;
 
+/**
+ * @method EZ3.OBJRequest#_parseMTL
+ * @param {String} baseUrl
+ * @param {String} data
+ * @param {EZ3.Material[]} materials
+ * @param {EZ3.RequestManager} requests
+ */
 EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests) {
   var that = this;
   var currents;
@@ -100,6 +109,11 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
   init();
 };
 
+/**
+ * @method EZ3.OBJRequest#_parseOBJ
+ * @param {String} data
+ * @param {Function} onLoad
+ */
 EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
   var that = this;
   var indices = [];
@@ -442,6 +456,11 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
   init();
 };
 
+/**
+ * @method EZ3.OBJRequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>EZ3.Touch - ez3</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            ez3
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/EZ3", "classes/EZ3.AnimationFrame", "classes/EZ3.ArrayBuffer", "classes/EZ3.AssetsManager", "classes/EZ3.AstroidalEllipsoid", "classes/EZ3.BoundingBox", "classes/EZ3.BoundingSphere", "classes/EZ3.Box", "classes/EZ3.Buffer", "classes/EZ3.Cache", "classes/EZ3.Camera", "classes/EZ3.CameraControl", "classes/EZ3.Control", "classes/EZ3.Cubemap", "classes/EZ3.DepthCubeFramebuffer", "classes/EZ3.DepthFramebuffer", "classes/EZ3.Device", "classes/EZ3.DirectionalLight", "classes/EZ3.Ellipsoid", "classes/EZ3.Engine", "classes/EZ3.Entity", "classes/EZ3.Euler", "classes/EZ3.File", "classes/EZ3.FileRequest", "classes/EZ3.Framebuffer", "classes/EZ3.FreeControl", "classes/EZ3.Frustum", "classes/EZ3.Geometry", "classes/EZ3.GLSLProgram", "classes/EZ3.Image", "classes/EZ3.ImageRequest", "classes/EZ3.IndexBuffer", "classes/EZ3.InputManager", "classes/EZ3.Keyboard", "classes/EZ3.Light", "classes/EZ3.Material", "classes/EZ3.Math", "classes/EZ3.Matrix3", "classes/EZ3.Matrix4", "classes/EZ3.MD2Request", "classes/EZ3.MDLRequest", "classes/EZ3.Mesh", "classes/EZ3.MeshMaterial", "classes/EZ3.Mouse", "classes/EZ3.MousePointer", "classes/EZ3.OBJRequest", "classes/EZ3.OFFRequest", "classes/EZ3.OrthographicCamera", "classes/EZ3.PerspectiveCamera", "classes/EZ3.Plane", "classes/EZ3.Pointer", "classes/EZ3.PointLight", "classes/EZ3.Primitive", "classes/EZ3.Quaternion", "classes/EZ3.Renderer", "classes/EZ3.RendererCapabilities", "classes/EZ3.RendererExtensions", "classes/EZ3.RendererState", "classes/EZ3.Request", "classes/EZ3.RequestManager", "classes/EZ3.Scene", "classes/EZ3.Screen", "classes/EZ3.ScreenManager", "classes/EZ3.ShaderLibrary", "classes/EZ3.ShaderMaterial", "classes/EZ3.Signal", "classes/EZ3.SignalBinding", "classes/EZ3.Sphere", "classes/EZ3.SpotLight", "classes/EZ3.Switch", "classes/EZ3.TargetControl", "classes/EZ3.TargetCubemap", "classes/EZ3.TargetTexture2D", "classes/EZ3.Texture", "classes/EZ3.Texture2D", "classes/EZ3.TGARequest", "classes/EZ3.Time", "classes/EZ3.Torus", "classes/EZ3.Touch", "classes/EZ3.TouchPointer", "classes/EZ3.Vector2", "classes/EZ3.Vector3", "classes/EZ3.Vector4", "classes/EZ3.VertexBuffer", "classes/EZ3.VertexBufferAttribute"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/EZ3.html">EZ3</a></li>
+                <li><a href="../classes/EZ3.AnimationFrame.html">EZ3.AnimationFrame</a></li>
+                <li><a href="../classes/EZ3.ArrayBuffer.html">EZ3.ArrayBuffer</a></li>
+                <li><a href="../classes/EZ3.AssetsManager.html">EZ3.AssetsManager</a></li>
+                <li><a href="../classes/EZ3.AstroidalEllipsoid.html">EZ3.AstroidalEllipsoid</a></li>
+                <li><a href="../classes/EZ3.BoundingBox.html">EZ3.BoundingBox</a></li>
+                <li><a href="../classes/EZ3.BoundingSphere.html">EZ3.BoundingSphere</a></li>
+                <li><a href="../classes/EZ3.Box.html">EZ3.Box</a></li>
+                <li><a href="../classes/EZ3.Buffer.html">EZ3.Buffer</a></li>
+                <li><a href="../classes/EZ3.Cache.html">EZ3.Cache</a></li>
+                <li><a href="../classes/EZ3.Camera.html">EZ3.Camera</a></li>
+                <li><a href="../classes/EZ3.CameraControl.html">EZ3.CameraControl</a></li>
+                <li><a href="../classes/EZ3.Control.html">EZ3.Control</a></li>
+                <li><a href="../classes/EZ3.Cubemap.html">EZ3.Cubemap</a></li>
+                <li><a href="../classes/EZ3.DepthCubeFramebuffer.html">EZ3.DepthCubeFramebuffer</a></li>
+                <li><a href="../classes/EZ3.DepthFramebuffer.html">EZ3.DepthFramebuffer</a></li>
+                <li><a href="../classes/EZ3.Device.html">EZ3.Device</a></li>
+                <li><a href="../classes/EZ3.DirectionalLight.html">EZ3.DirectionalLight</a></li>
+                <li><a href="../classes/EZ3.Ellipsoid.html">EZ3.Ellipsoid</a></li>
+                <li><a href="../classes/EZ3.Engine.html">EZ3.Engine</a></li>
+                <li><a href="../classes/EZ3.Entity.html">EZ3.Entity</a></li>
+                <li><a href="../classes/EZ3.Euler.html">EZ3.Euler</a></li>
+                <li><a href="../classes/EZ3.File.html">EZ3.File</a></li>
+                <li><a href="../classes/EZ3.FileRequest.html">EZ3.FileRequest</a></li>
+                <li><a href="../classes/EZ3.Framebuffer.html">EZ3.Framebuffer</a></li>
+                <li><a href="../classes/EZ3.FreeControl.html">EZ3.FreeControl</a></li>
+                <li><a href="../classes/EZ3.Frustum.html">EZ3.Frustum</a></li>
+                <li><a href="../classes/EZ3.Geometry.html">EZ3.Geometry</a></li>
+                <li><a href="../classes/EZ3.GLSLProgram.html">EZ3.GLSLProgram</a></li>
+                <li><a href="../classes/EZ3.Image.html">EZ3.Image</a></li>
+                <li><a href="../classes/EZ3.ImageRequest.html">EZ3.ImageRequest</a></li>
+                <li><a href="../classes/EZ3.IndexBuffer.html">EZ3.IndexBuffer</a></li>
+                <li><a href="../classes/EZ3.InputManager.html">EZ3.InputManager</a></li>
+                <li><a href="../classes/EZ3.Keyboard.html">EZ3.Keyboard</a></li>
+                <li><a href="../classes/EZ3.Light.html">EZ3.Light</a></li>
+                <li><a href="../classes/EZ3.Material.html">EZ3.Material</a></li>
+                <li><a href="../classes/EZ3.Math.html">EZ3.Math</a></li>
+                <li><a href="../classes/EZ3.Matrix3.html">EZ3.Matrix3</a></li>
+                <li><a href="../classes/EZ3.Matrix4.html">EZ3.Matrix4</a></li>
+                <li><a href="../classes/EZ3.MD2Request.html">EZ3.MD2Request</a></li>
+                <li><a href="../classes/EZ3.MDLRequest.html">EZ3.MDLRequest</a></li>
+                <li><a href="../classes/EZ3.Mesh.html">EZ3.Mesh</a></li>
+                <li><a href="../classes/EZ3.MeshMaterial.html">EZ3.MeshMaterial</a></li>
+                <li><a href="../classes/EZ3.Mouse.html">EZ3.Mouse</a></li>
+                <li><a href="../classes/EZ3.MousePointer.html">EZ3.MousePointer</a></li>
+                <li><a href="../classes/EZ3.OBJRequest.html">EZ3.OBJRequest</a></li>
+                <li><a href="../classes/EZ3.OFFRequest.html">EZ3.OFFRequest</a></li>
+                <li><a href="../classes/EZ3.OrthographicCamera.html">EZ3.OrthographicCamera</a></li>
+                <li><a href="../classes/EZ3.PerspectiveCamera.html">EZ3.PerspectiveCamera</a></li>
+                <li><a href="../classes/EZ3.Plane.html">EZ3.Plane</a></li>
+                <li><a href="../classes/EZ3.Pointer.html">EZ3.Pointer</a></li>
+                <li><a href="../classes/EZ3.PointLight.html">EZ3.PointLight</a></li>
+                <li><a href="../classes/EZ3.Primitive.html">EZ3.Primitive</a></li>
+                <li><a href="../classes/EZ3.Quaternion.html">EZ3.Quaternion</a></li>
+                <li><a href="../classes/EZ3.Renderer.html">EZ3.Renderer</a></li>
+                <li><a href="../classes/EZ3.RendererCapabilities.html">EZ3.RendererCapabilities</a></li>
+                <li><a href="../classes/EZ3.RendererExtensions.html">EZ3.RendererExtensions</a></li>
+                <li><a href="../classes/EZ3.RendererState.html">EZ3.RendererState</a></li>
+                <li><a href="../classes/EZ3.Request.html">EZ3.Request</a></li>
+                <li><a href="../classes/EZ3.RequestManager.html">EZ3.RequestManager</a></li>
+                <li><a href="../classes/EZ3.Scene.html">EZ3.Scene</a></li>
+                <li><a href="../classes/EZ3.Screen.html">EZ3.Screen</a></li>
+                <li><a href="../classes/EZ3.ScreenManager.html">EZ3.ScreenManager</a></li>
+                <li><a href="../classes/EZ3.ShaderLibrary.html">EZ3.ShaderLibrary</a></li>
+                <li><a href="../classes/EZ3.ShaderMaterial.html">EZ3.ShaderMaterial</a></li>
+                <li><a href="../classes/EZ3.Signal.html">EZ3.Signal</a></li>
+                <li><a href="../classes/EZ3.SignalBinding.html">EZ3.SignalBinding</a></li>
+                <li><a href="../classes/EZ3.Sphere.html">EZ3.Sphere</a></li>
+                <li><a href="../classes/EZ3.SpotLight.html">EZ3.SpotLight</a></li>
+                <li><a href="../classes/EZ3.Switch.html">EZ3.Switch</a></li>
+                <li><a href="../classes/EZ3.TargetControl.html">EZ3.TargetControl</a></li>
+                <li><a href="../classes/EZ3.TargetCubemap.html">EZ3.TargetCubemap</a></li>
+                <li><a href="../classes/EZ3.TargetTexture2D.html">EZ3.TargetTexture2D</a></li>
+                <li><a href="../classes/EZ3.Texture.html">EZ3.Texture</a></li>
+                <li><a href="../classes/EZ3.Texture2D.html">EZ3.Texture2D</a></li>
+                <li><a href="../classes/EZ3.TGARequest.html">EZ3.TGARequest</a></li>
+                <li><a href="../classes/EZ3.Time.html">EZ3.Time</a></li>
+                <li><a href="../classes/EZ3.Torus.html">EZ3.Torus</a></li>
+                <li><a href="../classes/EZ3.Touch.html">EZ3.Touch</a></li>
+                <li><a href="../classes/EZ3.TouchPointer.html">EZ3.TouchPointer</a></li>
+                <li><a href="../classes/EZ3.Vector2.html">EZ3.Vector2</a></li>
+                <li><a href="../classes/EZ3.Vector3.html">EZ3.Vector3</a></li>
+                <li><a href="../classes/EZ3.Vector4.html">EZ3.Vector4</a></li>
+                <li><a href="../classes/EZ3.VertexBuffer.html">EZ3.VertexBuffer</a></li>
+                <li><a href="../classes/EZ3.VertexBufferAttribute.html">EZ3.VertexBufferAttribute</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>EZ3.Touch</h1>
+</div>
+
+
+
+
+
+
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-EZ3.Touch#_getPointerIndex"><span class="im">EZ3.Touch#_getPointerIndex</span>(<span class="ia">id</span>)</a></li>
+				<li><a href="#method-EZ3.Touch#_processTouchMove"><span class="im">EZ3.Touch#_processTouchMove</span>(<span class="ia">event</span>)</a></li>
+				<li><a href="#method-EZ3.Touch#_processTouchPress"><span class="im">EZ3.Touch#_processTouchPress</span>(<span class="ia">event</span>)</a></li>
+				<li><a href="#method-EZ3.Touch#_processTouchUp"><span class="im">EZ3.Touch#_processTouchUp</span>(<span class="ia">event</span>)</a></li>
+				<li><a href="#method-EZ3.Touch#disable"><span class="im">EZ3.Touch#disable</span>()</a></li>
+				<li><a href="#method-EZ3.Touch#enable"><span class="im">EZ3.Touch#enable</span>()</a></li>
+				<li><a href="#method-EZ3.Touch#getPointer"><span class="im">EZ3.Touch#getPointer</span>(<span class="ia">code</span>)</a></li>
+			</ul>
+		</li>
+
+		<li>
+			<strong>Properties</strong>
+			<ul>
+				<li><a href="#prop-_bounds"><span class="ip">_bounds</span></a></li>
+				<li><a href="#prop-_domElement"><span class="ip">_domElement</span></a></li>
+				<li><a href="#prop-_pointers"><span class="ip">_pointers</span></a></li>
+				<li><a href="#prop-enabled"><span class="ip">enabled</span></a></li>
+				<li><a href="#prop-onMove"><span class="ip">onMove</span></a></li>
+				<li><a href="#prop-onPress"><span class="ip">onPress</span></a></li>
+				<li><a href="#prop-onUp"><span class="ip">onUp</span></a></li>
+			</ul>
+		</li>
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+    <div class="constructor yuidoc-class-constructor page-section">
+        <h2>Constructor</h2>
+        <div class="item-list">
+<div id="method-EZ3.Touch" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>domElement</code>
+				</li>
+				<li class="arg">
+						<code>bounds</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l1"><code>src&#x2F;input&#x2F;Touch.js:1</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">domElement</code>
+						<span class="type">HTMLElement</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">bounds</code>
+						<span class="type">HTMLRect</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+        </div>
+    </div>
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-EZ3.Touch#_getPointerIndex" class="method item private">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch#_getPointerIndex</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>id</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Number</span>
+		</span>
+	</div>
+
+
+		<span class="flag private">private</span>
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l46"><code>src&#x2F;input&#x2F;Touch.js:46</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">id</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Number</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-EZ3.Touch#_processTouchMove" class="method item private">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch#_processTouchMove</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>event</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+		<span class="flag private">private</span>
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l94"><code>src&#x2F;input&#x2F;Touch.js:94</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">event</code>
+						<span class="type">HTMLEvent</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-EZ3.Touch#_processTouchPress" class="method item private">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch#_processTouchPress</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>event</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+		<span class="flag private">private</span>
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l62"><code>src&#x2F;input&#x2F;Touch.js:62</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">event</code>
+						<span class="type">HTMLEvent</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-EZ3.Touch#_processTouchUp" class="method item private">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch#_processTouchUp</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>event</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+		<span class="flag private">private</span>
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l112"><code>src&#x2F;input&#x2F;Touch.js:112</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">event</code>
+						<span class="type">HTMLEvent</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-EZ3.Touch#disable" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch#disable</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l160"><code>src&#x2F;input&#x2F;Touch.js:160</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+
+</div>
+<div id="method-EZ3.Touch#enable" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch#enable</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l130"><code>src&#x2F;input&#x2F;Touch.js:130</code></a>
+		</p>
+
+
+
+	</div>
+
+
+
+
+</div>
+<div id="method-EZ3.Touch#getPointer" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>EZ3.Touch#getPointer</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>code</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/EZ3.TouchPointer.html" class="crosslink">EZ3.TouchPointer</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_input_Touch.js.html#l179"><code>src&#x2F;input&#x2F;Touch.js:179</code></a>
+		</p>
+
+
+
+	</div>
+
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">code</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/EZ3.TouchPointer.html" class="crosslink">EZ3.TouchPointer</a></span>
+			</div>
+		</div>
+
+</div>
+        </div>
+    </div>
+
+    <div id="properties" class="page-section">
+        <h2 class="off-left">Properties</h2>
+
+        <div class="item-list">
+<div id="prop-_bounds" class="property item private">
+    <h3 class="name"><code>_bounds</code></h3>
+    <span class="type">HTMLRect</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_input_Touch.js.html#l14"><code>src&#x2F;input&#x2F;Touch.js:14</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-_domElement" class="property item private">
+    <h3 class="name"><code>_domElement</code></h3>
+    <span class="type">HTMLElement</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_input_Touch.js.html#l9"><code>src&#x2F;input&#x2F;Touch.js:9</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-_pointers" class="property item private">
+    <h3 class="name"><code>_pointers</code></h3>
+    <span class="type"><a href="../classes/EZ3.TouchPointer.html" class="crosslink">EZ3.TouchPointer[]</a></span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_input_Touch.js.html#l19"><code>src&#x2F;input&#x2F;Touch.js:19</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-enabled" class="property item">
+    <h3 class="name"><code>enabled</code></h3>
+    <span class="type">Boolean</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_input_Touch.js.html#l25"><code>src&#x2F;input&#x2F;Touch.js:25</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+        <p><strong>Default:</strong> false</p>
+
+
+</div>
+<div id="prop-onMove" class="property item">
+    <h3 class="name"><code>onMove</code></h3>
+    <span class="type"><a href="../classes/EZ3.Signal.html" class="crosslink">EZ3.Signal</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_input_Touch.js.html#l34"><code>src&#x2F;input&#x2F;Touch.js:34</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-onPress" class="property item">
+    <h3 class="name"><code>onPress</code></h3>
+    <span class="type"><a href="../classes/EZ3.Signal.html" class="crosslink">EZ3.Signal</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_input_Touch.js.html#l30"><code>src&#x2F;input&#x2F;Touch.js:30</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-onUp" class="property item">
+    <h3 class="name"><code>onUp</code></h3>
+    <span class="type"><a href="../classes/EZ3.Signal.html" class="crosslink">EZ3.Signal</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_input_Touch.js.html#l38"><code>src&#x2F;input&#x2F;Touch.js:38</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+        </div>
+    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

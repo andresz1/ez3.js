@@ -1,8 +1,10 @@
 /**
- * @class TGARequest
- * @extends Request
+ * @class EZ3.TGARequest
+ * @extends EZ3.Request
+ * @param {String} url
+ * @param {Boolean} [cached]
+ * @param {Boolean} [crossOrigin]
  */
-
 EZ3.TGARequest = function(url, cached, crossOrigin) {
   EZ3.Request.call(this, url, new EZ3.Image(), cached, crossOrigin);
 };
@@ -10,6 +12,12 @@ EZ3.TGARequest = function(url, cached, crossOrigin) {
 EZ3.TGARequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.TGARequest.prototype.constructor = EZ3.TGARequest;
 
+/**
+ * @method EZ3.TGARequest#_parse
+ * @param {ArrayBuffer} data
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
   var TYPE_NO_DATA = 0;
   var TYPE_INDEXED = 1;
@@ -378,6 +386,11 @@ EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
   init();
 };
 
+/**
+ * @method EZ3.TGARequest#send
+ * @param {Function} onLoad
+ * @param {Function} onError
+ */
 EZ3.TGARequest.prototype.send = function(onLoad, onError) {
   var that = this;
   var requests = new EZ3.RequestManager();

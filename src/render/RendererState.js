@@ -1,27 +1,87 @@
 /**
- * @class RendererState
+ * @class EZ3.RendererState
+ * @constructor
+ * @param {WebGLContext} context
  */
 
 EZ3.RendererState = function(context) {
+  /**
+   * @property {WebGLContext} _context
+   * @private
+   */
   this._context = context;
+  /**
+   * @property {Object} _states
+   * @private
+   */
   this._states = {};
+  /**
+   * @property {Object} _blendEquation
+   * @private
+   */
   this._blendEquation = {};
+  /**
+   * @property {Object} _blendFunc
+   * @private
+   */
   this._blendFunc = {};
+  /**
+   * @property {Object} _textureSlots
+   * @private
+   */
   this._textureSlots = {};
+  /**
+   * @property {Object} _attributeLayouts
+   * @private
+   */
   this._attributeLayouts = {};
+  /**
+   * @property {Object} _viewport
+   * @private
+   */
   this._viewport = {};
+  /**
+   * @property {GLSLProgram} _program
+   * @private
+   */
   this._program = null;
+  /**
+   * @property {Number} _cullFace
+   * @private
+   */
   this._cullFace = null;
+  /**
+   * @property {Number} _depthFunc
+   * @private
+   */
   this._depthFunc = null;
+  /**
+   * @property {Number} _textureSlot
+   * @private
+   */
   this._textureSlot = null;
 
+  /**
+   * @property {Object} programs
+   */
   this.programs = {};
+  /**
+   * @property {Number} usedTextureSlots
+   * @default 0
+   */
   this.usedTextureSlots = 0;
+  /**
+   * @property {Number[]} textureArraySlots
+   */
   this.textureArraySlots = [];
 };
 
 EZ3.RendererState.prototype.constructor = EZ3.State;
 
+/**
+ * @method EZ3.RendererState#enable
+ * @param {Number} state
+ */
 EZ3.RendererState.prototype.enable = function(state) {
   var gl = this._context;
 
@@ -32,6 +92,10 @@ EZ3.RendererState.prototype.enable = function(state) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#disable
+ * @param {Number} state
+ */
 EZ3.RendererState.prototype.disable = function(state) {
   var gl = this._context;
 
@@ -42,6 +106,10 @@ EZ3.RendererState.prototype.disable = function(state) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#enableVertexAttribArray
+ * @param {Number} layout
+ */
 EZ3.RendererState.prototype.enableVertexAttribArray = function(layout) {
   var gl = this._context;
 
@@ -51,6 +119,14 @@ EZ3.RendererState.prototype.enableVertexAttribArray = function(layout) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#createProgram
+ * @param {String} id
+ * @param {String} vertex
+ * @param {String} fragment
+ * @param {String} [prefix]
+ * @return {EZ3.GLSLProgram}
+ */
 EZ3.RendererState.prototype.createProgram = function(id, vertex, fragment, prefix) {
   var gl = this._context;
 
@@ -60,6 +136,10 @@ EZ3.RendererState.prototype.createProgram = function(id, vertex, fragment, prefi
   return this.programs[id];
 };
 
+/**
+ * @method EZ3.RendererState#bindProgram
+ * @param {EZ3.GLSLProgram} program
+ */
 EZ3.RendererState.prototype.bindProgram = function(program) {
   var gl = this._context;
 
@@ -70,6 +150,11 @@ EZ3.RendererState.prototype.bindProgram = function(program) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#bindTexture
+ * @param {Number} target
+ * @param {Number} id
+ */
 EZ3.RendererState.prototype.bindTexture = function(target, id) {
   var gl = this._context;
   var slot = gl.TEXTURE0 + this.usedTextureSlots;
@@ -105,6 +190,11 @@ EZ3.RendererState.prototype.bindTexture = function(target, id) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#viewport
+ * @param {EZ3.Vector2} position
+ * @param {EZ3.Vector2} size
+ */
 EZ3.RendererState.prototype.viewport = function(position, size) {
   var gl = this._context;
   var changed = false;
@@ -123,6 +213,10 @@ EZ3.RendererState.prototype.viewport = function(position, size) {
     gl.viewport(position.x, position.y, size.x, size.y);
 };
 
+/**
+ * @method EZ3.RendererState#depthFunc
+ * @param {Number} func
+ */
 EZ3.RendererState.prototype.depthFunc = function(func) {
   var gl = this._context;
 
@@ -133,6 +227,10 @@ EZ3.RendererState.prototype.depthFunc = function(func) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#cullFace
+ * @param {Number} face
+ */
 EZ3.RendererState.prototype.cullFace = function(face) {
   var gl = this._context;
 
@@ -143,6 +241,11 @@ EZ3.RendererState.prototype.cullFace = function(face) {
   }
 };
 
+/**
+ * @method EZ3.RendererState#blendEquation
+ * @param {Number} modeRGB
+ * @param {Number} modeAlpha
+ */
 EZ3.RendererState.prototype.blendEquation = function(modeRGB, modeAlpha) {
   var gl = this._context;
   var changed = false;
@@ -163,6 +266,13 @@ EZ3.RendererState.prototype.blendEquation = function(modeRGB, modeAlpha) {
     gl.blendEquationSeparate(modeRGB, modeAlpha);
 };
 
+/**
+ * @method EZ3.RendererState#blendEquation
+ * @param {Number} srcRGB
+ * @param {Number} dstRGB
+ * @param {Number} srcAlpha
+ * @param {Number} dstAlpha
+ */
 EZ3.RendererState.prototype.blendFunc = function(srcRGB, dstRGB, srcAlpha, dstAlpha) {
   var gl = this._context;
   var changed = false;
