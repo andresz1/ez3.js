@@ -17,10 +17,10 @@ EZ3.Vector3 = function(x, y, z) {
    * @default 0
    */
 
-   /**
-    * @property {Number} z
-    * @default 0
-    */
+  /**
+   * @property {Number} z
+   * @default 0
+   */
 
   if (typeof x === 'number') {
     this.x = x;
@@ -204,32 +204,53 @@ EZ3.Vector3.prototype.cross = function(v1, v2) {
  * @return {EZ3.Vector3}
  */
 EZ3.Vector3.prototype.mulMatrix3 = function(m, v) {
-  var e;
+  var e = m.elements;;
   var x;
   var y;
   var z;
 
-  if (m !== undefined) {
-    e = m.elements;
-
-    if (v !== undefined) {
-      x = v.x;
-      y = v.y;
-      z = v.z;
-    } else {
-      x = this.x;
-      y = this.y;
-      z = this.z;
-    }
-
-    this.x = x * e[0] + y * e[3] + z * e[6];
-    this.y = x * e[1] + y * e[4] + z * e[7];
-    this.z = x * e[2] + y * e[5] + z * e[8];
+  if (v !== undefined) {
+    x = v.x;
+    y = v.y;
+    z = v.z;
   } else {
-    this.x = 0;
-    this.y = 0;
-    this.z = 0;
+    x = this.x;
+    y = this.y;
+    z = this.z;
   }
+
+  this.x = x * e[0] + y * e[3] + z * e[6];
+  this.y = x * e[1] + y * e[4] + z * e[7];
+  this.z = x * e[2] + y * e[5] + z * e[8];
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector3#mulMatrix4
+ * @param {EZ3.Matrix3} m
+ * @param {EZ3.Vector3} [v]
+ * @return {EZ3.Vector3}
+ */
+EZ3.Vector3.prototype.mulMatrix4 = function(m, v) {
+  var e = m.elements;
+  var x;
+  var y;
+  var z;
+
+  if (v !== undefined) {
+    x = v.x;
+    y = v.y;
+    z = v.z;
+  } else {
+    x = this.x;
+    y = this.y;
+    z = this.z;
+  }
+
+  this.x = x * e[0] + y * e[4] + z * e[8] + e[12];
+  this.y = x * e[1] + y * e[5] + z * e[9] + e[13];
+  this.z = x * e[2] + y * e[6] + z * e[10] + e[14];
 
   return this;
 };
@@ -267,6 +288,30 @@ EZ3.Vector3.prototype.mulQuaternion = function(q) {
  */
 EZ3.Vector3.prototype.length = function() {
   return Math.sqrt(this.dot(this));
+};
+
+/**
+ * @method EZ3.Vector3#distance
+ * @param {EZ3.Vector3} v1
+ * @param {EZ3.Vector3} [v2]
+ * @return {Number}
+ */
+EZ3.Vector3.prototype.distance = function(v1, v2) {
+  var dx;
+  var dy;
+  var dz;
+
+  if (v2 !== undefined) {
+    dx = v1.x - v2.x;
+    dy = v1.y - v2.y;
+    dz = v1.z - v2.z;
+  } else {
+    dx = this.x - v1.x;
+    dy = this.y - v1.y;
+    dz = this.z - v1.z;
+  }
+
+  return Math.sqrt(dx * dx + dy * dy + dz * dz);
 };
 
 /**

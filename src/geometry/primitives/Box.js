@@ -1,11 +1,11 @@
 /**
- * @class EZ3.Box
+ * @class EZ3.BoxGeometry
  * @extends EZ3.Primitive
  * @constructor
  * @param {EZ3.Vector3} [resolution]
  * @param {EZ3.Vector3} [dimensions]
  */
-EZ3.Box = function(resolution, dimensions) {
+EZ3.BoxGeometry = function(resolution, dimensions) {
   EZ3.Primitive.call(this);
 
   /**
@@ -21,13 +21,13 @@ EZ3.Box = function(resolution, dimensions) {
   this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
 };
 
-EZ3.Box.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Box.prototype.constructor = EZ3.Box;
+EZ3.BoxGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.BoxGeometry.prototype.constructor = EZ3.BoxGeometry;
 
 /**
- * @method EZ3.Box#generate
+ * @method EZ3.BoxGeometry#generate
  */
-EZ3.Box.prototype.generate = function() {
+EZ3.BoxGeometry.prototype.generate = function() {
   var that = this;
   var uvs = [];
   var indices = [];
@@ -105,9 +105,9 @@ EZ3.Box.prototype.generate = function() {
 
 /**
  * @property {Boolean} needGenerate
- * @memberof EZ3.Box
+ * @memberof EZ3.BoxGeometry
  */
-Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.BoxGeometry.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
 

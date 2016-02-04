@@ -17,6 +17,37 @@ EZ3.Geometry = function() {
    * @default true
    */
   this.normalDataNeedUpdate = true;
+
+  this.boundingSphere = null;
+};
+
+EZ3.Geometry.prototype.computeBoundingSphere = function() {
+  var vertices = this.buffers.getPositionBuffer();
+  var max = new EZ3.Vector3(-Infinity);
+  var min = new EZ3.Vector3(Infinity);
+  var v = new EZ3.Vector3();
+  var center = new EZ3.Vector3();
+  var radius = 0;
+
+  if (!vertices)
+    return;
+
+  vertices = vertices.data;
+
+  for (i = 0; i < vertices.length; i += 3) {
+    v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
+    max.max(v);
+    min.min(v);
+  }
+
+  center.add(max, min).scale(0.5);
+
+  for (i = 0; i < vertices.length; i += 3) {
+    v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
+    radius = Math.max(radius, center.distance(v));
+  }
+
+  this.boundingSphere = new EZ3.Sphere(center, radius);
 };
 
 /**

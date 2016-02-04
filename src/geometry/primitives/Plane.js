@@ -1,11 +1,11 @@
 /**
- * @class EZ3.Plane
+ * @class EZ3.PlaneGeometry
  * @extends EZ3.Primitive
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  */
 
-EZ3.Plane = function(resolution) {
+EZ3.PlaneGeometry = function(resolution) {
   EZ3.Primitive.call(this);
 
   /**
@@ -15,13 +15,13 @@ EZ3.Plane = function(resolution) {
   this.resolution = resolution || new EZ3.Vector2(2, 2);
 };
 
-EZ3.Plane.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Plane.prototype.constructor = EZ3.Plane;
+EZ3.PlaneGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.PlaneGeometry.prototype.constructor = EZ3.PlaneGeometry;
 
 /**
- * @method EZ3.Plane#generate
+ * @method EZ3.PlaneGeometry#generate
  */
-EZ3.Plane.prototype.generate = function() {
+EZ3.PlaneGeometry.prototype.generate = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -60,9 +60,9 @@ EZ3.Plane.prototype.generate = function() {
 
 /**
  * @property {Boolean} needGenerate
- * @memberof EZ3.Plane
+ * @memberof EZ3.PlaneGeometry
  */
-Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.PlaneGeometry.prototype, 'needGenerate', {
   get: function() {
     if (!this.resolution.isEqual(this._cache.resolution)) {
       this._cache.resolution = this.resolution.clone();

@@ -163,7 +163,7 @@ EZ3.Entity = function() {
   this.model = new EZ3.Matrix4();
 
   /**
-   * @property {EZ3.Matrix4} wolrd
+   * @property {EZ3.Matrix4} world
    */
   this.world = new EZ3.Matrix4();
 
@@ -788,6 +788,37 @@ EZ3.Geometry = function() {
    * @default true
    */
   this.normalDataNeedUpdate = true;
+
+  this.boundingSphere = null;
+};
+
+EZ3.Geometry.prototype.computeBoundingSphere = function() {
+  var vertices = this.buffers.getPositionBuffer();
+  var max = new EZ3.Vector3(-Infinity);
+  var min = new EZ3.Vector3(Infinity);
+  var v = new EZ3.Vector3();
+  var center = new EZ3.Vector3();
+  var radius = 0;
+
+  if (!vertices)
+    return;
+
+  vertices = vertices.data;
+
+  for (i = 0; i < vertices.length; i += 3) {
+    v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
+    max.max(v);
+    min.min(v);
+  }
+
+  center.add(max, min).scale(0.5);
+
+  for (i = 0; i < vertices.length; i += 3) {
+    v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
+    radius = Math.max(radius, center.distance(v));
+  }
+
+  this.boundingSphere = new EZ3.Sphere(center, radius);
 };
 
 /**
@@ -2614,17 +2645,26 @@ EZ3.Material.SUBTRACTIVE_BLENDING = 2;
 EZ3.Material.MULTIPLICATIVE_BLENDING = 3;
 
 /**
- * @class EZ3.BoundingBox
+ * @class EZ3.Box
  * @constructor
  */
-EZ3.BoundingBox = function() {
+EZ3.Box = function(min, max) {
+  this.min = (min !== undefined) ? min : new EZ3.Vector3(Infinity);
+  this.max = (max !== undefined) ? max : new EZ3.Vector3(-Infinity);
 };
 
-/**
- * @class EZ3.BoundingSphere
- * @constructor
- */
-EZ3.BoundingSphere = function() {
+EZ3.Box.prototype.set = function(min, max) {
+  this.min.copy(min);
+  this.max.copy(max);
+
+  return this;
+};
+
+EZ3.Box.prototype.copy = function(box) {
+  this.min.copy(box.min);
+  this.max.copy(box.max);
+
+  return this;
 };
 
 /**
@@ -2958,7 +2998,116 @@ EZ3.Euler.ZYX = 6;
  * @class EZ3.Frustum
  * @constructor
  */
-EZ3.Frustum = function() {
+EZ3.Frustum = function(p0, p1, p2, p3, p4, p5) {
+  this.planes = [
+    (p0 !== undefined) ? p0 : new EZ3.Plane(),
+    (p1 !== undefined) ? p1 : new EZ3.Plane(),
+    (p2 !== undefined) ? p2 : new EZ3.Plane(),
+    (p3 !== undefined) ? p3 : new EZ3.Plane(),
+    (p4 !== undefined) ? p4 : new EZ3.Plane(),
+    (p5 !== undefined) ? p5 : new EZ3.Plane()
+  ];
+};
+
+EZ3.Frustum.prototype.constructor = EZ3.Frustum;
+
+EZ3.Frustum.prototype.setFromMatrix4 = function(m) {
+  var planes = this.planes;
+  var me = m.elements;
+  var me0 = me[0];
+  var me1 = me[1];
+  var me2 = me[2];
+  var me3 = me[3];
+  var me4 = me[4];
+  var me5 = me[5];
+  var me6 = me[6];
+  var me7 = me[7];
+  var me8 = me[8];
+  var me9 = me[9];
+  var me10 = me[10];
+  var me11 = me[11];
+  var me12 = me[12];
+  var me13 = me[13];
+  var me14 = me[14];
+  var me15 = me[15];
+
+  planes[0].set(new EZ3.Vector3(me3 - me0, me7 - me4, me11 - me8), me15 - me12).normalize();
+  planes[1].set(new EZ3.Vector3(me3 + me0, me7 + me4, me11 + me8), me15 + me12).normalize();
+  planes[2].set(new EZ3.Vector3(me3 + me1, me7 + me5, me11 + me9), me15 + me13).normalize();
+  planes[3].set(new EZ3.Vector3(me3 - me1, me7 - me5, me11 - me9), me15 - me13).normalize();
+  planes[4].set(new EZ3.Vector3(me3 - me2, me7 - me6, me11 - me10), me15 - me14).normalize();
+  planes[5].set(new EZ3.Vector3(me3 + me2, me7 + me6, me11 + me10), me15 + me14).normalize();
+
+  return this;
+};
+
+EZ3.Frustum.prototype.set = function(p0, p1, p2, p3, p4, p5) {
+  var planes = this.planes;
+
+  planes[0].copy(p0);
+  planes[1].copy(p1);
+  planes[2].copy(p2);
+  planes[3].copy(p3);
+  planes[4].copy(p4);
+  planes[5].copy(p5);
+
+  return this;
+};
+
+EZ3.Frustum.prototype.copy = function(frustum) {
+  var planes = this.planes;
+
+  for (var i = 0; i < 6; i++)
+    planes[i].copy(frustum.planes[i]);
+
+  return this;
+};
+
+EZ3.Frustum.prototype.intersectsMesh = function(mesh) {
+  var geometry = mesh.geometry;
+  var sphere = new EZ3.Sphere();
+
+  if (geometry.boundingSphere === null)
+    geometry.computeBoundingSphere();
+
+  sphere.copy(geometry.boundingSphere);
+  sphere.applyMatrix4(mesh.world);
+
+  return this.intersectsSphere(sphere);
+};
+
+EZ3.Frustum.prototype.intersectsSphere = function(sphere) {
+  var planes = this.planes;
+  var center = sphere.center;
+  var negRadius = -sphere.radius;
+
+  for (var i = 0; i < 6; i++)
+    if (planes[i].distanceToPoint(center) < negRadius)
+      return false;
+
+  return true;
+};
+
+EZ3.Frustum.prototype.intersectsBox = function(box) {
+  var p1 = new EZ3.Vector3();
+  var p2 = new EZ3.Vector3();
+  var planes = this.planes;
+
+  for (var i = 0; i < 6; i++) {
+    var plane = planes[i];
+
+    p1.x = (plane.normal.x > 0) ? box.min.x : box.max.x;
+    p2.x = (plane.normal.x > 0) ? box.max.x : box.min.x;
+    p1.y = (plane.normal.y > 0) ? box.min.y : box.max.y;
+    p2.y = (plane.normal.y > 0) ? box.max.y : box.min.y;
+    p1.z = (plane.normal.z > 0) ? box.min.z : box.max.z;
+    p2.z = (plane.normal.z > 0) ? box.max.z : box.min.z;
+
+    if (plane.distanceToPoint(p1) < 0 && plane.distanceToPoint(p2) < 0)
+      return false;
+  }
+
+  return true;
 };
 
 /**
@@ -4188,6 +4337,16 @@ EZ3.Matrix4.prototype.getScale = function() {
 };
 
 /**
+ * @method EZ3.Matrix4#getMaxScaleOnAxis
+ * @return {Number}
+ */
+EZ3.Matrix4.prototype.getMaxScaleOnAxis = function() {
+  var scale = this.getScale();
+
+  return Math.max(scale.x, scale.y, scale.z);
+};
+
+/**
  * @method EZ3.Matrix4#clone
  * @return {EZ3.Matrix4}
  */
@@ -4308,6 +4467,44 @@ EZ3.Matrix4.prototype.isEqual = function(m) {
  */
 EZ3.Matrix4.prototype.isDiff = function(m) {
   return !this.isEqual(m);
+};
+
+/**
+ * @class EZ3.Plane
+ * @constructor
+ */
+EZ3.Plane = function(normal, constant) {
+  this.normal = (normal !== undefined) ? normal : new EZ3.Vector3(1, 0, 0);
+  this.constant = (constant !== undefined) ? constant : 0;
+};
+
+EZ3.Plane.prototype.constructor = EZ3.Plane;
+
+EZ3.Plane.prototype.distanceToPoint = function(point) {
+  return this.normal.dot(point) + this.constant;
+};
+
+EZ3.Plane.prototype.normalize = function() {
+  var inverseNormalLength = 1.0 / this.normal.length();
+
+  this.normal.scale(inverseNormalLength);
+  this.constant *= inverseNormalLength;
+
+  return this;
+};
+
+EZ3.Plane.prototype.set = function(normal, constant) {
+  this.normal.copy(normal);
+  this.constant = constant;
+
+  return this;
+};
+
+EZ3.Plane.prototype.copy = function(plane) {
+  this.normal.copy(plane.normal);
+  this.constant = plane.constant;
+
+  return this;
 };
 
 /**
@@ -4842,6 +5039,38 @@ Object.defineProperty(EZ3.Quaternion.prototype, 'w', {
 });
 
 /**
+ * @class EZ3.Sphere
+ * @constructor
+ */
+EZ3.Sphere = function(center, radius) {
+  this.center = (center !== undefined) ? center : new EZ3.Vector3();
+  this.radius = (radius !== undefined) ? radius : 0;
+};
+
+EZ3.Sphere.prototype.constructor = EZ3.Sphere;
+
+EZ3.Sphere.prototype.applyMatrix4 = function(matrix) {
+  this.center.mulMatrix4(matrix);
+  this.radius = this.radius * matrix.getMaxScaleOnAxis();
+  
+  return this;
+};
+
+EZ3.Sphere.prototype.set = function(center, radius) {
+  this.center.copy(center);
+  this.radius = radius;
+
+  return this;
+};
+
+EZ3.Sphere.prototype.copy = function(sphere) {
+  this.center.copy(sphere.center);
+  this.radius = sphere.radius;
+
+  return this;
+};
+
+/**
  * Representation of a 2D vector.
  * @class EZ3.Vector2
  * @constructor
@@ -5136,10 +5365,10 @@ EZ3.Vector3 = function(x, y, z) {
    * @default 0
    */
 
-   /**
-    * @property {Number} z
-    * @default 0
-    */
+  /**
+   * @property {Number} z
+   * @default 0
+   */
 
   if (typeof x === 'number') {
     this.x = x;
@@ -5323,32 +5552,53 @@ EZ3.Vector3.prototype.cross = function(v1, v2) {
  * @return {EZ3.Vector3}
  */
 EZ3.Vector3.prototype.mulMatrix3 = function(m, v) {
-  var e;
+  var e = m.elements;;
   var x;
   var y;
   var z;
 
-  if (m !== undefined) {
-    e = m.elements;
-
-    if (v !== undefined) {
-      x = v.x;
-      y = v.y;
-      z = v.z;
-    } else {
-      x = this.x;
-      y = this.y;
-      z = this.z;
-    }
-
-    this.x = x * e[0] + y * e[3] + z * e[6];
-    this.y = x * e[1] + y * e[4] + z * e[7];
-    this.z = x * e[2] + y * e[5] + z * e[8];
+  if (v !== undefined) {
+    x = v.x;
+    y = v.y;
+    z = v.z;
   } else {
-    this.x = 0;
-    this.y = 0;
-    this.z = 0;
+    x = this.x;
+    y = this.y;
+    z = this.z;
   }
+
+  this.x = x * e[0] + y * e[3] + z * e[6];
+  this.y = x * e[1] + y * e[4] + z * e[7];
+  this.z = x * e[2] + y * e[5] + z * e[8];
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector3#mulMatrix4
+ * @param {EZ3.Matrix3} m
+ * @param {EZ3.Vector3} [v]
+ * @return {EZ3.Vector3}
+ */
+EZ3.Vector3.prototype.mulMatrix4 = function(m, v) {
+  var e = m.elements;
+  var x;
+  var y;
+  var z;
+
+  if (v !== undefined) {
+    x = v.x;
+    y = v.y;
+    z = v.z;
+  } else {
+    x = this.x;
+    y = this.y;
+    z = this.z;
+  }
+
+  this.x = x * e[0] + y * e[4] + z * e[8] + e[12];
+  this.y = x * e[1] + y * e[5] + z * e[9] + e[13];
+  this.z = x * e[2] + y * e[6] + z * e[10] + e[14];
 
   return this;
 };
@@ -5386,6 +5636,30 @@ EZ3.Vector3.prototype.mulQuaternion = function(q) {
  */
 EZ3.Vector3.prototype.length = function() {
   return Math.sqrt(this.dot(this));
+};
+
+/**
+ * @method EZ3.Vector3#distance
+ * @param {EZ3.Vector3} v1
+ * @param {EZ3.Vector3} [v2]
+ * @return {Number}
+ */
+EZ3.Vector3.prototype.distance = function(v1, v2) {
+  var dx;
+  var dy;
+  var dz;
+
+  if (v2 !== undefined) {
+    dx = v1.x - v2.x;
+    dy = v1.y - v2.y;
+    dz = v1.z - v2.z;
+  } else {
+    dx = this.x - v1.x;
+    dy = this.y - v1.y;
+    dz = this.z - v1.z;
+  }
+
+  return Math.sqrt(dx * dx + dy * dy + dz * dz);
 };
 
 /**
@@ -6541,7 +6815,7 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
         entity.updateView();
         lights.spot.push(entity);
       }
-    } else if (entity instanceof EZ3.Mesh && entity.material.visible)
+    } else if (entity instanceof EZ3.Mesh)
       meshes.common.push(entity);
   });
 
@@ -6553,12 +6827,22 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
 
   viewProjection = new EZ3.Matrix4().mul(camera.projection, camera.view);
 
+  var frustum = new EZ3.Frustum().setFromMatrix4(viewProjection);
+
+  var c = 0;
+
   for (i = 0; i < meshes.common.length; i++) {
     mesh = meshes.common[i];
-    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(viewProjection).z;
 
     if (mesh.geometry instanceof EZ3.Primitive)
       mesh.geometry.updateCommonData();
+
+    if (mesh.material.visible && !frustum.intersectsMesh(mesh))
+      continue;
+
+    c++;
+
+    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(viewProjection).z;
 
     mesh.updateLinearData();
 
@@ -6583,6 +6867,8 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
     if (mesh.shadowCaster)
       meshes.shadowCasters.push(mesh);
   }
+
+//  console.log(c);
 
   meshes.opaque.sort(function(a, b) {
     if (a.depth !== b.depth)
@@ -11281,13 +11567,13 @@ Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'needGenerate', {
 });
 
 /**
- * @class EZ3.Box
+ * @class EZ3.BoxGeometry
  * @extends EZ3.Primitive
  * @constructor
  * @param {EZ3.Vector3} [resolution]
  * @param {EZ3.Vector3} [dimensions]
  */
-EZ3.Box = function(resolution, dimensions) {
+EZ3.BoxGeometry = function(resolution, dimensions) {
   EZ3.Primitive.call(this);
 
   /**
@@ -11303,13 +11589,13 @@ EZ3.Box = function(resolution, dimensions) {
   this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
 };
 
-EZ3.Box.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Box.prototype.constructor = EZ3.Box;
+EZ3.BoxGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.BoxGeometry.prototype.constructor = EZ3.BoxGeometry;
 
 /**
- * @method EZ3.Box#generate
+ * @method EZ3.BoxGeometry#generate
  */
-EZ3.Box.prototype.generate = function() {
+EZ3.BoxGeometry.prototype.generate = function() {
   var that = this;
   var uvs = [];
   var indices = [];
@@ -11387,9 +11673,9 @@ EZ3.Box.prototype.generate = function() {
 
 /**
  * @property {Boolean} needGenerate
- * @memberof EZ3.Box
+ * @memberof EZ3.BoxGeometry
  */
-Object.defineProperty(EZ3.Box.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.BoxGeometry.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
 
@@ -11518,13 +11804,13 @@ Object.defineProperty(EZ3.Ellipsoid.prototype, 'needGenerate', {
 });
 
 /**
- * @class EZ3.Plane
+ * @class EZ3.PlaneGeometry
  * @extends EZ3.Primitive
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  */
 
-EZ3.Plane = function(resolution) {
+EZ3.PlaneGeometry = function(resolution) {
   EZ3.Primitive.call(this);
 
   /**
@@ -11534,13 +11820,13 @@ EZ3.Plane = function(resolution) {
   this.resolution = resolution || new EZ3.Vector2(2, 2);
 };
 
-EZ3.Plane.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Plane.prototype.constructor = EZ3.Plane;
+EZ3.PlaneGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.PlaneGeometry.prototype.constructor = EZ3.PlaneGeometry;
 
 /**
- * @method EZ3.Plane#generate
+ * @method EZ3.PlaneGeometry#generate
  */
-EZ3.Plane.prototype.generate = function() {
+EZ3.PlaneGeometry.prototype.generate = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -11579,9 +11865,9 @@ EZ3.Plane.prototype.generate = function() {
 
 /**
  * @property {Boolean} needGenerate
- * @memberof EZ3.Plane
+ * @memberof EZ3.PlaneGeometry
  */
-Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.PlaneGeometry.prototype, 'needGenerate', {
   get: function() {
     if (!this.resolution.isEqual(this._cache.resolution)) {
       this._cache.resolution = this.resolution.clone();
@@ -11593,13 +11879,13 @@ Object.defineProperty(EZ3.Plane.prototype, 'needGenerate', {
 });
 
 /**
- * @class EZ3.Sphere
+ * @class EZ3.SphereGeometry
  * @extends EZ3.Primitive
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  * @param {Number} [radius]
  */
-EZ3.Sphere = function(resolution, radius) {
+EZ3.SphereGeometry = function(resolution, radius) {
   EZ3.Primitive.call(this);
 
   /**
@@ -11614,13 +11900,13 @@ EZ3.Sphere = function(resolution, radius) {
   this.radius = radius || 5;
 };
 
-EZ3.Sphere.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Sphere.prototype.constructor = EZ3.Sphere;
+EZ3.SphereGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.SphereGeometry.prototype.constructor = EZ3.SphereGeometry;
 
 /**
- * @method EZ3.Sphere#generate
+ * @method EZ3.SphereGeometry#generate
  */
-EZ3.Sphere.prototype.generate = function() {
+EZ3.SphereGeometry.prototype.generate = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -11678,9 +11964,9 @@ EZ3.Sphere.prototype.generate = function() {
 
 /**
  * @property {Boolean} needGenerate
- * @memberof EZ3.Sphere
+ * @memberof EZ3.SphereGeometry
  */
-Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.SphereGeometry.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
 

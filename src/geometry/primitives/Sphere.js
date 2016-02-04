@@ -1,11 +1,11 @@
 /**
- * @class EZ3.Sphere
+ * @class EZ3.SphereGeometry
  * @extends EZ3.Primitive
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  * @param {Number} [radius]
  */
-EZ3.Sphere = function(resolution, radius) {
+EZ3.SphereGeometry = function(resolution, radius) {
   EZ3.Primitive.call(this);
 
   /**
@@ -20,13 +20,13 @@ EZ3.Sphere = function(resolution, radius) {
   this.radius = radius || 5;
 };
 
-EZ3.Sphere.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Sphere.prototype.constructor = EZ3.Sphere;
+EZ3.SphereGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.SphereGeometry.prototype.constructor = EZ3.SphereGeometry;
 
 /**
- * @method EZ3.Sphere#generate
+ * @method EZ3.SphereGeometry#generate
  */
-EZ3.Sphere.prototype.generate = function() {
+EZ3.SphereGeometry.prototype.generate = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -84,9 +84,9 @@ EZ3.Sphere.prototype.generate = function() {
 
 /**
  * @property {Boolean} needGenerate
- * @memberof EZ3.Sphere
+ * @memberof EZ3.SphereGeometry
  */
-Object.defineProperty(EZ3.Sphere.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.SphereGeometry.prototype, 'needGenerate', {
   get: function() {
     var changed = false;
 

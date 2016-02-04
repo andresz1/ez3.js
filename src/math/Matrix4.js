@@ -740,6 +740,16 @@ EZ3.Matrix4.prototype.getScale = function() {
 };
 
 /**
+ * @method EZ3.Matrix4#getMaxScaleOnAxis
+ * @return {Number}
+ */
+EZ3.Matrix4.prototype.getMaxScaleOnAxis = function() {
+  var scale = this.getScale();
+
+  return Math.max(scale.x, scale.y, scale.z);
+};
+
+/**
  * @method EZ3.Matrix4#clone
  * @return {EZ3.Matrix4}
  */

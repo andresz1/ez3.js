@@ -322,7 +322,7 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
         entity.updateView();
         lights.spot.push(entity);
       }
-    } else if (entity instanceof EZ3.Mesh && entity.material.visible)
+    } else if (entity instanceof EZ3.Mesh)
       meshes.common.push(entity);
   });
 
@@ -334,12 +334,22 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
 
   viewProjection = new EZ3.Matrix4().mul(camera.projection, camera.view);
 
+  var frustum = new EZ3.Frustum().setFromMatrix4(viewProjection);
+
+  var c = 0;
+
   for (i = 0; i < meshes.common.length; i++) {
     mesh = meshes.common[i];
-    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(viewProjection).z;
 
     if (mesh.geometry instanceof EZ3.Primitive)
       mesh.geometry.updateCommonData();
+
+    if (mesh.material.visible && !frustum.intersectsMesh(mesh))
+      continue;
+
+    c++;
+
+    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(viewProjection).z;
 
     mesh.updateLinearData();
 
@@ -364,6 +374,8 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
     if (mesh.shadowCaster)
       meshes.shadowCasters.push(mesh);
   }
+
+//  console.log(c);
 
   meshes.opaque.sort(function(a, b) {
     if (a.depth !== b.depth)

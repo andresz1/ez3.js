@@ -27,7 +27,7 @@ EZ3.Entity = function() {
   this.model = new EZ3.Matrix4();
 
   /**
-   * @property {EZ3.Matrix4} wolrd
+   * @property {EZ3.Matrix4} world
    */
   this.world = new EZ3.Matrix4();
 
