@@ -39,7 +39,8 @@ EZ3.PerspectiveCamera.prototype = Object.create(EZ3.Camera.prototype);
 EZ3.PerspectiveCamera.prototype.constructor = EZ3.PerspectiveCamera;
 
 /**
- * @method EZ3.PerspectiveCamera#updateProjection
+ * @method EZ3.PerspectiveCamera#_updateProjection
+ * @return {Boolean}
  */
 EZ3.PerspectiveCamera.prototype.updateProjection = function() {
   var changed = false;
@@ -66,4 +67,6 @@ EZ3.PerspectiveCamera.prototype.updateProjection = function() {
 
   if(changed)
     this.projection.perspective(this.fov, this.aspect, this.near, this.far);
+
+  return changed;
 };

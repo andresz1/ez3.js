@@ -55,45 +55,46 @@ EZ3.OrthographicCamera.prototype.constructor = EZ3.OrthographicCamera;
 
 /**
  * @method EZ3.OrthographicCamera#updateProjection
+ * @return {Boolean}
  */
 EZ3.OrthographicCamera.prototype.updateProjection = function() {
   var changed = false;
   var dx;
-	var dy;
-	var cx;
-	var cy;
+  var dy;
+  var cx;
+  var cy;
 
-  if(this._cache.left !== this.left) {
+  if (this._cache.left !== this.left) {
     this._cache.left = this.left;
     changed = true;
   }
 
-  if(this._cache.right !== this.right) {
+  if (this._cache.right !== this.right) {
     this._cache.right = this.right;
     changed = true;
   }
 
-  if(this._cache.top !== this.top) {
+  if (this._cache.top !== this.top) {
     this._cache.top = this.top;
     changed = true;
   }
 
-  if(this._cache.bottom !== this.bottom) {
+  if (this._cache.bottom !== this.bottom) {
     this._cache.bottom = this.bottom;
     changed = true;
   }
 
-  if(this._cache.near !== this.near) {
+  if (this._cache.near !== this.near) {
     this._cache.near = this.near;
     changed = true;
   }
 
-  if(this._cache.far !== this.far) {
+  if (this._cache.far !== this.far) {
     this._cache.far = this.far;
     changed = true;
   }
 
-  if(changed) {
+  if (changed) {
     dx = (this.right - this.left) / 2;
     dy = (this.top - this.bottom) / 2;
     cx = (this.right + this.left) / 2;
@@ -101,4 +102,6 @@ EZ3.OrthographicCamera.prototype.updateProjection = function() {
 
     this.projection.orthographic(cx - dx, cx + dx, cy + dy, cy - dy, this.near, this.far);
   }
+
+  return changed;
 };

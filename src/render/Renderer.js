@@ -90,14 +90,14 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
  * @param {EZ3.Matrix4} view
  * @param {EZ3.Matrix4} projection
  */
-EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, view, projection) {
+EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, camera) {
   var gl = this.context;
   var modelView = new EZ3.Matrix4();
 
-  modelView.mul(view, mesh.world);
+  modelView.mul(camera.view, mesh.world);
 
   program.loadUniformMatrix(gl, 'uModelView', modelView);
-  program.loadUniformMatrix(gl, 'uProjection', projection);
+  program.loadUniformMatrix(gl, 'uProjection', camera.projection);
 
   mesh.render(gl, program.attributes, this.state, this.extensions);
 };
@@ -112,9 +112,9 @@ EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, l
   var gl = this.context;
   var target = new EZ3.Vector3();
   var up = new EZ3.Vector3();
-  var view = new EZ3.Matrix4();
   var position;
   var light;
+  var mesh;
   var i;
   var j;
   var k;
@@ -154,14 +154,20 @@ EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, l
           break;
       }
 
-      view.lookAt(position, target.add(position.clone()), up);
+      light.view.lookAt(position, target.add(position.clone()), up);
+      light.updateProjection();
+      light.computeFrustum();
 
       light.depthFramebuffer.texture.attach(gl, j);
 
       this.clear();
 
-      for (k = 0; k < meshes.length; k++)
-        this._renderMeshDepth(program, meshes[k], view, light.projection);
+      for (k = 0; k < meshes.length; k++) {
+        mesh = meshes[k];
+
+        if (light.frustum.intersectsMesh(mesh))
+          this._renderMeshDepth(program, mesh, light);
+      }
     }
   }
 };
@@ -175,6 +181,7 @@ EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, l
 EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, lights) {
   var gl = this.context;
   var light;
+  var mesh;
   var i;
   var j;
 
@@ -186,8 +193,12 @@ EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, light
 
     this.clear();
 
-    for (j = 0; j < meshes.length; j++)
-      this._renderMeshDepth(program, meshes[j], light.view, light.projection);
+    for (j = 0; j < meshes.length; j++) {
+      mesh = meshes[j];
+
+      if (light.frustum.intersectsMesh(mesh))
+        this._renderMeshDepth(program, mesh, light);
+    }
   }
 };
 
@@ -311,15 +322,13 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
     if (entity instanceof EZ3.Light) {
       lights.empty = false;
 
-      entity.updateProjection();
-
       if (entity instanceof EZ3.PointLight)
         lights.point.push(entity);
       else if (entity instanceof EZ3.DirectionalLight) {
-        entity.updateView();
+        entity.updateFrustum();
         lights.directional.push(entity);
       } else if (entity instanceof EZ3.SpotLight) {
-        entity.updateView();
+        entity.updateFrustum();
         lights.spot.push(entity);
       }
     } else if (entity instanceof EZ3.Mesh)
@@ -329,14 +338,9 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
   if (!camera.parent)
     camera.updateWorld();
 
-  camera.updateView();
-  camera.updateProjection();
+  camera.updateFrustum();
 
-  viewProjection = new EZ3.Matrix4().mul(camera.projection, camera.view);
-
-  var frustum = new EZ3.Frustum().setFromMatrix4(viewProjection);
-
-  var c = 0;
+  //var c = 0;
 
   for (i = 0; i < meshes.common.length; i++) {
     mesh = meshes.common[i];
@@ -344,12 +348,12 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
     if (mesh.geometry instanceof EZ3.Primitive)
       mesh.geometry.updateCommonData();
 
-    if (mesh.material.visible && !frustum.intersectsMesh(mesh))
+    if (mesh.material.visible && !camera.frustum.intersectsMesh(mesh))
       continue;
 
-    c++;
+  //  c++;
 
-    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(viewProjection).z;
+    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(camera.viewProjection).z;
 
     mesh.updateLinearData();
 

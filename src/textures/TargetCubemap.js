@@ -17,6 +17,9 @@
      false
    );
 
+   /**
+    * @property {Number} attachment
+    */
    this.attachment = attachment;
  };
 
