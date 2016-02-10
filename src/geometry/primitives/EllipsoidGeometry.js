@@ -1,12 +1,12 @@
 /**
- * @class EZ3.Ellipsoid
- * @extends EZ3.Primitive
+ * @class EZ3.EllipsoidGeometry
+ * @extends EZ3.PrimitiveGeometry
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  * @param {EZ3.Vector3} [radiouses]
  */
-EZ3.Ellipsoid = function(resolution, radiouses) {
-  EZ3.Primitive.call(this);
+EZ3.EllipsoidGeometry = function(resolution, radiouses) {
+  EZ3.PrimitiveGeometry.call(this);
 
   /**
    * @property {EZ3.Vector2} resolution
@@ -20,13 +20,14 @@ EZ3.Ellipsoid = function(resolution, radiouses) {
   this.radiouses = radiouses || new EZ3.Vector3(10, 5, 10);
 };
 
-EZ3.Ellipsoid.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Ellipsoid.prototype.constructor = EZ3.Ellipsoid;
+EZ3.EllipsoidGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
+EZ3.EllipsoidGeometry.prototype.constructor = EZ3.EllipsoidGeometry;
 
 /**
- * @method EZ3.Ellipsoid#generate
+ * @method EZ3.EllipsoidGeometry#_computeData
+ * @private
  */
-EZ3.Ellipsoid.prototype.generate = function() {
+EZ3.EllipsoidGeometry.prototype._computeData = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -80,17 +81,18 @@ EZ3.Ellipsoid.prototype.generate = function() {
     }
   }
 
-  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
-  this.buffers.addPositionBuffer(vertices);
-  this.buffers.addNormalBuffer(normals);
-  this.buffers.addUvBuffer(uvs);
+  this.buffers.setTriangles(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.setPositions(vertices);
+  this.buffers.setNormals(normals);
+  this.buffers.setUVs(uvs);
 };
 
 /**
- * @property {Boolean} needGenerate
- * @memberof EZ3.Ellipsoid
+ * @property {Boolean} _dataNeedUpdate
+ * @memberof EZ3.EllipsoidGeometry
+ * @private
  */
-Object.defineProperty(EZ3.Ellipsoid.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.EllipsoidGeometry.prototype, '_dataNeedUpdate', {
   get: function() {
     var changed = false;
 

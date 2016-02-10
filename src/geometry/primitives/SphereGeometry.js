@@ -1,32 +1,33 @@
 /**
  * @class EZ3.SphereGeometry
- * @extends EZ3.Primitive
+ * @extends EZ3.PrimitiveGeometry
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  * @param {Number} [radius]
  */
 EZ3.SphereGeometry = function(resolution, radius) {
-  EZ3.Primitive.call(this);
+  EZ3.PrimitiveGeometry.call(this);
 
   /**
    * @property {EZ3.Vector2} resolution
    * @default new EZ3.Vector2(6, 6)
    */
-  this.resolution = resolution || new EZ3.Vector2(6, 6);
+  this.resolution = resolution || new EZ3.Vector2(15, 15);
   /**
    * @property {EZ3.Vector2} radius
-   * @default 5
+   * @default 1
    */
-  this.radius = radius || 5;
+  this.radius = (radius !== undefined)? radius : 1;
 };
 
-EZ3.SphereGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.SphereGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
 EZ3.SphereGeometry.prototype.constructor = EZ3.SphereGeometry;
 
 /**
- * @method EZ3.SphereGeometry#generate
+ * @method EZ3.SphereGeometry#_computeData
+ * @private
  */
-EZ3.SphereGeometry.prototype.generate = function() {
+EZ3.SphereGeometry.prototype._computeData = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -76,17 +77,18 @@ EZ3.SphereGeometry.prototype.generate = function() {
     }
   }
 
-  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
-  this.buffers.addPositionBuffer(vertices);
-  this.buffers.addNormalBuffer(normals);
-  this.buffers.addUvBuffer(uvs);
+  this.buffers.setTriangles(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.setPositions(vertices);
+  this.buffers.setNormals(normals);
+  this.buffers.setUVs(uvs);
 };
 
 /**
- * @property {Boolean} needGenerate
+ * @property {Boolean} _dataNeedUpdate
  * @memberof EZ3.SphereGeometry
+ * @private
  */
-Object.defineProperty(EZ3.SphereGeometry.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.SphereGeometry.prototype, '_dataNeedUpdate', {
   get: function() {
     var changed = false;
 

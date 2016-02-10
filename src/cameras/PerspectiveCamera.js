@@ -40,9 +40,10 @@ EZ3.PerspectiveCamera.prototype.constructor = EZ3.PerspectiveCamera;
 
 /**
  * @method EZ3.PerspectiveCamera#_updateProjection
+ * @private
  * @return {Boolean}
  */
-EZ3.PerspectiveCamera.prototype.updateProjection = function() {
+EZ3.PerspectiveCamera.prototype._updateProjection = function() {
   var changed = false;
 
   if(this._cache.fov !== this.fov) {

@@ -59,7 +59,7 @@ EZ3.Material.prototype.updateStates = function(gl, state) {
 
   if (this.faceCulling !== EZ3.Material.NO_CULLING) {
     state.enable(gl.CULL_FACE);
-    if(this.faceCulling === EZ3.Material.FRONT)
+    if(this.faceCulling === EZ3.Material.FRONT_CULLING)
       state.cullFace(gl.FRONT);
     else
       state.cullFace(gl.BACK);

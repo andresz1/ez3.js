@@ -50,9 +50,9 @@ EZ3.Mesh.prototype.updateProgram = function(gl, state, lights) {
 /**
  * @method EZ3.Mesh#updateLinearData
  */
-EZ3.Mesh.prototype.updateLinearData = function() {
+EZ3.Mesh.prototype.updateLines = function() {
   if (this.material.fill === EZ3.Material.WIREFRAME)
-    this.geometry.updateLinearData();
+    this.geometry.updateLines();
 };
 
 /**
@@ -72,21 +72,21 @@ EZ3.Mesh.prototype.updateNormal = function() {
  * @param {EZ3.RendererState} state
  * @param {EZ3.RendererExtensions} extensions
  */
-EZ3.Mesh.prototype.render = function(gl, attributes, state, extensions) {
+EZ3.Mesh.prototype.render = function(gl, state, extensions, attributes) {
   var mode;
   var index;
   var buffer;
 
   if (this.material.fill === EZ3.Material.WIREFRAME) {
     index = EZ3.IndexBuffer.LINEAR;
-    buffer = this.geometry.buffers.getLinearBuffer();
+    buffer = this.geometry.buffers.getLines();
     mode = gl.LINES;
   } else if (this.material.fill === EZ3.Material.POINTS) {
-    buffer = this.geometry.buffers.getPositionBuffer();
+    buffer = this.geometry.buffers.getPositions();
     mode = gl.POINTS;
   } else {
     index = EZ3.IndexBuffer.TRIANGULAR;
-    buffer = this.geometry.buffers.getTriangularBuffer();
+    buffer = this.geometry.buffers.getTriangles();
     mode = gl.TRIANGLES;
   }
 

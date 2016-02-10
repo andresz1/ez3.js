@@ -57,11 +57,11 @@ EZ3.Cubemap.prototype.update = function(gl) {
 
 /**
  * @method EZ3.Cubemap#setImage
- * @param {Number} target
+ * @param {Number} face
  * @param {EZ3.Image} image
  */
-EZ3.Cubemap.prototype.setImage = function(target, image) {
-  this._images[target] = image;
+EZ3.Cubemap.prototype.setImage = function(face, image) {
+  this._images[face] = image;
 };
 
 /**

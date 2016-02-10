@@ -1,12 +1,12 @@
 /**
  * @class EZ3.PlaneGeometry
- * @extends EZ3.Primitive
+ * @extends EZ3.PrimitiveGeometry
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  */
 
 EZ3.PlaneGeometry = function(resolution) {
-  EZ3.Primitive.call(this);
+  EZ3.PrimitiveGeometry.call(this);
 
   /**
    * @property {EZ3.Vector2} resolution
@@ -15,13 +15,14 @@ EZ3.PlaneGeometry = function(resolution) {
   this.resolution = resolution || new EZ3.Vector2(2, 2);
 };
 
-EZ3.PlaneGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.PlaneGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
 EZ3.PlaneGeometry.prototype.constructor = EZ3.PlaneGeometry;
 
 /**
- * @method EZ3.PlaneGeometry#generate
+ * @method EZ3.PlaneGeometry#_computeData
+ * @private
  */
-EZ3.PlaneGeometry.prototype.generate = function() {
+EZ3.PlaneGeometry.prototype._computeData = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -52,17 +53,18 @@ EZ3.PlaneGeometry.prototype.generate = function() {
     }
   }
 
-  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
-  this.buffers.addPositionBuffer(vertices);
-  this.buffers.addNormalBuffer(normals);
-  this.buffers.addUvBuffer(uvs);
+  this.buffers.setTriangles(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.setPositions(vertices);
+  this.buffers.setNormals(normals);
+  this.buffers.setUVs(uvs);
 };
 
 /**
- * @property {Boolean} needGenerate
+ * @property {Boolean} _dataNeedUpdate
  * @memberof EZ3.PlaneGeometry
+ * @private
  */
-Object.defineProperty(EZ3.PlaneGeometry.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.PlaneGeometry.prototype, '_dataNeedUpdate', {
   get: function() {
     if (!this.resolution.isEqual(this._cache.resolution)) {
       this._cache.resolution = this.resolution.clone();

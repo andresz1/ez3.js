@@ -1,12 +1,12 @@
 /**
  * @class EZ3.PointLight
  * @extends EZ3.Light
- * @extends EZ3.PerspectiveCamera
+ * @extends EZ3.CubeCamera
  * @constructor
  */
 EZ3.PointLight = function() {
   EZ3.Light.call(this);
-  EZ3.PerspectiveCamera.call(this, 90.0, 1.0, 1.0, 5000.0);
+  EZ3.CubeCamera.call(this);
 
   /**
    * @property {EZ3.DepthCubeFramebuffer} depthFramebuffer
@@ -16,7 +16,7 @@ EZ3.PointLight = function() {
 };
 
 EZ3.PointLight.prototype = Object.create(EZ3.Light.prototype);
-EZ3.extends(EZ3.PointLight.prototype, EZ3.PerspectiveCamera.prototype);
+EZ3.extends(EZ3.PointLight.prototype, EZ3.CubeCamera.prototype);
 EZ3.PointLight.prototype.constructor = EZ3.PointLight;
 
 /**

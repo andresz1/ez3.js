@@ -83,8 +83,8 @@ EZ3.Vector3.prototype.sub = function(v1, v2) {
  */
 EZ3.Vector3.prototype.set = function(x, y, z) {
   this.x = x;
-  this.y = y;
-  this.z = z;
+  this.y = (typeof y === 'number') ? y : x;
+  this.z = (typeof z === 'number') ? z : x;
 
   return this;
 };

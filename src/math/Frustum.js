@@ -15,6 +15,28 @@ EZ3.Frustum = function(p0, p1, p2, p3, p4, p5) {
 
 EZ3.Frustum.prototype.constructor = EZ3.Frustum;
 
+EZ3.Frustum.prototype.set = function(p0, p1, p2, p3, p4, p5) {
+  var planes = this.planes;
+
+  planes[0].copy(p0);
+  planes[1].copy(p1);
+  planes[2].copy(p2);
+  planes[3].copy(p3);
+  planes[4].copy(p4);
+  planes[5].copy(p5);
+
+  return this;
+};
+
+EZ3.Frustum.prototype.copy = function(frustum) {
+  var planes = this.planes;
+
+  for (var i = 0; i < 6; i++)
+    planes[i].copy(frustum.planes[i]);
+
+  return this;
+};
+
 EZ3.Frustum.prototype.setFromMatrix4 = function(m) {
   var planes = this.planes;
   var me = m.elements;
@@ -45,34 +67,12 @@ EZ3.Frustum.prototype.setFromMatrix4 = function(m) {
   return this;
 };
 
-EZ3.Frustum.prototype.set = function(p0, p1, p2, p3, p4, p5) {
-  var planes = this.planes;
-
-  planes[0].copy(p0);
-  planes[1].copy(p1);
-  planes[2].copy(p2);
-  planes[3].copy(p3);
-  planes[4].copy(p4);
-  planes[5].copy(p5);
-
-  return this;
-};
-
-EZ3.Frustum.prototype.copy = function(frustum) {
-  var planes = this.planes;
-
-  for (var i = 0; i < 6; i++)
-    planes[i].copy(frustum.planes[i]);
-
-  return this;
-};
 
 EZ3.Frustum.prototype.intersectsMesh = function(mesh) {
   var geometry = mesh.geometry;
   var sphere = new EZ3.Sphere();
 
-  if (geometry.boundingSphere === null)
-    geometry.computeBoundingSphere();
+  geometry.updateBoundingVolumes();
 
   sphere.copy(geometry.boundingSphere);
   sphere.applyMatrix4(mesh.world);

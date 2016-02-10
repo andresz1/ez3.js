@@ -57,8 +57,8 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
       return;
 
     for (i = 0; i < currents.length; i++) {
-      currents[i].transparent = true;
-      currents[i].opacity = opacity;
+      //currents[i].transparent = true;
+      //currents[i].opacity = opacity;
     }
   }
 
@@ -70,7 +70,7 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
       currents[i].diffuseMap = texture;
   }
 
-  function init() {
+  function parse() {
     var lines = data.split('\n');
     var line;
     var key;
@@ -106,7 +106,7 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
     }
   }
 
-  init();
+  parse();
 };
 
 /**
@@ -356,16 +356,16 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
 
   function processMesh(mesh) {
     if (fixedIndices.length) {
-      mesh.geometry.buffers.addTriangularBuffer(fixedIndices, (fixedVertices.length / 3) > EZ3.Math.MAX_USHORT);
-      mesh.geometry.buffers.addPositionBuffer(fixedVertices);
+      mesh.geometry.buffers.setTriangles(fixedIndices, (fixedVertices.length / 3) > EZ3.Math.MAX_USHORT);
+      mesh.geometry.buffers.setPositions(fixedVertices);
 
       if (fixedUvs.length) {
-        mesh.geometry.buffers.addUvBuffer(fixedUvs);
+        mesh.geometry.buffers.setUVs(fixedUvs);
         fixedUvs = [];
       }
 
       if (fixedNormals.length) {
-        mesh.geometry.buffers.addNormalBuffer(fixedNormals);
+        mesh.geometry.buffers.setNormals(fixedNormals);
         fixedNormals = [];
       }
 
@@ -405,7 +405,7 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
     requests.start();
   }
 
-  function init() {
+  function parse() {
     var mesh = new EZ3.Mesh();
     var libraries = [];
     var materials = [];
@@ -453,7 +453,7 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
     processLibraries(libraries, materials);
   }
 
-  init();
+  parse();
 };
 
 /**

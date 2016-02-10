@@ -46,6 +46,8 @@ EZ3.Entity = function() {
    */
   this.position = new EZ3.Vector3();
 
+  this.pivot = new EZ3.Vector3();
+
   /**
    * @property {EZ3.Quaternion} quaternion
    */
@@ -137,7 +139,7 @@ EZ3.Entity.prototype.updateWorld = function() {
   }
 
   if (positionDirty || quaternionDirty || scaleDirty)
-    this.model.compose(this.position, this.quaternion, this.scale);
+    this.model.compose(this.position, this.quaternion, this.scale, this.pivot);
 
   if (!this.parent) {
     modelDirty = this.model.isDiff(this._cache.model);
@@ -170,17 +172,19 @@ EZ3.Entity.prototype.updateWorld = function() {
 EZ3.Entity.prototype.traverse = function(callback) {
   var entities = [];
   var entity;
+  var children;
   var i;
 
   entities.push(this);
 
   while (entities.length) {
     entity = entities.pop();
+    children = entity.children.slice();
 
     callback(entity);
 
-    for (i = entity.children.length - 1; i >= 0; i--)
-      entities.push(entity.children[i]);
+    for (i = children.length - 1; i >= 0; i--)
+      entities.push(children[i]);
   }
 };
 
@@ -223,4 +227,29 @@ EZ3.Entity.prototype.getWorldScale = function() {
  */
 EZ3.Entity.prototype.getWorldDirection = function() {
   return new EZ3.Vector3(0, 0, 1).mulQuaternion(this.getWorldRotation());
+};
+
+/**
+ * @method EZ3.Entity#getBoundingBox
+ * @return {EZ3.Vector3}
+ */
+EZ3.Entity.prototype.getBoundingBox = function() {
+  var box = new EZ3.Box();
+
+  this.traverse(function(entity) {
+    var geometry;
+
+    if (entity instanceof EZ3.Mesh) {
+      geometry = entity.geometry;
+
+      if (geometry instanceof EZ3.PrimitiveGeometry)
+        geometry.updateData();
+
+      geometry.updateBoundingVolumes();
+
+      box.union(geometry.boundingBox);
+    }
+  });
+
+  return box;
 };

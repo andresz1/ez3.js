@@ -47,17 +47,11 @@ EZ3.Camera.prototype._updateView = function() {
 };
 
 /**
- * @method EZ3.Camera#computeFrustum
- */
-EZ3.Camera.prototype.computeFrustum = function() {
-  this.viewProjection.mul(this.projection, this.view);
-  this.frustum.setFromMatrix4(this.viewProjection);
-};
-
-/**
  * @method EZ3.Camera#updateFrustum
  */
 EZ3.Camera.prototype.updateFrustum = function() {
-  if (this._updateView() || this.updateProjection())
-    this.computeFrustum();
+  if (this._updateView() || this._updateProjection()) {
+    this.viewProjection.mul(this.projection, this.view);
+    this.frustum.setFromMatrix4(this.viewProjection);
+  }
 };

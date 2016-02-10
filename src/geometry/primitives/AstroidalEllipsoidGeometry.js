@@ -1,12 +1,12 @@
 /**
- * @class EZ3.AstroidalEllipsoid
- * @extends EZ3.Primitive
+ * @class EZ3.AstroidalEllipsoidGeometry
+ * @extends EZ3.PrimitiveGeometry
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  * @param {EZ3.Vector3} [radiouses]
  */
-EZ3.AstroidalEllipsoid = function(resolution, radiouses) {
-  EZ3.Primitive.call(this);
+EZ3.AstroidalEllipsoidGeometry = function(resolution, radiouses) {
+  EZ3.PrimitiveGeometry.call(this);
 
   /**
    * @property {EZ3.Vector2} resolution
@@ -20,13 +20,14 @@ EZ3.AstroidalEllipsoid = function(resolution, radiouses) {
   this.radiouses = radiouses || new EZ3.Vector3(6, 6, 6);
 };
 
-EZ3.AstroidalEllipsoid.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.AstroidalEllipsoid.prototype.constructor = EZ3.AstroidalEllipsoid;
+EZ3.AstroidalEllipsoidGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
+EZ3.AstroidalEllipsoidGeometry.prototype.constructor = EZ3.AstroidalEllipsoidGeometry;
 
 /**
- * @method EZ3.AstroidalEllipsoid#generate
+ * @method EZ3.AstroidalEllipsoidGeometry#_computeData
+ * @private
  */
-EZ3.AstroidalEllipsoid.prototype.generate = function() {
+EZ3.AstroidalEllipsoidGeometry.prototype._computeData = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -80,17 +81,18 @@ EZ3.AstroidalEllipsoid.prototype.generate = function() {
     }
   }
 
-  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
-  this.buffers.addPositionBuffer(vertices);
-  this.buffers.addNormalBuffer(normals);
-  this.buffers.addUvBuffer(uvs);
+  this.buffers.setTriangles(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.setPositions(vertices);
+  this.buffers.setNormals(normals);
+  this.buffers.setUVs(uvs);
 };
 
 /**
- * @property {Boolean} needGenerate
- * @memberof EZ3.AstroidalEllipsoid
+ * @property {Boolean} _dataNeedUpdate
+ * @memberof EZ3.AstroidalEllipsoidGeometry
+ * @private
  */
-Object.defineProperty(EZ3.AstroidalEllipsoid.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.AstroidalEllipsoidGeometry.prototype, '_dataNeedUpdate', {
   get: function() {
     var changed = false;
 

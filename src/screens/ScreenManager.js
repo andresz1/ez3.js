@@ -246,6 +246,10 @@ EZ3.ScreenManager.prototype.update = function() {
     screen = this._screens[i];
 
     this.renderer.render(screen.position, screen.size, screen.scene, screen.camera);
+
+    if (screen.world)
+      screen.world.update();
+
     this._screens[i].update();
   }
 };

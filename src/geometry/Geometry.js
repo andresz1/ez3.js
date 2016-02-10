@@ -7,55 +7,56 @@ EZ3.Geometry = function() {
    * @property {EZ3.ArrayBuffer} buffers
    */
   this.buffers = new EZ3.ArrayBuffer();
-  /**
-   * @property {Boolean} linearDataNeedUpdate
-   * @default true
-   */
-  this.linearDataNeedUpdate = true;
-  /**
-   * @property {Boolean} normalDataNeedUpdate
-   * @default true
-   */
-  this.normalDataNeedUpdate = true;
 
+  /**
+   * @property {EZ3.Sphere} boundingSphere
+   */
   this.boundingSphere = null;
+
+  /**
+   * @property {EZ3.Box} boundingBox
+   */
+  this.boundingBox = null;
 };
 
-EZ3.Geometry.prototype.computeBoundingSphere = function() {
-  var vertices = this.buffers.getPositionBuffer();
-  var max = new EZ3.Vector3(-Infinity);
-  var min = new EZ3.Vector3(Infinity);
-  var v = new EZ3.Vector3();
-  var center = new EZ3.Vector3();
-  var radius = 0;
+/**
+ * @method EZ3.Geometry#computeBoundingVolumes
+ */
+EZ3.Geometry.prototype.computeBoundingVolumes = function() {
+  var vertices = this.buffers.getPositions();
+  var box;
+  var v;
+  var radius;
 
   if (!vertices)
     return;
 
   vertices = vertices.data;
+  box = new EZ3.Box();
+  v = new EZ3.Vector3();
+  radius = 0;
 
   for (i = 0; i < vertices.length; i += 3) {
     v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
-    max.max(v);
-    min.min(v);
+    box.expand(v);
   }
 
-  center.add(max, min).scale(0.5);
+  center = box.getCenter();
 
   for (i = 0; i < vertices.length; i += 3) {
     v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
     radius = Math.max(radius, center.distance(v));
   }
 
+  this.boundingBox = box;
   this.boundingSphere = new EZ3.Sphere(center, radius);
 };
 
 /**
- * @method EZ3.Geometry#_computeLinearData
- * @private
+ * @method EZ3.Geometry#computeLines
  */
-EZ3.Geometry.prototype._computeLinearData = function() {
-  var triangles = this.buffers.getTriangularBuffer();
+EZ3.Geometry.prototype.computeLines = function() {
+  var triangles = this.buffers.getTriangles();
   var need32Bits;
   var lines;
   var i;
@@ -63,8 +64,8 @@ EZ3.Geometry.prototype._computeLinearData = function() {
   if (!triangles)
     return;
 
-  need32Bits = triangles.need32Bits;
   triangles = triangles.data;
+  need32Bits = triangles.need32Bits;
   lines = [];
 
   for (i = 0; i < triangles.length; i += 3) {
@@ -72,16 +73,15 @@ EZ3.Geometry.prototype._computeLinearData = function() {
     lines.push(triangles[i + 2], triangles[i + 1], triangles[i + 2]);
   }
 
-  this.buffers.addLinearBuffer(lines, need32Bits);
+  this.buffers.setLines(lines, need32Bits);
 };
 
 /**
- * @method EZ3.Geometry#_computeNormalData
- * @private
+ * @method EZ3.Geometry#computeNormals
  */
-EZ3.Geometry.prototype._computeNormalData = function() {
-  var indices = this.buffers.getTriangularBuffer();
-  var vertices = this.buffers.getPositionBuffer();
+EZ3.Geometry.prototype.computeNormals = function() {
+  var indices = this.buffers.getTriangles();
+  var vertices = this.buffers.getPositions();
   var normals;
   var weighted;
   var point0;
@@ -129,31 +129,34 @@ EZ3.Geometry.prototype._computeNormalData = function() {
   }
 
   for (i = 0; i < weighted.length; i++) {
-    if (!weighted[i].isZeroVector())
-      weighted[i].normalize();
+    weighted[i].normalize();
 
     normals.push(weighted[i].x, weighted[i].y, weighted[i].z);
   }
 
-  this.buffers.addNormalBuffer(normals);
+  this.buffers.setNormals(normals);
 };
 
 /**
- * @method EZ3.Geometry#updateLinearData
+ * @method EZ3.Geometry#updateBoundingVolumes
  */
-EZ3.Geometry.prototype.updateLinearData = function() {
-  if (this.linearDataNeedUpdate) {
-    this._computeLinearData();
-    this.linearDataNeedUpdate = false;
-  }
+EZ3.Geometry.prototype.updateBoundingVolumes = function() {
+  if (!this.boundingSphere || !this.boundingBox)
+    this.computeBoundingVolumes();
 };
 
 /**
- * @method EZ3.Geometry#updateNormalData
+ * @method EZ3.Geometry#updateLines
  */
-EZ3.Geometry.prototype.updateNormalData = function() {
-  if (this.normalDataNeedUpdate) {
-    this._computeNormalData();
-    this.normalDataNeedUpdate = false;
-  }
+EZ3.Geometry.prototype.updateLines = function() {
+  if (!this.buffers.getLines())
+    this.computeLines();
+};
+
+/**
+ * @method EZ3.Geometry#updateNormals
+ */
+EZ3.Geometry.prototype.updateNormals = function() {
+  if (!this.buffers.getNormals())
+    this.computeNormals();
 };

@@ -1,12 +1,12 @@
 /**
  * @class EZ3.BoxGeometry
- * @extends EZ3.Primitive
+ * @extends EZ3.PrimitiveGeometry
  * @constructor
  * @param {EZ3.Vector3} [resolution]
  * @param {EZ3.Vector3} [dimensions]
  */
 EZ3.BoxGeometry = function(resolution, dimensions) {
-  EZ3.Primitive.call(this);
+  EZ3.PrimitiveGeometry.call(this);
 
   /**
    * @property {EZ3.Vector3} resolution
@@ -21,13 +21,14 @@ EZ3.BoxGeometry = function(resolution, dimensions) {
   this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
 };
 
-EZ3.BoxGeometry.prototype = Object.create(EZ3.Primitive.prototype);
+EZ3.BoxGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
 EZ3.BoxGeometry.prototype.constructor = EZ3.BoxGeometry;
 
 /**
- * @method EZ3.BoxGeometry#generate
+ * @method EZ3.BoxGeometry#_computeData
+ * @private
  */
-EZ3.BoxGeometry.prototype.generate = function() {
+EZ3.BoxGeometry.prototype._computeData = function() {
   var that = this;
   var uvs = [];
   var indices = [];
@@ -97,17 +98,18 @@ EZ3.BoxGeometry.prototype.generate = function() {
   computeFace('x', 'y', 1, -1, this.dimensions.x, this.dimensions.y, depthHalf);
   computeFace('x', 'y', -1, -1, this.dimensions.x, this.dimensions.y, -depthHalf);
 
-  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
-  this.buffers.addPositionBuffer(vertices);
-  this.buffers.addNormalBuffer(normals);
-  this.buffers.addUvBuffer(uvs);
+  this.buffers.setTriangles(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.setPositions(vertices);
+  this.buffers.setNormals(normals);
+  this.buffers.setUVs(uvs);
 };
 
 /**
- * @property {Boolean} needGenerate
+ * @property {Boolean} _dataNeedUpdate
  * @memberof EZ3.BoxGeometry
+ * @private
  */
-Object.defineProperty(EZ3.BoxGeometry.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.BoxGeometry.prototype, '_dataNeedUpdate', {
   get: function() {
     var changed = false;
 

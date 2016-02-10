@@ -55,9 +55,10 @@ EZ3.OrthographicCamera.prototype.constructor = EZ3.OrthographicCamera;
 
 /**
  * @method EZ3.OrthographicCamera#updateProjection
+ * @private
  * @return {Boolean}
  */
-EZ3.OrthographicCamera.prototype.updateProjection = function() {
+EZ3.OrthographicCamera.prototype._updateProjection = function() {
   var changed = false;
   var dx;
   var dy;

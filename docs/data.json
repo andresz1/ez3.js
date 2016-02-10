@@ -15,6 +15,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/cameras/CubeCamera.js": {
+            "name": "src/cameras/CubeCamera.js",
+            "modules": {},
+            "classes": {
+                "EZ3.CubeCamera": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src/cameras/OrthographicCamera.js": {
             "name": "src/cameras/OrthographicCamera.js",
             "modules": {},
@@ -186,65 +195,65 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/geometry/primitives/AstroidalEllipsoid.js": {
-            "name": "src/geometry/primitives/AstroidalEllipsoid.js",
+        "src/geometry/primitives/AstroidalEllipsoidGeometry.js": {
+            "name": "src/geometry/primitives/AstroidalEllipsoidGeometry.js",
             "modules": {},
             "classes": {
-                "EZ3.AstroidalEllipsoid": 1
+                "EZ3.AstroidalEllipsoidGeometry": 1
             },
             "fors": {},
             "namespaces": {}
         },
-        "src/geometry/primitives/Box.js": {
-            "name": "src/geometry/primitives/Box.js",
+        "src/geometry/primitives/BoxGeometry.js": {
+            "name": "src/geometry/primitives/BoxGeometry.js",
             "modules": {},
             "classes": {
-                "EZ3.Box": 1
+                "EZ3.BoxGeometry": 1
             },
             "fors": {},
             "namespaces": {}
         },
-        "src/geometry/primitives/Ellipsoid.js": {
-            "name": "src/geometry/primitives/Ellipsoid.js",
+        "src/geometry/primitives/EllipsoidGeometry.js": {
+            "name": "src/geometry/primitives/EllipsoidGeometry.js",
             "modules": {},
             "classes": {
-                "EZ3.Ellipsoid": 1
+                "EZ3.EllipsoidGeometry": 1
             },
             "fors": {},
             "namespaces": {}
         },
-        "src/geometry/primitives/Plane.js": {
-            "name": "src/geometry/primitives/Plane.js",
+        "src/geometry/primitives/PlaneGeometry.js": {
+            "name": "src/geometry/primitives/PlaneGeometry.js",
             "modules": {},
             "classes": {
-                "EZ3.Plane": 1
+                "EZ3.PlaneGeometry": 1
             },
             "fors": {},
             "namespaces": {}
         },
-        "src/geometry/primitives/Primitive.js": {
-            "name": "src/geometry/primitives/Primitive.js",
+        "src/geometry/primitives/PrimitiveGeometry.js": {
+            "name": "src/geometry/primitives/PrimitiveGeometry.js",
             "modules": {},
             "classes": {
-                "EZ3.Primitive": 1
+                "EZ3.PrimitiveGeometry": 1
             },
             "fors": {},
             "namespaces": {}
         },
-        "src/geometry/primitives/Sphere.js": {
-            "name": "src/geometry/primitives/Sphere.js",
+        "src/geometry/primitives/SphereGeometry.js": {
+            "name": "src/geometry/primitives/SphereGeometry.js",
             "modules": {},
             "classes": {
-                "EZ3.Sphere": 1
+                "EZ3.SphereGeometry": 1
             },
             "fors": {},
             "namespaces": {}
         },
-        "src/geometry/primitives/Torus.js": {
-            "name": "src/geometry/primitives/Torus.js",
+        "src/geometry/primitives/TorusGeometry.js": {
+            "name": "src/geometry/primitives/TorusGeometry.js",
             "modules": {},
             "classes": {
-                "EZ3.Torus": 1
+                "EZ3.TorusGeometry": 1
             },
             "fors": {},
             "namespaces": {}
@@ -510,20 +519,11 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/math/BoundingBox.js": {
-            "name": "src/math/BoundingBox.js",
+        "src/math/Box.js": {
+            "name": "src/math/Box.js",
             "modules": {},
             "classes": {
-                "EZ3.BoundingBox": 1
-            },
-            "fors": {},
-            "namespaces": {}
-        },
-        "src/math/BoundingSphere.js": {
-            "name": "src/math/BoundingSphere.js",
-            "modules": {},
-            "classes": {
-                "EZ3.BoundingSphere": 1
+                "EZ3.Box": 1
             },
             "fors": {},
             "namespaces": {}
@@ -573,11 +573,29 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/math/Plane.js": {
+            "name": "src/math/Plane.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Plane": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src/math/Quaternion.js": {
             "name": "src/math/Quaternion.js",
             "modules": {},
             "classes": {
                 "EZ3.Quaternion": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/math/Sphere.js": {
+            "name": "src/math/Sphere.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Sphere": 1
             },
             "fors": {},
             "namespaces": {}
@@ -609,11 +627,56 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/meshes/BoundingBox.js": {
+            "name": "src/meshes/BoundingBox.js",
+            "modules": {},
+            "classes": {
+                "EZ3.BoundingBox": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/meshes/BoundingSphere.js": {
+            "name": "src/meshes/BoundingSphere.js",
+            "modules": {},
+            "classes": {
+                "EZ3.BoundingSphere": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src/meshes/Mesh.js": {
             "name": "src/meshes/Mesh.js",
             "modules": {},
             "classes": {
                 "EZ3.Mesh": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/physics/Body.js": {
+            "name": "src/physics/Body.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Body": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/physics/Link.js": {
+            "name": "src/physics/Link.js",
+            "modules": {},
+            "classes": {
+                "EZ3.Link": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/physics/World.js": {
+            "name": "src/physics/World.js",
+            "modules": {},
+            "classes": {
+                "EZ3.World": 1
             },
             "fors": {},
             "namespaces": {}
@@ -786,6 +849,33 @@
             "line": 1,
             "extends": "EZ3.Entity",
             "is_constructor": 1
+        },
+        "EZ3.CubeCamera": {
+            "name": "EZ3.CubeCamera",
+            "shortname": "EZ3.CubeCamera",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/cameras/CubeCamera.js",
+            "line": 1,
+            "extends": "EZ3.Entity",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "near",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "far",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
         },
         "EZ3.OrthographicCamera": {
             "name": "EZ3.OrthographicCamera",
@@ -1287,17 +1377,17 @@
                 }
             ]
         },
-        "EZ3.AstroidalEllipsoid": {
-            "name": "EZ3.AstroidalEllipsoid",
-            "shortname": "EZ3.AstroidalEllipsoid",
+        "EZ3.AstroidalEllipsoidGeometry": {
+            "name": "EZ3.AstroidalEllipsoidGeometry",
+            "shortname": "EZ3.AstroidalEllipsoidGeometry",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/geometry/primitives/AstroidalEllipsoid.js",
+            "file": "src/geometry/primitives/AstroidalEllipsoidGeometry.js",
             "line": 1,
-            "extends": "EZ3.Primitive",
+            "extends": "EZ3.PrimitiveGeometry",
             "is_constructor": 1,
             "params": [
                 {
@@ -1314,17 +1404,17 @@
                 }
             ]
         },
-        "EZ3.Box": {
-            "name": "EZ3.Box",
-            "shortname": "EZ3.Box",
+        "EZ3.BoxGeometry": {
+            "name": "EZ3.BoxGeometry",
+            "shortname": "EZ3.BoxGeometry",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/geometry/primitives/Box.js",
+            "file": "src/geometry/primitives/BoxGeometry.js",
             "line": 1,
-            "extends": "EZ3.Primitive",
+            "extends": "EZ3.PrimitiveGeometry",
             "is_constructor": 1,
             "params": [
                 {
@@ -1341,17 +1431,17 @@
                 }
             ]
         },
-        "EZ3.Ellipsoid": {
-            "name": "EZ3.Ellipsoid",
-            "shortname": "EZ3.Ellipsoid",
+        "EZ3.EllipsoidGeometry": {
+            "name": "EZ3.EllipsoidGeometry",
+            "shortname": "EZ3.EllipsoidGeometry",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/geometry/primitives/Ellipsoid.js",
+            "file": "src/geometry/primitives/EllipsoidGeometry.js",
             "line": 1,
-            "extends": "EZ3.Primitive",
+            "extends": "EZ3.PrimitiveGeometry",
             "is_constructor": 1,
             "params": [
                 {
@@ -1368,17 +1458,17 @@
                 }
             ]
         },
-        "EZ3.Plane": {
-            "name": "EZ3.Plane",
-            "shortname": "EZ3.Plane",
+        "EZ3.PlaneGeometry": {
+            "name": "EZ3.PlaneGeometry",
+            "shortname": "EZ3.PlaneGeometry",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/geometry/primitives/Plane.js",
+            "file": "src/geometry/primitives/PlaneGeometry.js",
             "line": 1,
-            "extends": "EZ3.Primitive",
+            "extends": "EZ3.PrimitiveGeometry",
             "is_constructor": 1,
             "params": [
                 {
@@ -1389,30 +1479,30 @@
                 }
             ]
         },
-        "EZ3.Primitive": {
-            "name": "EZ3.Primitive",
-            "shortname": "EZ3.Primitive",
+        "EZ3.PrimitiveGeometry": {
+            "name": "EZ3.PrimitiveGeometry",
+            "shortname": "EZ3.PrimitiveGeometry",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/geometry/primitives/Primitive.js",
+            "file": "src/geometry/primitives/PrimitiveGeometry.js",
             "line": 1,
             "extends": "EZ3.Geometry",
             "is_constructor": 1
         },
-        "EZ3.Sphere": {
-            "name": "EZ3.Sphere",
-            "shortname": "EZ3.Sphere",
+        "EZ3.SphereGeometry": {
+            "name": "EZ3.SphereGeometry",
+            "shortname": "EZ3.SphereGeometry",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/geometry/primitives/Sphere.js",
+            "file": "src/geometry/primitives/SphereGeometry.js",
             "line": 1,
-            "extends": "EZ3.Primitive",
+            "extends": "EZ3.PrimitiveGeometry",
             "is_constructor": 1,
             "params": [
                 {
@@ -1429,17 +1519,17 @@
                 }
             ]
         },
-        "EZ3.Torus": {
-            "name": "EZ3.Torus",
-            "shortname": "EZ3.Torus",
+        "EZ3.TorusGeometry": {
+            "name": "EZ3.TorusGeometry",
+            "shortname": "EZ3.TorusGeometry",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/geometry/primitives/Torus.js",
+            "file": "src/geometry/primitives/TorusGeometry.js",
             "line": 1,
-            "extends": "EZ3.Primitive",
+            "extends": "EZ3.PrimitiveGeometry",
             "is_constructor": 1,
             "params": [
                 {
@@ -1656,7 +1746,7 @@
             "extension_for": [],
             "file": "src/lights/PointLight.js",
             "line": 1,
-            "extends": "EZ3.PerspectiveCamera",
+            "extends": "EZ3.CubeCamera",
             "is_constructor": 1
         },
         "EZ3.SpotLight": {
@@ -2091,29 +2181,31 @@
                 }
             ]
         },
-        "EZ3.BoundingBox": {
-            "name": "EZ3.BoundingBox",
-            "shortname": "EZ3.BoundingBox",
+        "EZ3.Box": {
+            "name": "EZ3.Box",
+            "shortname": "EZ3.Box",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/math/BoundingBox.js",
+            "file": "src/math/Box.js",
             "line": 1,
-            "is_constructor": 1
-        },
-        "EZ3.BoundingSphere": {
-            "name": "EZ3.BoundingSphere",
-            "shortname": "EZ3.BoundingSphere",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "src/math/BoundingSphere.js",
-            "line": 1,
-            "is_constructor": 1
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "min",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                },
+                {
+                    "name": "max",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ]
         },
         "EZ3.Euler": {
             "name": "EZ3.Euler",
@@ -2221,6 +2313,18 @@
                 }
             ]
         },
+        "EZ3.Plane": {
+            "name": "EZ3.Plane",
+            "shortname": "EZ3.Plane",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Plane.js",
+            "line": 1,
+            "is_constructor": 1
+        },
         "EZ3.Quaternion": {
             "name": "EZ3.Quaternion",
             "shortname": "EZ3.Quaternion",
@@ -2254,6 +2358,32 @@
                 },
                 {
                     "name": "w",
+                    "description": "",
+                    "type": "Number",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.Sphere": {
+            "name": "EZ3.Sphere",
+            "shortname": "EZ3.Sphere",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/math/Sphere.js",
+            "line": 1,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "center",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                },
+                {
+                    "name": "radius",
                     "description": "",
                     "type": "Number",
                     "optional": true
@@ -2359,6 +2489,72 @@
                 }
             ]
         },
+        "EZ3.BoundingBox": {
+            "name": "EZ3.BoundingBox",
+            "shortname": "EZ3.BoundingBox",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/meshes/BoundingBox.js",
+            "line": 1,
+            "extends": "EZ3.Mesh",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "geometry",
+                    "description": "",
+                    "type": "EZ3.Geometry",
+                    "optional": true
+                },
+                {
+                    "name": "resolution",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                },
+                {
+                    "name": "material",
+                    "description": "",
+                    "type": "EZ3.Material",
+                    "optional": true
+                }
+            ]
+        },
+        "EZ3.BoundingSphere": {
+            "name": "EZ3.BoundingSphere",
+            "shortname": "EZ3.BoundingSphere",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/meshes/BoundingSphere.js",
+            "line": 1,
+            "extends": "EZ3.Mesh",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "geometry",
+                    "description": "",
+                    "type": "EZ3.Geometry",
+                    "optional": true
+                },
+                {
+                    "name": "resolution",
+                    "description": "",
+                    "type": "EZ3.Vector2",
+                    "optional": true
+                },
+                {
+                    "name": "material",
+                    "description": "",
+                    "type": "EZ3.Material",
+                    "optional": true
+                }
+            ]
+        },
         "EZ3.Mesh": {
             "name": "EZ3.Mesh",
             "shortname": "EZ3.Mesh",
@@ -2385,6 +2581,42 @@
                     "optional": true
                 }
             ]
+        },
+        "EZ3.Body": {
+            "name": "EZ3.Body",
+            "shortname": "EZ3.Body",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/physics/Body.js",
+            "line": 1,
+            "is_constructor": 1
+        },
+        "EZ3.Link": {
+            "name": "EZ3.Link",
+            "shortname": "EZ3.Link",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/physics/Link.js",
+            "line": 1,
+            "is_constructor": 1
+        },
+        "EZ3.World": {
+            "name": "EZ3.World",
+            "shortname": "EZ3.World",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/physics/World.js",
+            "line": 1,
+            "is_constructor": 1
         },
         "EZ3.GLSLProgram": {
             "name": "EZ3.GLSLProgram",
@@ -2440,7 +2672,7 @@
                 {
                     "name": "options",
                     "description": "",
-                    "type": "Öbject"
+                    "type": "Object"
                 }
             ]
         },
@@ -2815,10 +3047,168 @@
         },
         {
             "file": "src/cameras/Camera.js",
-            "line": 23,
-            "itemtype": "method",
-            "name": "EZ3.Camera#updateView",
+            "line": 19,
+            "itemtype": "property",
+            "name": "viewProjection",
+            "type": "EZ3.Matrix4",
             "class": "EZ3.Camera"
+        },
+        {
+            "file": "src/cameras/Camera.js",
+            "line": 24,
+            "itemtype": "property",
+            "name": "Frustum",
+            "type": "EZ3.Frustum",
+            "class": "EZ3.Camera"
+        },
+        {
+            "file": "src/cameras/Camera.js",
+            "line": 33,
+            "itemtype": "method",
+            "name": "EZ3.Camera#_updateView",
+            "access": "protected",
+            "tagname": "",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "EZ3.Camera"
+        },
+        {
+            "file": "src/cameras/Camera.js",
+            "line": 49,
+            "itemtype": "method",
+            "name": "EZ3.Camera#updateFrustum",
+            "class": "EZ3.Camera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 13,
+            "itemtype": "property",
+            "name": "near",
+            "type": "Number",
+            "default": "0.1",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 19,
+            "itemtype": "property",
+            "name": "far",
+            "type": "Number",
+            "default": "2000",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 25,
+            "itemtype": "property",
+            "name": "views",
+            "type": "EZ3.Matrix4[]",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 30,
+            "itemtype": "property",
+            "name": "projection",
+            "type": "EZ3.Matrix4",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 35,
+            "itemtype": "property",
+            "name": "viewProjections",
+            "type": "EZ3.Matrix4[]",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 40,
+            "itemtype": "property",
+            "name": "frustums",
+            "type": "EZ3.Frustum[]",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 55,
+            "itemtype": "method",
+            "name": "EZ3.CubeCamera#_updateProjection",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 78,
+            "itemtype": "method",
+            "name": "EZ3.CubeCamera#_updateViews",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 127,
+            "itemtype": "method",
+            "name": "EZ3.CubeCamera#updateFrustums",
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 144,
+            "itemtype": "method",
+            "name": "EZ3.CubeCamera#getView",
+            "params": [
+                {
+                    "name": "face",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 153,
+            "itemtype": "method",
+            "name": "EZ3.CubeCamera#getViewProjection",
+            "params": [
+                {
+                    "name": "face",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Matrix4"
+            },
+            "class": "EZ3.CubeCamera"
+        },
+        {
+            "file": "src/cameras/CubeCamera.js",
+            "line": 163,
+            "itemtype": "method",
+            "name": "EZ3.CubeCamera#getFrustum",
+            "params": [
+                {
+                    "name": "face",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Frustum"
+            },
+            "class": "EZ3.CubeCamera"
         },
         {
             "file": "src/cameras/OrthographicCamera.js",
@@ -2879,6 +3269,12 @@
             "line": 56,
             "itemtype": "method",
             "name": "EZ3.OrthographicCamera#updateProjection",
+            "access": "private",
+            "tagname": "",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
             "class": "EZ3.OrthographicCamera"
         },
         {
@@ -2921,7 +3317,13 @@
             "file": "src/cameras/PerspectiveCamera.js",
             "line": 41,
             "itemtype": "method",
-            "name": "EZ3.PerspectiveCamera#updateProjection",
+            "name": "EZ3.PerspectiveCamera#_updateProjection",
+            "access": "private",
+            "tagname": "",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
             "class": "EZ3.PerspectiveCamera"
         },
         {
@@ -3304,7 +3706,7 @@
             "file": "src/core/Entity.js",
             "line": 29,
             "itemtype": "property",
-            "name": "wolrd",
+            "name": "world",
             "type": "EZ3.Matrix4",
             "class": "EZ3.Entity"
         },
@@ -3412,14 +3814,14 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 187,
+            "line": 189,
             "itemtype": "method",
             "name": "EZ3.Entity#updateWorldTraverse",
             "class": "EZ3.Entity"
         },
         {
             "file": "src/core/Entity.js",
-            "line": 196,
+            "line": 198,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldPosition",
             "return": {
@@ -3430,7 +3832,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 204,
+            "line": 206,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldRotation",
             "return": {
@@ -3441,7 +3843,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 212,
+            "line": 214,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldScale",
             "return": {
@@ -3452,9 +3854,20 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 220,
+            "line": 222,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldDirection",
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Entity"
+        },
+        {
+            "file": "src/core/Entity.js",
+            "line": 230,
+            "itemtype": "method",
+            "name": "EZ3.Entity#getBoundingBox",
             "return": {
                 "description": "",
                 "type": "EZ3.Vector3"
@@ -4061,7 +4474,7 @@
             "file": "src/geometry/buffers/ArrayBuffer.js",
             "line": 87,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#addLinearBuffer",
+            "name": "EZ3.ArrayBuffer#setLines",
             "params": [
                 {
                     "name": "data",
@@ -4090,9 +4503,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 118,
+            "line": 116,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#addTriangularBuffer",
+            "name": "EZ3.ArrayBuffer#setTriangles",
             "params": [
                 {
                     "name": "data",
@@ -4121,9 +4534,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 149,
+            "line": 145,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#addPositionBuffer",
+            "name": "EZ3.ArrayBuffer#setPositions",
             "params": [
                 {
                     "name": "data",
@@ -4146,9 +4559,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 176,
+            "line": 172,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#addNormalBuffer",
+            "name": "EZ3.ArrayBuffer#setNormals",
             "params": [
                 {
                     "name": "data",
@@ -4171,9 +4584,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 203,
+            "line": 199,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#addUvBuffer",
+            "name": "EZ3.ArrayBuffer#setUVs",
             "params": [
                 {
                     "name": "data",
@@ -4196,9 +4609,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 230,
+            "line": 226,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#addVertexBuffer",
+            "name": "EZ3.ArrayBuffer#setVertexBuffer",
             "params": [
                 {
                     "name": "name",
@@ -4219,9 +4632,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 242,
+            "line": 238,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#getTriangularBuffer",
+            "name": "EZ3.ArrayBuffer#getTriangles",
             "return": {
                 "description": "",
                 "type": "EZ3.IndexBuffer"
@@ -4230,9 +4643,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 250,
+            "line": 246,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#getLinearBuffer",
+            "name": "EZ3.ArrayBuffer#getLines",
             "return": {
                 "description": "",
                 "type": "EZ3.IndexBuffer"
@@ -4241,9 +4654,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 258,
+            "line": 254,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#getPositionBuffer",
+            "name": "EZ3.ArrayBuffer#getPositions",
             "return": {
                 "description": "",
                 "type": "EZ3.VertexBuffer"
@@ -4252,9 +4665,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 266,
+            "line": 262,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#getNormalBuffer",
+            "name": "EZ3.ArrayBuffer#getNormals",
             "return": {
                 "description": "",
                 "type": "EZ3.VertexBuffer"
@@ -4263,9 +4676,9 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 274,
+            "line": 270,
             "itemtype": "method",
-            "name": "EZ3.ArrayBuffer#getUvBuffer",
+            "name": "EZ3.ArrayBuffer#getUVs",
             "return": {
                 "description": "",
                 "type": "EZ3.VertexBuffer"
@@ -4274,7 +4687,7 @@
         },
         {
             "file": "src/geometry/buffers/ArrayBuffer.js",
-            "line": 282,
+            "line": 278,
             "itemtype": "method",
             "name": "EZ3.ArrayBuffer#getVertexBuffer",
             "return": {
@@ -4592,216 +5005,240 @@
             "class": "EZ3.VertexBuffer"
         },
         {
-            "file": "src/geometry/primitives/AstroidalEllipsoid.js",
+            "file": "src/geometry/primitives/AstroidalEllipsoidGeometry.js",
             "line": 11,
             "itemtype": "property",
             "name": "resolution",
             "type": "EZ3.Vector2",
             "default": "new EZ3.Vector2(50, 50)",
-            "class": "EZ3.AstroidalEllipsoid"
+            "class": "EZ3.AstroidalEllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/AstroidalEllipsoid.js",
+            "file": "src/geometry/primitives/AstroidalEllipsoidGeometry.js",
             "line": 16,
             "itemtype": "property",
             "name": "radiouses",
             "type": "EZ3.Vector3",
             "default": "new EZ3.Vector3(6, 6, 6)",
-            "class": "EZ3.AstroidalEllipsoid"
+            "class": "EZ3.AstroidalEllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/AstroidalEllipsoid.js",
+            "file": "src/geometry/primitives/AstroidalEllipsoidGeometry.js",
             "line": 26,
             "itemtype": "method",
-            "name": "EZ3.AstroidalEllipsoid#generate",
-            "class": "EZ3.AstroidalEllipsoid"
+            "name": "EZ3.AstroidalEllipsoidGeometry#_computeData",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.AstroidalEllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/AstroidalEllipsoid.js",
-            "line": 89,
+            "file": "src/geometry/primitives/AstroidalEllipsoidGeometry.js",
+            "line": 90,
             "itemtype": "property",
-            "name": "needGenerate",
+            "name": "_dataNeedUpdate",
             "type": "Boolean",
-            "memberof": "EZ3.AstroidalEllipsoid",
-            "class": "EZ3.AstroidalEllipsoid"
+            "memberof": "EZ3.AstroidalEllipsoidGeometry",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.AstroidalEllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/Box.js",
+            "file": "src/geometry/primitives/BoxGeometry.js",
             "line": 11,
             "itemtype": "property",
             "name": "resolution",
             "type": "EZ3.Vector3",
             "default": "new EZ3.Vector3(1, 1, 1)",
-            "class": "EZ3.Box"
+            "class": "EZ3.BoxGeometry"
         },
         {
-            "file": "src/geometry/primitives/Box.js",
+            "file": "src/geometry/primitives/BoxGeometry.js",
             "line": 17,
             "itemtype": "property",
             "name": "dimensions",
             "type": "EZ3.Vector3",
             "default": "new EZ3.Vector3(1, 1, 1)",
-            "class": "EZ3.Box"
+            "class": "EZ3.BoxGeometry"
         },
         {
-            "file": "src/geometry/primitives/Box.js",
+            "file": "src/geometry/primitives/BoxGeometry.js",
             "line": 27,
             "itemtype": "method",
-            "name": "EZ3.Box#generate",
-            "class": "EZ3.Box"
+            "name": "EZ3.BoxGeometry#_computeData",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.BoxGeometry"
         },
         {
-            "file": "src/geometry/primitives/Box.js",
-            "line": 106,
+            "file": "src/geometry/primitives/BoxGeometry.js",
+            "line": 107,
             "itemtype": "property",
-            "name": "needGenerate",
+            "name": "_dataNeedUpdate",
             "type": "Boolean",
-            "memberof": "EZ3.Box",
-            "class": "EZ3.Box"
+            "memberof": "EZ3.BoxGeometry",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.BoxGeometry"
         },
         {
-            "file": "src/geometry/primitives/Ellipsoid.js",
+            "file": "src/geometry/primitives/EllipsoidGeometry.js",
             "line": 11,
             "itemtype": "property",
             "name": "resolution",
             "type": "EZ3.Vector2",
             "default": "new EZ3.Vector3(40, 40)",
-            "class": "EZ3.Ellipsoid"
+            "class": "EZ3.EllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/Ellipsoid.js",
+            "file": "src/geometry/primitives/EllipsoidGeometry.js",
             "line": 16,
             "itemtype": "property",
             "name": "radiouses",
             "type": "EZ3.Vector3",
             "default": "new EZ3.Vector3(10, 5, 10)",
-            "class": "EZ3.Ellipsoid"
+            "class": "EZ3.EllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/Ellipsoid.js",
+            "file": "src/geometry/primitives/EllipsoidGeometry.js",
             "line": 26,
             "itemtype": "method",
-            "name": "EZ3.Ellipsoid#generate",
-            "class": "EZ3.Ellipsoid"
+            "name": "EZ3.EllipsoidGeometry#_computeData",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.EllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/Ellipsoid.js",
-            "line": 89,
+            "file": "src/geometry/primitives/EllipsoidGeometry.js",
+            "line": 90,
             "itemtype": "property",
-            "name": "needGenerate",
+            "name": "_dataNeedUpdate",
             "type": "Boolean",
-            "memberof": "EZ3.Ellipsoid",
-            "class": "EZ3.Ellipsoid"
+            "memberof": "EZ3.EllipsoidGeometry",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.EllipsoidGeometry"
         },
         {
-            "file": "src/geometry/primitives/Plane.js",
+            "file": "src/geometry/primitives/PlaneGeometry.js",
             "line": 11,
             "itemtype": "property",
             "name": "resolution",
             "type": "EZ3.Vector2",
             "default": "new EZ3.Vector2(2, 2)",
-            "class": "EZ3.Plane"
+            "class": "EZ3.PlaneGeometry"
         },
         {
-            "file": "src/geometry/primitives/Plane.js",
+            "file": "src/geometry/primitives/PlaneGeometry.js",
             "line": 21,
             "itemtype": "method",
-            "name": "EZ3.Plane#generate",
-            "class": "EZ3.Plane"
+            "name": "EZ3.PlaneGeometry#_computeData",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.PlaneGeometry"
         },
         {
-            "file": "src/geometry/primitives/Plane.js",
-            "line": 61,
+            "file": "src/geometry/primitives/PlaneGeometry.js",
+            "line": 62,
             "itemtype": "property",
-            "name": "needGenerate",
+            "name": "_dataNeedUpdate",
             "type": "Boolean",
-            "memberof": "EZ3.Plane",
-            "class": "EZ3.Plane"
+            "memberof": "EZ3.PlaneGeometry",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.PlaneGeometry"
         },
         {
-            "file": "src/geometry/primitives/Primitive.js",
+            "file": "src/geometry/primitives/PrimitiveGeometry.js",
             "line": 9,
             "itemtype": "property",
             "name": "_cache",
             "type": "Object",
             "access": "private",
             "tagname": "",
-            "class": "EZ3.Primitive"
+            "class": "EZ3.PrimitiveGeometry"
         },
         {
-            "file": "src/geometry/primitives/Primitive.js",
+            "file": "src/geometry/primitives/PrimitiveGeometry.js",
             "line": 19,
             "itemtype": "method",
-            "name": "EZ3.Primitive#updateCommonData",
-            "class": "EZ3.Primitive"
+            "name": "EZ3.PrimitiveGeometry#updateData",
+            "class": "EZ3.PrimitiveGeometry"
         },
         {
-            "file": "src/geometry/primitives/Sphere.js",
+            "file": "src/geometry/primitives/SphereGeometry.js",
             "line": 11,
             "itemtype": "property",
             "name": "resolution",
             "type": "EZ3.Vector2",
             "default": "new EZ3.Vector2(6, 6)",
-            "class": "EZ3.Sphere"
+            "class": "EZ3.SphereGeometry"
         },
         {
-            "file": "src/geometry/primitives/Sphere.js",
+            "file": "src/geometry/primitives/SphereGeometry.js",
             "line": 16,
             "itemtype": "property",
             "name": "radius",
             "type": "EZ3.Vector2",
-            "default": "5",
-            "class": "EZ3.Sphere"
+            "default": "1",
+            "class": "EZ3.SphereGeometry"
         },
         {
-            "file": "src/geometry/primitives/Sphere.js",
+            "file": "src/geometry/primitives/SphereGeometry.js",
             "line": 26,
             "itemtype": "method",
-            "name": "EZ3.Sphere#generate",
-            "class": "EZ3.Sphere"
+            "name": "EZ3.SphereGeometry#_computeData",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.SphereGeometry"
         },
         {
-            "file": "src/geometry/primitives/Sphere.js",
-            "line": 85,
+            "file": "src/geometry/primitives/SphereGeometry.js",
+            "line": 86,
             "itemtype": "property",
-            "name": "needGenerate",
+            "name": "_dataNeedUpdate",
             "type": "Boolean",
-            "memberof": "EZ3.Sphere",
-            "class": "EZ3.Sphere"
+            "memberof": "EZ3.SphereGeometry",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.SphereGeometry"
         },
         {
-            "file": "src/geometry/primitives/Torus.js",
+            "file": "src/geometry/primitives/TorusGeometry.js",
             "line": 11,
             "itemtype": "property",
             "name": "resolution",
             "type": "EZ3.Vector2",
             "default": "new EZ3.Vector2(5, 5)",
-            "class": "EZ3.Torus"
+            "class": "EZ3.TorusGeometry"
         },
         {
-            "file": "src/geometry/primitives/Torus.js",
+            "file": "src/geometry/primitives/TorusGeometry.js",
             "line": 16,
             "itemtype": "property",
             "name": "radiouses",
             "type": "EZ3.Vector2",
             "default": "new EZ3.Vector2(7, 3)",
-            "class": "EZ3.Torus"
+            "class": "EZ3.TorusGeometry"
         },
         {
-            "file": "src/geometry/primitives/Torus.js",
+            "file": "src/geometry/primitives/TorusGeometry.js",
             "line": 26,
             "itemtype": "method",
-            "name": "EZ3.Torus#generate",
-            "class": "EZ3.Torus"
+            "name": "EZ3.TorusGeometry#_computeData",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.TorusGeometry"
         },
         {
-            "file": "src/geometry/primitives/Torus.js",
-            "line": 95,
+            "file": "src/geometry/primitives/TorusGeometry.js",
+            "line": 96,
             "itemtype": "property",
-            "name": "needGenerate",
+            "name": "_dataNeedUpdate",
             "type": "Boolean",
-            "memberof": "EZ3.Torus",
-            "class": "EZ3.Torus"
+            "memberof": "EZ3.TorusGeometry",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.TorusGeometry"
         },
         {
             "file": "src/geometry/Geometry.js",
@@ -4813,52 +5250,60 @@
         },
         {
             "file": "src/geometry/Geometry.js",
-            "line": 10,
+            "line": 11,
             "itemtype": "property",
-            "name": "linearDataNeedUpdate",
-            "type": "Boolean",
-            "default": "true",
+            "name": "boundingSphere",
+            "type": "EZ3.Sphere",
             "class": "EZ3.Geometry"
         },
         {
             "file": "src/geometry/Geometry.js",
-            "line": 15,
+            "line": 16,
             "itemtype": "property",
-            "name": "normalDataNeedUpdate",
-            "type": "Boolean",
-            "default": "true",
+            "name": "boundingBox",
+            "type": "EZ3.Box",
             "class": "EZ3.Geometry"
         },
         {
             "file": "src/geometry/Geometry.js",
             "line": 22,
             "itemtype": "method",
-            "name": "EZ3.Geometry#_computeLinearData",
-            "access": "private",
-            "tagname": "",
+            "name": "EZ3.Geometry#computeBoundingVolumes",
             "class": "EZ3.Geometry"
         },
         {
             "file": "src/geometry/Geometry.js",
-            "line": 47,
+            "line": 55,
             "itemtype": "method",
-            "name": "EZ3.Geometry#_computeNormalData",
-            "access": "private",
-            "tagname": "",
+            "name": "EZ3.Geometry#computeLines",
             "class": "EZ3.Geometry"
         },
         {
             "file": "src/geometry/Geometry.js",
-            "line": 110,
+            "line": 79,
             "itemtype": "method",
-            "name": "EZ3.Geometry#updateLinearData",
+            "name": "EZ3.Geometry#computeNormals",
             "class": "EZ3.Geometry"
         },
         {
             "file": "src/geometry/Geometry.js",
-            "line": 120,
+            "line": 140,
             "itemtype": "method",
-            "name": "EZ3.Geometry#updateNormalData",
+            "name": "EZ3.Geometry#updateBoundingVolumes",
+            "class": "EZ3.Geometry"
+        },
+        {
+            "file": "src/geometry/Geometry.js",
+            "line": 148,
+            "itemtype": "method",
+            "name": "EZ3.Geometry#updateLines",
+            "class": "EZ3.Geometry"
+        },
+        {
+            "file": "src/geometry/Geometry.js",
+            "line": 156,
+            "itemtype": "method",
+            "name": "EZ3.Geometry#updateNormals",
             "class": "EZ3.Geometry"
         },
         {
@@ -8727,6 +9172,17 @@
             "file": "src/math/Matrix4.js",
             "line": 742,
             "itemtype": "method",
+            "name": "EZ3.Matrix4#getMaxScaleOnAxis",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Matrix4"
+        },
+        {
+            "file": "src/math/Matrix4.js",
+            "line": 752,
+            "itemtype": "method",
             "name": "EZ3.Matrix4#clone",
             "return": {
                 "description": "",
@@ -8736,7 +9192,7 @@
         },
         {
             "file": "src/math/Matrix4.js",
-            "line": 750,
+            "line": 760,
             "itemtype": "method",
             "name": "EZ3.Matrix4#copy",
             "params": [
@@ -8754,7 +9210,7 @@
         },
         {
             "file": "src/math/Matrix4.js",
-            "line": 779,
+            "line": 789,
             "itemtype": "method",
             "name": "EZ3.Matrix4#toArray",
             "return": {
@@ -8765,7 +9221,7 @@
         },
         {
             "file": "src/math/Matrix4.js",
-            "line": 787,
+            "line": 797,
             "itemtype": "method",
             "name": "EZ3.Matrix4#toString",
             "return": {
@@ -8776,7 +9232,7 @@
         },
         {
             "file": "src/math/Matrix4.js",
-            "line": 811,
+            "line": 821,
             "itemtype": "method",
             "name": "EZ3.Matrix4#toMatrix3",
             "params": [
@@ -8795,7 +9251,7 @@
         },
         {
             "file": "src/math/Matrix4.js",
-            "line": 829,
+            "line": 839,
             "itemtype": "method",
             "name": "EZ3.Matrix4#isEqual",
             "params": [
@@ -8813,7 +9269,7 @@
         },
         {
             "file": "src/math/Matrix4.js",
-            "line": 856,
+            "line": 866,
             "itemtype": "method",
             "name": "EZ3.Matrix4#isDiff",
             "params": [
@@ -9022,6 +9478,39 @@
             "file": "src/math/Quaternion.js",
             "line": 248,
             "itemtype": "method",
+            "name": "EZ3.Quaternion#set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "z",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "w",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Quaternion"
+            },
+            "class": "EZ3.Quaternion"
+        },
+        {
+            "file": "src/math/Quaternion.js",
+            "line": 267,
+            "itemtype": "method",
             "name": "EZ3.Quaternion#copy",
             "params": [
                 {
@@ -9039,7 +9528,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 264,
+            "line": 283,
             "itemtype": "method",
             "name": "EZ3.Quaternion#clone",
             "return": {
@@ -9050,7 +9539,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 272,
+            "line": 291,
             "itemtype": "method",
             "name": "EZ3.Quaternion#isEqual",
             "params": [
@@ -9068,7 +9557,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 284,
+            "line": 303,
             "itemtype": "method",
             "name": "EZ3.Quaternion#isDiff",
             "params": [
@@ -9086,7 +9575,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 293,
+            "line": 312,
             "itemtype": "method",
             "name": "EZ3.Quaternion#setFromAxisAngle",
             "params": [
@@ -9109,7 +9598,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 312,
+            "line": 331,
             "itemtype": "method",
             "name": "EZ3.Quaternion#setFromRotationMatrix",
             "params": [
@@ -9127,7 +9616,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 366,
+            "line": 385,
             "itemtype": "method",
             "name": "EZ3.Quaternion#setFromEuler",
             "params": [
@@ -9150,7 +9639,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 420,
+            "line": 439,
             "itemtype": "method",
             "name": "EZ3.Quaternion#toMatrix3",
             "params": [
@@ -9174,7 +9663,7 @@
         },
         {
             "file": "src/math/Quaternion.js",
-            "line": 475,
+            "line": 494,
             "itemtype": "method",
             "name": "EZ3.Quaternion#toString",
             "return": {
@@ -9760,7 +10249,31 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 237,
+            "line": 229,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#mulMatrix4",
+            "params": [
+                {
+                    "name": "m",
+                    "description": "",
+                    "type": "EZ3.Matrix3"
+                },
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "EZ3.Vector3"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 258,
             "itemtype": "method",
             "name": "EZ3.Vector3#mulQuaternion",
             "params": [
@@ -9778,7 +10291,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 264,
+            "line": 285,
             "itemtype": "method",
             "name": "EZ3.Vector3#length",
             "return": {
@@ -9789,7 +10302,31 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 272,
+            "line": 293,
+            "itemtype": "method",
+            "name": "EZ3.Vector3#distance",
+            "params": [
+                {
+                    "name": "v1",
+                    "description": "",
+                    "type": "EZ3.Vector3"
+                },
+                {
+                    "name": "v2",
+                    "description": "",
+                    "type": "EZ3.Vector3",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "EZ3.Vector3"
+        },
+        {
+            "file": "src/math/Vector3.js",
+            "line": 317,
             "itemtype": "method",
             "name": "EZ3.Vector3#normalize",
             "params": [
@@ -9808,7 +10345,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 307,
+            "line": 352,
             "itemtype": "method",
             "name": "EZ3.Vector3#negate",
             "params": [
@@ -9827,7 +10364,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 326,
+            "line": 371,
             "itemtype": "method",
             "name": "EZ3.Vector3#clone",
             "return": {
@@ -9838,7 +10375,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 334,
+            "line": 379,
             "itemtype": "method",
             "name": "EZ3.Vector3#copy",
             "params": [
@@ -9856,7 +10393,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 347,
+            "line": 392,
             "itemtype": "method",
             "name": "EZ3.Vector3#setPositionFromWorldMatrix",
             "params": [
@@ -9874,7 +10411,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 362,
+            "line": 407,
             "itemtype": "method",
             "name": "EZ3.Vector3#setFromViewProjectionMatrix",
             "params": [
@@ -9892,7 +10429,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 381,
+            "line": 426,
             "itemtype": "method",
             "name": "EZ3.Vector3#isEqual",
             "params": [
@@ -9910,7 +10447,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 393,
+            "line": 438,
             "itemtype": "method",
             "name": "EZ3.Vector3#isZeroVector",
             "params": [
@@ -9929,7 +10466,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 405,
+            "line": 450,
             "itemtype": "method",
             "name": "EZ3.Vector3#isDiff",
             "params": [
@@ -9947,7 +10484,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 414,
+            "line": 459,
             "itemtype": "method",
             "name": "EZ3.Vector3#toArray",
             "return": {
@@ -9958,7 +10495,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 422,
+            "line": 467,
             "itemtype": "method",
             "name": "EZ3.Vector3#toString",
             "return": {
@@ -9969,7 +10506,7 @@
         },
         {
             "file": "src/math/Vector3.js",
-            "line": 434,
+            "line": 479,
             "itemtype": "method",
             "name": "EZ3.Vector3#toVector2",
             "return": {
@@ -10499,6 +11036,62 @@
             "class": "EZ3.Mesh"
         },
         {
+            "file": "src/physics/Body.js",
+            "line": 15,
+            "itemtype": "property",
+            "name": "position",
+            "type": "Number",
+            "memberof": "EZ3.Body",
+            "class": "EZ3.Body"
+        },
+        {
+            "file": "src/physics/Body.js",
+            "line": 25,
+            "itemtype": "property",
+            "name": "quaternion",
+            "type": "Number",
+            "memberof": "EZ3.Body",
+            "class": "EZ3.Body"
+        },
+        {
+            "file": "src/physics/Body.js",
+            "line": 35,
+            "itemtype": "property",
+            "name": "density",
+            "type": "Number",
+            "memberof": "EZ3.Body",
+            "class": "EZ3.Body"
+        },
+        {
+            "file": "src/physics/Body.js",
+            "line": 49,
+            "itemtype": "property",
+            "name": "friction",
+            "type": "Number",
+            "memberof": "EZ3.Body",
+            "class": "EZ3.Body"
+        },
+        {
+            "file": "src/physics/Body.js",
+            "line": 62,
+            "itemtype": "property",
+            "name": "restitution",
+            "type": "Number",
+            "memberof": "EZ3.Body",
+            "class": "EZ3.Body"
+        },
+        {
+            "file": "src/physics/World.js",
+            "line": 95,
+            "itemtype": "property",
+            "name": "gravity",
+            "type": "Boolean",
+            "memberof": "EZ3.World",
+            "access": "private",
+            "tagname": "",
+            "class": "EZ3.World"
+        },
+        {
             "file": "src/render/GLSLProgram.js",
             "line": 10,
             "itemtype": "property",
@@ -10891,7 +11484,7 @@
         },
         {
             "file": "src/render/Renderer.js",
-            "line": 169,
+            "line": 146,
             "itemtype": "method",
             "name": "EZ3.Renderer#_renderDirectionalDepth",
             "params": [
@@ -10915,7 +11508,7 @@
         },
         {
             "file": "src/render/Renderer.js",
-            "line": 194,
+            "line": 176,
             "itemtype": "method",
             "name": "EZ3.Renderer#_renderDepth",
             "params": [
@@ -10934,14 +11527,14 @@
         },
         {
             "file": "src/render/Renderer.js",
-            "line": 227,
+            "line": 209,
             "itemtype": "method",
             "name": "EZ3.Renderer#initContext",
             "class": "EZ3.Renderer"
         },
         {
             "file": "src/render/Renderer.js",
-            "line": 263,
+            "line": 245,
             "itemtype": "method",
             "name": "EZ3.Renderer#clearColor",
             "params": [
@@ -10955,14 +11548,14 @@
         },
         {
             "file": "src/render/Renderer.js",
-            "line": 273,
+            "line": 255,
             "itemtype": "method",
             "name": "EZ3.Renderer#clear",
             "class": "EZ3.Renderer"
         },
         {
             "file": "src/render/Renderer.js",
-            "line": 282,
+            "line": 264,
             "itemtype": "method",
             "name": "EZ3.Renderer#render",
             "params": [
@@ -11417,6 +12010,14 @@
             "class": "EZ3.Screen"
         },
         {
+            "file": "src/screens/Screen.js",
+            "line": 28,
+            "itemtype": "property",
+            "name": "world",
+            "type": "EZ3.World",
+            "class": "EZ3.Screen"
+        },
+        {
             "file": "src/screens/ScreenManager.js",
             "line": 12,
             "itemtype": "property",
@@ -11588,14 +12189,14 @@
         },
         {
             "file": "src/screens/ScreenManager.js",
-            "line": 253,
+            "line": 257,
             "itemtype": "method",
             "name": "EZ3.ScreenManager#requestFullScreen",
             "class": "EZ3.ScreenManager"
         },
         {
             "file": "src/screens/ScreenManager.js",
-            "line": 272,
+            "line": 276,
             "itemtype": "method",
             "name": "EZ3.ScreenManager#exitFullScreen",
             "class": "EZ3.ScreenManager"
@@ -11977,7 +12578,7 @@
             "name": "EZ3.Cubemap#setImage",
             "params": [
                 {
-                    "name": "target",
+                    "name": "face",
                     "description": "",
                     "type": "Number"
                 },
@@ -12057,7 +12658,15 @@
         },
         {
             "file": "src/textures/TargetCubemap.js",
-            "line": 26,
+            "line": 20,
+            "itemtype": "property",
+            "name": "attachment",
+            "type": "Number",
+            "class": "EZ3.TargetCubemap"
+        },
+        {
+            "file": "src/textures/TargetCubemap.js",
+            "line": 29,
             "itemtype": "method",
             "name": "EZ3.TargetCubemap#attach",
             "params": [
@@ -12602,27 +13211,27 @@
         },
         {
             "message": "unknown tag: memberof",
-            "line": " src/geometry/primitives/AstroidalEllipsoid.js:89"
+            "line": " src/geometry/primitives/AstroidalEllipsoidGeometry.js:90"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " src/geometry/primitives/Box.js:106"
+            "line": " src/geometry/primitives/BoxGeometry.js:107"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " src/geometry/primitives/Ellipsoid.js:89"
+            "line": " src/geometry/primitives/EllipsoidGeometry.js:90"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " src/geometry/primitives/Plane.js:61"
+            "line": " src/geometry/primitives/PlaneGeometry.js:62"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " src/geometry/primitives/Sphere.js:85"
+            "line": " src/geometry/primitives/SphereGeometry.js:86"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " src/geometry/primitives/Torus.js:95"
+            "line": " src/geometry/primitives/TorusGeometry.js:96"
         },
         {
             "message": "unknown tag: memberof",
@@ -12723,6 +13332,30 @@
         {
             "message": "unknown tag: memberof",
             "line": " src/math/Euler.js:320"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/physics/Body.js:15"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/physics/Body.js:25"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/physics/Body.js:35"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/physics/Body.js:49"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/physics/Body.js:62"
+        },
+        {
+            "message": "unknown tag: memberof",
+            "line": " src/physics/World.js:95"
         },
         {
             "message": "unknown tag: memberof",

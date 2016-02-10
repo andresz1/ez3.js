@@ -182,7 +182,7 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
     }
   }
 
-  function init() {
+  function parse() {
     var skins = [];
     var seams = [];
     var uvs = [];
@@ -261,16 +261,16 @@ EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
       uvs[j + 1] = (uvs[j + 1] + 0.5) / header.skinHeight;
     }
 
-    that.asset.geometry.buffers.addTriangularBuffer(indices, (frames[0].vertices.length / 3) > EZ3.Math.MAX_USHORT);
-    that.asset.geometry.buffers.addPositionBuffer(frames[0].vertices);
-    that.asset.geometry.buffers.addUvBuffer(uvs);
+    that.asset.geometry.buffers.setTriangles(indices, (frames[0].vertices.length / 3) > EZ3.Math.MAX_USHORT);
+    that.asset.geometry.buffers.setPositions(frames[0].vertices);
+    that.asset.geometry.buffers.setUVs(uvs);
 
     that.asset.material.diffuseMap = skins[0];
 
     onLoad(that.url, that.asset);
   }
 
-  init();
+  parse();
 };
 
 /**

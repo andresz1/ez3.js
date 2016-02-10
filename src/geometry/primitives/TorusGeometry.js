@@ -1,12 +1,12 @@
 /**
- * @class EZ3.Torus
- * @extends EZ3.Primitive
+ * @class EZ3.TorusGeometry
+ * @extends EZ3.PrimitiveGeometry
  * @constructor
  * @param {EZ3.Vector2} [resolution]
  * @param {EZ3.Vector2} [radiouses]
  */
-EZ3.Torus = function(resolution, radiouses) {
-  EZ3.Primitive.call(this);
+EZ3.TorusGeometry = function(resolution, radiouses) {
+  EZ3.PrimitiveGeometry.call(this);
 
   /**
    * @property {EZ3.Vector2} resolution
@@ -20,13 +20,14 @@ EZ3.Torus = function(resolution, radiouses) {
   this.radiouses = radiouses || new EZ3.Vector2(7, 3);
 };
 
-EZ3.Torus.prototype = Object.create(EZ3.Primitive.prototype);
-EZ3.Torus.prototype.constructor = EZ3.Torus;
+EZ3.TorusGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
+EZ3.TorusGeometry.prototype.constructor = EZ3.TorusGeometry;
 
 /**
- * @method EZ3.Torus#generate
+ * @method EZ3.TorusGeometry#_computeData
+ * @private
  */
-EZ3.Torus.prototype.generate = function() {
+EZ3.TorusGeometry.prototype._computeData = function() {
   var indices = [];
   var vertices = [];
   var normals = [];
@@ -86,17 +87,18 @@ EZ3.Torus.prototype.generate = function() {
     }
   }
 
-  this.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
-  this.buffers.addPositionBuffer(vertices);
-  this.buffers.addNormalBuffer(normals);
-  this.buffers.addUvBuffer(uvs);
+  this.buffers.setTriangles(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+  this.buffers.setPositions(vertices);
+  this.buffers.setNormals(normals);
+  this.buffers.setUVs(uvs);
 };
 
 /**
- * @property {Boolean} needGenerate
- * @memberof EZ3.Torus
+ * @property {Boolean} _dataNeedUpdate
+ * @memberof EZ3.TorusGeometry
+ * @private
  */
-Object.defineProperty(EZ3.Torus.prototype, 'needGenerate', {
+Object.defineProperty(EZ3.TorusGeometry.prototype, '_dataNeedUpdate', {
   get: function() {
     var changed = false;
 

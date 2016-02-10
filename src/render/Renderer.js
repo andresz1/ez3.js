@@ -1,7 +1,7 @@
 /**
  * @class EZ3.Renderer
  * @param {HTMLElement} canvas
- * @param {Öbject} options
+ * @param {Object} options
  */
 EZ3.Renderer = function(canvas, options) {
   /**
@@ -57,7 +57,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
 
   modelView.mul(camera.view, mesh.world);
 
-  program.loadUniformFloat(gl, 'uEyePosition', camera.position);
+  program.loadUniformFloat(gl, 'uEyePosition', camera.getWorldPosition());
   program.loadUniformMatrix(gl, 'uModel', mesh.world);
   program.loadUniformMatrix(gl, 'uModelView', modelView);
   program.loadUniformMatrix(gl, 'uProjection', camera.projection);
@@ -78,7 +78,7 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
     light.updateUniforms(gl, this.state, this.capabilities, program, i, mesh.shadowReceiver, lights.directional.length);
   }
 
-  mesh.render(gl, program.attributes, this.state, this.extensions);
+  mesh.render(gl, this.state, this.extensions, program.attributes);
 
   this.state.usedTextureSlots = 0;
 };
@@ -90,16 +90,16 @@ EZ3.Renderer.prototype._renderMesh = function(mesh, camera, lights) {
  * @param {EZ3.Matrix4} view
  * @param {EZ3.Matrix4} projection
  */
-EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, camera) {
+EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, view, projection) {
   var gl = this.context;
   var modelView = new EZ3.Matrix4();
 
-  modelView.mul(camera.view, mesh.world);
+  modelView.mul(view, mesh.world);
 
   program.loadUniformMatrix(gl, 'uModelView', modelView);
-  program.loadUniformMatrix(gl, 'uProjection', camera.projection);
+  program.loadUniformMatrix(gl, 'uProjection', projection);
 
-  mesh.render(gl, program.attributes, this.state, this.extensions);
+  mesh.render(gl, this.state, this.extensions, program.attributes);
 };
 
 /**
@@ -110,10 +110,10 @@ EZ3.Renderer.prototype._renderMeshDepth = function(program, mesh, camera) {
  */
 EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, lights) {
   var gl = this.context;
-  var target = new EZ3.Vector3();
-  var up = new EZ3.Vector3();
-  var position;
   var light;
+  var frustum;
+  var view;
+  var projection;
   var mesh;
   var i;
   var j;
@@ -121,52 +121,23 @@ EZ3.Renderer.prototype._renderOmnidirectionalDepth = function(program, meshes, l
 
   for (i = 0; i < lights.length; i++) {
     light = lights[i];
-    position = light.getWorldPosition();
 
     light.depthFramebuffer.bind(gl, this.state);
     light.depthFramebuffer.update(gl);
 
     for (j = 0; j < 6; j++) {
-      switch (j) {
-        case EZ3.Cubemap.POSITIVE_X:
-          target.set(1, 0, 0);
-          up.set(0, -1, 0);
-          break;
-        case EZ3.Cubemap.NEGATIVE_X:
-          target.set(-1, 0, 0);
-          up.set(0, -1, 0);
-          break;
-        case EZ3.Cubemap.POSITIVE_Y:
-          target.set(0, 1, 0);
-          up.set(0, 0, 1);
-          break;
-        case EZ3.Cubemap.NEGATIVE_Y:
-          target.set(0, -1, 0);
-          up.set(0, 0, -1);
-          break;
-        case EZ3.Cubemap.POSITIVE_Z:
-          target.set(0, 0, 1);
-          up.set(0, -1, 0);
-          break;
-        case EZ3.Cubemap.NEGATIVE_Z:
-          target.set(0, 0, -1);
-          up.set(0, -1, 0);
-          break;
-      }
-
-      light.view.lookAt(position, target.add(position.clone()), up);
-      light.updateProjection();
-      light.computeFrustum();
+      view = light.getView(j);
+      projection = light.projection;
+      frustum = light.getFrustum(j);
 
       light.depthFramebuffer.texture.attach(gl, j);
-
       this.clear();
 
       for (k = 0; k < meshes.length; k++) {
         mesh = meshes[k];
 
-        if (light.frustum.intersectsMesh(mesh))
-          this._renderMeshDepth(program, mesh, light);
+        if (frustum.intersectsMesh(mesh))
+          this._renderMeshDepth(program, mesh, view, projection);
       }
     }
   }
@@ -197,7 +168,7 @@ EZ3.Renderer.prototype._renderDirectionalDepth = function(program, meshes, light
       mesh = meshes[j];
 
       if (light.frustum.intersectsMesh(mesh))
-        this._renderMeshDepth(program, mesh, light);
+        this._renderMeshDepth(program, mesh, light.view, light.projection);
     }
   }
 };
@@ -308,28 +279,30 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
   var lights = {
     point: [],
     directional: [],
-    spot: [],
-    empty: true
+    spot: []
   };
+  var depth = new EZ3.Vector3();
+  var empty = false;
   var mesh;
-  var depth;
-  var viewProjection;
   var i;
 
   scene.updateWorldTraverse();
 
   scene.traverse(function(entity) {
     if (entity instanceof EZ3.Light) {
-      lights.empty = false;
+      empty = false;
 
-      if (entity instanceof EZ3.PointLight)
+      if (entity instanceof EZ3.PointLight) {
+        entity.updateFrustums();
+
         lights.point.push(entity);
-      else if (entity instanceof EZ3.DirectionalLight) {
+      } else {
         entity.updateFrustum();
-        lights.directional.push(entity);
-      } else if (entity instanceof EZ3.SpotLight) {
-        entity.updateFrustum();
-        lights.spot.push(entity);
+
+        if (entity instanceof EZ3.DirectionalLight)
+          lights.directional.push(entity);
+        else if (entity instanceof EZ3.SpotLight)
+          lights.spot.push(entity);
       }
     } else if (entity instanceof EZ3.Mesh)
       meshes.common.push(entity);
@@ -340,29 +313,31 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
 
   camera.updateFrustum();
 
-  //var c = 0;
-
   for (i = 0; i < meshes.common.length; i++) {
     mesh = meshes.common[i];
 
-    if (mesh.geometry instanceof EZ3.Primitive)
-      mesh.geometry.updateCommonData();
-
-    if (mesh.material.visible && !camera.frustum.intersectsMesh(mesh))
+    if (!mesh.material.visible)
       continue;
 
-  //  c++;
+    if (mesh.geometry instanceof EZ3.PrimitiveGeometry)
+      mesh.geometry.updateData();
 
-    depth = new EZ3.Vector3().setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(camera.viewProjection).z;
+    if (mesh.shadowCaster)
+      meshes.shadowCasters.push(mesh);
 
-    mesh.updateLinearData();
+    if (!camera.frustum.intersectsMesh(mesh))
+      continue;
 
-    if (!lights.empty) {
-      mesh.geometry.updateNormalData();
+    mesh.updateLines();
+
+    if (!empty) {
+      mesh.geometry.updateNormals();
       mesh.updateNormal();
     }
 
     mesh.updateProgram(gl, this.state, lights);
+
+    depth.setPositionFromWorldMatrix(mesh.world).setFromViewProjectionMatrix(camera.viewProjection).z;
 
     if (mesh.material.transparent)
       meshes.transparent.push({
@@ -374,12 +349,7 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
         mesh: mesh,
         depth: depth
       });
-
-    if (mesh.shadowCaster)
-      meshes.shadowCasters.push(mesh);
   }
-
-//  console.log(c);
 
   meshes.opaque.sort(function(a, b) {
     if (a.depth !== b.depth)
@@ -391,7 +361,7 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
       return b.depth - a.depth;
   });
 
-  if (meshes.shadowCasters.length && !lights.empty)
+  if (!empty)
     this._renderDepth(meshes.shadowCasters, lights);
 
   this.state.viewport(position, size);

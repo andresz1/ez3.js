@@ -671,10 +671,19 @@ EZ3.Matrix4.prototype.determinant = function() {
  * @param {EZ3.Vector3} scale
  * @return {EZ3.Matrix4}
  */
-EZ3.Matrix4.prototype.compose = function(position, rotation, scale) {
+EZ3.Matrix4.prototype.compose = function(position, rotation, scale, pivot) {
+  this.identity();
+  this.translate(pivot);
+  this.translate(position);
+  this.mul(rotation.toMatrix4(-1));
+  this.scale(scale);
+  this.translate(pivot.clone().negate());
+
+  /*
   this.setFromQuaternion(rotation);
   this.setPosition(position);
   this.scale(scale);
+  */
 
   return this;
 };

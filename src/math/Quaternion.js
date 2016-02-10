@@ -246,6 +246,25 @@ EZ3.Quaternion.prototype.length = function() {
 };
 
 /**
+ * @method EZ3.Quaternion#set
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @param {Number} w
+ * @return {EZ3.Quaternion}
+ */
+EZ3.Quaternion.prototype.set = function(x, y, z, w) {
+  this._x = x;
+  this._y = y;
+  this._z = z;
+  this._w = w;
+
+  this.onChange.dispatch();
+
+  return this;
+};
+
+/**
  * @method EZ3.Quaternion#copy
  * @param {EZ3.Quaternion} [q]
  * @return {EZ3.Quaternion}
@@ -472,6 +491,109 @@ EZ3.Quaternion.prototype.toMatrix3 = function(mode, q) {
   return matrix;
 };
 
+
+/**
+ * @method EZ3.Quaternion#toMatrix4
+ * @param {Number} mode
+ * @param {EZ3.Quaternion} [q]
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Quaternion.prototype.toMatrix4 = function(mode, q) {
+  var matrix = new EZ3.Matrix4();
+  var yy2;
+  var xy2;
+  var xz2;
+  var yz2;
+  var zz2;
+  var wz2;
+  var wy2;
+  var wx2;
+  var xx2;
+
+  if (q !== undefined) {
+    yy2 = 2.0 * q.y * q.y;
+    xy2 = 2.0 * q.x * q.y;
+    xz2 = 2.0 * q.x * q.z;
+    yz2 = 2.0 * q.y * q.z;
+    zz2 = 2.0 * q.z * q.z;
+    wz2 = 2.0 * q.w * q.z;
+    wy2 = 2.0 * q.w * q.y;
+    wx2 = 2.0 * q.w * q.x;
+    xx2 = 2.0 * q.x * q.x;
+  } else {
+    yy2 = 2.0 * this._y * this._y;
+    xy2 = 2.0 * this._x * this._y;
+    xz2 = 2.0 * this._x * this._z;
+    yz2 = 2.0 * this._y * this._z;
+    zz2 = 2.0 * this._z * this._z;
+    wz2 = 2.0 * this._w * this._z;
+    wy2 = 2.0 * this._w * this._y;
+    wx2 = 2.0 * this._w * this._x;
+    xx2 = 2.0 * this._x * this._x;
+  }
+
+  matrix.elements[0] = -yy2 - zz2 + 1.0;
+  matrix.elements[4] = xy2 - mode * wz2;
+  matrix.elements[8] = xz2 + mode * wy2;
+
+
+  matrix.elements[1] = xy2 + mode * wz2;
+  matrix.elements[5] = -xx2 - zz2 + 1.0;
+  matrix.elements[9] = yz2 - mode * wx2;
+
+  matrix.elements[2] = xz2 - mode * wy2;
+  matrix.elements[6] = yz2 + mode * wx2;
+  matrix.elements[10] = -xx2 - yy2 + 1.0;
+
+  return matrix;
+};
+/*
+
+var n00 = te[0];
+var n10 = te[1];
+var n20 = te[2];
+var n30 = te[3];
+var n01 = te[4];
+var n11 = te[5];
+var n21 = te[6];
+var n31 = te[7];
+var n02 = te[8];
+var n12 = te[9];
+var n22 = te[10];
+var n32 = te[11];
+var n03 = te[12];
+var n13 = te[13];
+var n23 = te[14];
+var n33 = te[15];
+glm::mat4 convertQuaternionToMatrix4(glm::vec4 quat, int mode)
+{
+	glm::mat4 mat;
+    float yy2 = 2.0f * quat[1] * quat[1];
+    float xy2 = 2.0f * quat[0] * quat[1];
+    float xz2 = 2.0f * quat[0] * quat[2];
+    float yz2 = 2.0f * quat[1] * quat[2];
+    float zz2 = 2.0f * quat[2] * quat[2];
+    float wz2 = 2.0f * quat[3] * quat[2];
+    float wy2 = 2.0f * quat[3] * quat[1];
+    float wx2 = 2.0f * quat[3] * quat[0];
+    float xx2 = 2.0f * quat[0] * quat[0];
+    mat[0][0] = - yy2 - zz2 + 1.0f;
+    mat[0][1] = xy2 -  mode * wz2;
+    mat[0][2] = xz2 +  mode * wy2;
+    mat[0][3] = 0;
+    mat[1][0] = xy2 + mode * wz2;
+    mat[1][1] = - xx2 - zz2 + 1.0f;
+    mat[1][2] = yz2 - mode * wx2;
+    mat[1][3] = 0;
+    mat[2][0] = xz2 - mode * wy2;
+    mat[2][1] = yz2 + mode * wx2;
+    mat[2][2] = - xx2 - yy2 + 1.0f;
+    mat[2][3] = 0;
+    mat[3][0] = mat[3][1] = mat[3][2] = 0;
+    mat[3][3] = 1;
+	return mat;
+}
+*/
 /**
  * @method EZ3.Quaternion#toString
  * @return {String}

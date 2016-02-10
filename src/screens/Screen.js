@@ -25,4 +25,8 @@ EZ3.Screen = function(position, size) {
    * @property {EZ3.Camera} camera
    */
   this.camera = null;
+  /**
+   * @property {EZ3.World} world
+   */
+  this.world = null;
 };

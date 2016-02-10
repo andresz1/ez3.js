@@ -51,7 +51,7 @@ EZ3.OFFRequest.prototype._parse = function(data, onLoad, onError) {
       indices.push(parseInt(face[i]));
   }
 
-  function init() {
+  function parse() {
     var lines = data.split('\n');
     var i = 0;
     var j = 0;
@@ -93,13 +93,13 @@ EZ3.OFFRequest.prototype._parse = function(data, onLoad, onError) {
       i++;
     }
 
-    that.asset.geometry.buffers.addTriangularBuffer(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
-    that.asset.geometry.buffers.addPositionBuffer(vertices);
+    that.asset.geometry.buffers.setTriangles(indices, (vertices.length / 3) > EZ3.Math.MAX_USHORT);
+    that.asset.geometry.buffers.setPositions(vertices);
 
     onLoad(that.url, that.asset);
   }
 
-  init();
+  parse();
 };
 
 /**
