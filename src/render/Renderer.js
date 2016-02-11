@@ -282,7 +282,7 @@ EZ3.Renderer.prototype.render = function(position, size, scene, camera) {
     spot: []
   };
   var depth = new EZ3.Vector3();
-  var empty = false;
+  var empty = true;
   var mesh;
   var i;
 
