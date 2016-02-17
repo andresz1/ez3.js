@@ -6,7 +6,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "EZ3.ArrayBuffer",
         "EZ3.AssetsManager",
         "EZ3.AstroidalEllipsoidGeometry",
-        "EZ3.Body",
         "EZ3.BoundingBox",
         "EZ3.BoundingSphere",
         "EZ3.Box",
@@ -39,7 +38,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "EZ3.InputManager",
         "EZ3.Keyboard",
         "EZ3.Light",
-        "EZ3.Link",
         "EZ3.MD2Request",
         "EZ3.MDLRequest",
         "EZ3.Material",
@@ -91,8 +89,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "EZ3.Vector3",
         "EZ3.Vector4",
         "EZ3.VertexBuffer",
-        "EZ3.VertexBufferAttribute",
-        "EZ3.World"
+        "EZ3.VertexBufferAttribute"
     ],
     "modules": [],
     "allModules": [],

@@ -14,12 +14,12 @@
  EZ3.MD2Request.prototype.constructor = EZ3.MD2Request;
 
  /**
-  * @method EZ3.MD2Request#_parse
+  * @method EZ3.MD2Request#_processLoad
   * @param {ArrayBuffer} data
   * @param {Function} onLoad
   * @param {Function} onError
   */
- EZ3.MD2Request.prototype._parse = function(data, onLoad, onError) {
+ EZ3.MD2Request.prototype._processLoad = function(data, onLoad, onError) {
  };
 
  /**
@@ -37,7 +37,7 @@
      if (failed)
        return onError(that.url);
 
-     that._parse(assets.get(that.url).data, onLoad, onError);
+     that._processLoad(assets.get(that.url).data, onLoad, onError);
    });
 
    requests.send();

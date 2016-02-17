@@ -18,6 +18,8 @@ EZ3.TorusGeometry = function(resolution, radiouses) {
    * @default new EZ3.Vector2(7, 3)
    */
   this.radiouses = radiouses || new EZ3.Vector2(7, 3);
+
+  this.updateData();
 };
 
 EZ3.TorusGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
@@ -66,10 +68,7 @@ EZ3.TorusGeometry.prototype._computeData = function() {
 
       vertices.push(vertex.x, vertex.y, vertex.z);
 
-      vertex.sub(center);
-
-      if (!vertex.isZeroVector())
-        vertex.normalize();
+      vertex.sub(center).normalize();
 
       normals.push(vertex.x, vertex.y, vertex.z);
 

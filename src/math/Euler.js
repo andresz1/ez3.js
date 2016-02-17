@@ -1,5 +1,4 @@
 /**
- * Representation of a Euler angles.
  * @class EZ3.Euler
  * @constructor
  * @param {Number} [x]
@@ -60,14 +59,6 @@ EZ3.Euler.prototype.set = function(x, y, z, order) {
 };
 
 /**
- * @method EZ3.Euler#clone
- * @return {EZ3.Euler}
- */
-EZ3.Euler.prototype.clone = function() {
-  return new this.constructor(this._x, this._y, this._z, this._order);
-};
-
-/**
  * @method EZ3.Euler#set
  * @param {EZ3.Euler} euler
  * @return {EZ3.Euler}
@@ -81,6 +72,14 @@ EZ3.Euler.prototype.copy = function(e) {
   this.onChange.dispatch();
 
   return this;
+};
+
+/**
+ * @method EZ3.Euler#clone
+ * @return {EZ3.Euler}
+ */
+EZ3.Euler.prototype.clone = function() {
+  return new this.constructor(this._x, this._y, this._z, this._order);
 };
 
 /**
@@ -223,14 +222,6 @@ EZ3.Euler.prototype.isDiff = function(e) {
  */
 EZ3.Euler.prototype.toVector3 = function() {
   return new EZ3.Vector3(this._x, this._y, this._z);
-};
-
-/**
- * @method EZ3.Euler#toString
- * @return {String}
- */
-EZ3.Euler.prototype.toString = function() {
-  return 'EZ3.Euler[' + this._x + ', ' + this._y + ', ' + this._z + ', ' + this._order + ']';
 };
 
 Object.defineProperty(EZ3.Euler.prototype, 'x', {

@@ -40,8 +40,8 @@ EZ3.Geometry.prototype.computeBoundingVolumes = function() {
     v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
     box.expand(v);
   }
-
-  center = box.getCenter();
+  
+  center = box.center();
 
   for (i = 0; i < vertices.length; i += 3) {
     v.set(vertices[i], vertices[i + 1], vertices[i + 2]);

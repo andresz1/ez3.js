@@ -1,6 +1,6 @@
 {
   "name": "ez3",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "JavaScript 3D library",
   "main": "build/ez3.js",
   "repository": {

@@ -1,11 +1,12 @@
 /**
- * Representation of a 4x4 matrix.
  * @class EZ3.Matrix4
  * @constructor
  * @param {Number|Number[]} [value]
  */
 EZ3.Matrix4 = function(value) {
-  this.elements = null;
+  /**
+   * @property {Number[]} elements
+   */
 
   if (typeof value === 'number') {
     this.elements = [
@@ -14,18 +15,46 @@ EZ3.Matrix4 = function(value) {
       0.0, 0.0, value, 0.0,
       0.0, 0.0, 0.0, value
     ];
-  } else if (value instanceof Array && value.length === 16) {
-    this.elements = [
-      value[0], value[1], value[2], value[3],
-      value[4], value[5], value[6], value[7],
-      value[8], value[9], value[10], value[11],
-      value[12], value[13], value[14], value[15]
-    ];
-  } else
+  } else if (value instanceof Array)
+    this.elements = value.slice();
+  else
     this.identity();
 };
 
 EZ3.Matrix4.prototype.constructor = EZ3.Matrix4;
+
+/**
+ * @method EZ3.Matrix4#identity
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.identity = function() {
+  this.elements = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ];
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#copy
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.copy = function(m) {
+  this.elements = m.toArray();
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix4#clone
+ * @return {EZ3.Matrix4}
+ */
+EZ3.Matrix4.prototype.clone = function() {
+  return new EZ3.Matrix4(this.toArray());
+};
 
 /**
  * @method EZ3.Matrix4#transpose
@@ -140,7 +169,7 @@ EZ3.Matrix4.prototype.inverse = function(m) {
   var det = n11 * te[0] + n21 * te[4] + n31 * te[8] + n41 * te[12];
 
   if (!det)
-    return this.identity;
+    return this.identity();
 
   this.multiplyScalar(1 / det);
 
@@ -582,20 +611,6 @@ EZ3.Matrix4.prototype.lookAt = function(eye, center, up) {
 };
 
 /**
- * @method EZ3.Matrix4#identity
- * @return {EZ3.Matrix4}
- */
-EZ3.Matrix4.prototype.identity = function() {
-  this.elements = [
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
-  ];
-  return this;
-};
-
-/**
  * @method EZ3.Matrix4#yawPitchRoll
  * @param {Number} yaw
  * @param {Number} pitch
@@ -666,24 +681,19 @@ EZ3.Matrix4.prototype.determinant = function() {
 
 /**
  * @method EZ3.Matrix4#compose
+ * @param {EZ3.Vector3} pivot
  * @param {EZ3.Vector3} position
  * @param {EZ3.Vector3} rotation
  * @param {EZ3.Vector3} scale
  * @return {EZ3.Matrix4}
  */
-EZ3.Matrix4.prototype.compose = function(position, rotation, scale, pivot) {
+EZ3.Matrix4.prototype.compose = function(pivot, position, rotation, scale) {
   this.identity();
   this.translate(pivot);
   this.translate(position);
   this.mul(rotation.toMatrix4(-1));
   this.scale(scale);
   this.translate(pivot.clone().negate());
-
-  /*
-  this.setFromQuaternion(rotation);
-  this.setPosition(position);
-  this.scale(scale);
-  */
 
   return this;
 };
@@ -759,72 +769,11 @@ EZ3.Matrix4.prototype.getMaxScaleOnAxis = function() {
 };
 
 /**
- * @method EZ3.Matrix4#clone
- * @return {EZ3.Matrix4}
- */
-EZ3.Matrix4.prototype.clone = function() {
-  return new EZ3.Matrix4(this.toArray());
-};
-
-/**
- * @method EZ3.Matrix4#copy
- * @param {EZ3.Matrix4} m
- * @return {EZ3.Matrix4}
- */
-EZ3.Matrix4.prototype.copy = function(m) {
-  this.elements[0] = m.elements[0];
-  this.elements[1] = m.elements[1];
-  this.elements[2] = m.elements[2];
-  this.elements[3] = m.elements[3];
-
-  this.elements[4] = m.elements[4];
-  this.elements[5] = m.elements[5];
-  this.elements[6] = m.elements[6];
-  this.elements[7] = m.elements[7];
-
-  this.elements[8] = m.elements[8];
-  this.elements[9] = m.elements[9];
-  this.elements[10] = m.elements[10];
-  this.elements[11] = m.elements[11];
-
-  this.elements[12] = m.elements[12];
-  this.elements[13] = m.elements[13];
-  this.elements[14] = m.elements[14];
-  this.elements[15] = m.elements[15];
-
-  return this;
-};
-
-/**
  * @method EZ3.Matrix4#toArray
  * @return {Number[]}
  */
 EZ3.Matrix4.prototype.toArray = function() {
-  return this.elements;
-};
-
-/**
- * @method EZ3.Matrix4#toString
- * @return {String}
- */
-EZ3.Matrix4.prototype.toString = function() {
-  return 'Matrix4[' + '\n' +
-    this.elements[0].toFixed(4) + ', ' +
-    this.elements[4].toFixed(4) + ', ' +
-    this.elements[8].toFixed(4) + ', ' +
-    this.elements[12].toFixed(4) + '\n' +
-    this.elements[1].toFixed(4) + ', ' +
-    this.elements[5].toFixed(4) + ', ' +
-    this.elements[9].toFixed(4) + ', ' +
-    this.elements[13].toFixed(4) + '\n' +
-    this.elements[2].toFixed(4) + ', ' +
-    this.elements[6].toFixed(4) + ', ' +
-    this.elements[10].toFixed(4) + ', ' +
-    this.elements[14].toFixed(4) + '\n' +
-    this.elements[3].toFixed(4) + ', ' +
-    this.elements[7].toFixed(4) + ', ' +
-    this.elements[11].toFixed(4) + ', ' +
-    this.elements[15].toFixed(4) + '\n]';
+  return this.elements.slice();
 };
 
 /**

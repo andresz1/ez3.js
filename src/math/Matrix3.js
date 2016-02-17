@@ -1,5 +1,4 @@
 /**
- * Representation of a 3x3 matrix.
  * @class EZ3.Matrix3
  * @constructor
  * @param {Number|Number[]} [value]
@@ -8,7 +7,6 @@ EZ3.Matrix3 = function(value) {
   /**
    * @property {Number[]} elements
    */
-  this.elements = null;
 
   if (typeof value === 'number') {
     this.elements = [
@@ -16,17 +14,46 @@ EZ3.Matrix3 = function(value) {
       0.0, value, 0.0,
       0.0, 0.0, value
     ];
-  } else if (value instanceof Array && value.length === 9) {
-    this.elements = [
-      value[0], value[1], value[2],
-      value[3], value[4], value[5],
-      value[6], value[7], value[8],
-    ];
-  } else
+  } else if (value instanceof Array)
+    this.elements = value.slice();
+  else
     this.identity();
 };
 
 EZ3.Matrix3.prototype.constructor = EZ3.Matrix3;
+
+/**
+ * @method EZ3.Matrix3#identity
+ * @return {EZ3.Matrix3}
+ */
+EZ3.Matrix3.prototype.identity = function() {
+  this.elements = [
+    1.0, 0.0, 0.0,
+    0.0, 1.0, 0.0,
+    0.0, 0.0, 1.0
+  ];
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix3#copy
+ * @param {EZ3.Matrix3} m
+ * @return {EZ3.Matrix3}
+ */
+EZ3.Matrix3.prototype.copy = function(m) {
+  this.elements = m.toArray();
+
+  return this;
+};
+
+/**
+ * @method EZ3.Matrix3#clone
+ * @return {EZ3.Matrix3}
+ */
+EZ3.Matrix3.prototype.clone = function() {
+  return new EZ3.Matrix3(this.toArray());
+};
 
 /**
  * @method EZ3.Matrix3#add
@@ -204,6 +231,35 @@ EZ3.Matrix3.prototype.mul = function(m1, m2) {
 };
 
 /**
+ * @method EZ3.Matrix3#inverse
+ * @param {EZ3.Matrix3} [m]
+ * @return {EZ3.Matrix3}
+ */
+EZ3.Matrix3.prototype.inverse = function(m) {
+  var e = m.elements;
+  var det;
+
+  this.elements[0] = e[10] * e[5] - e[6] * e[9];
+  this.elements[1] = -e[10] * e[1] + e[2] * e[9];
+  this.elements[2] = e[6] * e[1] - e[2] * e[5];
+  this.elements[3] = -e[10] * e[4] + e[6] * e[8];
+  this.elements[4] = e[10] * e[0] - e[2] * e[8];
+  this.elements[5] = -e[6] * e[0] + e[2] * e[4];
+  this.elements[6] = e[9] * e[4] - e[5] * e[8];
+  this.elements[7] = -e[9] * e[0] + e[1] * e[8];
+  this.elements[8] = e[5] * e[0] - e[1] * e[4];
+
+  det = e[0] * this.elements[0] + e[1] * this.elements[3] + e[2] * this.elements[6];
+
+  if (det === 0)
+    return this.identity();
+
+  this.scale(1.0 / det);
+
+  return this;
+};
+
+/**
  * @method EZ3.Matrix3#transpose
  * @param {EZ3.Matrix3} [m]
  * @return {EZ3.Matrix3}
@@ -268,74 +324,13 @@ EZ3.Matrix3.prototype.setFromQuaternion = function(q) {
 };
 
 /**
- * @method EZ3.Matrix3#inverse
- * @param {EZ3.Matrix3} [m]
- * @return {EZ3.Matrix3}
- */
-EZ3.Matrix3.prototype.inverse = function(m) {
-  var e = m.elements;
-  var det;
-
-  this.elements[0] = e[10] * e[5] - e[6] * e[9];
-  this.elements[1] = -e[10] * e[1] + e[2] * e[9];
-  this.elements[2] = e[6] * e[1] - e[2] * e[5];
-  this.elements[3] = -e[10] * e[4] + e[6] * e[8];
-  this.elements[4] = e[10] * e[0] - e[2] * e[8];
-  this.elements[5] = -e[6] * e[0] + e[2] * e[4];
-  this.elements[6] = e[9] * e[4] - e[5] * e[8];
-  this.elements[7] = -e[9] * e[0] + e[1] * e[8];
-  this.elements[8] = e[5] * e[0] - e[1] * e[4];
-
-  det = e[0] * this.elements[0] + e[1] * this.elements[3] + e[2] * this.elements[6];
-
-  if (det === 0)
-    return this.identity();
-
-  this.scale(1.0 / det);
-
-  return this;
-};
-
-/**
- * @method EZ3.Matrix3#normalFromMat4
+ * @method EZ3.Matrix3#setNormalFromMatrix4
  * @param {EZ3.Matrix4} m
  * @return {EZ3.Matrix3}
  */
-EZ3.Matrix3.prototype.normalFromMat4 = function(m) {
+EZ3.Matrix3.prototype.setNormalFromMatrix4 = function(m) {
   this.inverse(m).transpose();
 
-  return this;
-};
-
-/**
- * @method EZ3.Matrix3#identity
- * @return {EZ3.Matrix3}
- */
-EZ3.Matrix3.prototype.identity = function() {
-  this.elements = [
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0
-  ];
-
-  return this;
-};
-
-/**
- * @method EZ3.Matrix3#clone
- * @return {EZ3.Matrix3}
- */
-EZ3.Matrix3.prototype.clone = function() {
-  return new EZ3.Matrix3(this.elements);
-};
-
-/**
- * @method EZ3.Matrix3#copy
- * @param {EZ3.Matrix3} m
- * @return {EZ3.Matrix3}
- */
-EZ3.Matrix3.prototype.copy = function(m) {
-  this.elements = m.elements;
   return this;
 };
 
@@ -344,24 +339,7 @@ EZ3.Matrix3.prototype.copy = function(m) {
  * @return {Number[]}
  */
 EZ3.Matrix3.prototype.toArray = function() {
-  return this.elements;
-};
-
-/**
- * @method EZ3.Matrix3#toString
- * @return {String}
- */
-EZ3.Matrix3.prototype.toString = function() {
-  return 'Matrix3[' + '\n' +
-    this.elements[0].toFixed(4) + ', ' +
-    this.elements[3].toFixed(4) + ', ' +
-    this.elements[6].toFixed(4) + '\n' +
-    this.elements[1].toFixed(4) + ', ' +
-    this.elements[4].toFixed(4) + ', ' +
-    this.elements[7].toFixed(4) + '\n' +
-    this.elements[2].toFixed(4) + ', ' +
-    this.elements[5].toFixed(4) + ', ' +
-    this.elements[8].toFixed(4) + '\n]';
+  return this.elements.slice();
 };
 
 /**

@@ -2,19 +2,11 @@
  * @class EZ3.BoundingSphere
  * @extends EZ3.Mesh
  * @constructor
- * @param {EZ3.Geometry} [geometry]
+ * @param {EZ3.Sphere} sphere
  * @param {EZ3.Vector2} [resolution]
  * @param {EZ3.Material} [material]
  */
-EZ3.BoundingSphere = function(geometry, resolution, material) {
-  var sphere;
-
-  if (geometry instanceof EZ3.PrimitiveGeometry)
-    geometry.updateData();
-
-  geometry.updateBoundingVolumes();
-
-  sphere = geometry.boundingSphere;
+EZ3.BoundingSphere = function(sphere, resolution, material) {
   geometry = new EZ3.SphereGeometry(resolution);
 
   if (!material) {
@@ -25,7 +17,7 @@ EZ3.BoundingSphere = function(geometry, resolution, material) {
     EZ3.Mesh.call(this, geometry, material);
 
   this.position.copy(sphere.center);
-  this.scale.set(sphere.radius);
+  this.scale.set(sphere.radius, sphere.radius, sphere.radius);
 };
 
 EZ3.BoundingSphere.prototype = Object.create(EZ3.Mesh.prototype);

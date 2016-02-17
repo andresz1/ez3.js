@@ -1,5 +1,4 @@
 /**
- * Representation of a 4D vector.
  * @class EZ3.Vector4
  * @constructor
  * @param {Number} [x]
@@ -7,7 +6,6 @@
  * @param {Number} [z]
  * @param {Number} [w]
  */
-
 EZ3.Vector4 = function(x, y, z, w) {
   /**
    * @property {Number} x
@@ -29,12 +27,11 @@ EZ3.Vector4 = function(x, y, z, w) {
    * @default 0
    */
 
-
-  if (typeof x === 'number') {
+  if (x !== undefined) {
     this.x = x;
-    this.y = (typeof y === 'number') ? y : x;
-    this.z = (typeof z === 'number') ? z : x;
-    this.w = (typeof w === 'number') ? w : x;
+    this.y = (y !== undefined) ? y : x;
+    this.z = (z !== undefined) ? z : x;
+    this.w = (w !== undefined) ? w : x;
   } else {
     this.x = 0.0;
     this.y = 0.0;
@@ -44,6 +41,45 @@ EZ3.Vector4 = function(x, y, z, w) {
 };
 
 EZ3.Vector4.prototype.constructor = EZ3.Vector4;
+
+/**
+ * @method EZ3.Vector4#set
+ * @param {Number} [x]
+ * @param {Number} [y]
+ * @param {Number} [z]
+ * @param {Number} [w]
+ * @return {EZ3.Vector4}
+ */
+EZ3.Vector4.prototype.set = function(x, y, z, w) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  this.w = w;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector4#copy
+ * @param {EZ3.Vector4} v
+ * @return {EZ3.Vector4}
+ */
+EZ3.Vector4.prototype.copy = function(v) {
+  this.x = v.x;
+  this.y = v.y;
+  this.z = v.z;
+  this.w = v.w;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector4#clone
+ * @return {EZ3.Vector4}
+ */
+EZ3.Vector4.prototype.clone = function() {
+  return new EZ3.Vector4(this.x, this.y, this.z, this.w);
+};
 
 /**
  * @method EZ3.Vector4#add
@@ -90,21 +126,6 @@ EZ3.Vector4.prototype.sub = function(v1, v2) {
 };
 
 /**
- * @method EZ3.Vector4#set
- * @param {Number} x
- * @param {Number} y
- * @param {Number} z
- * @param {Number} w
- * @return {EZ3.Vector4}
- */
-EZ3.Vector4.prototype.set = function(x, y, z, w) {
-  this.x = x;
-  this.y = y;
-  this.z = z;
-  this.w = w;
-};
-
-/**
  * @method EZ3.Vector4#scale
  * @param {Number} s
  * @param {EZ3.Vector4} [v]
@@ -128,14 +149,11 @@ EZ3.Vector4.prototype.scale = function(s, v) {
 
 /**
  * @method EZ3.Vector4#dot
- * @param {EZ3.Vector4} [v]
+ * @param {EZ3.Vector4} v
  * @return {Number}
  */
 EZ3.Vector4.prototype.dot = function(v) {
-  if (v !== undefined)
-    return v.x * this.x + v.y * this.y + v.z * this.z + v.w * this.w;
-  else
-    return -1;
+  return v.x * this.x + v.y * this.y + v.z * this.z + v.w * this.w;
 };
 
 /**
@@ -252,36 +270,24 @@ EZ3.Vector4.prototype.length = function() {
  */
 EZ3.Vector4.prototype.normalize = function(v) {
   var l;
+  var u;
 
   if (v !== undefined) {
     l = v.length();
 
     if (l > 0) {
-      v.scale(1.0 / l);
+      u = v.clone().scale(1.0 / l);
 
-      this.x = v.x;
-      this.y = v.y;
-      this.z = v.z;
-      this.w = v.w;
-    } else {
-      this.x = 0;
-      this.y = 0;
-      this.z = 0;
-      this.w = 0;
+      this.x = u.x;
+      this.y = u.y;
+      this.z = u.z;
+      this.w = u.w;
     }
   } else {
     l = this.length();
 
-    if (l > 0) {
+    if (l > 0)
       this.scale(1.0 / l);
-
-      return this;
-    } else {
-      this.x = 0;
-      this.y = 0;
-      this.z = 0;
-      this.w = 0;
-    }
   }
 
   return this;
@@ -309,28 +315,6 @@ EZ3.Vector4.prototype.negate = function(v) {
 };
 
 /**
- * @method EZ3.Vector4#copy
- * @param {EZ3.Vector4} v
- * @return {EZ3.Vector4}
- */
-EZ3.Vector4.prototype.copy = function(v) {
-  this.x = v.x;
-  this.y = v.y;
-  this.z = v.z;
-  this.w = v.w;
-
-  return this;
-};
-
-/**
- * @method EZ3.Vector4#clone
- * @return {EZ3.Vector4}
- */
-EZ3.Vector4.prototype.clone = function() {
-  return new EZ3.Vector4(this.x, this.y, this.z, this.w);
-};
-
-/**
  * @method EZ3.Vector4#isEqual
  * @param {EZ3.Vector4} v
  * @return {Boolean}
@@ -340,32 +324,6 @@ EZ3.Vector4.prototype.isEqual = function(v) {
     return this.x === v.x && this.y === v.y && this.z === v.z && this.w === v.w;
   else
     return false;
-};
-
-/**
- * @method EZ3.Vector4#isZeroVector
- * @param {EZ3.Vector4} [v]
- * @return {Boolean}
- */
-EZ3.Vector4.prototype.isZeroVector = function(v) {
-  var ex;
-  var ey;
-  var ez;
-  var ew;
-
-  if (v !== undefined) {
-    ex = v.x === 0.0;
-    ey = v.y === 0.0;
-    ez = v.z === 0.0;
-    ew = v.w === 0.0;
-  } else {
-    ex = this.x === 0.0;
-    ey = this.y === 0.0;
-    ez = this.z === 0.0;
-    ew = this.w === 0.0;
-  }
-
-  return ex && ey && ez && ew;
 };
 
 /**
@@ -382,20 +340,12 @@ EZ3.Vector4.prototype.isDiff = function(v) {
  * @return {Number[]}
  */
 EZ3.Vector4.prototype.toArray = function() {
-  return [this.x, this.y, this.z, this.w];
-};
-
-/**
- * @method EZ3.Vector4#toString
- * @return {String}
- */
-EZ3.Vector4.prototype.toString = function() {
-  var x = this.x.toFixed(4);
-  var y = this.y.toFixed(4);
-  var z = this.z.toFixed(4);
-  var w = this.w.toFixed(4);
-
-  return 'Vector4[' + x + ', ' + y + ', ' + z + ', ' + w + ']';
+  return [
+    this.x,
+    this.y,
+    this.z,
+    this.w
+  ];
 };
 
 /**

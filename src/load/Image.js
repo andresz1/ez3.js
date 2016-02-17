@@ -2,24 +2,18 @@
  * @class EZ3.Image
  * @extends EZ3.File
  * @constructor
- * @param {Number} [width]
- * @param {Number} [height]
+ * @param {EZ3.Vector2} [size]
  * @param {Number} [format]
  * @param {Number[]} [data]
  */
-EZ3.Image = function(width, height, format, data) {
+EZ3.Image = function(size, format, data) {
   EZ3.File.call(this, data);
 
   /**
    * @property {Number} width
    * @default 0
    */
-  this.width = (width !== undefined)? width : 0;
-  /**
-   * @property {Number} height
-   * @default 0
-   */
-  this.height = (height !== undefined)? height : 0;
+  this.size = size || new EZ3.Vector2(0, 0);
   /**
    * @property {Number} format
    * @default EZ3.Image.RGBA
@@ -49,10 +43,10 @@ EZ3.Image.prototype.getGLFormat = function(gl) {
 EZ3.Image.prototype.getCanvas = function() {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
-  var image = context.createImageData(this.width, this.height);
+  var image = context.createImageData(this.size.x, this.size.y);
 
-  canvas.width = this.width;
-  canvas.height = this.height;
+  canvas.width = this.size.x;
+  canvas.height = this.size.y;
 
   image.data.set(new Uint8ClampedArray(this.data));
 
@@ -69,12 +63,12 @@ EZ3.Image.prototype.toPowerOfTwo = function() {
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
 
-  canvas.width = EZ3.Math.nextHighestPowerOfTwo(this.width);
-  canvas.height = EZ3.Math.nextHighestPowerOfTwo(this.height);
-  context.drawImage(this.getCanvas(), 0, 0, this.width, this.height, 0, 0, canvas.width, canvas.height);
+  canvas.width = EZ3.Math.nextHighestPowerOfTwo(this.size.x);
+  canvas.height = EZ3.Math.nextHighestPowerOfTwo(this.size.y);
+  context.drawImage(this.getCanvas(), 0, 0, this.size.x, this.size.y, 0, 0, canvas.width, canvas.height);
 
-  this.width = canvas.width;
-  this.height = canvas.height;
+  this.size.x = canvas.width;
+  this.size.y = canvas.height;
   this.data = new Uint8Array(context.getImageData(0, 0, canvas.width, canvas.height).data);
 
   return this;

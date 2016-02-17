@@ -13,12 +13,12 @@ EZ3.OFFRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.OFFRequest.prototype.constructor = EZ3.OFFRequest;
 
 /**
- * @method EZ3.OFFRequest#_parse
+ * @method EZ3.OFFRequest#_processLoad
  * @param {String} data
  * @param {Function} onLoad
  * @param {Function} onError
  */
-EZ3.OFFRequest.prototype._parse = function(data, onLoad, onError) {
+EZ3.OFFRequest.prototype._processLoad = function(data, onLoad, onError) {
   var that = this;
   var indices = [];
   var vertices = [];
@@ -117,7 +117,7 @@ EZ3.OFFRequest.prototype.send = function(onLoad, onError) {
     if (failed)
       return onError(that.url);
 
-    that._parse(assets.get(that.url).data, onLoad, onError);
+    that._processLoad(assets.get(that.url).data, onLoad, onError);
   });
 
   requests.send();

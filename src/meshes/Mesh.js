@@ -60,7 +60,7 @@ EZ3.Mesh.prototype.updateLines = function() {
  */
 EZ3.Mesh.prototype.updateNormal = function() {
   if (this.world.isDiff(this._cache.world)) {
-    this.normal.normalFromMat4(this.world);
+    this.normal.setNormalFromMatrix4(this.world);
     this._cache.world = this.world.clone();
   }
 };

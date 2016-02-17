@@ -18,6 +18,8 @@ EZ3.EllipsoidGeometry = function(resolution, radiouses) {
    * @default new EZ3.Vector3(10, 5, 10)
    */
   this.radiouses = radiouses || new EZ3.Vector3(10, 5, 10);
+
+  this.updateData();
 };
 
 EZ3.EllipsoidGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
@@ -62,8 +64,7 @@ EZ3.EllipsoidGeometry.prototype._computeData = function() {
       vertex.y /= this.radiouses.y;
       vertex.z /= this.radiouses.z;
 
-      if (!vertex.isZeroVector())
-        vertex.normalize();
+      vertex.normalize();
 
       normals.push(vertex.x, vertex.y, vertex.z);
 

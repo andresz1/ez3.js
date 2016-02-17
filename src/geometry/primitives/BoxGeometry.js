@@ -19,6 +19,8 @@ EZ3.BoxGeometry = function(resolution, dimensions) {
    * @default new EZ3.Vector3(1, 1, 1)
    */
   this.dimensions = dimensions || new EZ3.Vector3(1, 1, 1);
+
+  this.updateData();
 };
 
 EZ3.BoxGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);

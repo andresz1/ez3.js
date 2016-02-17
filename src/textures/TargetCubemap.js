@@ -8,12 +8,12 @@
  */
  EZ3.TargetCubemap = function(size, format, attachment) {
    EZ3.Cubemap.call(this,
-     new EZ3.Image(size.x, size.y, format, null),
-     new EZ3.Image(size.x, size.y, format, null),
-     new EZ3.Image(size.x, size.y, format, null),
-     new EZ3.Image(size.x, size.y, format, null),
-     new EZ3.Image(size.x, size.y, format, null),
-     new EZ3.Image(size.x, size.y, format, null),
+     new EZ3.Image(size, format, null),
+     new EZ3.Image(size, format, null),
+     new EZ3.Image(size, format, null),
+     new EZ3.Image(size, format, null),
+     new EZ3.Image(size, format, null),
+     new EZ3.Image(size, format, null),
      false
    );
 

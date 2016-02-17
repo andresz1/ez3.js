@@ -4,7 +4,6 @@
  * @param {HTMLElement} domElement
  * @param {HTMLRect} bounds
  */
-
 EZ3.Touch = function(domElement, bounds) {
   /**
    * @property {HTMLElement} _domElement
@@ -188,14 +187,80 @@ EZ3.Touch.prototype.getPointer = function(code) {
   return this._pointers[code];
 };
 
+/**
+ * @property {Number} POINTER_1
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_1 = 0;
+/**
+ * @property {Number} POINTER_2
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_2 = 1;
+/**
+ * @property {Number} POINTER_3
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_3 = 2;
+/**
+ * @property {Number} POINTER_4
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_4 = 3;
+/**
+ * @property {Number} POINTER_5
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_5 = 4;
+/**
+ * @property {Number} POINTER_6
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_6 = 5;
+/**
+ * @property {Number} POINTER_7
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_7 = 6;
+/**
+ * @property {Number} POINTER_8
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_8 = 7;
+/**
+ * @property {Number} POINTER_9
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_9 = 8;
+/**
+ * @property {Number} POINTER_10
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.POINTER_10 = 9;
+/**
+ * @property {Number} MAX_NUM_OF_POINTERS
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Touch.MAX_NUM_OF_POINTERS = 10;

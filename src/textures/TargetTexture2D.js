@@ -7,7 +7,7 @@
  * @param {Number} attachment
  */
  EZ3.TargetTexture2D = function(size, format, attachment) {
-   EZ3.Texture2D.call(this, new EZ3.Image(size.x, size.y, format, null), false);
+   EZ3.Texture2D.call(this, new EZ3.Image(size, format, null), false);
 
    /**
     * @property {Number} attachment

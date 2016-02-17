@@ -1,5 +1,4 @@
 /**
- * Math constants and functions.
  * @class EZ3.Math
  * @static
  */

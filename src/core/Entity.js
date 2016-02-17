@@ -46,6 +46,9 @@ EZ3.Entity = function() {
    */
   this.position = new EZ3.Vector3();
 
+  /**
+   * @property {EZ3.Vector3} pivot
+   */
   this.pivot = new EZ3.Vector3();
 
   /**
@@ -91,77 +94,61 @@ EZ3.Entity.prototype.remove = function(child) {
  * @param {EZ3.Vector3} [up]
  */
 EZ3.Entity.prototype.lookAt = function(target, up) {
-  var changed = false;
-
   target = target || new EZ3.Vector3();
   up = up || new EZ3.Vector3(0, 1, 0);
 
-  if (target.isDiff(this._cache.target)) {
-    this._cache.target = target.clone();
-    changed = true;
-  }
-
-  if (up.isDiff(this._cache.up)) {
-    this._cache.up = up.clone();
-    changed = true;
-  }
-
-  if (this.position.isDiff(this._cache.position))
-    changed = true;
-
-  if (changed)
-    this.quaternion.setFromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
+  this.quaternion.setFromRotationMatrix(new EZ3.Matrix4().lookAt(this.position, target, up));
 };
 
 /**
  * @method EZ3.Entity#updateWorld
  */
 EZ3.Entity.prototype.updateWorld = function() {
-  var scaleDirty = false;
-  var modelDirty = false;
-  var positionDirty = false;
-  var quaternionDirty = false;
-  var parentWorldDirty = false;
+  var changed = false;
 
   if (this.position.isDiff(this._cache.position)) {
     this._cache.position = this.position.clone();
-    positionDirty = true;
+    changed = true;
   }
 
   if (this.quaternion.isDiff(this._cache.quaternion)) {
     this._cache.quaternion = this.quaternion.clone();
-    quaternionDirty = true;
+    changed = true;
   }
 
   if (this.scale.isDiff(this._cache.scale)) {
     this._cache.scale = this.scale.clone();
-    scaleDirty = true;
+    changed = true;
   }
 
-  if (positionDirty || quaternionDirty || scaleDirty)
-    this.model.compose(this.position, this.quaternion, this.scale, this.pivot);
+  if (this.pivot.isDiff(this._cache.pivot)) {
+    this._cache.pivot = this.pivot.clone();
+    changed = true;
+  }
+
+  if (changed)
+    this.model.compose(this.pivot, this.position, this.quaternion, this.scale);
 
   if (!this.parent) {
-    modelDirty = this.model.isDiff(this._cache.model);
-
-    if (modelDirty) {
+    if (this.model.isDiff(this._cache.model)) {
       this.world = this.model.clone();
       this._cache.model = this.model.clone();
     }
   } else {
-    modelDirty = this.model.isDiff(this._cache.model);
-    parentWorldDirty = this.parent.world.isDiff(this._cache.parentWorld);
+    changed = false;
 
-    if (parentWorldDirty || modelDirty) {
-
-      if (modelDirty)
-        this._cache.model = this.model.clone();
-
-      if (parentWorldDirty)
-        this._cache.parentWorld = this.parent.world.clone();
-
-      this.world.mul(this.parent.world, this.model);
+    if (this.model.isDiff(this._cache.model)) {
+      this._cache.model = this.model.clone();
+      changed = true;
     }
+
+    if (this.parent.world.isDiff(this._cache.parentWorld)) {
+      this._cache.parentWorld = this.parent.world.clone();
+      changed = true;
+    }
+
+    if (changed)
+      this.world.mul(this.parent.world, this.model);
   }
 };
 
@@ -230,10 +217,10 @@ EZ3.Entity.prototype.getWorldDirection = function() {
 };
 
 /**
- * @method EZ3.Entity#getBoundingBox
+ * @method EZ3.Entity#getBoundingBoxTraverse
  * @return {EZ3.Vector3}
  */
-EZ3.Entity.prototype.getBoundingBox = function() {
+EZ3.Entity.prototype.getBoundingBoxTraverse = function() {
   var box = new EZ3.Box();
 
   this.traverse(function(entity) {
@@ -242,9 +229,6 @@ EZ3.Entity.prototype.getBoundingBox = function() {
     if (entity instanceof EZ3.Mesh) {
       geometry = entity.geometry;
 
-      if (geometry instanceof EZ3.PrimitiveGeometry)
-        geometry.updateData();
-
       geometry.updateBoundingVolumes();
 
       box.union(geometry.boundingBox);
@@ -252,4 +236,26 @@ EZ3.Entity.prototype.getBoundingBox = function() {
   });
 
   return box;
+};
+
+/**
+ * @method EZ3.Entity#getBoundingSphereTraverse
+ * @return {EZ3.Vector3}
+ */
+EZ3.Entity.prototype.getBoundingSphereTraverse = function() {
+  var box = new EZ3.Box();
+
+  this.traverse(function(entity) {
+    var geometry;
+
+    if (entity instanceof EZ3.Mesh) {
+      geometry = entity.geometry;
+
+      geometry.updateBoundingVolumes();
+
+      box.union(geometry.boundingBox);
+    }
+  });
+
+  return new EZ3.Sphere(box.center(), box.size().length() * 0.5);
 };

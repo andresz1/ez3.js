@@ -1,5 +1,4 @@
 /**
- * Representation of a quaternion.
  * @class EZ3.Quaternion
  * @constructor
  * @param {Number} [x]
@@ -40,6 +39,49 @@ EZ3.Quaternion = function(x, y, z, w) {
 };
 
 EZ3.Quaternion.prototype.constructor = EZ3.Quaternion;
+
+/**
+ * @method EZ3.Quaternion#set
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Number} z
+ * @param {Number} w
+ * @return {EZ3.Quaternion}
+ */
+EZ3.Quaternion.prototype.set = function(x, y, z, w) {
+  this._x = x;
+  this._y = y;
+  this._z = z;
+  this._w = w;
+
+  this.onChange.dispatch();
+
+  return this;
+};
+
+/**
+ * @method EZ3.Quaternion#copy
+ * @param {EZ3.Quaternion} [q]
+ * @return {EZ3.Quaternion}
+ */
+EZ3.Quaternion.prototype.copy = function(q) {
+  this._x = q.x;
+  this._y = q.y;
+  this._z = q.z;
+  this._w = q.w;
+
+  this.onChange.dispatch();
+
+  return this;
+};
+
+/**
+ * @method EZ3.Quaternion#clone
+ * @return {EZ3.Quaternion}
+ */
+EZ3.Quaternion.prototype.clone = function() {
+  return new EZ3.Quaternion(this._x, this._y, this._z, this._w);
+};
 
 /**
  * @method EZ3.Quaternion#add
@@ -114,6 +156,15 @@ EZ3.Quaternion.prototype.scale = function(s, q) {
 };
 
 /**
+ * @method EZ3.Quaternion#dot
+ * @param {EZ3.Quaternion} q
+ * @return {Number}
+ */
+EZ3.Quaternion.prototype.dot = function(q) {
+  return q.x * this._x + q.y * this._y + q.z * this._z + q.w * this._w;
+};
+
+/**
  * @method EZ3.Quaternion#mul
  * @param {EZ3.Quaternion} q1
  * @param {EZ3.Quaternion} [q2]
@@ -157,54 +208,41 @@ EZ3.Quaternion.prototype.mul = function(q1, q2) {
 };
 
 /**
+ * @method EZ3.Quaternion#length
+ * @return {Number}
+ */
+EZ3.Quaternion.prototype.length = function() {
+  return Math.sqrt(this.dot(this));
+};
+
+/**
  * @method EZ3.Quaternion#normalize
  * @param {EZ3.Quaternion} [q]
  * @return {EZ3.Quaternion}
  */
 EZ3.Quaternion.prototype.normalize = function(q) {
-  var len;
-  var s2;
-  var x2;
-  var y2;
-  var z2;
+  var l;
+  var u;
 
   if (q !== undefined) {
-    len = Math.sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+    l = q.length();
 
-    if (len > 0.0) {
-      len = 1.0 / len;
-      q.scale(len);
+    if (l > 0) {
+      u = new EZ3.Quaternion().copy(q).scale(1.0 / l);
 
-      this._x = q.x;
-      this._y = q.y;
-      this._z = q.z;
-      this._w = q.w;
-    } else {
-      this._x = 0;
-      this._y = 0;
-      this._z = 0;
-      this._w = 1;
+      this._x = u.x;
+      this._y = u.y;
+      this._z = u.z;
+      this._w = u.w;
+
+      this.onChange.dispatch();
     }
   } else {
-    x2 = this._x * this._x;
-    y2 = this._y * this._y;
-    z2 = this._z * this._z;
-    s2 = this._w * this._w;
+    l = this.length();
 
-    len = Math.sqrt(s2 + x2 + y2 + z2);
-
-    if (len > 0.0) {
-      len = 1.0 / len;
-      this._scale(len);
-    } else {
-      this._x = 0;
-      this._y = 0;
-      this._z = 0;
-      this._w = 1;
-    }
+    if (l > 0)
+      this.scale(1.0 / l);
   }
-
-  this.onChange.dispatch();
 
   return this;
 };
@@ -230,62 +268,6 @@ EZ3.Quaternion.prototype.inverse = function(q) {
   this.onChange.dispatch();
 
   return this;
-};
-
-/**
- * @method EZ3.Quaternion#length
- * @return {Number}
- */
-EZ3.Quaternion.prototype.length = function() {
-  var x2 = this._x * this._x;
-  var y2 = this._y * this._y;
-  var z2 = this._z * this._z;
-  var s2 = this._w * this._w;
-
-  return Math.sqrt(s2 + x2 + y2 + z2);
-};
-
-/**
- * @method EZ3.Quaternion#set
- * @param {Number} x
- * @param {Number} y
- * @param {Number} z
- * @param {Number} w
- * @return {EZ3.Quaternion}
- */
-EZ3.Quaternion.prototype.set = function(x, y, z, w) {
-  this._x = x;
-  this._y = y;
-  this._z = z;
-  this._w = w;
-
-  this.onChange.dispatch();
-
-  return this;
-};
-
-/**
- * @method EZ3.Quaternion#copy
- * @param {EZ3.Quaternion} [q]
- * @return {EZ3.Quaternion}
- */
-EZ3.Quaternion.prototype.copy = function(q) {
-  this._x = q.x;
-  this._y = q.y;
-  this._z = q.z;
-  this._w = q.w;
-
-  this.onChange.dispatch();
-
-  return this;
-};
-
-/**
- * @method EZ3.Quaternion#clone
- * @return {EZ3.Quaternion}
- */
-EZ3.Quaternion.prototype.clone = function() {
-  return new EZ3.Quaternion(this._x, this._y, this._z, this._w);
 };
 
 /**
@@ -546,65 +528,6 @@ EZ3.Quaternion.prototype.toMatrix4 = function(mode, q) {
   matrix.elements[10] = -xx2 - yy2 + 1.0;
 
   return matrix;
-};
-/*
-
-var n00 = te[0];
-var n10 = te[1];
-var n20 = te[2];
-var n30 = te[3];
-var n01 = te[4];
-var n11 = te[5];
-var n21 = te[6];
-var n31 = te[7];
-var n02 = te[8];
-var n12 = te[9];
-var n22 = te[10];
-var n32 = te[11];
-var n03 = te[12];
-var n13 = te[13];
-var n23 = te[14];
-var n33 = te[15];
-glm::mat4 convertQuaternionToMatrix4(glm::vec4 quat, int mode)
-{
-	glm::mat4 mat;
-    float yy2 = 2.0f * quat[1] * quat[1];
-    float xy2 = 2.0f * quat[0] * quat[1];
-    float xz2 = 2.0f * quat[0] * quat[2];
-    float yz2 = 2.0f * quat[1] * quat[2];
-    float zz2 = 2.0f * quat[2] * quat[2];
-    float wz2 = 2.0f * quat[3] * quat[2];
-    float wy2 = 2.0f * quat[3] * quat[1];
-    float wx2 = 2.0f * quat[3] * quat[0];
-    float xx2 = 2.0f * quat[0] * quat[0];
-    mat[0][0] = - yy2 - zz2 + 1.0f;
-    mat[0][1] = xy2 -  mode * wz2;
-    mat[0][2] = xz2 +  mode * wy2;
-    mat[0][3] = 0;
-    mat[1][0] = xy2 + mode * wz2;
-    mat[1][1] = - xx2 - zz2 + 1.0f;
-    mat[1][2] = yz2 - mode * wx2;
-    mat[1][3] = 0;
-    mat[2][0] = xz2 - mode * wy2;
-    mat[2][1] = yz2 + mode * wx2;
-    mat[2][2] = - xx2 - yy2 + 1.0f;
-    mat[2][3] = 0;
-    mat[3][0] = mat[3][1] = mat[3][2] = 0;
-    mat[3][3] = 1;
-	return mat;
-}
-*/
-/**
- * @method EZ3.Quaternion#toString
- * @return {String}
- */
-EZ3.Quaternion.prototype.toString = function() {
-  var x = this._x.toFixed(4);
-  var y = this._y.toFixed(4);
-  var z = this._z.toFixed(4);
-  var w = this._w.toFixed(4);
-
-  return 'Quaternion[' + x + ', ' + y + ', ' + z + ', ' + w + ' ]';
 };
 
 Object.defineProperty(EZ3.Quaternion.prototype, 'x', {

@@ -13,6 +13,8 @@ EZ3.PlaneGeometry = function(resolution) {
    * @default new EZ3.Vector2(2, 2)
    */
   this.resolution = resolution || new EZ3.Vector2(2, 2);
+
+  this.updateData();
 };
 
 EZ3.PlaneGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);

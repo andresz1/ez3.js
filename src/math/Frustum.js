@@ -1,8 +1,17 @@
 /**
  * @class EZ3.Frustum
  * @constructor
+ * @param {EZ3.Plane} [p0]
+ * @param {EZ3.Plane} [p1]
+ * @param {EZ3.Plane} [p2]
+ * @param {EZ3.Plane} [p3]
+ * @param {EZ3.Plane} [p4]
+ * @param {EZ3.Plane} [p5]
  */
 EZ3.Frustum = function(p0, p1, p2, p3, p4, p5) {
+  /**
+   * @property {EZ3.Plane[]} planes
+   */
   this.planes = [
     (p0 !== undefined) ? p0 : new EZ3.Plane(),
     (p1 !== undefined) ? p1 : new EZ3.Plane(),
@@ -15,6 +24,16 @@ EZ3.Frustum = function(p0, p1, p2, p3, p4, p5) {
 
 EZ3.Frustum.prototype.constructor = EZ3.Frustum;
 
+/**
+ * @method EZ3.Frustum#set
+ * @param {EZ3.Plane} p0
+ * @param {EZ3.Plane} p1
+ * @param {EZ3.Plane} p2
+ * @param {EZ3.Plane} p3
+ * @param {EZ3.Plane} p4
+ * @param {EZ3.Plane} p5
+ * @return {EZ3.Frustum}
+ */
 EZ3.Frustum.prototype.set = function(p0, p1, p2, p3, p4, p5) {
   var planes = this.planes;
 
@@ -28,6 +47,11 @@ EZ3.Frustum.prototype.set = function(p0, p1, p2, p3, p4, p5) {
   return this;
 };
 
+/**
+ * @method EZ3.Frustum#copy
+ * @param {EZ3.Frustum} frustum
+ * @return {EZ3.Frustum}
+ */
 EZ3.Frustum.prototype.copy = function(frustum) {
   var planes = this.planes;
 
@@ -37,6 +61,26 @@ EZ3.Frustum.prototype.copy = function(frustum) {
   return this;
 };
 
+/**
+ * @method EZ3.Frustum#clone
+ * @return {EZ3.Frustum}
+ */
+EZ3.Frustum.prototype.clone = function() {
+  var p0 = this.planes[0];
+  var p1 = this.planes[1];
+  var p2 = this.planes[2];
+  var p3 = this.planes[3];
+  var p4 = this.planes[4];
+  var p5 = this.planes[5];
+
+  return new EZ3.Frustum(p0, p1, p2, p3, p4, p5);
+};
+
+/**
+ * @method EZ3.Frustum#setFromMatrix4
+ * @param {EZ3.Matrix4} m
+ * @return {EZ3.Frustum}
+ */
 EZ3.Frustum.prototype.setFromMatrix4 = function(m) {
   var planes = this.planes;
   var me = m.elements;
@@ -67,7 +111,11 @@ EZ3.Frustum.prototype.setFromMatrix4 = function(m) {
   return this;
 };
 
-
+/**
+ * @method EZ3.Frustum#intersectsMesh
+ * @param {EZ3.Mesh} mesh
+ * @return {Boolean}
+ */
 EZ3.Frustum.prototype.intersectsMesh = function(mesh) {
   var geometry = mesh.geometry;
   var sphere = new EZ3.Sphere();
@@ -80,6 +128,11 @@ EZ3.Frustum.prototype.intersectsMesh = function(mesh) {
   return this.intersectsSphere(sphere);
 };
 
+/**
+ * @method EZ3.Frustum#intersectsSphere
+ * @param {EZ3.Sphere} sphere
+ * @return {Boolean}
+ */
 EZ3.Frustum.prototype.intersectsSphere = function(sphere) {
   var planes = this.planes;
   var center = sphere.center;
@@ -92,6 +145,11 @@ EZ3.Frustum.prototype.intersectsSphere = function(sphere) {
   return true;
 };
 
+/**
+ * @method EZ3.Frustum#intersectsBox
+ * @param {EZ3.Box} box
+ * @return {Boolean}
+ */
 EZ3.Frustum.prototype.intersectsBox = function(box) {
   var p1 = new EZ3.Vector3();
   var p2 = new EZ3.Vector3();

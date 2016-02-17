@@ -1,5 +1,4 @@
 /**
- * Representation of a 2D vector.
  * @class EZ3.Vector2
  * @constructor
  * @param {Number} [x]
@@ -26,6 +25,39 @@ EZ3.Vector2 = function(x, y) {
 };
 
 EZ3.Vector2.prototype.constructor = EZ3.Vector2;
+
+/**
+ * @method EZ3.Vector2#set
+ * @param {Number} x
+ * @param {Number} y
+ * @return {EZ3.Vector2}
+ */
+EZ3.Vector2.prototype.set = function(x, y) {
+  this.x = x;
+  this.y = y;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector2#copy
+ * @param {EZ3.Vector2} v
+ * @return {EZ3.Vector2}
+ */
+EZ3.Vector2.prototype.copy = function(v) {
+  this.x = v.x;
+  this.y = v.y;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector2#clone
+ * @return {EZ3.Vector2}
+ */
+EZ3.Vector2.prototype.clone = function() {
+  return new EZ3.Vector2(this.x, this.y);
+};
 
 /**
  * @method EZ3.Vector2#add
@@ -63,19 +95,6 @@ EZ3.Vector2.prototype.sub = function(v1, v2) {
 };
 
 /**
- * @method EZ3.Vector2#set
- * @param {Number} x
- * @param {Number} y
- * @return {EZ3.Vector2}
- */
-EZ3.Vector2.prototype.set = function(x, y) {
-  this.x = x;
-  this.y = y;
-
-  return this;
-};
-
-/**
  * @method EZ3.Vector2#scale
  * @param {Number} s
  * @param {EZ3.Vector2} [v]
@@ -99,10 +118,7 @@ EZ3.Vector2.prototype.scale = function(s, v) {
  * @return {Number}
  */
 EZ3.Vector2.prototype.dot = function(v) {
-  if (v !== undefined)
-    return v.x * this.x + v.y * this.y;
-  else
-    return -1;
+  return v.x * this.x + v.y * this.y;
 };
 
 /**
@@ -160,29 +176,22 @@ EZ3.Vector2.prototype.length = function() {
  */
 EZ3.Vector2.prototype.normalize = function(v) {
   var l;
+  var u;
 
   if (v !== undefined) {
     l = v.length();
 
     if (l > 0) {
-      l = 1.0 / l;
-      v.scale(l);
-      this.x = v.x;
-      this.y = v.y;
-    } else {
-      this.x = 0;
-      this.y = 0;
+      u = v.clone().scale(1.0 / l);
+
+      this.x = u.x;
+      this.y = u.y;
     }
   } else {
     l = this.length();
 
-    if (l > 0) {
-      l = 1.0 / l;
-      this.scale(l);
-    } else {
-      this.x = 0;
-      this.y = 0;
-    }
+    if (l > 0)
+      this.scale(1.0 / l);
   }
 
   return this;
@@ -203,26 +212,6 @@ EZ3.Vector2.prototype.negate = function(v) {
   }
 
   return this;
-};
-
-/**
- * @method EZ3.Vector2#copy
- * @param {EZ3.Vector2} v
- * @return {EZ3.Vector2}
- */
-EZ3.Vector2.prototype.copy = function(v) {
-  this.x = v.x;
-  this.y = v.y;
-
-  return this;
-};
-
-/**
- * @method EZ3.Vector2#clone
- * @return {EZ3.Vector2}
- */
-EZ3.Vector2.prototype.clone = function() {
-  return new EZ3.Vector2(this.x, this.y);
 };
 
 /**
@@ -247,29 +236,12 @@ EZ3.Vector2.prototype.isDiff = function(v) {
 };
 
 /**
- * @method EZ3.Vector2#isZeroVector
- * @param {EZ3.Vector2} v
- * @return {Boolean}
- */
-EZ3.Vector2.prototype.isZeroVector = function(v) {
-  if (v !== undefined)
-    return ((v.x === 0.0) && (v.y === 0.0));
-  else
-    return ((this.x === 0.0) && (this.y === 0.0));
-};
-
-/**
  * @method EZ3.Vector2#toArray
  * @return {Number[]}
  */
 EZ3.Vector2.prototype.toArray = function() {
-  return [this.x, this.y];
-};
-
-/**
- * @method EZ3.Vector2#toString
- * @return {String}
- */
-EZ3.Vector2.prototype.toString = function() {
-  return 'Vector2[' + this.x.toFixed(4) + ', ' + this.y.toFixed(4) + ']';
+  return [
+    this.x,
+    this.y
+  ];
 };

@@ -13,13 +13,13 @@ EZ3.OBJRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.OBJRequest.prototype.constructor = EZ3.OBJRequest;
 
 /**
- * @method EZ3.OBJRequest#_parseMTL
+ * @method EZ3.OBJRequest#_processLoadMTL
  * @param {String} baseUrl
  * @param {String} data
  * @param {EZ3.Material[]} materials
  * @param {EZ3.RequestManager} requests
  */
-EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests) {
+EZ3.OBJRequest.prototype._processLoadMTL = function(baseUrl, data, materials, requests) {
   var that = this;
   var currents;
 
@@ -110,11 +110,11 @@ EZ3.OBJRequest.prototype._parseMTL = function(baseUrl, data, materials, requests
 };
 
 /**
- * @method EZ3.OBJRequest#_parseOBJ
+ * @method EZ3.OBJRequest#_processLoadOBJ
  * @param {String} data
  * @param {Function} onLoad
  */
-EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
+EZ3.OBJRequest.prototype._processLoadOBJ = function(data, onLoad) {
   var that = this;
   var indices = [];
   var vertices = [];
@@ -392,7 +392,7 @@ EZ3.OBJRequest.prototype._parseOBJ = function(data, onLoad) {
 
     requests.onComplete.add(function() {
       for (i = 0; i < files.length; i++)
-        that._parseMTL(baseUrl, files[i].data, materials, requests);
+        that._processLoadMTL(baseUrl, files[i].data, materials, requests);
 
       requests.onComplete.removeAll();
       requests.onComplete.add(function() {
@@ -471,7 +471,7 @@ EZ3.OBJRequest.prototype.send = function(onLoad, onError) {
     if (failed)
       return onError(that.url, true);
 
-    that._parseOBJ(assets.get(that.url).data, onLoad);
+    that._processLoadOBJ(assets.get(that.url).data, onLoad);
   });
 
   requests.send();

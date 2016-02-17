@@ -188,8 +188,38 @@ EZ3.Mouse.prototype.disable = function() {
   }
 };
 
+/**
+ * @property {Number} LEFT_BUTTON
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Mouse.LEFT_BUTTON = 0;
+/**
+ * @property {Number} MIDDLE_BUTTON
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Mouse.MIDDLE_BUTTON = 1;
+/**
+ * @property {Number} RIGHT_BUTTON
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Mouse.RIGHT_BUTTON = 2;
+/**
+ * @property {Number} BACK_BUTTON
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Mouse.BACK_BUTTON = 3;
+/**
+ * @property {Number} FORWARD_BUTTON
+ * @memberof EZ3.Touch
+ * @static
+ * @final
+ */
 EZ3.Mouse.FORWARD_BUTTON = 4;

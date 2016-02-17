@@ -100,10 +100,10 @@ EZ3.Texture.prototype._getGLWrap = function(gl, wrap) {
 EZ3.Texture.prototype._updateImage = function(gl, target, image) {
   var format = image.getGLFormat(gl);
 
-  if (!EZ3.Math.isPowerOfTwo(image.width) || !EZ3.Math.isPowerOfTwo(image.height))
+  if (!EZ3.Math.isPowerOfTwo(image.size.x) || !EZ3.Math.isPowerOfTwo(image.size.y))
     image.toPowerOfTwo();
 
-  gl.texImage2D(target, 0, format, image.width, image.height, 0, format, gl.UNSIGNED_BYTE, image.data);
+  gl.texImage2D(target, 0, format, image.size.x, image.size.y, 0, format, gl.UNSIGNED_BYTE, image.data);
 };
 
 /**

@@ -1,5 +1,4 @@
 /**
- * Representation of a 3D vector.
  * @class EZ3.Vector3
  * @constructor
  * @param {Number} [x]
@@ -22,10 +21,10 @@ EZ3.Vector3 = function(x, y, z) {
    * @default 0
    */
 
-  if (typeof x === 'number') {
+  if (x !== undefined) {
     this.x = x;
-    this.y = (typeof y === 'number') ? y : x;
-    this.z = (typeof z === 'number') ? z : x;
+    this.y = (y !== undefined) ? y : x;
+    this.z = (z !== undefined) ? z : x;
   } else {
     this.x = 0.0;
     this.y = 0.0;
@@ -34,6 +33,42 @@ EZ3.Vector3 = function(x, y, z) {
 };
 
 EZ3.Vector3.prototype.constructor = EZ3.Vector3;
+
+/**
+ * @method EZ3.Vector3#set
+ * @param {Number} [x]
+ * @param {Number} [y]
+ * @param {Number} [z]
+ * @return {EZ3.Vector3}
+ */
+EZ3.Vector3.prototype.set = function(x, y, z) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector3#copy
+ * @param {EZ3.Vector3} v
+ * @return {EZ3.Vector3}
+ */
+EZ3.Vector3.prototype.copy = function(v) {
+  this.x = v.x;
+  this.y = v.y;
+  this.z = v.z;
+
+  return this;
+};
+
+/**
+ * @method EZ3.Vector3#clone
+ * @return {EZ3.Vector3}
+ */
+EZ3.Vector3.prototype.clone = function() {
+  return new EZ3.Vector3(this.x, this.y, this.z);
+};
 
 /**
  * @method EZ3.Vector3#add
@@ -75,21 +110,6 @@ EZ3.Vector3.prototype.sub = function(v1, v2) {
 };
 
 /**
- * @method EZ3.Vector3#set
- * @param {Number} x
- * @param {Number} y
- * @param {Number} z
- * @return {EZ3.Vector3}
- */
-EZ3.Vector3.prototype.set = function(x, y, z) {
-  this.x = x;
-  this.y = (typeof y === 'number') ? y : x;
-  this.z = (typeof z === 'number') ? z : x;
-
-  return this;
-};
-
-/**
  * @method EZ3.Vector3#scale
  * @param {Number} s
  * @param {EZ3.Vector3} [v]
@@ -115,10 +135,7 @@ EZ3.Vector3.prototype.scale = function(s, v) {
  * @return {Number}
  */
 EZ3.Vector3.prototype.dot = function(v) {
-  if (v !== undefined)
-    return v.x * this.x + v.y * this.y + v.z * this.z;
-  else
-    return -1;
+  return v.x * this.x + v.y * this.y + v.z * this.z;
 };
 
 /**
@@ -321,32 +338,26 @@ EZ3.Vector3.prototype.distance = function(v1, v2) {
  */
 EZ3.Vector3.prototype.normalize = function(v) {
   var l;
+  var u;
 
   if (v !== undefined) {
     l = v.length();
 
     if (l > 0) {
-      v.scale(1.0 / l);
+      u = v.clone().scale(1.0 / l);
 
-      this.x = v.x;
-      this.y = v.y;
-      this.z = v.z;
-    } else {
-      this.x = 0;
-      this.y = 0;
-      this.z = 0;
+      this.x = u.x;
+      this.y = u.y;
+      this.z = u.z;
     }
-
-    return this;
   } else {
     l = this.length();
 
-    if (l > 0) {
+    if (l > 0)
       this.scale(1.0 / l);
-
-      return this;
-    }
   }
+
+  return this;
 };
 
 /**
@@ -364,27 +375,6 @@ EZ3.Vector3.prototype.negate = function(v) {
     this.y = -this.y;
     this.z = -this.z;
   }
-
-  return this;
-};
-
-/**
- * @method EZ3.Vector3#clone
- * @return {EZ3.Vector3}
- */
-EZ3.Vector3.prototype.clone = function() {
-  return new EZ3.Vector3(this.x, this.y, this.z);
-};
-
-/**
- * @method EZ3.Vector3#copy
- * @param {EZ3.Vector3} v
- * @return {EZ3.Vector3}
- */
-EZ3.Vector3.prototype.copy = function(v) {
-  this.x = v.x;
-  this.y = v.y;
-  this.z = v.z;
 
   return this;
 };
@@ -436,18 +426,6 @@ EZ3.Vector3.prototype.isEqual = function(v) {
 };
 
 /**
- * @method EZ3.Vector3#isZeroVector
- * @param {EZ3.Vector3} [v]
- * @return {Boolean}
- */
-EZ3.Vector3.prototype.isZeroVector = function(v) {
-  if (v !== undefined)
-    return (v.x === 0.0) && (v.y === 0.0) && (v.z === 0.0);
-  else
-    return (this.x === 0.0) && (this.y === 0.0) && (this.z === 0.0);
-};
-
-/**
  * @method EZ3.Vector3#isDiff
  * @param {EZ3.Vector3} v
  * @return {Boolean}
@@ -457,29 +435,21 @@ EZ3.Vector3.prototype.isDiff = function(v) {
 };
 
 /**
- * @method EZ3.Vector3#toArray
- * @return {Number[]}
- */
-EZ3.Vector3.prototype.toArray = function() {
-  return [this.x, this.y, this.z];
-};
-
-/**
- * @method EZ3.Vector3#toString
- * @return {String}
- */
-EZ3.Vector3.prototype.toString = function() {
-  var x = this.x.toFixed(4);
-  var y = this.y.toFixed(4);
-  var z = this.z.toFixed(4);
-
-  return 'Vector3[' + x + ', ' + y + ', ' + z + ']';
-};
-
-/**
  * @method EZ3.Vector3#toVector2
  * @return {EZ3.Vector2}
  */
 EZ3.Vector3.prototype.toVector2 = function() {
   return new EZ3.Vector2(this.x, this.y);
+};
+
+/**
+ * @method EZ3.Vector3#toArray
+ * @return {Number[]}
+ */
+EZ3.Vector3.prototype.toArray = function() {
+  return [
+    this.x,
+    this.y,
+    this.z
+  ];
 };

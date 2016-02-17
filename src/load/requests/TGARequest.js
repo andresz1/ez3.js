@@ -13,12 +13,12 @@ EZ3.TGARequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.TGARequest.prototype.constructor = EZ3.TGARequest;
 
 /**
- * @method EZ3.TGARequest#_parse
+ * @method EZ3.TGARequest#_processLoad
  * @param {ArrayBuffer} data
  * @param {Function} onLoad
  * @param {Function} onError
  */
-EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
+EZ3.TGARequest.prototype._processLoad = function(data, onLoad, onError) {
   var TYPE_NO_DATA = 0;
   var TYPE_INDEXED = 1;
   var TYPE_RGB = 2;
@@ -309,7 +309,7 @@ EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
     return data;
   }
 
-  function init() {
+  function parse() {
     var useRle = false;
     var usePal = false;
     var useGrey = false;
@@ -377,13 +377,13 @@ EZ3.TGARequest.prototype._parse = function(data, onLoad, onError) {
     result = processData(useRle, usePal, header, offset, content);
 
     that.asset.data = processImageData(useGrey, header, result.pixelData, result.palettes);
-    that.asset.width = header.width;
-    that.asset.height = header.height;
+    that.asset.size.x = header.width;
+    that.asset.size.y = header.height;
 
     onLoad(that.url, that.asset, that.cached);
   }
 
-  init();
+  parse();
 };
 
 /**
@@ -401,7 +401,7 @@ EZ3.TGARequest.prototype.send = function(onLoad, onError) {
     if (failed)
       return onError(that.url);
 
-    that._parse(assets.get(that.url).data, onLoad);
+    that._processLoad(assets.get(that.url).data, onLoad);
   });
 
   requests.send();

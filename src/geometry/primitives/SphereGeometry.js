@@ -18,6 +18,8 @@ EZ3.SphereGeometry = function(resolution, radius) {
    * @default 1
    */
   this.radius = (radius !== undefined)? radius : 1;
+
+  this.updateData();
 };
 
 EZ3.SphereGeometry.prototype = Object.create(EZ3.PrimitiveGeometry.prototype);
@@ -58,8 +60,7 @@ EZ3.SphereGeometry.prototype._computeData = function() {
 
       vertices.push(vertex.x, vertex.y, vertex.z);
 
-      if (!vertex.isZeroVector())
-        vertex.normalize();
+      vertex.normalize();
 
       normals.push(vertex.x, vertex.y, vertex.z);
 

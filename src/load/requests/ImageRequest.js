@@ -31,8 +31,8 @@ EZ3.ImageRequest.prototype._processLoad = function(image, onLoad) {
   canvas.height = image.height;
   context.drawImage(image, 0, 0);
 
-  this.asset.width = image.width;
-  this.asset.height = image.height;
+  this.asset.size.x = image.width;
+  this.asset.size.y = image.height;
   this.asset.data = new Uint8Array(context.getImageData(0, 0, image.width, image.height).data);
 
   this._removeEventListeners();

@@ -14,12 +14,12 @@ EZ3.MDLRequest.prototype = Object.create(EZ3.Request.prototype);
 EZ3.MDLRequest.prototype.constructor = EZ3.MDLRequest;
 
 /**
- * @method EZ3.MDLRequest#_parse
+ * @method EZ3.MDLRequest#_processLoad
  * @param {ArrayBuffer} data
  * @param {Function} onLoad
  * @param {Function} onError
  */
-EZ3.MDLRequest.prototype._parse = function(data, onLoad, onError) {
+EZ3.MDLRequest.prototype._processLoad = function(data, onLoad, onError) {
   var that = this;
   var offset = 0;
   var palette = [
@@ -288,7 +288,7 @@ EZ3.MDLRequest.prototype.send = function(onLoad, onError) {
     if (failed)
       return onError(that.url);
 
-    that._parse(assets.get(that.url).data, onLoad, onError);
+    that._processLoad(assets.get(that.url).data, onLoad, onError);
   });
 
   requests.send();
