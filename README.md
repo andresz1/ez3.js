@@ -2,7 +2,7 @@
 A JavaScript framework for building 3D games with HTML5 and WebGL in an easy way. Inspired by [Three.js](http://threejs.org/) and [Phaser](http://phaser.io/).
 
 ## Usage
-Download the [minified library](http://ccg.ciens.ucv.ve) and include it in your html.
+Download the [minified library](https://www.dropbox.com/s/2pf12x3g540ho61/ez3.min.js?dl=0) and include it in your html.
 
 ```html
 <html>
