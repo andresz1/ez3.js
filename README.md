@@ -54,9 +54,9 @@ function update() {
 ```
 
 ## Build
-To build the library yourself you need to have installed [node.js](https://nodejs.org/), and follow this steps.
+To build the library yourself you need to have installed [Node.js](https://nodejs.org/), and follow this steps.
 
-Install [Grunt](http://gruntjs.com/) globally.
+Install [Grunt-CLI](http://gruntjs.com/) globally.
 
 ```bash
 npm install -g grunt-cli
