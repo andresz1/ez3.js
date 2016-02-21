@@ -1,5 +1,7 @@
 precision highp float;
 
+#extension GL_OES_standard_derivatives : enable
+
 struct PointLight {
 	vec3 position;
 	vec3 diffuse;
@@ -158,7 +160,6 @@ varying vec2 vUv;
 #endif
 
 #ifdef NORMAL_MAP
-	#extension GL_OES_standard_derivatives : enable
 
 	uniform sampler2D uNormalSampler;
 
