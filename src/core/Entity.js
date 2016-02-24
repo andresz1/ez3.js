@@ -84,6 +84,8 @@ EZ3.Entity.prototype.add = function(child) {
 EZ3.Entity.prototype.remove = function(child) {
   var position = this.children.indexOf(child);
 
+  console.log(position);
+
   if (~position)
     this.children.splice(position, 1);
 };

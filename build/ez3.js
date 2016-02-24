@@ -220,6 +220,8 @@ EZ3.Entity.prototype.add = function(child) {
 EZ3.Entity.prototype.remove = function(child) {
   var position = this.children.indexOf(child);
 
+  console.log(position);
+
   if (~position)
     this.children.splice(position, 1);
 };
@@ -7725,12 +7727,12 @@ EZ3.ScreenManager.prototype.update = function() {
   for (i = 0; i < this._screens.length; i++) {
     screen = this._screens[i];
 
-    this.renderer.render(screen.position, screen.size, screen.scene, screen.camera);
-
     if (screen.world)
       screen.world.update();
 
     this._screens[i].update();
+
+    this.renderer.render(screen.position, screen.size, screen.scene, screen.camera);
   }
 };
 
