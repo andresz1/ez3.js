@@ -3753,7 +3753,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 91,
+            "line": 93,
             "itemtype": "method",
             "name": "EZ3.Entity#lookAt",
             "params": [
@@ -3774,14 +3774,14 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 103,
+            "line": 105,
             "itemtype": "method",
             "name": "EZ3.Entity#updateWorld",
             "class": "EZ3.Entity"
         },
         {
             "file": "src/core/Entity.js",
-            "line": 155,
+            "line": 157,
             "itemtype": "method",
             "name": "EZ3.Entity#traverse",
             "params": [
@@ -3795,14 +3795,14 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 178,
+            "line": 180,
             "itemtype": "method",
             "name": "EZ3.Entity#updateWorldTraverse",
             "class": "EZ3.Entity"
         },
         {
             "file": "src/core/Entity.js",
-            "line": 187,
+            "line": 189,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldPosition",
             "return": {
@@ -3813,7 +3813,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 195,
+            "line": 197,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldRotation",
             "return": {
@@ -3824,7 +3824,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 203,
+            "line": 205,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldScale",
             "return": {
@@ -3835,7 +3835,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 211,
+            "line": 213,
             "itemtype": "method",
             "name": "EZ3.Entity#getWorldDirection",
             "return": {
@@ -3846,7 +3846,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 219,
+            "line": 221,
             "itemtype": "method",
             "name": "EZ3.Entity#getBoundingBoxTraverse",
             "return": {
@@ -3857,7 +3857,7 @@
         },
         {
             "file": "src/core/Entity.js",
-            "line": 241,
+            "line": 243,
             "itemtype": "method",
             "name": "EZ3.Entity#getBoundingSphereTraverse",
             "return": {
